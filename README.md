@@ -6,7 +6,7 @@ Projet annuel ESGI 2025
 
 1) git clone https://github.com/Makav77/the-bench.git
 2) cd frontend && npm install && npm run dev (http://localhost:5173/)
-3) cd ../backend && npm init -y && node server.js (http://localhost:5000/)
+3) cd ../backend && npm init -y && npm install express cors dotenv && node server.js (http://localhost:5000/)
 
 **Présentation de l'application**
 
