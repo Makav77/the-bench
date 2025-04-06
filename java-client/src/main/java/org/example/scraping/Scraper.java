@@ -46,7 +46,7 @@ public class Scraper {
                         dayArticles.add(currentArticles);
                     }
                     currentArticles = new DayArticles(
-                            DayArticles.resolveDayNameToDate(elementText, LocalDate.now()),
+                            DayArticlesUtils.resolveDayNameToDate(elementText, LocalDate.now()),
                             new ArrayList<>()
                     );
                 } else {
@@ -70,12 +70,7 @@ public class Scraper {
             }
 
             System.out.println(dayArticles.size());
-            for(DayArticles day : dayArticles) {
-                System.out.println("Jour : " + day.day);
-                for (Article article : day.articles) {
-                    System.out.println("  " + article.time + " - " + article.title);
-                }
-            }
+            DayArticlesUtils.printDayArticles(dayArticles);
             //System.out.println(news.asNormalizedText());
         } catch (Exception e) {
             e.printStackTrace();
