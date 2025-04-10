@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { v4 as uuidv4 } from "uuid";
 
 interface registerCredentials {
     id: string,
@@ -10,7 +11,7 @@ interface registerCredentials {
     dateOfBirth: string
 };
 
-enum credentialsState {
+enum registerState {
     noError = "noError",
     missingCredentials = "missingCredentials",
     invalidMailAddress = "invalidMailAddress",
@@ -20,9 +21,7 @@ enum credentialsState {
 function Signup() {
     const { t } = useTranslation("Register");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [currentCredentialsState, setCurrentCredentialsState] =
-        useState<credentialsState>(credentialsState.noError);
-    const [formData, setFormData] = useState<registerCredentials>({
+    const [registerCredentials, setRegisterCredentials] = useState<registerCredentials>({
         id: "",
         firstname: "",
         lastname: "",
@@ -30,6 +29,9 @@ function Signup() {
         password: "",
         dateOfBirth: ""
     });
+    const [currentRegisterState, setCurrentRegisterState] = useState<registerState>(
+        registerState.noError
+    );
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible((prev) => !prev);
@@ -40,16 +42,43 @@ function Signup() {
     }
 
     function getErrorMessage() {
-        switch (currentCredentialsState) {
-            case credentialsState.missingCredentials:
+        switch (currentRegisterState) {
+            case registerState.missingCredentials:
                 return t("missingCredentials");
-            case credentialsState.invalidMailAddress:
+            case registerState.invalidMailAddress:
                 return t("invalidCredentials");
-            case credentialsState.unknowError:
+            case registerState.unknowError:
                 return t("unknowError");
             default:
                 return null;
         }
+    }
+
+    function handleChange(e: ChangeEvent<HTMLInputElement>) {
+        e.preventDefault();
+        const { name, value } = e.target;
+        setRegisterCredentials((prev) => ({ ...prev, [name]: value }));
+        setCurrentRegisterState(registerState.noError);
+    }
+
+    function handleSubmit(e: FormEvent) {
+        e.preventDefault();
+        if (!registerCredentials.firstname || !registerCredentials.lastname || !registerCredentials.email || !registerCredentials.password || !registerCredentials.dateOfBirth) {
+            setCurrentRegisterState(registerState.missingCredentials);
+            return;
+        }
+        setCurrentRegisterState(registerState.noError);
+        console.log(registerCredentials);
+        registerCredentials.id = uuidv4();
+        console.log(registerCredentials);
+        setRegisterCredentials({
+            id: "",
+            firstname: "",
+            lastname: "",
+            email: "",
+            password: "",
+            dateOfBirth: ""
+        });
     }
 
     return (
@@ -60,13 +89,15 @@ function Signup() {
 
             <form
                 className="flex flex-col gap-5 w-4/5 mx-auto"
+                onSubmit={handleSubmit}
             >
                 <input
                     name="firstname"
                     type="text"
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
-                    value={ formData.firstname || "" }
+                    value={registerCredentials.firstname || ""}
+                    onChange={handleChange}
                     placeholder={t("firstname")}
                 />
 
@@ -75,7 +106,8 @@ function Signup() {
                     type="text"
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
-                    value={ formData.lastname || "" }
+                    value={registerCredentials.lastname || ""}
+                    onChange={handleChange}
                     placeholder={t("lastname")}
                 />
 
@@ -84,7 +116,8 @@ function Signup() {
                     type="email"
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
-                    value={ formData.email || "" }
+                    value={registerCredentials.email || ""}
+                    onChange={handleChange}
                     placeholder={t("email")}
                 />
 
@@ -94,7 +127,8 @@ function Signup() {
                         type={isPasswordVisible ? "text" : "password"}
                         autoComplete="off"
                         className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black"
-                        value={formData.password}
+                        value={registerCredentials.password}
+                        onChange={handleChange}
                         placeholder={t("password")}
                     />
 
@@ -120,7 +154,8 @@ function Signup() {
                     type="date"
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
-                    value={ formData.dateOfBirth || "" }
+                    value={registerCredentials.dateOfBirth || ""}
+                    onChange={handleChange}
                     placeholder={t("dateOfBirth")}
                 />
 

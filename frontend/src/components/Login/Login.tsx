@@ -23,7 +23,7 @@ function Login() {
         password: "",
     });
     const [currentLoginState, setCurrentLoginState] = useState<loginState>(
-        loginState.noError,
+        loginState.noError
     );
 
     const togglePasswordVisibility = () => {
@@ -70,7 +70,7 @@ function Login() {
             password: "",
         });
         setIsLoading(false);
-    };
+    }
 
     return (
         <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6">
