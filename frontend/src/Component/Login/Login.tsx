@@ -17,6 +17,7 @@ export enum loginState {
 function Login() {
     const { t } = useTranslation("Login");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [loginCredentials, setLoginCredentials] = useState<loginCredentials>({
         email: "",
         password: "",
@@ -62,11 +63,13 @@ function Login() {
             return;
         }
         setCurrentLoginState(loginState.noError);
+        setIsLoading(true);
         console.log(loginCredentials);
         setLoginCredentials({
             email: "",
             password: "",
         });
+        setIsLoading(false);
     };
 
     return (
@@ -146,8 +149,13 @@ function Login() {
                 <button
                     type="submit"
                     className="border-none bg-[#488ACF] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                    disabled={isLoading}
                 >
-                    {t("button")}
+                    {isLoading ? (
+                        <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                        t("title")
+                    )}
                 </button>
 
                 <a
