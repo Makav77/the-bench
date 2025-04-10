@@ -1,3 +1,4 @@
+import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +23,18 @@ function Login() {
         if (e.key === "Space") {
             togglePasswordVisibility();
         }
-    }
+    };
+
+    function handleChange(e: ChangeEvent<HTMLInputElement>) {
+        e.preventDefault();
+        const { name, value } = e.target;
+        setLoginCredentials((prev) => ({ ...prev, [name]: value }));
+    };
+
+    function handleSubmit(e: FormEvent) {
+        e.preventDefault();
+        console.log(loginCredentials);
+    };
 
     return (
         <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6">
@@ -35,12 +47,15 @@ function Login() {
 
             <form
                 className="flex flex-col gap-5 w-4/5 mx-auto"
+                onSubmit={handleSubmit}
             >
                 <input
                     name="email"
                     type="email"
+                    autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
                     value={ loginCredentials.email || "" }
+                    onChange={handleChange}
                     placeholder={t("mailAddress")}
                 />
 
@@ -48,8 +63,10 @@ function Login() {
                     <input
                         name="password"
                         type={isPasswordVisible ? "text" : "password"}
+                        autoComplete="off"
                         className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black"
                         value={loginCredentials.password || ""}
+                        onChange={handleChange}
                         placeholder={t("password")}
                     />
 
@@ -62,8 +79,8 @@ function Login() {
                         <img
                             src={
                                 isPasswordVisible
-                                    ? "public/assets/password/show-password-32.png"
-                                    : "public/assets/password/hide-password-32.png"
+                                    ? "assets/password/show-password-32.png"
+                                    : "assets/password/hide-password-32.png"
                             }
                             alt="Toggle password visibility"
                         />
