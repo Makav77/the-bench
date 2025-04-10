@@ -6,5 +6,8 @@
     "password": "Password",
     "dateOfBirth": "Birth date",
     "cancel": "Cancel",
-    "buttonRegister": "Register"
+    "buttonRegister": "Register",
+    "missingCredentials": "All fields must be completed",
+    "invalidMailAddress": "Email address is already in use",
+    "unknowError": "Unknow Error"
 }

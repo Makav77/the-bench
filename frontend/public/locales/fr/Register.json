@@ -6,5 +6,8 @@
     "password": "Mot de passe",
     "dateOfBirth": "Date de naissance",
     "cancel": "ANNULER",
-    "buttonRegister": "S'inscrire"
+    "buttonRegister": "S'inscrire",
+    "missingCredentials": "Tous les champs doivent être renseignés",
+    "invalidMailAddress": "L'adresse mail est déjà utilisée",
+    "unknowError": "Erreur inconnue"
 }

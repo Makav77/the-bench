@@ -10,9 +10,18 @@ interface registerCredentials {
     dateOfBirth: string
 };
 
+enum credentialsState {
+    noError = "noError",
+    missingCredentials = "missingCredentials",
+    invalidMailAddress = "invalidMailAddress",
+    unknowError = "unknowError"
+}
+
 function Signup() {
     const { t } = useTranslation("Register");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [currentCredentialsState, setCurrentCredentialsState] =
+        useState<credentialsState>(credentialsState.noError);
     const [formData, setFormData] = useState<registerCredentials>({
         id: "",
         firstname: "",
@@ -28,6 +37,19 @@ function Signup() {
 
     function handleKeyPress(e: React.KeyboardEvent) {
         if (e.key === "Space") togglePasswordVisibility();
+    }
+
+    function getErrorMessage() {
+        switch (currentCredentialsState) {
+            case credentialsState.missingCredentials:
+                return t("missingCredentials");
+            case credentialsState.invalidMailAddress:
+                return t("invalidCredentials");
+            case credentialsState.unknowError:
+                return t("unknowError");
+            default:
+                return null;
+        }
     }
 
     return (
@@ -101,6 +123,14 @@ function Signup() {
                     value={ formData.dateOfBirth || "" }
                     placeholder={t("dateOfBirth")}
                 />
+
+                <div>
+                    {getErrorMessage() && (
+                        <p className="text-red-500 text-left text-sm -mb-2 -mt-2 shake italic">
+                            {getErrorMessage()}
+                        </p>
+                    )}
+                </div>
 
                 <div className="flex gap-5">
                     <button
