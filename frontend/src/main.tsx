@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './index.css'
 import "./i18n";
-import Home from './Component/Home/Home'
+import Home from './Component/Login/Login'
 
 const rootElement = document.getElementById("root");
 
