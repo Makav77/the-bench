@@ -6,7 +6,7 @@
     "createAccountLink": "Vous n'avez pas de compte ? S'inscrire",
     "forgotPassword": "Mot de passe oublié ?",
     "rememberMe": "Se souvenir de moi",
-    "button": "LOGIN",
+    "buttonLogin": "LOGIN",
     "missingCredentials": "Le nom d'utilisateur et le mot de passe doivent être renseignés",
     "invalidCredentials": "Nom d'utilisateur ou mot de passe incorrect",
     "unknowError": "Erreur inconnue"

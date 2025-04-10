@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface registerCredentials {
     id: string,
@@ -10,6 +11,7 @@ interface registerCredentials {
 };
 
 function Signup() {
+    const { t } = useTranslation("Register");
     const [formData, setFormData] = useState<registerCredentials>({
         id: "",
         firstname: "",
@@ -21,8 +23,8 @@ function Signup() {
 
     return (
         <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6">
-            <h1 className="text-black font-bold text-5xl mt-10 mb-2">
-                title
+            <h1 className="text-black font-bold text-5xl mt-10 mb-10">
+                {t("title")}
             </h1>
 
             <form
@@ -34,7 +36,7 @@ function Signup() {
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
                     value={ formData.firstname || "" }
-                    placeholder="Firstname"
+                    placeholder={t("firstname")}
                 />
 
                 <input
@@ -43,7 +45,7 @@ function Signup() {
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
                     value={ formData.lastname || "" }
-                    placeholder="Lastname"
+                    placeholder={t("lastname")}
                 />
 
                 <input
@@ -52,7 +54,7 @@ function Signup() {
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
                     value={ formData.email || "" }
-                    placeholder="Email"
+                    placeholder={t("email")}
                 />
 
                 <input
@@ -61,7 +63,7 @@ function Signup() {
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
                     value={ formData.password || "" }
-                    placeholder="Password"
+                    placeholder={t("password")}
                 />
 
                 <input
@@ -70,7 +72,7 @@ function Signup() {
                     autoComplete="off"
                     className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
                     value={ formData.dateOfBirth || "" }
-                    placeholder="Firstname"
+                    placeholder={t("dateOfBirth")}
                 />
 
                 <div className="flex gap-5">
@@ -78,14 +80,14 @@ function Signup() {
                         type="button"
                         className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                     >
-                        Cancel
+                        {t("cancel")}
                     </button>
 
                     <button
                         type="submit"
                         className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                     >
-                        Register
+                        {t("buttonRegister")}
                     </button>
                 </div>
             </form>

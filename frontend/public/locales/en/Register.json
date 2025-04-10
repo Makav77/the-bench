@@ -1,0 +1,10 @@
+{
+    "title": "SIGNUP",
+    "firstname": "Firstname",
+    "lastname": "Lastname",
+    "email": "Email address",
+    "password": "Password",
+    "dateOfBirth": "Birth date",
+    "cancel": "Cancel",
+    "buttonRegister": "Register"
+}

@@ -1,0 +1,10 @@
+{
+    "title": "S'INSCRIRE",
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "email": "Adresse mail",
+    "password": "Mot de passe",
+    "dateOfBirth": "Date de naissance",
+    "cancel": "ANNULER",
+    "buttonRegister": "S'inscrire"
+}
