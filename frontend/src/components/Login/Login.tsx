@@ -159,7 +159,7 @@ function Login() {
                 </button>
 
                 <a
-                    href="/"
+                    href="/register"
                     className="text-blue-600 underline text-center hover:cursor-pointer hover:text-blue-800"
                 >
                     {t("createAccountLink")}
