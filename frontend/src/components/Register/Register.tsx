@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 interface registerCredentials {
@@ -20,6 +21,7 @@ enum registerState {
 
 function Signup() {
     const { t } = useTranslation("Register");
+    const navigate = useNavigate();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [registerCredentials, setRegisterCredentials] = useState<registerCredentials>({
         id: "",
@@ -54,6 +56,8 @@ function Signup() {
         }
     }
 
+    const navToLoginPage = () => navigate("/");
+
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
         const { name, value } = e.target;
@@ -83,9 +87,12 @@ function Signup() {
 
     return (
         <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6">
-            <h1 className="text-black font-bold text-5xl mt-10 mb-10">
+            <h1 className="text-black font-bold text-5xl mt-10 mb-2">
                 {t("title")}
             </h1>
+            <h2 className="text-black/38 text-lg font-bold mb-8">
+                {t("subtitle")}
+            </h2>
 
             <form
                 className="flex flex-col gap-5 w-4/5 mx-auto"
@@ -95,7 +102,7 @@ function Signup() {
                     name="firstname"
                     type="text"
                     autoComplete="off"
-                    className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.firstname || ""}
                     onChange={handleChange}
                     placeholder={t("firstname")}
@@ -105,7 +112,7 @@ function Signup() {
                     name="lastname"
                     type="text"
                     autoComplete="off"
-                    className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.lastname || ""}
                     onChange={handleChange}
                     placeholder={t("lastname")}
@@ -115,7 +122,7 @@ function Signup() {
                     name="email"
                     type="email"
                     autoComplete="off"
-                    className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.email || ""}
                     onChange={handleChange}
                     placeholder={t("email")}
@@ -126,7 +133,7 @@ function Signup() {
                         name="password"
                         type={isPasswordVisible ? "text" : "password"}
                         autoComplete="off"
-                        className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black"
+                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
                         value={registerCredentials.password}
                         onChange={handleChange}
                         placeholder={t("password")}
@@ -153,7 +160,7 @@ function Signup() {
                     name="dateOfBirth"
                     type="date"
                     autoComplete="off"
-                    className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.dateOfBirth ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.dateOfBirth || ""}
                     onChange={handleChange}
                     placeholder={t("dateOfBirth")}
@@ -171,6 +178,7 @@ function Signup() {
                     <button
                         type="button"
                         className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                        onClick={navToLoginPage}
                     >
                         {t("cancel")}
                     </button>

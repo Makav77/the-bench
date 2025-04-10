@@ -1,5 +1,6 @@
 {
     "title": "SIGNUP",
+    "subtitle": "Complete the fields below to register",
     "firstname": "Firstname",
     "lastname": "Lastname",
     "email": "Email address",
