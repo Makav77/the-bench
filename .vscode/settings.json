@@ -15,7 +15,7 @@
         "frontend/tsconfig.json": true,
         "frontend/tsconfig.node.json": true,
         "frontend/vite.config.ts": true,
-        "**/.gitignore": false,
+        "**/.gitignore": true,
         "**/README.md": true,
         "frontend\\src/vite-env.d.ts": true,
         "i18n.ts": true,

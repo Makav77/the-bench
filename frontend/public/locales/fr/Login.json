@@ -1,0 +1,10 @@
+{
+    "title": "CONNEXION",
+    "subtitle": "Renseignez vos identifiants ci-dessous",
+    "mailAddress": "Adresse mail",
+    "password": "Mot de passe",
+    "createAccountLink": "Vous n'avez pas de compte ? S'inscrire",
+    "forgotPassword": "Mot de passe oublié ?",
+    "rememberMe": "Se souvenir de moi",
+    "button": "LOGIN"
+}

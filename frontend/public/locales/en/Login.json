@@ -1,0 +1,10 @@
+{
+    "title": "LOGIN",
+    "subtitle": "Please enter your details below",
+    "mailAddress": "Email",
+    "password": "Password",
+    "createAccountLink": "Don't have an account? Sign up",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "button": "LOGIN"
+}
