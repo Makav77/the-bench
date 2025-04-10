@@ -6,5 +6,8 @@
     "createAccountLink": "Don't have an account? Sign up",
     "forgotPassword": "Forgot password?",
     "rememberMe": "Remember me",
-    "button": "LOGIN"
+    "button": "LOGIN",
+    "missingCredentials": "Username and password must be entered",
+    "invalidCredentials": "Wrong username or password",
+    "unknowError": "Unknow error"
 }

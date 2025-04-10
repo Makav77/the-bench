@@ -7,6 +7,13 @@ interface loginCredentials {
     password: string;
 }
 
+export enum loginState {
+    noError = "noError",
+    unknowError = "unknowError",
+    missingCredentials = "missingCredentials",
+    invalidCredentials = "invalidCredentials",
+}
+
 function Login() {
     const { t } = useTranslation("Login");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -14,6 +21,9 @@ function Login() {
         email: "",
         password: "",
     });
+    const [currentLoginState, setCurrentLoginState] = useState<loginState>(
+        loginState.noError,
+    );
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible((prev) => !prev);
@@ -25,15 +35,38 @@ function Login() {
         }
     };
 
+    function getErrorMessage() {
+        switch (currentLoginState) {
+            case loginState.missingCredentials:
+                return t("missingCredentials");
+            case loginState.invalidCredentials:
+                return t("invalidCredentials");
+            case loginState.unknowError:
+                return t("unknowError");
+            default:
+                return null;
+        }
+    }
+
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
         const { name, value } = e.target;
         setLoginCredentials((prev) => ({ ...prev, [name]: value }));
+        setCurrentLoginState(loginState.noError);
     };
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
+        if (!loginCredentials.email || !loginCredentials.password) {
+            setCurrentLoginState(loginState.missingCredentials);
+            return;
+        }
+        setCurrentLoginState(loginState.noError);
         console.log(loginCredentials);
+        setLoginCredentials({
+            email: "",
+            password: "",
+        });
     };
 
     return (
@@ -53,7 +86,7 @@ function Login() {
                     name="email"
                     type="email"
                     autoComplete="off"
-                    className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black"
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
                     value={ loginCredentials.email || "" }
                     onChange={handleChange}
                     placeholder={t("mailAddress")}
@@ -64,7 +97,7 @@ function Login() {
                         name="password"
                         type={isPasswordVisible ? "text" : "password"}
                         autoComplete="off"
-                        className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black"
+                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
                         value={loginCredentials.password || ""}
                         onChange={handleChange}
                         placeholder={t("password")}
@@ -94,6 +127,12 @@ function Login() {
                     {t("forgotPassword")}
                 </a>
 
+                {getErrorMessage() && (
+                    <p className="text-red-500 text-left text-sm -mb-2 -mt-2 shake italic">
+                        {getErrorMessage()}
+                    </p>
+                )}
+
                 <div className="text-left flex gap-2">
                     <input
                         name="remember"
@@ -106,7 +145,7 @@ function Login() {
 
                 <button
                     type="submit"
-                    className="border-none bg-[#77B5F5] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                    className="border-none bg-[#488ACF] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                 >
                     {t("button")}
                 </button>
