@@ -8,10 +8,21 @@ interface loginCredentials {
 
 function Login() {
     const { t } = useTranslation("Login");
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [loginCredentials, setLoginCredentials] = useState<loginCredentials>({
         email: "",
         password: "",
     });
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible((prev) => !prev);
+    };
+
+    function handleKeyPress(e: React.KeyboardEvent) {
+        if (e.key === "Space") {
+            togglePasswordVisibility();
+        }
+    }
 
     return (
         <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6">
@@ -33,13 +44,31 @@ function Login() {
                     placeholder={t("mailAddress")}
                 />
 
-                <input
-                    name="password"
-                    type="password"
-                    className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black"
-                    value={ loginCredentials.password || "" }
-                    placeholder={t("password")}
-                />
+                <div className="relative text-left">
+                    <input
+                        name="password"
+                        type={isPasswordVisible ? "text" : "password"}
+                        className="bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black"
+                        value={loginCredentials.password || ""}
+                        placeholder={t("password")}
+                    />
+
+                    <button
+                        type="button"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                        onKeyUp={handleKeyPress}
+                    >
+                        <img
+                            src={
+                                isPasswordVisible
+                                    ? "public/assets/password/show-password-32.png"
+                                    : "public/assets/password/hide-password-32.png"
+                            }
+                            alt="Toggle password visibility"
+                        />
+                    </button>
+                </div>
 
                 <a
                     href="/"
