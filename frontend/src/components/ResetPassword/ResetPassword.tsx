@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export enum mailState {
@@ -14,6 +14,11 @@ function ResetPassword() {
         mailState.noError,
     );
 
+    function handleChange(e: ChangeEvent<HTMLInputElement>) {
+        setMailAddress(e.target.value);
+        setCurrentMailState(mailState.noError);
+    }
+
     function getErrorMessage() {
         switch (currentMailState) {
             case mailState.missingMail:
@@ -23,6 +28,18 @@ function ResetPassword() {
             default:
                 return null;
         }
+    }
+
+    function handleSubmit(e: FormEvent) {
+        e.preventDefault();
+        if (!mailAddress) {
+            setCurrentMailState(mailState.missingMail);
+            return;
+        }
+        console.log("Envoi d'un mail de récupération à l'adresse : ");
+        console.log(mailAddress);
+        setCurrentMailState(mailState.noError);
+        setMailAddress("");
     }
 
     return (
@@ -42,12 +59,16 @@ function ResetPassword() {
                 </p>
             )}
 
-            <form className="mx-auto">
+            <form
+                className="mx-auto"
+                onSubmit={handleSubmit}
+            >
                 <input
                     name="email"
                     type="email"
                     autoComplete="off"
                     className="w-2/3 bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 mb-5 border-gray-500 hover:border-black"
+                    onChange={handleChange}
                     placeholder={t("enterEmail")}
                 />
 
