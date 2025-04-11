@@ -1,9 +1,29 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+export enum mailState {
+    noError = "noError",
+    unknowError = "unknowError",
+    missingMail = "missingMail",
+}
+
 function ResetPassword() {
     const { t } = useTranslation("ResetPassword");
     const [mailAddress, setMailAddress] = useState("");
+    const [currentMailState, setCurrentMailState] = useState<mailState>(
+        mailState.noError,
+    );
+
+    function getErrorMessage() {
+        switch (currentMailState) {
+            case mailState.missingMail:
+                return t("errorMissingMail");
+            case mailState.unknowError:
+                return t("errorUnknowError");
+            default:
+                return null;
+        }
+    }
 
     return (
         <div className="bg-white w-1/4 mx-auto mt-20 rounded-[2vw] text-center p-6">
@@ -15,6 +35,12 @@ function ResetPassword() {
                 <br />
                 {t("subtitle2")}
             </h2>
+
+            {getErrorMessage() && (
+                <p className="text-red-500 text-sm mb-2 -mt-2 shake italic">
+                    {getErrorMessage()}
+                </p>
+            )}
 
             <form className="mx-auto">
                 <input
