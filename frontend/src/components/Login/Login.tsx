@@ -90,7 +90,7 @@ function Login() {
                     type="email"
                     autoComplete="off"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
-                    value={ loginCredentials.email || "" }
+                    value={loginCredentials.email || ""}
                     onChange={handleChange}
                     placeholder={t("mailAddress")}
                 />
@@ -124,7 +124,7 @@ function Login() {
                 </div>
 
                 <a
-                    href="/"
+                    href="/resetpassword"
                     className="text-blue-600 underline text-right -mt-4 hover:cursor-pointer hover:text-blue-800"
                 >
                     {t("forgotPassword")}
