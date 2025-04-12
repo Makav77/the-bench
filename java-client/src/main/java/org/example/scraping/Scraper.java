@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Scraper {
-    public static void getNewParis() {
+    public static void getNewsParis() {
         // à réactiver pour debug
         Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
         Logger.getLogger("org.apache.http").setLevel(Level.OFF);

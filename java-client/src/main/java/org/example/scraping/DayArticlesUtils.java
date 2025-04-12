@@ -33,6 +33,7 @@ public class DayArticlesUtils {
             return today.plusDays(diff); // jour cette semaine ou aujourd'hui (plus day car diff est négatif ou 0)
         }
     }
+
     public static void printDayArticles(List<DayArticles> dayArticles) {
         for(DayArticles day : dayArticles) {
             System.out.println("Jour : " + day.day);
