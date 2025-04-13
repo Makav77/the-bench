@@ -6,6 +6,7 @@ import "./i18n";
 import Login from './components/Login/Login'
 import Register from "./components/Register/Register";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
+import Layout from "./components/Layout/Layout";
 
 const rootElement = document.getElementById("root");
 
@@ -14,9 +15,11 @@ if (rootElement) {
         <React.StrictMode>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="register" element={<Register />} />
-                    <Route path="resetpassword" element={<ResetPassword />} />
+                    <Route element={<Layout />}>
+                        <Route path="/" element={<Login />} />
+                        <Route path="register" element={<Register />} />
+                        <Route path="resetpassword" element={<ResetPassword />} />
+                    </Route>
                 </Routes>
             </BrowserRouter>
         </React.StrictMode>
