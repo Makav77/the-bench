@@ -15,7 +15,7 @@ import org.example.scraping.Article;
 public class ArticlesDAO {
     public ArticlesDAO() {
         try(Connection conn  = DatabaseManager.getConnection(); Statement stmt = conn.createStatement();){
-            stmt.execute("CREATE TABLE articles ( id INTEGER PRIMARY KEY AUTOINCREMENT, day_id INTEGER NOT NULL, time TEXT NOT NULL, title TEXT NOT NULL, FOREIGN KEY(day_id) REFERENCES day_articles(id) );");
+            stmt.execute("CREATE TABLE IF NOT EXISTS articles ( id INTEGER PRIMARY KEY AUTOINCREMENT, day_id INTEGER NOT NULL, time TEXT NOT NULL, title TEXT NOT NULL, FOREIGN KEY(day_id) REFERENCES day_articles(id), UNIQUE(day_id, title) );");
         }
         catch (SQLException e) {
             System.err.println("Erreur lors de la création de la table : " + e.getMessage());
@@ -23,7 +23,7 @@ public class ArticlesDAO {
     }
 
     public void insertArticle(Article article, int dayId) {
-        String sql = "INSERT INTO articles (day_id, time, title) VALUES (?, ?, ?)";
+        String sql = "INSERT OR IGNORE INTO articles (day_id, time, title) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, dayId);
             pstmt.setString(2, article.time);

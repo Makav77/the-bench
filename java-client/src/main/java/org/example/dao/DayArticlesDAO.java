@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class DayArticlesDAO {
     public DayArticlesDAO() throws SQLException {
         try(Connection conn  = DatabaseManager.getConnection(); Statement stmt = conn.createStatement();){
-            stmt.execute("CREATE TABLE IF NOT EXISTS day_articles (id INTEGER PRIMARY KEY AUTOINCREMENT, day DATE NOT NULL)");
+            stmt.execute("CREATE TABLE IF NOT EXISTS day_articles (id INTEGER PRIMARY KEY AUTOINCREMENT, day DATE NOT NULL UNIQUE)");
         }
         catch (SQLException e) {
             System.err.println("Erreur lors de la création de la table : " + e.getMessage());
@@ -21,7 +21,7 @@ public class DayArticlesDAO {
     }
 
     public int insertDayArticles(DayArticles dayArticles) throws SQLException {
-        String sql = "INSERT INTO day_articles (day) VALUES (?)";
+        String sql = "INSERT OR IGNORE INTO day_articles (day) VALUES (?)";
         int generatedId = -1;
 
         try (Connection conn = DatabaseManager.getConnection();
@@ -58,5 +58,22 @@ public class DayArticlesDAO {
             System.err.println("Erreur lors de la récupération des articles : " + e.getMessage());
         }
         return dayArticlesList;
+    }
+
+    public DayArticles getDayArticles(LocalDate day) throws SQLException {
+        DayArticles dayArticles = null;
+        String sql = "SELECT * FROM day_articles WHERE day = ?";
+        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDate(1, Date.valueOf(day));
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Date date = rs.getDate("day");
+                LocalDate localDate = date.toLocalDate();
+                dayArticles = new DayArticles(localDate, new ArrayList<Article>());
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des articles : " + e.getMessage());
+        }
+        return dayArticles;
     }
 }
