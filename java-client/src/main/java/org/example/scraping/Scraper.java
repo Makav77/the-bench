@@ -3,6 +3,7 @@ package org.example.scraping;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import org.example.dao.DayArticlesDAO;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ public class Scraper {
 
             System.out.println(dayArticles.size());
             DayArticlesUtils.printDayArticles(dayArticles);
+            DayArticlesUtils.InsertDayArticles(dayArticles);
             //System.out.println(news.asNormalizedText());
         } catch (Exception e) {
             e.printStackTrace();

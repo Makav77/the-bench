@@ -1,5 +1,8 @@
 package org.example.scraping;
 
+import org.example.dao.ArticlesDAO;
+import org.example.dao.DayArticlesDAO;
+
 import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -40,6 +43,22 @@ public class DayArticlesUtils {
             for (Article article : day.articles) {
                 System.out.println("  " + article.time + " - " + article.title);
             }
+        }
+    }
+
+    public static void InsertDayArticles(List<DayArticles> dayArticles) {
+        try {
+            DayArticlesDAO dayArticlesDAO = new DayArticlesDAO();
+            ArticlesDAO articlesDAO = new ArticlesDAO();
+            for (DayArticles dayArticle : dayArticles) {
+                int idDayArticles =  dayArticlesDAO.insertDayArticles(dayArticle);
+                for (Article article : dayArticle.articles) {
+                    articlesDAO.insertArticle(article, idDayArticles);
+                }
+            }
+        }
+        catch (Exception e) {
+            System.err.println("Erreur lors de l'insertion des articles : " + e.getMessage());
         }
     }
 }
