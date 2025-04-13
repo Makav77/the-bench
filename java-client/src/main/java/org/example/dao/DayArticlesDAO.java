@@ -20,15 +20,29 @@ public class DayArticlesDAO {
         }
     }
 
-    public void insertDayArticles(DayArticles dayArticles) throws SQLException {
+    public int insertDayArticles(DayArticles dayArticles) throws SQLException {
         String sql = "INSERT INTO day_articles (day) VALUES (?)";
-        try (Connection conn = DatabaseManager.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        int generatedId = -1;
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             pstmt.setDate(1, Date.valueOf(dayArticles.day));
             pstmt.executeUpdate();
+
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                }
+            }
+
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'insertion : " + e.getMessage());
         }
+
+        return generatedId;
     }
+
 
     public List<DayArticles> getAllDayArticles() throws SQLException {
         List<DayArticles> dayArticlesList = new ArrayList<>();
