@@ -88,6 +88,7 @@ function Login() {
                 <input
                     name="email"
                     type="email"
+                    aria-label="email"
                     autoComplete="off"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
                     value={loginCredentials.email || ""}
@@ -99,6 +100,7 @@ function Login() {
                     <input
                         name="password"
                         type={isPasswordVisible ? "text" : "password"}
+                        aria-label="password"
                         autoComplete="off"
                         className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
                         value={loginCredentials.password || ""}
@@ -138,8 +140,9 @@ function Login() {
 
                 <div className="text-left flex gap-2">
                     <input
-                        name="remember"
+                        name="rememberMe"
                         type="checkbox"
+                        aria-label="rememberMe"
                         autoComplete="off"
                         className="appearance-none w-4 h-4 self-center border-2 border-gray-500 checked:bg-[#F00969] checked:border-black hover:cursor-pointer"
                     />
