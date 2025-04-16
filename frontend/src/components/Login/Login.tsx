@@ -88,7 +88,7 @@ function Login() {
                 <input
                     name="email"
                     type="email"
-                    aria-label="email"
+                    aria-label="email-field"
                     autoComplete="off"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
                     value={loginCredentials.email || ""}
@@ -100,7 +100,7 @@ function Login() {
                     <input
                         name="password"
                         type={isPasswordVisible ? "text" : "password"}
-                        aria-label="password"
+                        aria-label="password-field"
                         autoComplete="off"
                         className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
                         value={loginCredentials.password || ""}
@@ -110,6 +110,7 @@ function Login() {
 
                     <button
                         type="button"
+                        aria-label="toggle-password-visibility"
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
                         onClick={togglePasswordVisibility}
                         onKeyUp={handleKeyPress}
@@ -142,7 +143,7 @@ function Login() {
                     <input
                         name="rememberMe"
                         type="checkbox"
-                        aria-label="rememberMe"
+                        aria-label="rememberMe-checkbox"
                         autoComplete="off"
                         className="appearance-none w-4 h-4 self-center border-2 border-gray-500 checked:bg-[#F00969] checked:border-black hover:cursor-pointer"
                     />
