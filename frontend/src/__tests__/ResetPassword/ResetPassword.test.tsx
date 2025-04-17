@@ -75,3 +75,18 @@ describe("Redirection links", () => {
         expect(mockNavigate).toHaveBeenCalledWith("/");
     })
 })
+
+describe("Error handling", () => {
+    test("Print error message if field is empty", async () => {
+        render(
+            <I18nextProvider i18n={i18n}>
+                <ResetPassword />
+            </I18nextProvider>
+        );
+
+        const sendButton = screen.getByLabelText(/send-button/i);
+        fireEvent.click(sendButton);
+
+        expect(screen.getByText("Error: missing mail")).toBeInTheDocument();
+    })
+})
