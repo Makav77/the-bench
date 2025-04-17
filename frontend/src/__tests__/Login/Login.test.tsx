@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
+import { MemoryRouter } from 'react-router-dom'
 import Login from '../../components/Login/Login'
 
 import i18n from "i18next";
@@ -18,8 +19,8 @@ beforeAll(() => {
             react: {
                 useSuspense: false,
             },
-        });
-});
+        })
+})
 
 
 describe("Login forms", () => {
@@ -97,5 +98,29 @@ describe("Password visibility", () => {
 
         fireEvent.keyUp(toggleButtonVisibility, { key: 'Space', code: 'Space' })
         expect(passwordInput).toHaveAttribute("type", "password");
-    });
+    })
+})
+
+describe("Redirection links", () => {
+    test("Redirection to the reset password page", () => {
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
+
+        const forgotPasswordLink = screen.getByLabelText(/forgot-password-link/i);
+        expect(forgotPasswordLink).toHaveAttribute("href", "/resetpassword");
+    })
+
+    test("Redirection to the registration page", () => {
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
+
+        const registerLink = screen.getByLabelText(/register-link/i);
+        expect(registerLink).toHaveAttribute("href", "/register");
+    })
 })

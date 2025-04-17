@@ -128,6 +128,7 @@ function Login() {
 
                 <a
                     href="/resetpassword"
+                    aria-label="forgot-password-link"
                     className="text-blue-600 underline text-right -mt-4 hover:cursor-pointer hover:text-blue-800"
                 >
                     {t("forgotPassword")}
@@ -164,6 +165,7 @@ function Login() {
 
                 <a
                     href="/register"
+                    aria-label="register-link"
                     className="text-blue-600 underline text-center hover:cursor-pointer hover:text-blue-800"
                 >
                     {t("createAccountLink")}
