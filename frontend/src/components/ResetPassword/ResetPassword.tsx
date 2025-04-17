@@ -18,8 +18,6 @@ function ResetPassword() {
         mailState.noError,
     );
 
-    const navToLoginPage = () => navigate("/");
-
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         setMailAddress(e.target.value);
         setCurrentMailState(mailState.noError);
@@ -47,7 +45,7 @@ function ResetPassword() {
         setMailAddress("");
         setIsLoading(true);
         setTimeout(() => {
-            navToLoginPage();
+            navigate("/");
         }, 3000);
     }
 
@@ -71,6 +69,7 @@ function ResetPassword() {
                         <input
                             name="email"
                             type="email"
+                            aria-label="email-field"
                             autoComplete="off"
                             className={`w-2/3 bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 mb-5 border-gray-500 hover:border-black ${currentMailState === mailState.missingMail && !mailAddress ? "border-red-500 shake" : "border-gray-500"}`}
                             onChange={handleChange}
@@ -87,7 +86,7 @@ function ResetPassword() {
                             <button
                                 type="button"
                                 className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
-                                onClick={navToLoginPage}
+                                onClick={() => navigate("/")}
                             >
                                 {t("cancel")}
                             </button>
