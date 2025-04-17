@@ -89,4 +89,15 @@ describe("Error handling", () => {
 
         expect(screen.getByText("Error: missing mail")).toBeInTheDocument();
     })
+
+    test("Field show red borders and shake when empty on submit", () => {
+        render(<ResetPassword />);
+
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const sendButton = screen.getByLabelText(/send-button/i);
+
+        fireEvent.click(sendButton);
+
+        expect(emailInput).toHaveClass("border-red-500 shake");
+    })
 })
