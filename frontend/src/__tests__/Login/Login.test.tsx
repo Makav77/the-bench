@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { MemoryRouter } from 'react-router-dom'
 import Login from '../../components/Login/Login'
@@ -331,6 +331,41 @@ describe("After submission", () => {
 
         expect(emailInput).toHaveValue("");
         expect(passwordInput).toHaveValue("");
+    })
+
+    test("Loading while 500ms", () => {
+        jest.useFakeTimers();
+
+        render(<Login />);
+
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+        const loginButton = screen.getByLabelText(/login-button/i);
+
+        fireEvent.change(emailInput, {
+            target: {
+                value: "test@example.com"
+            }
+        });
+        fireEvent.change(passwordInput, {
+            target: {
+                value: "password123"
+            }
+        });
+
+        fireEvent.click(loginButton);
+
+        expect(loginButton).toBeDisabled();
+        expect(screen.getByTestId('spinner')).toBeInTheDocument();
+
+        act(() => {
+            jest.advanceTimersByTime(500);
+        });
+
+        expect(loginButton).toBeEnabled();
+        expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
+
+        jest.useRealTimers();
     })
 })
 
