@@ -40,12 +40,12 @@ describe("Login forms", () => {
 
         fireEvent.change(emailInput, {
             target: {
-                value: "brice@example.com"
+                value: "test@example.com"
             }
         });
         fireEvent.change(passwordInput, {
             target: {
-                value: "motdepasse123"
+                value: "password123"
             }
         });
 
@@ -150,7 +150,7 @@ describe("Error handling", () => {
 
         fireEvent.change(passwordInput, {
             target: {
-                value: "password"
+                value: "password123"
             }
         });
 
@@ -169,7 +169,7 @@ describe("Error handling", () => {
 
         fireEvent.change(emailInput, {
             target: {
-                value: "brice@test.com"
+                value: "test@example.com"
             }
         });
 
@@ -201,7 +201,7 @@ describe("Error handling", () => {
 
         fireEvent.change(passwordInput, {
             target: {
-                value: "password"
+                value: "password123"
             }
         });
 
@@ -218,7 +218,7 @@ describe("Error handling", () => {
 
         fireEvent.change(emailInput, {
             target: {
-                value: "brice@test.com"
+                value: "test@example.com"
             }
         });
 
@@ -237,7 +237,7 @@ describe("Sending data", () => {
 
         fireEvent.change(emailInput, {
             target: {
-                value: "brice@test.com"
+                value: "test@example.com"
             }
         });
 
@@ -261,7 +261,7 @@ describe("Sending data", () => {
 
         fireEvent.change(emailInput, {
             target: {
-                value: "brice@test.com"
+                value: "test@example.com"
             }
         });
 
@@ -287,7 +287,7 @@ describe("Sending data", () => {
 
         fireEvent.change(emailInput, {
             target: {
-                value: "brice@test.com"
+                value: "test@example.com"
             }
         });
 
@@ -304,4 +304,30 @@ describe("Sending data", () => {
             password: "password123",
         });
     });
+})
+
+describe("After submission", () => {
+    test("Reset form fields after submission", () => {
+        render(<Login />);
+
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+        const loginButton = screen.getByLabelText(/login-button/i);
+
+        fireEvent.change(emailInput, {
+            target: {
+                value: "test@example.com"
+            }
+        });
+        fireEvent.change(passwordInput, {
+            target: {
+                value: "password123"
+            }
+        });
+
+        fireEvent.click(loginButton);
+
+        expect(emailInput).toHaveValue("");
+        expect(passwordInput).toHaveValue("");
+    })
 })
