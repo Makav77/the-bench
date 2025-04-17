@@ -13,6 +13,11 @@ const config: Config = {
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
+
+  testMatch: [
+    '<rootDir>/src/__tests__/**/*.test.ts',
+    '<rootDir>/src/__tests__/**/*.test.tsx',
+  ],
 };
 
 export default config;

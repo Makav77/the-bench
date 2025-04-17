@@ -2,9 +2,8 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { MemoryRouter } from 'react-router-dom'
 import Login from '../../components/Login/Login'
-
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
+import i18n from '../i18nForTests'
+import { I18nextProvider, initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
 
 beforeAll(() => {
@@ -49,8 +48,8 @@ describe("Login forms", () => {
             }
         });
 
-        expect(emailInput).toHaveValue("brice@example.com");
-        expect(passwordInput).toHaveValue("motdepasse123");
+        expect(emailInput).toHaveValue("test@example.com");
+        expect(passwordInput).toHaveValue("password123");
     })
 
     test("The \"remember me\" checkbox can be checked and unchecked", () => {
@@ -132,15 +131,18 @@ describe("Redirection links", () => {
 })
 
 describe("Error handling", () => {
-    test("Print error message if email and password fields are empty", () => {
-        render(<Login />);
+    test("Print error message if email and password fields are empty", async () => {
+        render(
+            <I18nextProvider i18n={i18n}>
+                <Login />
+            </I18nextProvider>
+        );
 
         const loginButton = screen.getByLabelText(/login-button/i);
         fireEvent.click(loginButton);
 
-        expect(screen.getByText(/missingCredentials/i)).toBeInTheDocument();
+        expect(screen.getByText("Username and password must be entered")).toBeInTheDocument();
     })
-
     test("Print error message if email field is empty", () => {
         render(<Login />);
 
@@ -157,7 +159,7 @@ describe("Error handling", () => {
         expect(emailInput).toHaveValue("");
 
         fireEvent.click(loginButton);
-        expect(screen.getByText(/missingCredentials/i)).toBeInTheDocument();
+        expect(screen.getByText("Username and password must be entered")).toBeInTheDocument();
     })
 
     test("Print error message if password field is empty", () => {
@@ -176,7 +178,7 @@ describe("Error handling", () => {
         expect(passwordInput).toHaveValue("");
 
         fireEvent.click(loginButton);
-        expect(screen.getByText(/missingCredentials/i)).toBeInTheDocument();
+        expect(screen.getByText("Username and password must be entered")).toBeInTheDocument();
     })
 
     test("Fields show red borders and shake when empty on submit", () => {
@@ -300,7 +302,7 @@ describe("Sending data", () => {
         fireEvent.click(loginButton);
 
         expect(consoleLogSpy).toHaveBeenCalledWith({
-            email: "brice@test.com",
+            email: "test@example.com",
             password: "password123",
         });
     });
@@ -330,4 +332,22 @@ describe("After submission", () => {
         expect(emailInput).toHaveValue("");
         expect(passwordInput).toHaveValue("");
     })
+})
+
+describe("Translation", () => {
+    test("Switch language", async () => {
+        await i18n.changeLanguage("fr");
+        render(
+            <I18nextProvider i18n={i18n}>
+                <Login />
+            </I18nextProvider>
+        );
+
+        expect(screen.getByText("CONNEXION")).toBeInTheDocument();
+        expect(screen.getByText("Renseignez vos identifiants ci-dessous")).toBeInTheDocument();
+        expect(screen.getByText("Vous n'avez pas de compte ? S'inscrire")).toBeInTheDocument();
+        expect(screen.getByText("Mot de passe oublié ?")).toBeInTheDocument();
+        expect(screen.getByText("Se souvenir de moi")).toBeInTheDocument();
+        expect(screen.getByText("Connexion")).toBeInTheDocument();
+    });
 })
