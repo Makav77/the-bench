@@ -47,3 +47,31 @@ describe("Email form", () => {
         expect(emailInput).toHaveValue("test@example.com");
     })
 })
+
+describe("Redirection links", () => {
+    test("Cancel button", () => {
+        render(
+            <MemoryRouter>
+                <ResetPassword />
+            </MemoryRouter>
+        );
+
+        const cancelLink = screen.getByLabelText(/cancel-button/i);
+        fireEvent.click(cancelLink);
+
+        expect(mockNavigate).toHaveBeenCalledWith("/");
+    })
+
+    test("Send button", () => {
+        render(
+            <MemoryRouter>
+                <ResetPassword />
+            </MemoryRouter>
+        );
+
+        const sendLink = screen.getByLabelText(/send-button/i);
+        fireEvent.click(sendLink);
+
+        expect(mockNavigate).toHaveBeenCalledWith("/");
+    })
+})

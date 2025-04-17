@@ -86,6 +86,7 @@ function ResetPassword() {
                             <button
                                 type="button"
                                 className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                                aria-label="cancel-button"
                                 onClick={() => navigate("/")}
                             >
                                 {t("cancel")}
@@ -94,6 +95,7 @@ function ResetPassword() {
                             <button
                                 type="submit"
                                 className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                                aria-label="send-button"
                             >
                                 {t("send")}
                             </button>
