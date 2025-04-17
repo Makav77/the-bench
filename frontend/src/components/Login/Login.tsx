@@ -64,7 +64,6 @@ function Login() {
         }
         setCurrentLoginState(loginState.noError);
         setIsLoading(true);
-        console.log(loginCredentials);
         setLoginCredentials({
             email: "",
             password: "",

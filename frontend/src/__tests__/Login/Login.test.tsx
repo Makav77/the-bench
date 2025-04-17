@@ -277,35 +277,6 @@ describe("Sending data", () => {
 
         expect(loginButton).toBeDisabled();
     })
-
-    test("Login credentials are sent successfully", () => {
-        const consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => { });
-
-        render(<Login />);
-
-        const emailInput = screen.getByLabelText(/email-field/i);
-        const passwordInput = screen.getByLabelText(/password-field/i);
-        const loginButton = screen.getByLabelText(/login-button/i);
-
-        fireEvent.change(emailInput, {
-            target: {
-                value: "test@example.com"
-            }
-        });
-
-        fireEvent.change(passwordInput, {
-            target: {
-                value: "password123"
-            }
-        });
-
-        fireEvent.click(loginButton);
-
-        expect(consoleLogSpy).toHaveBeenCalledWith({
-            email: "test@example.com",
-            password: "password123",
-        });
-    });
 })
 
 describe("After submission", () => {
@@ -386,3 +357,7 @@ describe("Translation", () => {
         expect(screen.getByText("Connexion")).toBeInTheDocument();
     });
 })
+
+// add test for :
+//      - Login credentials are sent successfully
+//      - Print error message if credentials are invalid
