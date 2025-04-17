@@ -84,15 +84,15 @@ describe("Password visibility", () => {
 
     test("Show/Hide password by pressing enter", () => {
         render(<Login />)
-    
+
         const toggleButtonVisibility = screen.getByLabelText(/toggle-password-visibility/i);
         const passwordInput = screen.getByLabelText(/password-field/i);
-    
+
         expect(passwordInput).toHaveAttribute("type", "password");
-    
+
         toggleButtonVisibility.focus();
         expect(toggleButtonVisibility).toHaveFocus();
-    
+
         fireEvent.keyUp(toggleButtonVisibility, {
             key: 'Space',
             code: 'Space'
@@ -155,7 +155,7 @@ describe("Error handling", () => {
         });
 
         expect(emailInput).toHaveValue("");
-        
+
         fireEvent.click(loginButton);
         expect(screen.getByText(/missingCredentials/i)).toBeInTheDocument();
     })
@@ -225,4 +225,83 @@ describe("Error handling", () => {
         fireEvent.click(loginButton);
         expect(passwordInput).toHaveClass("border-red-500 shake");
     })
+})
+
+describe("Sending data", () => {
+    test("Display a spinner on login button when loading", async () => {
+        render(<Login />);
+
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+        const loginButton = screen.getByLabelText(/login-button/i);
+
+        fireEvent.change(emailInput, {
+            target: {
+                value: "brice@test.com"
+            }
+        });
+
+        fireEvent.change(passwordInput, {
+            target: {
+                value: "password123"
+            }
+        });
+
+        fireEvent.click(loginButton);
+
+        expect(await screen.findByTestId("spinner")).toBeInTheDocument();
+    })
+
+    test("Login button is disabled when loading", () => {
+        render(<Login />);
+
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+        const loginButton = screen.getByLabelText(/login-button/i);
+
+        fireEvent.change(emailInput, {
+            target: {
+                value: "brice@test.com"
+            }
+        });
+
+        fireEvent.change(passwordInput, {
+            target: {
+                value: "password123"
+            }
+        });
+
+        fireEvent.click(loginButton);
+
+        expect(loginButton).toBeDisabled();
+    })
+
+    test("Login credentials are sent successfully", () => {
+        const consoleLogSpy = jest.spyOn(console, "log").mockImplementation(() => { });
+
+        render(<Login />);
+
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+        const loginButton = screen.getByLabelText(/login-button/i);
+
+        fireEvent.change(emailInput, {
+            target: {
+                value: "brice@test.com"
+            }
+        });
+
+        fireEvent.change(passwordInput, {
+            target: {
+                value: "password123"
+            }
+        });
+
+        fireEvent.click(loginButton);
+
+        expect(consoleLogSpy).toHaveBeenCalledWith({
+            email: "brice@test.com",
+            password: "password123",
+        });
+    });
 })
