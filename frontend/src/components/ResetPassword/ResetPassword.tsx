@@ -42,7 +42,6 @@ function ResetPassword() {
             setCurrentMailState(mailState.missingMail);
             return;
         }
-        console.log("Envoi d'un mail de récupération à l'adresse : ");
         console.log(mailAddress);
         setCurrentMailState(mailState.noError);
         setMailAddress("");
@@ -65,12 +64,6 @@ function ResetPassword() {
                         {t("subtitle2")}
                     </h2>
 
-                    {getErrorMessage() && (
-                        <p className="text-red-500 text-sm mb-2 -mt-2 shake italic">
-                            {getErrorMessage()}
-                        </p>
-                    )}
-
                     <form
                         className="mx-auto"
                         onSubmit={handleSubmit}
@@ -79,10 +72,16 @@ function ResetPassword() {
                             name="email"
                             type="email"
                             autoComplete="off"
-                            className="w-2/3 bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 mb-5 border-gray-500 hover:border-black"
+                            className={`w-2/3 bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 mb-5 border-gray-500 hover:border-black ${currentMailState === mailState.missingMail && !mailAddress ? "border-red-500 shake" : "border-gray-500"}`}
                             onChange={handleChange}
                             placeholder={t("enterEmail")}
                         />
+
+                        {getErrorMessage() && (
+                            <p className="text-red-500 text-sm mb-2 -mt-2 shake italic">
+                                {getErrorMessage()}
+                            </p>
+                        )}
 
                         <div className="flex justify-center w-3/4 gap-5 mx-auto">
                             <button
