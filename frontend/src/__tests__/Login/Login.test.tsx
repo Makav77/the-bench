@@ -21,7 +21,6 @@ beforeAll(() => {
         })
 })
 
-
 describe("Login forms", () => {
     test("The fields are present in the document", () => {
         render(<Login />);

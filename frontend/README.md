@@ -20,3 +20,6 @@ Pour lancer les tests avec la couverture
 => npm run test:c || npm test -- --coverage
 
 ---
+
+redirection link
+translation
