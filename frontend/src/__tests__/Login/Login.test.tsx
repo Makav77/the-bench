@@ -150,7 +150,7 @@ describe("Error handling", () => {
 
         fireEvent.change(passwordInput, {
             target: {
-                value: "motdepasse123"
+                value: "password"
             }
         });
 
@@ -177,5 +177,52 @@ describe("Error handling", () => {
 
         fireEvent.click(loginButton);
         expect(screen.getByText(/missingCredentials/i)).toBeInTheDocument();
+    })
+
+    test("Fields show red borders and shake when empty on submit", () => {
+        render(<Login />);
+
+        const loginButton = screen.getByLabelText(/login-button/i);
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+
+        fireEvent.click(loginButton);
+
+        expect(emailInput).toHaveClass("border-red-500 shake");
+        expect(passwordInput).toHaveClass("border-red-500 shake");
+    })
+
+    test("Input field show red borders and shake when empty on submit", () => {
+        render(<Login />);
+
+        const loginButton = screen.getByLabelText(/login-button/i);
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+
+        fireEvent.change(passwordInput, {
+            target: {
+                value: "password"
+            }
+        });
+
+        fireEvent.click(loginButton);
+        expect(emailInput).toHaveClass("border-red-500 shake");
+    })
+
+    test("Password field show red borders and shake when empty on submit", () => {
+        render(<Login />);
+
+        const loginButton = screen.getByLabelText(/login-button/i);
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+
+        fireEvent.change(emailInput, {
+            target: {
+                value: "brice@test.com"
+            }
+        });
+
+        fireEvent.click(loginButton);
+        expect(passwordInput).toHaveClass("border-red-500 shake");
     })
 })
