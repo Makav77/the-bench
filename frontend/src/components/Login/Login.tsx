@@ -153,6 +153,7 @@ function Login() {
 
                 <button
                     type="submit"
+                    aria-label="login-button"
                     className="border-none bg-[#488ACF] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                     disabled={isLoading}
                 >

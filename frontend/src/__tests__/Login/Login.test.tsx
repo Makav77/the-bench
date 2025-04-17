@@ -93,10 +93,16 @@ describe("Password visibility", () => {
         toggleButtonVisibility.focus();
         expect(toggleButtonVisibility).toHaveFocus();
     
-        fireEvent.keyUp(toggleButtonVisibility, { key: 'Space', code: 'Space' })
+        fireEvent.keyUp(toggleButtonVisibility, {
+            key: 'Space',
+            code: 'Space'
+        });
         expect(passwordInput).toHaveAttribute("type", "text");
 
-        fireEvent.keyUp(toggleButtonVisibility, { key: 'Space', code: 'Space' })
+        fireEvent.keyUp(toggleButtonVisibility, {
+            key: 'Space',
+            code: 'Space'
+        });
         expect(passwordInput).toHaveAttribute("type", "password");
     })
 })
@@ -122,5 +128,54 @@ describe("Redirection links", () => {
 
         const registerLink = screen.getByLabelText(/register-link/i);
         expect(registerLink).toHaveAttribute("href", "/register");
+    })
+})
+
+describe("Error handling", () => {
+    test("Print error message if email and password fields are empty", () => {
+        render(<Login />);
+
+        const loginButton = screen.getByLabelText(/login-button/i);
+        fireEvent.click(loginButton);
+
+        expect(screen.getByText(/missingCredentials/i)).toBeInTheDocument();
+    })
+
+    test("Print error message if email field is empty", () => {
+        render(<Login />);
+
+        const loginButton = screen.getByLabelText(/login-button/i);
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+
+        fireEvent.change(passwordInput, {
+            target: {
+                value: "motdepasse123"
+            }
+        });
+
+        expect(emailInput).toHaveValue("");
+        
+        fireEvent.click(loginButton);
+        expect(screen.getByText(/missingCredentials/i)).toBeInTheDocument();
+    })
+
+    test("Print error message if password field is empty", () => {
+        render(<Login />);
+
+        const loginButton = screen.getByLabelText(/login-button/i);
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+
+        fireEvent.change(emailInput, {
+            target: {
+                value: "brice@test.com"
+            }
+        });
+
+        expect(passwordInput).toHaveValue("");
+
+        fireEvent.click(loginButton);
+        expect(screen.getByText(/missingCredentials/i)).toBeInTheDocument();
     })
 })
