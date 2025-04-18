@@ -27,8 +27,6 @@ function ResetPassword() {
         switch (currentMailState) {
             case mailState.missingMail:
                 return t("errorMissingMail");
-            case mailState.unknowError:
-                return t("errorUnknowError");
             default:
                 return null;
         }
@@ -40,7 +38,6 @@ function ResetPassword() {
             setCurrentMailState(mailState.missingMail);
             return;
         }
-        console.log(mailAddress);
         setCurrentMailState(mailState.noError);
         setMailAddress("");
         setIsLoading(true);

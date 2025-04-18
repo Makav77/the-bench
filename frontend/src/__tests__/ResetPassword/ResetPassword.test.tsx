@@ -1,10 +1,12 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
 import ResetPassword from "../../components/ResetPassword/ResetPassword";
 import i18n from "../i18nForTests";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
+import { act } from "react";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -99,6 +101,54 @@ describe("Error handling", () => {
         fireEvent.click(sendButton);
 
         expect(emailInput).toHaveClass("border-red-500 shake");
+    })
+})
+
+describe("After submission", () => {
+    test("Clear mailState and mailAddress", async () => {
+        render(<ResetPassword />);
+
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const sendButton = screen.getByLabelText(/send-button/i);
+    
+        fireEvent.change(emailInput, {
+            target: {
+                value: "test@example.com",
+            },
+        });
+
+        fireEvent.click(sendButton);
+
+        await waitFor(() =>
+            expect(
+                screen.getByText(/You will receive a link to create a new password./i)
+            ).toBeInTheDocument()
+        );
+
+        expect(screen.queryByLabelText(/email-field/i)).not.toBeInTheDocument();
+    });
+
+    test("Redirect to login page", async () => {
+        jest.useFakeTimers();
+
+        render(<ResetPassword />);
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const sendButton = screen.getByLabelText(/send-button/i);
+
+        fireEvent.change(emailInput, {
+            target: {
+                value: "test@example.com"
+            },
+        });
+
+        fireEvent.click(sendButton);
+
+        act(() => {
+            jest.advanceTimersByTime(3000);
+        });
+
+        expect(mockNavigate).toHaveBeenCalledWith("/");
+        jest.useRealTimers();
     })
 })
 

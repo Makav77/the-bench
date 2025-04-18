@@ -358,3 +358,7 @@ describe("Translation", () => {
 // add test for :
 //      - Login credentials are sent successfully
 //      - Print error message if credentials are invalid
+
+
+//userEvent
+//react intl
