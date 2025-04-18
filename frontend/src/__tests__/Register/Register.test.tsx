@@ -4,6 +4,7 @@ import { initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
 import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
+import { MemoryRouter } from "react-router-dom";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -122,5 +123,20 @@ describe("Password visibility", () => {
             code: 'Space'
         });
         expect(passwordInput).toHaveAttribute("type", "password");
+    })
+})
+
+describe("Redirection links", () => {
+    test("Redirection to the login page", () => {
+        render(
+            <MemoryRouter>
+                <Register />
+            </MemoryRouter>
+        );
+
+        const cancelButton = screen.getByLabelText(/cancel-button/i);
+        fireEvent.click(cancelButton);
+
+        expect(mockNavigate).toHaveBeenCalledWith("/");
     })
 })
