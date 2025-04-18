@@ -80,24 +80,24 @@ describe("Password visibility", () => {
         expect(passwordInput).toHaveAttribute("type", "password");
     })
 
-    test("Show/Hide password by pressing enter", () => {
+    test("Show/Hide password by pressing space bar", () => {
         render(<Login />)
 
-        const toggleButtonVisibility = screen.getByLabelText(/toggle-password-visibility/i);
         const passwordInput = screen.getByLabelText(/password-field/i);
+        const toggleIcon = screen.getByLabelText(/toggle-password-visibility/i);
 
         expect(passwordInput).toHaveAttribute("type", "password");
 
-        toggleButtonVisibility.focus();
-        expect(toggleButtonVisibility).toHaveFocus();
+        toggleIcon.focus();
+        expect(toggleIcon).toHaveFocus();
 
-        fireEvent.keyUp(toggleButtonVisibility, {
+        fireEvent.keyUp(toggleIcon, {
             key: 'Space',
             code: 'Space'
         });
         expect(passwordInput).toHaveAttribute("type", "text");
 
-        fireEvent.keyUp(toggleButtonVisibility, {
+        fireEvent.keyUp(toggleIcon, {
             key: 'Space',
             code: 'Space'
         });

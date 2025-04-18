@@ -83,3 +83,44 @@ describe("Register forms", () => {
         expect(dateOfBirthInput).toHaveValue("2000-01-01");
     })
 })
+
+describe("Password visibility", () => {
+    test("Show/Hide password by clicking on button", () => {
+        render(<Register />);
+
+        const passwordInput = screen.getByLabelText(/password-field/i);
+        const toggleIcon = screen.getByLabelText(/toggle-password-visibility/i);
+
+        expect(passwordInput).toHaveAttribute("type", "password");
+
+        fireEvent.click(toggleIcon);
+        expect(passwordInput).toHaveAttribute("type", "text");
+
+        fireEvent.click(toggleIcon);
+        expect(passwordInput).toHaveAttribute("type", "password");
+    })
+
+    test("Show/Hide password by pressing space bar", () => {
+        render(<Register />);
+
+        const passwordInput = screen.getByLabelText(/password-field/i);
+        const toggleIcon = screen.getByLabelText(/toggle-password-visibility/i);
+
+        expect(passwordInput).toHaveAttribute("type", "password");
+
+        toggleIcon.focus();
+        expect(toggleIcon).toHaveFocus();
+
+        fireEvent.keyUp(toggleIcon, {
+            key: 'Space',
+            code: 'Space'
+        });
+        expect(passwordInput).toHaveAttribute("type", "text");
+
+        fireEvent.keyUp(toggleIcon, {
+            key: 'Space',
+            code: 'Space'
+        });
+        expect(passwordInput).toHaveAttribute("type", "password");
+    })
+})
