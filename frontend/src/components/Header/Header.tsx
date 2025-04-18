@@ -2,7 +2,7 @@ import Navigation from "../Navigation/Navigation";
 
 function Header() {
     return (
-        <div>
+        <div data-testid = "footer">
             <div className="grid grid-cols-3 h-10">
                 <div className="flex items-center pl-5">
                     <img src="assets/bench-logo.png" alt="logo" className="h-10"/>
