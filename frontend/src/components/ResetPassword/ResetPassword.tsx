@@ -88,6 +88,7 @@ function ResetPassword() {
                                 className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                                 aria-label="cancel-button"
                                 onClick={() => navigate("/")}
+                                disabled={isLoading}
                             >
                                 {t("cancel")}
                             </button>
@@ -96,6 +97,7 @@ function ResetPassword() {
                                 type="submit"
                                 className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                                 aria-label="send-button"
+                                disabled={isLoading}
                             >
                                 {t("send")}
                             </button>
@@ -106,7 +108,9 @@ function ResetPassword() {
                 <>
                     <p>You will receive a link to create a new password.</p>
                     <p>Redirect to login page</p>
-                    <div className="w-[32px] h-[32px] m-auto mt-5 aspect-square rounded-full border-6 border-solid border-black border-r-transparent animate-[spin_1s_linear_infinite]" />
+                    <div 
+                        data-testid="spinner"
+                        className="w-[32px] h-[32px] m-auto mt-5 aspect-square rounded-full border-6 border-solid border-black border-r-transparent animate-[spin_1s_linear_infinite]" />
                 </>
             )}
         </div>
