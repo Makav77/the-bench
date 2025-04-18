@@ -51,8 +51,6 @@ function Signup() {
         }
     }
 
-    const navToLoginPage = () => navigate("/");
-
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
         const { name, value } = e.target;
@@ -179,7 +177,7 @@ function Signup() {
                         type="button"
                         aria-label="cancel-button"
                         className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
-                        onClick={navToLoginPage}
+                        onClick={() => navigate("/")}
                     >
                         {t("cancel")}
                     </button>
