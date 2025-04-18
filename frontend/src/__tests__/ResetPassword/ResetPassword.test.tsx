@@ -101,3 +101,16 @@ describe("Error handling", () => {
         expect(emailInput).toHaveClass("border-red-500 shake");
     })
 })
+
+describe("Translation", () => {
+    test("Switch language", async () => {
+        await i18n.changeLanguage("fr");
+        render(
+            <I18nextProvider i18n={i18n}>
+                <ResetPassword />
+            </I18nextProvider>
+        );
+
+        expect(screen.getByText("Mot de passe oublié ?")).toBeInTheDocument();
+    })
+})
