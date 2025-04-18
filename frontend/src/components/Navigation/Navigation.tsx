@@ -6,7 +6,10 @@ function Navigation() {
     const navigate = useNavigate();
 
     return (
-        <div className="grid grid-cols-5 gap-1 m-2 mt-5">
+        <div
+            data-testid="navigation-bar"
+            className="grid grid-cols-5 gap-1 m-2 mt-5"
+        >
             <button
                 type="button"
                 aria-label="homepage-button"
