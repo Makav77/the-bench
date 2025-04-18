@@ -288,6 +288,7 @@ describe("After submission", () => {
                 value: "test@example.com"
             }
         });
+        
         fireEvent.change(passwordInput, {
             target: {
                 value: "password123"
