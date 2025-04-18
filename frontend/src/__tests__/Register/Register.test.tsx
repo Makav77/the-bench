@@ -140,3 +140,33 @@ describe("Redirection links", () => {
         expect(mockNavigate).toHaveBeenCalledWith("/");
     })
 })
+
+describe("Error handling", () => {
+    test("Print error message when credentials are missing", () => {
+        render(<Register />);
+
+        const registerButton = screen.getByLabelText(/register-button/i);
+        fireEvent.click(registerButton);
+
+        expect(screen.getByText("All fields must be completed")).toBeInTheDocument();
+    })
+
+    test("Input fields show red border shake when credentials are missing", () => {
+        render(<Register />);
+
+        const firstnameInput = screen.getByLabelText(/firstname-field/i);
+        const lastnameInput = screen.getByLabelText(/lastname-field/i);
+        const emailInput = screen.getByLabelText(/email-field/i);
+        const passwordInput = screen.getByLabelText(/password-field/i);
+        const dateOfBirthInput = screen.getByLabelText(/dateOfBirth-field/i);
+        const sendButton = screen.getByLabelText(/register-button/i);
+
+        fireEvent.click(sendButton);
+
+        expect(firstnameInput).toHaveClass("border-red-500 shake");
+        expect(lastnameInput).toHaveClass("border-red-500 shake");
+        expect(emailInput).toHaveClass("border-red-500 shake");
+        expect(passwordInput).toHaveClass("border-red-500 shake");
+        expect(dateOfBirthInput).toHaveClass("border-red-500 shake");
+    })
+})

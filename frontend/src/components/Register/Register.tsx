@@ -16,8 +16,6 @@ interface registerCredentials {
 enum registerState {
     noError = "noError",
     missingCredentials = "missingCredentials",
-    invalidMailAddress = "invalidMailAddress",
-    unknowError = "unknowError"
 }
 
 function Signup() {
@@ -49,10 +47,6 @@ function Signup() {
         switch (currentRegisterState) {
             case registerState.missingCredentials:
                 return t("missingCredentials");
-            case registerState.invalidMailAddress:
-                return t("invalidCredentials");
-            case registerState.unknowError:
-                return t("unknowError");
             default:
                 return null;
         }

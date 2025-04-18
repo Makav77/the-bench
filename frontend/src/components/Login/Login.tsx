@@ -9,9 +9,7 @@ interface loginCredentials {
 
 export enum loginState {
     noError = "noError",
-    unknowError = "unknowError",
     missingCredentials = "missingCredentials",
-    invalidCredentials = "invalidCredentials",
 }
 
 function Login() {
@@ -40,10 +38,6 @@ function Login() {
         switch (currentLoginState) {
             case loginState.missingCredentials:
                 return t("missingCredentials");
-            case loginState.invalidCredentials:
-                return t("invalidCredentials");
-            case loginState.unknowError:
-                return t("unknowError");
             default:
                 return null;
         }

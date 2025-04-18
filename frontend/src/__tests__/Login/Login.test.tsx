@@ -130,18 +130,15 @@ describe("Redirection links", () => {
 })
 
 describe("Error handling", () => {
-    test("Print error message if email and password fields are empty", async () => {
-        render(
-            <I18nextProvider i18n={i18n}>
-                <Login />
-            </I18nextProvider>
-        );
+    test("Print error message if email and password fields are empty",  () => {
+        render(<Login />);
 
         const loginButton = screen.getByLabelText(/login-button/i);
         fireEvent.click(loginButton);
 
         expect(screen.getByText("Username and password must be entered")).toBeInTheDocument();
     })
+
     test("Print error message if email field is empty", () => {
         render(<Login />);
 
