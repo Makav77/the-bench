@@ -105,6 +105,7 @@ function Signup() {
                     name="firstname"
                     type="text"
                     autoComplete="off"
+                    aria-label="firstname-field"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.firstname || ""}
                     onChange={handleChange}
@@ -115,6 +116,7 @@ function Signup() {
                     name="lastname"
                     type="text"
                     autoComplete="off"
+                    aria-label="lastname-field"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.lastname || ""}
                     onChange={handleChange}
@@ -125,6 +127,7 @@ function Signup() {
                     name="email"
                     type="email"
                     autoComplete="off"
+                    aria-label="email-field"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.email || ""}
                     onChange={handleChange}
@@ -136,6 +139,7 @@ function Signup() {
                         name="password"
                         type={isPasswordVisible ? "text" : "password"}
                         autoComplete="off"
+                        aria-label="password-field"
                         className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
                         value={registerCredentials.password}
                         onChange={handleChange}
@@ -144,6 +148,7 @@ function Signup() {
 
                     <button
                         type="button"
+                        aria-label="toggle-password-visibility"
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
                         onClick={togglePasswordVisibility}
                         onKeyUp={handleKeyPress}
@@ -163,6 +168,7 @@ function Signup() {
                     name="dateOfBirth"
                     type="date"
                     autoComplete="off"
+                    aria-label="dateOfBirth-field"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.dateOfBirth ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.dateOfBirth || ""}
                     onChange={handleChange}
@@ -180,6 +186,7 @@ function Signup() {
                 <div className="flex gap-5">
                     <button
                         type="button"
+                        aria-label="cancel-button"
                         className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                         onClick={navToLoginPage}
                     >
@@ -188,6 +195,7 @@ function Signup() {
 
                     <button
                         type="submit"
+                        aria-label="register-button"
                         className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                     >
                         {isLoading ? (
