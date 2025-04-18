@@ -1,6 +1,6 @@
 import Register from "../../components/Register/Register";
 import i18n from "../i18nForTests";
-import { initReactI18next } from "react-i18next";
+import { I18nextProvider, initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
 import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -219,5 +219,18 @@ describe("After submission", () => {
         expect(emailInput).toHaveValue("");
         expect(passwordInput).toHaveValue("");
         expect(dateOfBirthInput).toHaveValue("");
+    })
+})
+
+describe("Translation", () => {
+    test("Switch language", async () => {
+        await i18n.changeLanguage("fr");
+        render(
+            <I18nextProvider i18n={i18n}>
+                <Register />
+            </I18nextProvider>
+        );
+
+        expect(screen.getByText("S'INSCRIRE")).toBeInTheDocument();
     })
 })

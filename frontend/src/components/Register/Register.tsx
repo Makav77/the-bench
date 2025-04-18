@@ -22,7 +22,6 @@ function Signup() {
     const { t } = useTranslation("Register");
     const navigate = useNavigate();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [registerCredentials, setRegisterCredentials] = useState<registerCredentials>({
         id: "",
         firstname: "",
@@ -67,7 +66,6 @@ function Signup() {
             setCurrentRegisterState(registerState.missingCredentials);
             return;
         }
-        setIsLoading(true);
         setCurrentRegisterState(registerState.noError);
         registerCredentials.id = uuidv4();
         console.log(registerCredentials);
@@ -79,7 +77,6 @@ function Signup() {
             password: "",
             dateOfBirth: ""
         });
-        setIsLoading(false);
     }
 
     return (
@@ -192,11 +189,7 @@ function Signup() {
                         aria-label="register-button"
                         className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                     >
-                        {isLoading ? (
-                            <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                            t("buttonRegister")
-                        )}
+                        t("buttonRegister")
                     </button>
                 </div>
             </form>
