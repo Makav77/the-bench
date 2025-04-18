@@ -1,5 +1,5 @@
-import Register from "../../components/Register/Register";
-import i18n from "../i18nForTests";
+import Register from "../../../components/Register/Register";
+import i18n from "../../i18nForTests";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
 import { fireEvent, render, screen } from "@testing-library/react";

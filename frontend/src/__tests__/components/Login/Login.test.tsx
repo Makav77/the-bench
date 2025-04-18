@@ -1,8 +1,8 @@
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
-import Login from "../../components/Login/Login";
-import i18n from "../i18nForTests";
+import Login from "../../../components/Login/Login";
+import i18n from "../../i18nForTests";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
 

@@ -1,10 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import i18n from "../i18nForTests";
-import Navigation from "../../components/Navigation/Navigation";
-import { MemoryRouter } from "react-router-dom";
-import { I18nextProvider, initReactI18next } from "react-i18next";
-import HttpBackend from "i18next-http-backend";
+import i18n from "../../i18nForTests";
+import Navigation from "../../../components/Navigation/Navigation";
+import { I18nextProvider } from "react-i18next";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -12,41 +10,23 @@ jest.mock("react-router-dom", () => ({
     useNavigate: () => mockNavigate,
 }));
 
-beforeAll(() => {
-    i18n
-        .use(initReactI18next)
-        .use(HttpBackend)
-        .init({
-            lng: "en",
-            backend: {
-                loadPath: "/locales/{{lng}}/Navigation.json",
-            },
-            react: {
-                useSuspense: false,
-            },
-        })
-})
-
 describe("Buttons", () => {
     test("All buttons are present", () => {
         render(<Navigation />);
 
         expect(screen.getByLabelText(/homepage-button/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/homepage-button/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/homepage-button/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/homepage-button/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/homepage-button/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/market-button/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/listings-button/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/events-button/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/community-button/i)).toBeInTheDocument();
     })
 })
 
 describe("Navigation link", () => {
-    test("Navigation to homepage", () => {
-        render(
-            <MemoryRouter>
-                <Navigation />
-            </MemoryRouter>
-        );
+    beforeEach(() => render(<Navigation />));
+    afterEach(() => jest.clearAllMocks());
 
+    test("Navigation to homepage", () => {
         const homepageButton = screen.getByLabelText(/homepage-button/i);
         fireEvent.click(homepageButton);
 
@@ -54,12 +34,6 @@ describe("Navigation link", () => {
     })
 
     test("Navigation to marketplace", () => {
-        render(
-            <MemoryRouter>
-                <Navigation />
-            </MemoryRouter>
-        );
-
         const marketplaceButton = screen.getByLabelText(/market-button/i);
         fireEvent.click(marketplaceButton);
 
@@ -67,12 +41,6 @@ describe("Navigation link", () => {
     })
 
     test("Navigation to listings", () => {
-        render(
-            <MemoryRouter>
-                <Navigation />
-            </MemoryRouter>
-        );
-
         const listingsButton = screen.getByLabelText(/listings-button/i);
         fireEvent.click(listingsButton);
 
@@ -80,12 +48,6 @@ describe("Navigation link", () => {
     })
 
     test("Navigation to events", () => {
-        render(
-            <MemoryRouter>
-                <Navigation />
-            </MemoryRouter>
-        );
-
         const eventsButton = screen.getByLabelText(/events-button/i);
         fireEvent.click(eventsButton);
 
@@ -93,12 +55,6 @@ describe("Navigation link", () => {
     })
 
     test("Navigation to community", () => {
-        render(
-            <MemoryRouter>
-                <Navigation />
-            </MemoryRouter>
-        );
-
         const communityButton = screen.getByLabelText(/community-button/i);
         fireEvent.click(communityButton);
 

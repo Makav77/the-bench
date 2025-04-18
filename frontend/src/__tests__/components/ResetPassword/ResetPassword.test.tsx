@@ -2,8 +2,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
-import ResetPassword from "../../components/ResetPassword/ResetPassword";
-import i18n from "../i18nForTests";
+import ResetPassword from "../../../components/ResetPassword/ResetPassword";
+import i18n from "../../i18nForTests";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
 import { act } from "react";
