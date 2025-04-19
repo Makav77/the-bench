@@ -14,11 +14,11 @@ describe("Buttons", () => {
     test("All buttons are present", () => {
         render(<Navigation />);
 
-        expect(screen.getByLabelText(/homepage-button/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/market-button/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/listings-button/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/events-button/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/community-button/i)).toBeInTheDocument();
+        expect(screen.getByLabelText("homepage-button")).toBeInTheDocument();
+        expect(screen.getByLabelText("market-button")).toBeInTheDocument();
+        expect(screen.getByLabelText("listings-button")).toBeInTheDocument();
+        expect(screen.getByLabelText("events-button")).toBeInTheDocument();
+        expect(screen.getByLabelText("community-button")).toBeInTheDocument();
     })
 })
 
@@ -27,35 +27,35 @@ describe("Navigation link", () => {
     afterEach(() => jest.clearAllMocks());
 
     test("Navigation to homepage", () => {
-        const homepageButton = screen.getByLabelText(/homepage-button/i);
+        const homepageButton = screen.getByLabelText("homepage-button");
         fireEvent.click(homepageButton);
 
         expect(mockNavigate).toHaveBeenCalledWith("/homepage");
     })
 
     test("Navigation to marketplace", () => {
-        const marketplaceButton = screen.getByLabelText(/market-button/i);
+        const marketplaceButton = screen.getByLabelText("market-button");
         fireEvent.click(marketplaceButton);
 
         expect(mockNavigate).toHaveBeenCalledWith("/marketplace");
     })
 
     test("Navigation to listings", () => {
-        const listingsButton = screen.getByLabelText(/listings-button/i);
+        const listingsButton = screen.getByLabelText("listings-button");
         fireEvent.click(listingsButton);
 
         expect(mockNavigate).toHaveBeenCalledWith("/listings");
     })
 
     test("Navigation to events", () => {
-        const eventsButton = screen.getByLabelText(/events-button/i);
+        const eventsButton = screen.getByLabelText("events-button");
         fireEvent.click(eventsButton);
 
         expect(mockNavigate).toHaveBeenCalledWith("/events");
     })
 
     test("Navigation to community", () => {
-        const communityButton = screen.getByLabelText(/community-button/i);
+        const communityButton = screen.getByLabelText("community-button");
         fireEvent.click(communityButton);
 
         expect(mockNavigate).toHaveBeenCalledWith("/community");
