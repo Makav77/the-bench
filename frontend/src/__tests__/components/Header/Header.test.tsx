@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import i18n from "../../i18nForTests";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
-import { MemoryRouter } from "react-router-dom";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -28,9 +27,9 @@ beforeAll(() => {
 })
 
 describe("Header component", () => {
-    test("renders logo, title and navigation", () => {
-        render(<Header />);
+    beforeEach(() => render(<Header />));
 
+    test("renders logo, title and navigation", () => {
         const header = screen.getByTestId("header");
         expect(header).toBeInTheDocument();
 
@@ -43,16 +42,11 @@ describe("Header component", () => {
     })
 
     test("render logout redirection", () => {
-        render(
-            <MemoryRouter>
-                <Header />
-            </MemoryRouter>
-        );
-
-        const logoutButon = screen.getByLabelText("logout-button");
-        fireEvent.click(logoutButon);
+        const logoutButton = screen.getByLabelText("logout-button");
+        fireEvent.click(logoutButton);
 
         expect(mockNavigate).toHaveBeenCalledWith("/");
+        jest.clearAllMocks();
     })
 });
 
