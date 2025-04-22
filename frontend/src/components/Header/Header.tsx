@@ -1,8 +1,13 @@
+import { useTranslation } from "react-i18next";
 import Navigation from "../Navigation/Navigation";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+    const { t } = useTranslation("Header");
+    const navigate = useNavigate();
+
     return (
-        <div>
+        <div data-testid = "header">
             <div className="grid grid-cols-3 h-10">
                 <div className="flex items-center pl-5">
                     <img src="assets/bench-logo.png" alt="logo" className="h-10"/>
@@ -16,16 +21,19 @@ function Header() {
                     <div>
                         <button
                             type="button"
+                            aria-label="profile-button"
                             className="border-none text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300"
                         >
-                            Profile
+                            {t("profile")}
                         </button>
 
                         <button
                             type="button"
+                            aria-label="logout-button"
                             className="border-none text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300"
+                            onClick={() => navigate("/")}
                         >
-                            Logout
+                            {t("logout")}
                         </button>
                     </div>
                 </div>

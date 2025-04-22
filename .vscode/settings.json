@@ -16,12 +16,12 @@
         "frontend/tsconfig.node.json": true,
         "frontend/vite.config.ts": true,
         "**/.gitignore": true,
-        "**/README.md": false,
+        "**/README.md": true,
         "frontend\\src/vite-env.d.ts": true,
         "i18n.ts": true,
         "frontend\\src/i18n.ts": true,
         "frontend/index.html": true,
-        "frontend/README.md": false,
+        "frontend/README.md": true,
         "frontend/node_modules": true
     },
     "explorerExclude.backup": {}

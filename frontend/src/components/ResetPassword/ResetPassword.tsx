@@ -18,8 +18,6 @@ function ResetPassword() {
         mailState.noError,
     );
 
-    const navToLoginPage = () => navigate("/");
-
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         setMailAddress(e.target.value);
         setCurrentMailState(mailState.noError);
@@ -29,8 +27,6 @@ function ResetPassword() {
         switch (currentMailState) {
             case mailState.missingMail:
                 return t("errorMissingMail");
-            case mailState.unknowError:
-                return t("errorUnknowError");
             default:
                 return null;
         }
@@ -42,13 +38,11 @@ function ResetPassword() {
             setCurrentMailState(mailState.missingMail);
             return;
         }
-        console.log("Envoi d'un mail de récupération à l'adresse : ");
-        console.log(mailAddress);
         setCurrentMailState(mailState.noError);
         setMailAddress("");
         setIsLoading(true);
         setTimeout(() => {
-            navToLoginPage();
+            navigate("/");
         }, 3000);
     }
 
@@ -65,12 +59,6 @@ function ResetPassword() {
                         {t("subtitle2")}
                     </h2>
 
-                    {getErrorMessage() && (
-                        <p className="text-red-500 text-sm mb-2 -mt-2 shake italic">
-                            {getErrorMessage()}
-                        </p>
-                    )}
-
                     <form
                         className="mx-auto"
                         onSubmit={handleSubmit}
@@ -78,17 +66,26 @@ function ResetPassword() {
                         <input
                             name="email"
                             type="email"
+                            aria-label="email-field"
                             autoComplete="off"
-                            className="w-2/3 bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 mb-5 border-gray-500 hover:border-black"
+                            className={`w-2/3 bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 mb-5 border-gray-500 hover:border-black ${currentMailState === mailState.missingMail && !mailAddress ? "border-red-500 shake" : "border-gray-500"}`}
                             onChange={handleChange}
                             placeholder={t("enterEmail")}
                         />
+
+                        {getErrorMessage() && (
+                            <p className="text-red-500 text-sm mb-2 -mt-2 shake italic">
+                                {getErrorMessage()}
+                            </p>
+                        )}
 
                         <div className="flex justify-center w-3/4 gap-5 mx-auto">
                             <button
                                 type="button"
                                 className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
-                                onClick={navToLoginPage}
+                                aria-label="cancel-button"
+                                onClick={() => navigate("/")}
+                                disabled={isLoading}
                             >
                                 {t("cancel")}
                             </button>
@@ -96,6 +93,8 @@ function ResetPassword() {
                             <button
                                 type="submit"
                                 className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                                aria-label="send-button"
+                                disabled={isLoading}
                             >
                                 {t("send")}
                             </button>
@@ -106,7 +105,9 @@ function ResetPassword() {
                 <>
                     <p>You will receive a link to create a new password.</p>
                     <p>Redirect to login page</p>
-                    <div className="w-[32px] h-[32px] m-auto mt-5 aspect-square rounded-full border-6 border-solid border-black border-r-transparent animate-[spin_1s_linear_infinite]" />
+                    <div 
+                        data-testid="spinner"
+                        className="w-[32px] h-[32px] m-auto mt-5 aspect-square rounded-full border-6 border-solid border-black border-r-transparent animate-[spin_1s_linear_infinite]" />
                 </>
             )}
         </div>
