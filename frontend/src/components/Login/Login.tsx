@@ -68,7 +68,7 @@ function Login() {
     }
 
     return (
-        <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6">
+        <div className="bg-white w-[90%] sm:w-[20%] mx-auto mt-20 rounded-[6vw] sm:rounded-[2vw] text-center p-6">
             <h1 className="text-black font-bold text-5xl mt-10 mb-2">
                 {t("title")}
             </h1>
@@ -77,7 +77,7 @@ function Login() {
             </h2>
 
             <form
-                className="flex flex-col gap-5 w-4/5 mx-auto"
+                className="flex flex-col gap-5 w-5/6 mx-auto"
                 onSubmit={handleSubmit}
             >
                 <input
@@ -85,7 +85,7 @@ function Login() {
                     type="email"
                     aria-label="email-field"
                     autoComplete="off"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-12 sm:h-8 pl-5 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
                     value={loginCredentials.email || ""}
                     onChange={handleChange}
                     placeholder={t("mailAddress")}
@@ -97,7 +97,7 @@ function Login() {
                         type={isPasswordVisible ? "text" : "password"}
                         aria-label="password-field"
                         autoComplete="off"
-                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
+                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-12 sm:h-8 pl-5 w-1/1 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
                         value={loginCredentials.password || ""}
                         onChange={handleChange}
                         placeholder={t("password")}
@@ -124,7 +124,7 @@ function Login() {
                 <a
                     href="/resetpassword"
                     aria-label="forgot-password-link"
-                    className="text-blue-600 underline text-right -mt-4 hover:cursor-pointer hover:text-blue-800"
+                    className="text-blue-600 underline sm:text-right text-2xl sm:text-base mb-5 sm:mb-0 sm:-mt-4 sm:hover:cursor-pointer sm:hover:text-blue-800"
                 >
                     {t("forgotPassword")}
                 </a>
@@ -141,7 +141,7 @@ function Login() {
                         type="checkbox"
                         aria-label="rememberMe-checkbox"
                         autoComplete="off"
-                        className="appearance-none w-4 h-4 self-center border-2 border-gray-500 checked:bg-[#F00969] checked:border-black hover:cursor-pointer"
+                        className="appearance-none w-6 sm:w-4 h-6 sm:h-4 self-center border-2 border-gray-500 checked:bg-[#F00969] checked:border-black sm:hover:cursor-pointer"
                     />
                     {t("rememberMe")}
                 </div>
@@ -149,7 +149,7 @@ function Login() {
                 <button
                     type="submit"
                     aria-label="login-button"
-                    className="border-none bg-[#488ACF] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                    className="border-none bg-[#488ACF] text-1xl font-bold w-3/4 sm:w-1/2 mx-auto mt-7 h-14 sm:h-10 mb-2 p-2 text-white rounded-lg sm:cursor-pointer sm:transition-all sm:duration-300"
                     disabled={isLoading}
                 >
                     {isLoading ? (
@@ -164,7 +164,7 @@ function Login() {
                 <a
                     href="/register"
                     aria-label="register-link"
-                    className="text-blue-600 underline text-center hover:cursor-pointer hover:text-blue-800"
+                    className="text-blue-600 underline text-center mt-5 sm:mt-0 text-xl sm:text-base hover:cursor-pointer hover:text-blue-800"
                 >
                     {t("createAccountLink")}
                 </a>
