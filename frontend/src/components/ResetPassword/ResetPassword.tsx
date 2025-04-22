@@ -47,7 +47,7 @@ function ResetPassword() {
     }
 
     return (
-        <div className="bg-white w-1/4 mx-auto mt-20 rounded-[2vw] text-center p-6">
+        <div className="bg-white w-[90%] sm:w-[25%] mx-auto mt-20 rounded-[6vw] sm:rounded-[2vw] text-center p-6">
             {!isLoading ? (
                 <>
                     <h1 className="text-black font-bold text-4xl mt-5 mb-4">
@@ -68,7 +68,7 @@ function ResetPassword() {
                             type="email"
                             aria-label="email-field"
                             autoComplete="off"
-                            className={`w-2/3 bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 mb-5 border-gray-500 hover:border-black ${currentMailState === mailState.missingMail && !mailAddress ? "border-red-500 shake" : "border-gray-500"}`}
+                            className={`w-4/5 bg-[#F2EBDC] text-black border-2 rounded-xl h-12 sm:h-8 pl-5 mb-5 border-gray-500 hover:border-black ${currentMailState === mailState.missingMail && !mailAddress ? "border-red-500 shake" : "border-gray-500"}`}
                             onChange={handleChange}
                             placeholder={t("enterEmail")}
                         />
@@ -79,10 +79,10 @@ function ResetPassword() {
                             </p>
                         )}
 
-                        <div className="flex justify-center w-3/4 gap-5 mx-auto">
+                        <div className="flex flex-col sm:flex-row w-3/4 gap-5 mx-auto">
                             <button
                                 type="button"
-                                className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                                className="border-none bg-[#488ACF] text-1xl font-bold h-12 sm:h-10 w-1/2 sm:w-1/3 mx-auto mt-4 mb-1 sm:mb-2 p-2 text-white rounded-lg sm:cursor-pointer sm:transition-all sm:duration-300"
                                 aria-label="cancel-button"
                                 onClick={() => navigate("/")}
                                 disabled={isLoading}
@@ -92,7 +92,7 @@ function ResetPassword() {
 
                             <button
                                 type="submit"
-                                className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                                className="border-none bg-[#488ACF] text-1xl font-bold h-15 sm:h-10 w-1/1 sm:w-2/3 mx-auto mt-1 sm:mt-4 mb-2 p-2 text-white rounded-lg sm:cursor-pointer sm:transition-all sm:duration-300"
                                 aria-label="send-button"
                                 disabled={isLoading}
                             >
@@ -105,7 +105,7 @@ function ResetPassword() {
                 <>
                     <p>You will receive a link to create a new password.</p>
                     <p>Redirect to login page</p>
-                    <div 
+                    <div
                         data-testid="spinner"
                         className="w-[32px] h-[32px] m-auto mt-5 aspect-square rounded-full border-6 border-solid border-black border-r-transparent animate-[spin_1s_linear_infinite]" />
                 </>
