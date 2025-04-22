@@ -78,7 +78,7 @@ function Signup() {
     }
 
     return (
-        <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6">
+        <div className="bg-white w-[90%] sm:w-[20%] mx-auto mt-20 rounded-[6vw] sm:rounded-[2vw] text-center p-6">
             <h1 className="text-black font-bold text-5xl mt-10 mb-2">
                 {t("title")}
             </h1>
@@ -95,7 +95,7 @@ function Signup() {
                     type="text"
                     autoComplete="off"
                     aria-label="firstname-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-12 sm:h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.firstname || ""}
                     onChange={handleChange}
                     placeholder={t("firstname")}
@@ -106,7 +106,7 @@ function Signup() {
                     type="text"
                     autoComplete="off"
                     aria-label="lastname-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-12 sm:h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.lastname || ""}
                     onChange={handleChange}
                     placeholder={t("lastname")}
@@ -117,7 +117,7 @@ function Signup() {
                     type="email"
                     autoComplete="off"
                     aria-label="email-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-12 sm:h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.email || ""}
                     onChange={handleChange}
                     placeholder={t("email")}
@@ -129,7 +129,7 @@ function Signup() {
                         type={isPasswordVisible ? "text" : "password"}
                         autoComplete="off"
                         aria-label="password-field"
-                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
+                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-12 sm:h-8 pl-5 w-1/1 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
                         value={registerCredentials.password}
                         onChange={handleChange}
                         placeholder={t("password")}
@@ -158,7 +158,7 @@ function Signup() {
                     type="date"
                     autoComplete="off"
                     aria-label="dateOfBirth-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.dateOfBirth ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-12 sm:h-8 pl-5 pr-3 text-xl sm:text-base hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.dateOfBirth ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.dateOfBirth || ""}
                     onChange={handleChange}
                     placeholder={t("dateOfBirth")}
@@ -172,11 +172,11 @@ function Signup() {
                     )}
                 </div>
 
-                <div className="flex gap-5">
+                <div className="flex flex-col sm:flex-row gap-5">
                     <button
                         type="button"
                         aria-label="cancel-button"
-                        className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                        className="border-none bg-[#488ACF] text-1xl font-bold h-12 sm:h-10 w-1/2 sm:w-1/3 mx-auto mt-4 mb-1 sm:mb-2 p-2 text-white rounded-lg sm:cursor-pointer sm:transition-all sm:duration-300"
                         onClick={() => navigate("/")}
                     >
                         {t("cancel")}
@@ -185,9 +185,9 @@ function Signup() {
                     <button
                         type="submit"
                         aria-label="register-button"
-                        className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                        className="border-none bg-[#488ACF] text-1xl font-bold h-15 sm:h-10 w-1/1 sm:w-2/3 mx-auto mt-1 sm:mt-4 mb-2 p-2 text-white rounded-lg sm:cursor-pointer sm:transition-all sm:duration-300"
                     >
-                        t("buttonRegister")
+                        {t("register")}
                     </button>
                 </div>
             </form>
