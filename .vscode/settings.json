@@ -1,0 +1,28 @@
+{
+    "files.exclude": {
+        "**/.git": false,
+        "**/.svn": false,
+        "**/.hg": false,
+        "**/.DS_Store": false,
+        "**/Thumbs.db": false,
+        "java-client": false,
+        ".vscode": false,
+        "backend": false,
+        "frontend/biome.json": false,
+        "frontend/package-lock.json": false,
+        "frontend/package.json": false,
+        "frontend/tsconfig.app.json": false,
+        "frontend/tsconfig.json": false,
+        "frontend/tsconfig.node.json": false,
+        "frontend/vite.config.ts": false,
+        "**/.gitignore": false,
+        "**/README.md": false,
+        "frontend\\src/vite-env.d.ts": false,
+        "i18n.ts": false,
+        "frontend\\src/i18n.ts": false,
+        "frontend/index.html": false,
+        "frontend/README.md": false,
+        "frontend/node_modules": false
+    },
+    "explorerExclude.backup": {}
+}

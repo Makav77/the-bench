@@ -4,3 +4,6 @@ backend/dist/
 backend/api/dist
 backend/api/.env
 backend/api/node_modules
+ressources
+coverage/
+backend/dist/
