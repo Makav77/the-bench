@@ -1,0 +1,14 @@
+{
+    "title": "SIGNUP",
+    "subtitle": "Complete the fields below to register",
+    "firstname": "Firstname",
+    "lastname": "Lastname",
+    "email": "Email address",
+    "password": "Password",
+    "dateOfBirth": "Birth date",
+    "cancel": "Cancel",
+    "buttonRegister": "Register",
+    "missingCredentials": "All fields must be completed",
+    "invalidMailAddress": "Email address is already in use",
+    "unknowError": "Unknow Error"
+}

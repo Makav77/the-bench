@@ -1,0 +1,13 @@
+{
+    "title": "LOGIN",
+    "subtitle": "Please enter your details below",
+    "mailAddress": "Email",
+    "password": "Password",
+    "createAccountLink": "Don't have an account? Sign up",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "buttonLogin": "LOGIN",
+    "missingCredentials": "Username and password must be entered",
+    "invalidCredentials": "Wrong username or password",
+    "unknowError": "Unknow error"
+}
