@@ -9,6 +9,7 @@ Dans le dossier frontend/
 => npm install --save-dev ts-node
 => npm install --save-dev jest-environment-jsdom
 
+
 Avant chaque commit :
 npm run lint
 npm run format
@@ -19,7 +20,3 @@ Pour lancer les tests :
 Pour lancer les tests avec la couverture
 => npm run test:c || npm test -- --coverage
 
----
-
-redirection link
-translation
