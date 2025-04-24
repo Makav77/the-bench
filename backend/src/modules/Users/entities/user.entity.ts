@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 export enum Role {
     USER = 'user',
@@ -7,8 +7,8 @@ export enum Role {
 
 @Entity({ name: 'users' })
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn()
+    id: string;
 
     @Column()
     firstname: string;
