@@ -20,7 +20,7 @@ describe("UserController", () => {
         profilePicture: "none"
     };
 
-    beforeEach(async() => {
+    beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
             controllers: [UserController],
             providers: [
@@ -42,7 +42,7 @@ describe("UserController", () => {
     });
 
     describe("Create", () => {
-        test("should create a new user", async() => {
+        test("should create a new user", async () => {
             const new_user: CreateUserDTO = {
                 id: "",
                 firstname: "Jane",
@@ -59,19 +59,19 @@ describe("UserController", () => {
     });
 
     describe("findAll", () => {
-        test("should return an array of users", async() => {
+        test("should return an array of users", async () => {
             await expect(userController.findAll()).resolves.toEqual([mockUser]);
         });
     });
 
     describe("findOne", () => {
-        test("should return a user by id", async() => {
+        test("should return a user by id", async () => {
             await expect(userController.findOne("jd8hze31-di8t-280o-jz91m5nwg85t")).resolves.toEqual(mockUser);
         });
     });
 
     describe("update", () => {
-        test("should update a user and return it", async() => {
+        test("should update a user and return it", async () => {
             const updateUserDTO: UpdateUserDTO = {
                 email: "updated@example.com"
             };
@@ -82,7 +82,7 @@ describe("UserController", () => {
     });
 
     describe("remove", () => {
-        test("should delete the user", async() => {
+        test("should delete the user", async () => {
             await expect(userController.remove(mockUser.id)).resolves.toBeUndefined();
         });
     });
