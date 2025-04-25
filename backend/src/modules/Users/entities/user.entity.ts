@@ -26,7 +26,7 @@ export class User {
     dateOfBirth: Date;
 
     @Column()
-    profilePicture: string;
+    profilePicture?: string;
 
     @Column({
         type: "enum",
