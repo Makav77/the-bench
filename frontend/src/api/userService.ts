@@ -1,5 +1,5 @@
 import axios from "axios";
-enum Role {
+export enum Role {
     ADMIN = "admin",
     USER = "user"
 };
