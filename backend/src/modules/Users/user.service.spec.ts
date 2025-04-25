@@ -95,6 +95,23 @@ describe("UserService", () => {
         await expect(service.create(new_user)).rejects.toThrow(ConflictException);
     })
 
+    test("create() should throw unknow error", async() => {
+        const new_user: CreateUserDTO = {
+            "id": "jdz56q3f-sdz5-56da-daza256s2qa1",
+            "firstname": "Jane",
+            "lastname": "Doh",
+            "email": "error@example.com",
+            "password": "password123",
+            "dateOfBirth": new Date("2010-01-01"),
+            "profilePicture": "none",
+            "role": Role.USER
+        };
+        const unknow_error = new Error("Error");
+
+        jest.spyOn(repo, "save").mockRejectedValue(unknow_error);
+        await expect(service.create(new_user)).rejects.toThrow("Error");
+    })
+
     test("update() should update and return the user", async() => {
         const updatedUser = { ...mockUser, firstname: "Jane" };
 

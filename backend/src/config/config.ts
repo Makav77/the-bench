@@ -21,7 +21,7 @@ const initConfig = (): Configuration => {
         DB_PORT
     } = process.env;
 
-    if (!DB_NAME || !DB_PASSWORD || !DB_USER || !DB_SYNCHRONIZE || !DB_HOST || !DB_PORT) {
+    if (!DB_NAME || !DB_PASSWORD || !DB_USER || !DB_SYNCHRONIZE || !DB_HOST) {
         throw new Error('Missing environment variables. Please check your .env file.');
     }
 
