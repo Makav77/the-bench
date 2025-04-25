@@ -1,13 +1,13 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 export enum Role {
-    USER = 'user',
-    ADMIN = 'admin'
+    USER = "user",
+    ADMIN = "admin"
 }
 
-@Entity({ name: 'users' })
+@Entity({ name: "users" })
 export class User {
-    @PrimaryColumn()
+    @PrimaryColumn({ unique: true })
     id: string;
 
     @Column()
@@ -22,14 +22,14 @@ export class User {
     @Column()
     password: string;
 
-    @Column({type: 'date'})
+    @Column({type: "date"})
     dateOfBirth: Date;
 
     @Column()
     profilePicture: string;
 
     @Column({
-        type: 'enum',
+        type: "enum",
         enum: Role
     })
     role: Role;

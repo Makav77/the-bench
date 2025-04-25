@@ -22,7 +22,7 @@ export class CreateUserDTO {
     password: string;
 
     @IsDateString()
-    dateOfBirth: string;
+    dateOfBirth: Date;
 
     @IsNotEmpty()
     @IsString()
