@@ -7,21 +7,34 @@ import Login from './components/Login/Login'
 import Register from "./components/Register/Register";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import Layout from "./components/Layout/Layout";
+import { AuthProvider } from "./context/AuthContext";
 
 const rootElement = document.getElementById("root");
 
 if (rootElement) {
     ReactDOM.createRoot(rootElement).render(
         <React.StrictMode>
-            <BrowserRouter>
-                <Routes>
-                    <Route element={<Layout />}>
-                        <Route path="/" element={<Login />} />
-                        <Route path="register" element={<Register />} />
-                        <Route path="resetpassword" element={<ResetPassword />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
+            <AuthProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route element={<Layout />}>
+                            <Route path="/" element={<Login />} />
+                            <Route path="register" element={<Register />} />
+                            <Route path="resetpassword" element={<ResetPassword />} />
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+            </AuthProvider>
         </React.StrictMode>
     );
 }
+
+
+// <Route element={<Layout />}>
+//     <Route path="/" element={<Login />} />
+//     <Route path="register" element={<Register />} />
+//     <Route path="resetpassword" element={<ResetPassword />}
+//     <Route element={<ProtectedRoute />}>
+//          <Route path="homepage" element={<Homepage />} />
+//          + ajouter ici les routes nécéssitant une authentification
+// </Route>

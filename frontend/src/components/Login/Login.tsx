@@ -1,6 +1,10 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/authService";
+import { useAuth } from "../../context/AuthContext";
+
 
 interface loginCredentials {
     email: string;
@@ -11,10 +15,14 @@ interface loginCredentials {
 enum loginState {
     noError = "noError",
     missingCredentials = "missingCredentials",
+    invalidCredentials = "invalidCredentials",
 }
 
 function Login() {
+    const { login } = useAuth();
     const { t } = useTranslation("Login");
+    const navigate = useNavigate();
+
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [loginCredentials, setLoginCredentials] = useState<loginCredentials>({
@@ -40,6 +48,8 @@ function Login() {
         switch (currentLoginState) {
             case loginState.missingCredentials:
                 return t("missingCredentials");
+            case loginState.invalidCredentials:
+                return t("invalidCredentials");
             default:
                 return null;
         }
@@ -59,7 +69,7 @@ function Login() {
         }));
     }
 
-    function handleSubmit(e: FormEvent) {
+    async function handleSubmit(e: FormEvent) {
         e.preventDefault();
         if (!loginCredentials.email || !loginCredentials.password) {
             setCurrentLoginState(loginState.missingCredentials);
@@ -67,7 +77,21 @@ function Login() {
         }
         setCurrentLoginState(loginState.noError);
         setIsLoading(true);
-        console.log("Credentials : " + JSON.stringify(loginCredentials));
+        //console.log("Credentials : " + JSON.stringify(loginCredentials));
+        try {
+            const data = await loginUser(loginCredentials);
+
+            if (data?.accessToken) {
+                login(data.accessToken);
+            }
+
+            navigate("/homepage");
+        } catch (error) {
+            console.error("Login failed : " + error);
+            setCurrentLoginState(loginState.invalidCredentials)
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
