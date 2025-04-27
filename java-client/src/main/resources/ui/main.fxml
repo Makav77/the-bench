@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane fx:controller="org.example.controller.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #1F1F2D;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-alignment: left; -fx-background-color: #3D4051;" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="journalButton" contentDisplay="TOP" mnemonicParsing="false" prefHeight="300.0" prefWidth="123.0" style="-fx-background-color: #3D4051; -fx-border-color: #59747B; -fx-border-style: solid none none none;" styleClass="button-hovered" text="Journal" textFill="#59747b">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/newspaper.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Corbel" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="pluginsButton" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="300.0" prefWidth="123.0" style="-fx-background-color: #3D4051; -fx-border-style: solid none none none; -fx-border-color: #59747B;" text="Plugins" textFill="#59747b">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/puzzle-piece-plugin.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Corbel" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="themesButton" contentDisplay="TOP" layoutX="10.0" layoutY="92.0" mnemonicParsing="false" prefHeight="300.0" prefWidth="123.0" style="-fx-background-color: #3D4051; -fx-border-style: solid none solid none; -fx-border-color: #59747B;" text="Themes" textFill="#59747b">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/theme.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Corbel" size="18.0" />
+               </font>
+            </Button>
+            <ToggleButton mnemonicParsing="false" style="-fx-background-color: #59747b;" text="Online mode">
+               <VBox.margin>
+                  <Insets bottom="10.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Corbel" size="13.0" />
+               </font>
+               <effect>
+                  <Glow level="0.0" />
+               </effect></ToggleButton>
+         </children>
+         <effect>
+            <Bloom threshold="0.41">
+               <input>
+                  <DropShadow height="0.0" radius="4.75" />
+               </input>
+            </Bloom>
+         </effect>
+      </VBox>
+   </left>
+   <center>
+      <StackPane fx:id="contentStack" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <BorderPane fx:id="journalPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <top>
+                  <HBox prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #333F4C;" BorderPane.alignment="CENTER">
+                     <children>
+                        <ButtonBar buttonMinWidth="65.0" prefHeight="90.0" prefWidth="250.0" style="-fx-padding: 10%;">
+                          <buttons>
+                              <Button mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Machin" textFill="#59747b">
+                                 <effect>
+                                    <Glow level="0.57" />
+                                 </effect>
+                                 <font>
+                                    <Font name="Corbel" size="14.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor></Button>
+                              <Button layoutX="30.0" layoutY="43.0" mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Cinema" textFill="#59747b">
+                                 <font>
+                                    <Font name="Corbel" size="14.0" />
+                                 </font>
+                                 <effect>
+                                    <Glow level="0.57" />
+                                 </effect>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                            <Button mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="News" textFill="#59747b">
+                                 <font>
+                                    <Font name="Corbel" size="14.0" />
+                                 </font>
+                                 <effect>
+                                    <Glow level="0.57" />
+                                 </effect>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor></Button>
+                          </buttons>
+                        </ButtonBar>
+                        <VBox prefHeight="200.0" prefWidth="500.0">
+                           <children>
+                              <HBox prefHeight="65.0" prefWidth="500.0">
+                                 <children>
+                                    <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
+                                       <font>
+                                          <Font name="Corbel" size="17.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="20.0" top="35.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                    <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/magnifier.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets left="5.0" top="30.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <TextField prefWidth="500.0" promptText="Type to search...">
+                                       <font>
+                                          <Font name="Corbel Italic" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="5.0" right="20.0" top="30.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <SplitMenuButton mnemonicParsing="false" prefHeight="10.0" prefWidth="500.0" style="-fx-background-color: #3D4051;" text="Sort by">
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="Most Recent Date" />
+                                  <MenuItem mnemonicParsing="false" text="Oldest Date" />
+                                </items>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="100.0" right="20.0" top="5.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Corbel" size="14.0" />
+                                 </font>
+                              </SplitMenuButton>
+                           </children>
+                        </VBox>
+                     </children>
+                     <effect>
+                        <DropShadow radius="4.75" width="0.0" />
+                     </effect>
+                  </HBox>
+               </top>
+            </BorderPane>
+            <BorderPane fx:id="pluginsPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <top>
+                  <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #333F4C;" BorderPane.alignment="CENTER">
+                     <children>
+                        <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload plugins here:">
+                           <font>
+                              <Font name="Corbel" size="18.0" />
+                           </font>
+                           <effect>
+                              <Glow level="0.74" />
+                           </effect>
+                           <HBox.margin>
+                              <Insets left="30.0" top="40.0" />
+                           </HBox.margin>
+                        </Text>
+                        <Button mnemonicParsing="false" prefWidth="120.0" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Select file..." textFill="#59747b">
+                           <HBox.margin>
+                              <Insets left="20.0" top="35.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Corbel" size="14.0" />
+                           </font>
+                           <effect>
+                              <Glow level="0.57" />
+                           </effect>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                     <effect>
+                        <DropShadow radius="4.75" width="0.0" />
+                     </effect>
+                  </HBox>
+               </top>
+               <center>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: #59747b; -fx-border-style: dashed; -fx-border-radius: 20; -fx-border-width: 5;" BorderPane.alignment="CENTER">
+                     <children>
+                        <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Drag and Drop your file here" textAlignment="CENTER">
+                           <font>
+                              <Font name="Corbel" size="24.0" />
+                           </font>
+                           <effect>
+                              <Glow level="0.5" />
+                           </effect>
+                        </Text>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+                     </BorderPane.margin>
+                  </HBox>
+               </center>
+            </BorderPane>
+            <BorderPane fx:id="themesPane" prefHeight="200.0" prefWidth="200.0">
+               <top>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #333F4C;" BorderPane.alignment="CENTER">
+                     <children>
+                        <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose a theme">
+                           <font>
+                              <Font name="Corbel" size="24.0" />
+                           </font>
+                           <effect>
+                              <Glow level="0.74" />
+                           </effect>
+                        </Text>
+                     </children>
+                  </HBox>
+               </top>
+               <center>
+                  <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: #59747b;">
+                           <children>
+                              <ImageView fitHeight="50.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="25.0">
+                                 <image>
+                                    <Image url="@themes/nature/nature_palette.PNG" />
+                                 </image>
+                              </ImageView>
+                              <VBox prefHeight="100.0" prefWidth="150.0">
+                                 <children>
+                                    <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Theme  1">
+                                       <font>
+                                          <Font name="Corbel" size="18.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="25.0" top="25.0" />
+                                       </VBox.margin>
+                                    </Text>
+                                    <Button mnemonicParsing="false" prefWidth="90.0" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Select" textFill="#59747b">
+                                       <VBox.margin>
+                                          <Insets left="25.0" right="20.0" />
+                                       </VBox.margin>
+                                       <effect>
+                                          <Glow level="0.57" />
+                                       </effect>
+                                       <font>
+                                          <Font name="Corbel" size="14.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: #59747b;">
+                           <children>
+                              <ImageView fitHeight="50.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="25.0">
+                                 <image>
+                                    <Image url="@themes/dark/dark_palette.PNG" />
+                                 </image>
+                              </ImageView>
+                              <VBox prefHeight="100.0" prefWidth="150.0">
+                                 <children>
+                                    <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Theme  2">
+                                       <font>
+                                          <Font name="Corbel" size="18.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="25.0" top="25.0" />
+                                       </VBox.margin>
+                                    </Text>
+                                    <Button mnemonicParsing="false" prefWidth="90.0" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Select" textFill="#59747b">
+                                       <VBox.margin>
+                                          <Insets left="25.0" right="20.0" />
+                                       </VBox.margin>
+                                       <effect>
+                                          <Glow level="0.57" />
+                                       </effect>
+                                       <font>
+                                          <Font name="Corbel" size="14.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane layoutX="10.0" layoutY="112.0" prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: #59747b;">
+                           <children>
+                              <ImageView fitHeight="50.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="25.0">
+                                 <image>
+                                    <Image url="@themes/pastel/pastel_palette.PNG" />
+                                 </image>
+                              </ImageView>
+                              <VBox prefHeight="100.0" prefWidth="150.0">
+                                 <children>
+                                    <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Theme  3">
+                                       <font>
+                                          <Font name="Corbel" size="18.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="25.0" top="25.0" />
+                                       </VBox.margin>
+                                    </Text>
+                                    <Button mnemonicParsing="false" prefWidth="90.0" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Select" textFill="#59747b">
+                                       <VBox.margin>
+                                          <Insets left="25.0" right="20.0" />
+                                       </VBox.margin>
+                                       <effect>
+                                          <Glow level="0.57" />
+                                       </effect>
+                                       <font>
+                                          <Font name="Corbel" size="14.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+               </center>
+            </BorderPane>
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>
