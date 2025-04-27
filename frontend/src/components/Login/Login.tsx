@@ -5,9 +5,10 @@ import { useTranslation } from "react-i18next";
 interface loginCredentials {
     email: string;
     password: string;
+    rememberMe: boolean;
 }
 
-export enum loginState {
+enum loginState {
     noError = "noError",
     missingCredentials = "missingCredentials",
 }
@@ -19,6 +20,7 @@ function Login() {
     const [loginCredentials, setLoginCredentials] = useState<loginCredentials>({
         email: "",
         password: "",
+        rememberMe: false,
     });
     const [currentLoginState, setCurrentLoginState] = useState<loginState>(
         loginState.noError
@@ -50,6 +52,13 @@ function Login() {
         setCurrentLoginState(loginState.noError);
     };
 
+    function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
+        setLoginCredentials(prev => ({
+            ...prev,
+            rememberMe: e.target.checked,
+        }));
+    }
+
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
         if (!loginCredentials.email || !loginCredentials.password) {
@@ -58,13 +67,7 @@ function Login() {
         }
         setCurrentLoginState(loginState.noError);
         setIsLoading(true);
-        setLoginCredentials({
-            email: "",
-            password: "",
-        });
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 500);
+        console.log("Credentials : " + JSON.stringify(loginCredentials));
     }
 
     return (
@@ -142,6 +145,8 @@ function Login() {
                         aria-label="rememberMe-checkbox"
                         autoComplete="off"
                         className="appearance-none w-4 h-4 self-center border-2 border-gray-500 checked:bg-[#F00969] checked:border-black hover:cursor-pointer"
+                        checked={loginCredentials.rememberMe}
+                        onChange={handleCheckboxChange}
                     />
                     {t("rememberMe")}
                 </div>
