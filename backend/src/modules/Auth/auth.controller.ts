@@ -6,12 +6,12 @@ import { LoginUserDTO } from "./dto/login-user.dto";
 export class AuthController {
     constructor(private authService: AuthService) {}
 
-    @Post("login")
-    async login(@Body() loginUserDTO: LoginUserDTO) {
-        const user = await this.authService.validateUser(loginUserDTO.email, loginUserDTO.password);
-        if (!user) {
-            throw new UnauthorizedException("Email or password incorrect");
-        }
-        return this.authService.login(user);
-    }
+    // @Post("login")
+    // async login(@Body() loginUserDTO: LoginUserDTO) {
+    //     const user = await this.authService.validateUser(loginUserDTO.email, loginUserDTO.password, loginUserDTO.rememberMe);
+    //     if (!user) {
+    //         throw new UnauthorizedException("Email or password incorrect");
+    //     }
+    //     return this.authService.login(user);
+    // }
 }

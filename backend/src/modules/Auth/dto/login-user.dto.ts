@@ -1,4 +1,4 @@
-import { IsEmail, isEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, isEmail, IsNotEmpty, IsString, IsBoolean } from "class-validator";
 
 export class LoginUserDTO {
     @IsEmail()
@@ -8,4 +8,7 @@ export class LoginUserDTO {
     @IsString()
     @IsNotEmpty()
     password: string;
+
+    @IsBoolean()
+    rememberMe: boolean;
 }
