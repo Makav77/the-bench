@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, Req, HttpCode, UseGuards } from "@nestjs/common";
+import { Controller, Post, Body, Res, Req, HttpCode, Get, UseGuards } from "@nestjs/common";
 import { Response, Request } from "express";
 import { AuthService } from "./auth.service";
 import { LoginUserDTO } from "./dto/login-user.dto";
@@ -44,5 +44,11 @@ export class AuthController {
         await this.authService.logout(oldToken);
         res.clearCookie("refreshToken", { path: "/" });
         return { message: "Déconnexion réussie." };
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("me")
+    async me(@Req() req: Request) {
+        return req.user
     }
 }

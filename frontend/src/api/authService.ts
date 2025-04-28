@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import { User } from "../../../backend/src/modules/Users/entities/user.entity";
 
 interface userCredentials {
     email: string;
@@ -119,6 +120,16 @@ export const logout = async() => {
     } finally {
         localStorage.removeItem("accessToken");
         delete api.defaults.headers?.["Authorization"];
+    }
+}
+
+export const fetchMe = async(): Promise<User> => {
+    try {
+        const response = await api.get("/me");
+        return response.data;
+    } catch(error) {
+        console.error("fetchMe error : " + error);
+        throw error;
     }
 }
 
