@@ -110,4 +110,16 @@ export const refreshToken = async() =>{
     }
 };
 
+// Route de Logout
+export const logout = async() => {
+    try {
+        await api.post("/logout");
+    } catch(error) {
+        console.error("Logout error : " + error);
+    } finally {
+        localStorage.removeItem("accessToken");
+        delete api.defaults.headers?.["Authorization"];
+    }
+}
+
 export default api;
