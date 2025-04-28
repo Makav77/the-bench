@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             } catch(error) {
                 console.error("Unable to refresh token on intialisation :", error);
                 setAccessToken(null);
-                localStorage.remove("accessToken");
+                localStorage.removeItem("accessToken");
             }
         };
         initializeAuth();

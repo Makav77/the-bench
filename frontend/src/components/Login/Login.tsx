@@ -77,7 +77,7 @@ function Login() {
         }
         setCurrentLoginState(loginState.noError);
         setIsLoading(true);
-        //console.log("Credentials : " + JSON.stringify(loginCredentials));
+        console.log("Credentials : " + JSON.stringify(loginCredentials));
         try {
             const data = await loginUser(loginCredentials);
 
@@ -85,7 +85,7 @@ function Login() {
                 login(data.accessToken);
             }
 
-            navigate("/homepage");
+            navigate("/resetpassword");
         } catch (error) {
             console.error("Login failed : " + error);
             setCurrentLoginState(loginState.invalidCredentials)
