@@ -112,7 +112,7 @@ export const refreshToken = async() =>{
 };
 
 // Route de Logout
-export const logout = async() => {
+export const logoutUser = async() => {
     try {
         await api.post("/logout");
     } catch(error) {

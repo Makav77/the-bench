@@ -8,6 +8,7 @@ import Register from "./components/Register/Register";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
 import Layout from "./components/Layout/Layout";
 import { AuthProvider } from "./context/AuthContext";
+//import { PublicRoute } from "./components/Utils/PublicRoute";
 
 const rootElement = document.getElementById("root");
 
@@ -28,6 +29,18 @@ if (rootElement) {
         </React.StrictMode>
     );
 }
+
+
+{/* <Route element={<PublicRoute />}>
+    <Route element={<Layout />}>
+        <Route path="/" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="resetpassword" element={<ResetPassword />} />
+    </Route>
+</Route> */}
+
+
+
 
 
 // <Route element={<Layout />}>

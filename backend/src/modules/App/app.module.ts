@@ -6,11 +6,11 @@ import { AppService } from './app.service';
 import { databaseConfig } from '../../database/database-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../Users/user.module';
-import { AuthService } from '../Auth/auth.service';
-import { JwtService } from '@nestjs/jwt';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
     imports: [
+        ScheduleModule.forRoot(),
         AuthModule,
         TypeOrmModule.forRoot(databaseConfig),
         UserModule,

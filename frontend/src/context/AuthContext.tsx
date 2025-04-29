@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthContextType>({
     login: () => {},
     logout: () => {},
     isAuthenticated: false,
-    fetchUser: null,
+    fetchUser: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -26,29 +26,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const isAuthenticated = Boolean(accessToken);
 
     useEffect(() => {
-        const initializeAuth = async() => {
+        (async () => {
             try {
                 const { accessToken: newToken } = await refreshToken();
                 setAccessToken(newToken);
                 localStorage.setItem("accessToken", newToken);
-
                 const me = await fetchMe();
                 setUser(me);
-            } catch(error) {
-                console.error("Unable to refresh token on intialisation :", error);
-                setAccessToken(null);
-                setUser(null);
-                localStorage.removeItem("accessToken");
+            } catch {
+                logoutCleanup();
             }
-        };
-        initializeAuth();
+        })();
     }, []);
 
     const fetchUser = async() => {
-        if (!accessToken) {
-            return;
-        }
-
         try {
             const me = await fetchMe();
             setUser(me);
@@ -68,6 +59,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
         localStorage.removeItem("accessToken");
     };
+
+    const logoutCleanup = () => {
+        setAccessToken(null);
+        setUser(null);
+        localStorage.removeItem("accessToken");
+      };
 
     return (
         <AuthContext.Provider value={{ accessToken, user, login, logout, isAuthenticated, fetchUser }}>

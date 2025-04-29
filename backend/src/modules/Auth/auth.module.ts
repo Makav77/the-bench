@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from '../Users/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RefreshToken } from './entities/refresh-token.entity';
+import { CleanupService } from './cleanup.service';
 
 @Module({
     imports: [
@@ -23,7 +24,7 @@ import { RefreshToken } from './entities/refresh-token.entity';
         TypeOrmModule.forFeature([RefreshToken]),
     ],
     controllers: [AuthController],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService, JwtStrategy, CleanupService],
     exports: [AuthService],
 })
 
