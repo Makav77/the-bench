@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, MoreThan } from "typeorm";
 import { Event } from "./entities/event.entity";
@@ -46,5 +46,19 @@ export class EventService {
             participantsList: [],
         });
         return this.eventRepo.save(event);
+    }
+
+    async update(id: string, updateEventDTO: UpdateEventDTO, user: User): Promise <Event> {
+        const event = await this.eventRepo.findOne({ where: { id }, relations: ["author"] });
+        if (!event) {
+            throw new ForbiddenException("Evenement introuvable");
+        }
+
+        if (event.author.id !== user.id && user.role !== Role.ADMIN) {
+            throw new ForbiddenException("Vous n'êtes pas autorisé à modifier cet événement");
+        }
+
+        const updated = this.eventRepo.merge(event, updateEventDTO);
+        return this.eventRepo.save(updated);
     }
 }
