@@ -17,7 +17,10 @@ describe("UserController", () => {
         email: "test@example.com",
         dateOfBirth: new Date("2010-12-12"),
         role: Role.USER,
-        profilePicture: "none"
+        profilePicture: "none",
+        refreshTokens: [],
+        eventsCreated: [],
+        eventsParticipating: []
     };
 
     beforeEach(async () => {

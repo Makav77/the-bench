@@ -1,6 +1,6 @@
-import { RefreshToken } from 'src/modules/Auth/entities/refresh-token.entity';
+import { RefreshToken } from '../../../modules/Auth/entities/refresh-token.entity';
 import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany } from 'typeorm';
-import { Event } from 'src/modules/Events/entities/event.entity';
+import { Event } from '../../../modules/Events/entities/event.entity';
 
 export enum Role {
     USER = "user",
