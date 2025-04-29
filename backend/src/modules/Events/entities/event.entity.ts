@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany, JoinTable, UpdateDateColumn } from "typeorm";
 import { User } from "src/modules/Users/entities/user.entity";
 
 @Entity({ name: "events" })
@@ -17,6 +17,9 @@ export class Event {
 
     @CreateDateColumn({ type: "timestamptz" })
     createdDate: Date;
+
+    @UpdateDateColumn({ type: "timestamptz" })
+    updatedDate: Date;
 
     @Column()
     place: string;
