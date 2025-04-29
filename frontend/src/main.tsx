@@ -6,6 +6,7 @@ import "./i18n";
 import Login from './components/Login/Login'
 import Register from "./components/Register/Register";
 import ResetPassword from "./components/ResetPassword/ResetPassword";
+import Homepage from "./components/Homepage/Homepage";
 import Layout from "./components/Layout/Layout";
 import { AuthProvider } from "./context/AuthContext";
 //import { PublicRoute } from "./components/Utils/PublicRoute";
@@ -22,6 +23,7 @@ if (rootElement) {
                             <Route path="/" element={<Login />} />
                             <Route path="register" element={<Register />} />
                             <Route path="resetpassword" element={<ResetPassword />} />
+                            <Route path="homepage" element={<Homepage />} />
                         </Route>
                     </Routes>
                 </BrowserRouter>
