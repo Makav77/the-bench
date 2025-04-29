@@ -2,6 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, MoreThan } from "typeorm";
 import { Event } from "./entities/event.entity";
+import { CreateEventDTO } from "./dto/create-event.dto";
+import { UpdateEventDTO } from "./dto/update-event.dto";
+import { User, Role } from "../Users/entities/user.entity";
 
 @Injectable()
 export class EventService {
@@ -34,5 +37,14 @@ export class EventService {
             throw new NotFoundException(`Event with ID ${id} not found.`);
         }
         return event;
+    }
+
+    async create(createEventDTO: CreateEventDTO, author: User): Promise<Event> {
+        const event = this.eventRepo.create({
+            ...createEventDTO,
+            author,
+            participantsList: [],
+        });
+        return this.eventRepo.save(event);
     }
 }
