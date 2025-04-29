@@ -1,4 +1,4 @@
-import api from "./authService";
+import apiClient from "./apiClient";
 
 export interface EventSummary {
     id: string;
@@ -18,11 +18,11 @@ export interface EventDetails extends EventSummary {
 }
 
 export const getEvents = async (page = 1, limit = 5): Promise<{ data: EventSummary[]; total: number; page: number; lastPage: number }> => {
-    const response = await api.get("/events", { params: { page, limit } });
+    const response = await apiClient.get("/events", { params: { page, limit } });
     return response.data;
 }
 
 export const getEvent = async (id: string): Promise<EventDetails> => {
-    const response = await api.get(`/event/${id}`);
+    const response = await apiClient.get(`/events/${id}`);
     return response.data;
 }

@@ -9,7 +9,10 @@ import ResetPassword from "./components/ResetPassword/ResetPassword";
 import Homepage from "./components/Homepage/Homepage";
 import Layout from "./components/Layout/Layout";
 import { AuthProvider } from "./context/AuthContext";
-//import { PublicRoute } from "./components/Utils/PublicRoute";
+import EventsPage from "./components/Events/EventsPage";
+import EventDetailPage from "./components/Events/EventDetailPage";
+import { PublicRoute } from "./components/Utils/PublicRoute";
+import ProtectedRoute from "./components/Login/ProtectedRoute";
 
 const rootElement = document.getElementById("root");
 
@@ -20,10 +23,17 @@ if (rootElement) {
                 <BrowserRouter>
                     <Routes>
                         <Route element={<Layout />}>
-                            <Route path="/" element={<Login />} />
-                            <Route path="register" element={<Register />} />
-                            <Route path="resetpassword" element={<ResetPassword />} />
-                            <Route path="homepage" element={<Homepage />} />
+                            <Route element={<PublicRoute />}>
+                                <Route path="/" element={<Login />} />
+                                <Route path="register" element={<Register />} />
+                                <Route path="resetpassword" element={<ResetPassword />} />
+                            </Route>
+
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="homepage" element={<Homepage />} />
+                                <Route path="events" element={<EventsPage />} />
+                                <Route path="events/:id" element={<EventDetailPage />} />
+                            </Route>
                         </Route>
                     </Routes>
                 </BrowserRouter>
@@ -31,25 +41,3 @@ if (rootElement) {
         </React.StrictMode>
     );
 }
-
-
-{/* <Route element={<PublicRoute />}>
-    <Route element={<Layout />}>
-        <Route path="/" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="resetpassword" element={<ResetPassword />} />
-    </Route>
-</Route> */}
-
-
-
-
-
-// <Route element={<Layout />}>
-//     <Route path="/" element={<Login />} />
-//     <Route path="register" element={<Register />} />
-//     <Route path="resetpassword" element={<ResetPassword />}
-//     <Route element={<ProtectedRoute />}>
-//          <Route path="homepage" element={<Homepage />} />
-//          + ajouter ici les routes nécéssitant une authentification
-// </Route>
