@@ -30,14 +30,14 @@ export class Event {
     @Column()
     description: string;
 
-    @ManyToOne(() => User, (user) => user.eventsCreated, { nullable: false })
-    author: User;
+//    @ManyToOne(() => User, (user) => user.eventsCreated, { nullable: false })
+//    author: User;
 
-    @ManyToMany(() => User, (user) => user.eventsParticipating, { nullable: true })
-    @JoinTable({
-        name: "event_participants",
-        joinColumn: { name: "event_id", referencedColumnName: "id" },
-        inverseJoinColumn: { name: "user_id", referencedColumnName: "id" },
-    })
-    participantsList?: User[];
+//    @ManyToMany(() => User, (user) => user.eventsParticipating, { nullable: true })
+//    @JoinTable({
+//        name: "event_participants",
+//        joinColumn: { name: "event_id", referencedColumnName: "id" },
+//        inverseJoinColumn: { name: "user_id", referencedColumnName: "id" },
+//    })
+//    participantsList?: User[];
 }
