@@ -39,7 +39,7 @@ export class EventService {
         return event;
     }
 
-    async create(createEventDTO: CreateEventDTO, author: User): Promise<Event> {
+    async createEvent(createEventDTO: CreateEventDTO, author: User): Promise<Event> {
         const event = this.eventRepo.create({
             ...createEventDTO,
             author,
@@ -48,7 +48,7 @@ export class EventService {
         return this.eventRepo.save(event);
     }
 
-    async update(id: string, updateEventDTO: UpdateEventDTO, user: User): Promise <Event> {
+    async updateEvent(id: string, updateEventDTO: UpdateEventDTO, user: User): Promise <Event> {
         const event = await this.eventRepo.findOne({ where: { id }, relations: ["author"] });
         if (!event) {
             throw new ForbiddenException("Evenement introuvable");
@@ -60,5 +60,18 @@ export class EventService {
 
         const updated = this.eventRepo.merge(event, updateEventDTO);
         return this.eventRepo.save(updated);
+    }
+
+    async removeEvent(id: string, user: User): Promise<void> {
+        const event = await this.eventRepo.findOne({ where: { id }, relations: ["author"] });
+        if (!event) {
+            throw new ForbiddenException("Evénement introuvable");
+        }
+
+        if (event.author.id !== user.id && user.role !== Role.ADMIN) {
+            throw new ForbiddenException("Vous n'êtes pas autorisé à supprimer cet événement");
+        }
+
+        await this.eventRepo.delete(id);
     }
 }
