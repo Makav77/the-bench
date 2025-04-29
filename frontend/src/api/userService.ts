@@ -1,11 +1,12 @@
 import axios from "axios";
+
 export enum Role {
     ADMIN = "admin",
     USER = "user"
 };
 
 interface UserData {
-    id: string
+    id: string;
     firstname: string;
     lastname: string;
     email: string;

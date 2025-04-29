@@ -6,14 +6,14 @@ function Navigation() {
     const navigate = useNavigate();
 
     return (
-        <div
+        <nav
             data-testid="navigation-bar"
-            className="grid grid-cols-5 gap-1 m-2 mt-5"
+            className="grid grid-cols-5 gap-1 m-2 mt-10 mb-5 w-[75%] mx-auto"
         >
             <button
                 type="button"
                 aria-label="homepage-button"
-                className="bg-white border-1 cursor-pointer rounded-3xl"
+                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
                 onClick={() => navigate("/homepage")}
             >
                 {t("homePage")}
@@ -22,7 +22,7 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="market-button"
-                className="bg-white border-1 cursor-pointer rounded-3xl"
+                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
                 onClick={() => navigate("/marketplace")}
             >
                 {t("marketplace")}
@@ -31,7 +31,7 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="listings-button"
-                className="bg-white border-1 cursor-pointer rounded-3xl"
+                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
                 onClick={() => navigate("/listings")}
             >
                 {t("listings")}
@@ -40,7 +40,7 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="events-button"
-                className="bg-white border-1 cursor-pointer rounded-3xl"
+                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
                 onClick={() => navigate("/events")}
             >
                 {t("events")}
@@ -49,12 +49,12 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="community-button"
-                className="bg-white border-1 cursor-pointer rounded-3xl"
+                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
                 onClick={() => navigate("/community")}
             >
                 {t("community")}
             </button>
-        </div>
+        </nav>
     );
 }
 

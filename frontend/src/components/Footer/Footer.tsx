@@ -2,9 +2,9 @@ function Footer() {
     return (
         <div
             data-test-id="footer"
-            className="bg-[#77B5F5] text-center border-t-2 h-20 flex items-center justify-center"
+            className="bg-[#4A93C9] text-center border-t-2 h-20 flex items-center justify-center"
         >
-            <p>The Bench © 2025</p>
+            <p className="text-l font-bold">The Bench © 2025</p>
         </div>
     );
 }
