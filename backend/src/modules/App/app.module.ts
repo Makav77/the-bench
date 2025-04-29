@@ -7,6 +7,7 @@ import { databaseConfig } from '../../database/database-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../Users/user.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventModule } from '../Events/event.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         TypeOrmModule.forRoot(databaseConfig),
         UserModule,
         AuthModule,
+        EventModule,
     ],
     controllers: [AuthController, AppController],
     providers: [AppService],

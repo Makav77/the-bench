@@ -1,5 +1,6 @@
 import { RefreshToken } from 'src/modules/Auth/entities/refresh-token.entity';
-import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany } from 'typeorm';
+import { Event } from 'src/modules/Events/entities/event.entity';
 
 export enum Role {
     USER = "user",
@@ -37,4 +38,10 @@ export class User {
 
     @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
     refreshTokens: RefreshToken[];
+
+    @OneToMany(() => Event, (event) => event.author)
+    eventsCreated: Event[];
+
+    @ManyToMany(() => Event, (event) => event.participantsList)
+    eventsParticipating: Event[];
 }
