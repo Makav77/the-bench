@@ -1,14 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { RefreshToken } from 'src/modules/Auth/entities/refresh-token.entity';
+import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
 
 export enum Role {
-    USER = 'user',
-    ADMIN = 'admin'
+    USER = "user",
+    ADMIN = "admin"
 }
 
-@Entity({ name: 'users' })
+@Entity({ name: "users" })
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn({ unique: true })
+    id: string;
 
     @Column()
     firstname: string;
@@ -22,15 +23,18 @@ export class User {
     @Column()
     password: string;
 
-    @Column({type: 'date'})
+    @Column({ type: "timestamptz" })
     dateOfBirth: Date;
 
     @Column()
-    profilePicture: string;
+    profilePicture?: string;
 
     @Column({
-        type: 'enum',
+        type: "enum",
         enum: Role
     })
     role: Role;
+
+    @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
+    refreshTokens: RefreshToken[];
 }
