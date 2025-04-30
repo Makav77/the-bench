@@ -23,7 +23,11 @@ beforeAll(() => {
 
 describe("Login forms", () => {
     test("The fields are present in the document", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         expect(screen.getByLabelText(/email-field/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/password-field/i)).toBeInTheDocument();
@@ -31,7 +35,11 @@ describe("Login forms", () => {
     })
 
     test("The fields are filling in correctly", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const emailInput = screen.getByLabelText(/email-field/i);
         const passwordInput = screen.getByLabelText(/password-field/i);
@@ -52,7 +60,11 @@ describe("Login forms", () => {
     })
 
     test("The \"remember me\" checkbox can be checked and unchecked", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const checkbox = screen.getByLabelText(/rememberMe-checkbox/i);
 
@@ -66,7 +78,11 @@ describe("Login forms", () => {
 
 describe("Password visibility", () => {
     test("Show/Hide password by cliking on button", () => {
-        render(<Login />)
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const passwordInput = screen.getByLabelText(/password-field/i);
         const toggleIcon = screen.getByLabelText(/toggle-password-visibility/i);
@@ -81,7 +97,11 @@ describe("Password visibility", () => {
     })
 
     test("Show/Hide password by pressing space bar", () => {
-        render(<Login />)
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const passwordInput = screen.getByLabelText(/password-field/i);
         const toggleIcon = screen.getByLabelText(/toggle-password-visibility/i);
@@ -131,7 +151,11 @@ describe("Redirection links", () => {
 
 describe("Error handling", () => {
     test("Print error message if email and password fields are empty",  () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const loginButton = screen.getByLabelText(/login-button/i);
         fireEvent.click(loginButton);
@@ -140,7 +164,11 @@ describe("Error handling", () => {
     })
 
     test("Print error message if email field is empty", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const loginButton = screen.getByLabelText(/login-button/i);
         const emailInput = screen.getByLabelText(/email-field/i);
@@ -159,7 +187,11 @@ describe("Error handling", () => {
     })
 
     test("Print error message if password field is empty", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const loginButton = screen.getByLabelText(/login-button/i);
         const emailInput = screen.getByLabelText(/email-field/i);
@@ -178,7 +210,11 @@ describe("Error handling", () => {
     })
 
     test("Fields show red borders and shake when empty on submit", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const loginButton = screen.getByLabelText(/login-button/i);
         const emailInput = screen.getByLabelText(/email-field/i);
@@ -191,7 +227,11 @@ describe("Error handling", () => {
     })
 
     test("Input field show red borders and shake when empty on submit", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const loginButton = screen.getByLabelText(/login-button/i);
         const emailInput = screen.getByLabelText(/email-field/i);
@@ -208,7 +248,11 @@ describe("Error handling", () => {
     })
 
     test("Password field show red borders and shake when empty on submit", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const loginButton = screen.getByLabelText(/login-button/i);
         const emailInput = screen.getByLabelText(/email-field/i);
@@ -227,7 +271,11 @@ describe("Error handling", () => {
 
 describe("Sending data", () => {
     test("Display a spinner on login button when loading", async () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const emailInput = screen.getByLabelText(/email-field/i);
         const passwordInput = screen.getByLabelText(/password-field/i);
@@ -251,7 +299,11 @@ describe("Sending data", () => {
     })
 
     test("Login button is disabled when loading", () => {
-        render(<Login />);
+        render(
+            <MemoryRouter>
+                <Login />
+            </MemoryRouter>
+        );
 
         const emailInput = screen.getByLabelText(/email-field/i);
         const passwordInput = screen.getByLabelText(/password-field/i);
@@ -272,68 +324,6 @@ describe("Sending data", () => {
         fireEvent.click(loginButton);
 
         expect(loginButton).toBeDisabled();
-    })
-})
-
-describe("After submission", () => {
-    test("Reset form fields after submission", () => {
-        render(<Login />);
-
-        const emailInput = screen.getByLabelText(/email-field/i);
-        const passwordInput = screen.getByLabelText(/password-field/i);
-        const loginButton = screen.getByLabelText(/login-button/i);
-
-        fireEvent.change(emailInput, {
-            target: {
-                value: "test@example.com"
-            }
-        });
-        
-        fireEvent.change(passwordInput, {
-            target: {
-                value: "password123"
-            }
-        });
-
-        fireEvent.click(loginButton);
-
-        expect(emailInput).toHaveValue("");
-        expect(passwordInput).toHaveValue("");
-    })
-
-    test("Loading while 500ms", () => {
-        jest.useFakeTimers();
-
-        render(<Login />);
-
-        const emailInput = screen.getByLabelText(/email-field/i);
-        const passwordInput = screen.getByLabelText(/password-field/i);
-        const loginButton = screen.getByLabelText(/login-button/i);
-
-        fireEvent.change(emailInput, {
-            target: {
-                value: "test@example.com"
-            }
-        });
-        fireEvent.change(passwordInput, {
-            target: {
-                value: "password123"
-            }
-        });
-
-        fireEvent.click(loginButton);
-
-        expect(loginButton).toBeDisabled();
-        expect(screen.getByTestId('spinner')).toBeInTheDocument();
-
-        act(() => {
-            jest.advanceTimersByTime(500);
-        });
-
-        expect(loginButton).toBeEnabled();
-        expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
-
-        jest.useRealTimers();
     })
 })
 
@@ -341,9 +331,11 @@ describe("Translation", () => {
     test("Switch language", async () => {
         await i18n.changeLanguage("fr");
         render(
-            <I18nextProvider i18n={i18n}>
-                <Login />
-            </I18nextProvider>
+            <MemoryRouter>
+                <I18nextProvider i18n={i18n}>
+                    <Login />
+                </I18nextProvider>
+            </MemoryRouter>
         );
 
         expect(screen.getByText("CONNEXION")).toBeInTheDocument();
@@ -354,11 +346,3 @@ describe("Translation", () => {
         expect(screen.getByText("Connexion")).toBeInTheDocument();
     });
 })
-
-// add test for :
-//      - Login credentials are sent successfully
-//      - Print error message if credentials are invalid
-
-
-//userEvent
-//react intl

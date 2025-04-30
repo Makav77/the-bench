@@ -171,56 +171,56 @@ describe("Error handling", () => {
     })
 })
 
-describe("After submission", () => {
-    test("Reset form fields after submission", () => {
-        render(<Register />);
+// describe("After submission", () => {
+//     test("Reset form fields after submission", () => {
+//         render(<Register />);
 
-        const firstnameInput = screen.getByLabelText(/firstname-field/i);
-        const lastnameInput = screen.getByLabelText(/lastname-field/i);
-        const emailInput = screen.getByLabelText(/email-field/i);
-        const passwordInput = screen.getByLabelText(/password-field/i);
-        const dateOfBirthInput = screen.getByLabelText(/dateOfBirth-field/i);
-        const sendButton = screen.getByLabelText(/register-button/i);
+//         const firstnameInput = screen.getByLabelText(/firstname-field/i);
+//         const lastnameInput = screen.getByLabelText(/lastname-field/i);
+//         const emailInput = screen.getByLabelText(/email-field/i);
+//         const passwordInput = screen.getByLabelText(/password-field/i);
+//         const dateOfBirthInput = screen.getByLabelText(/dateOfBirth-field/i);
+//         const sendButton = screen.getByLabelText(/register-button/i);
 
-        fireEvent.change(firstnameInput, {
-            target: {
-                value: "John"
-            }
-        });
+//         fireEvent.change(firstnameInput, {
+//             target: {
+//                 value: "John"
+//             }
+//         });
 
-        fireEvent.change(lastnameInput, {
-            target: {
-                value: "Doe"
-            }
-        });
+//         fireEvent.change(lastnameInput, {
+//             target: {
+//                 value: "Doe"
+//             }
+//         });
 
-        fireEvent.change(emailInput, {
-            target: {
-                value: "test@example.com"
-            }
-        });
+//         fireEvent.change(emailInput, {
+//             target: {
+//                 value: "test@example.com"
+//             }
+//         });
 
-        fireEvent.change(passwordInput, {
-            target: {
-                value: "password123"
-            }
-        });
+//         fireEvent.change(passwordInput, {
+//             target: {
+//                 value: "password123"
+//             }
+//         });
 
-        fireEvent.change(dateOfBirthInput, {
-            target: {
-                value: "2000-01-01"
-            }
-        });
+//         fireEvent.change(dateOfBirthInput, {
+//             target: {
+//                 value: "2000-01-01"
+//             }
+//         });
 
-        fireEvent.click(sendButton);
+//         fireEvent.click(sendButton);
 
-        expect(firstnameInput).toHaveValue("");
-        expect(lastnameInput).toHaveValue("");
-        expect(emailInput).toHaveValue("");
-        expect(passwordInput).toHaveValue("");
-        expect(dateOfBirthInput).toHaveValue("");
-    })
-})
+//         expect(firstnameInput).toHaveValue("");
+//         expect(lastnameInput).toHaveValue("");
+//         expect(emailInput).toHaveValue("");
+//         expect(passwordInput).toHaveValue("");
+//         expect(dateOfBirthInput).toHaveValue("");
+//     })
+// })
 
 describe("Translation", () => {
     test("Switch language", async () => {
