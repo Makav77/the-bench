@@ -30,6 +30,16 @@ function EventsPage() {
 
     return (
         <div className="p-6">
+            <div className="flex justify-end mb-4 h-10">
+                <button
+                    type="button"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
+                    onClick={() => navigate("/events/create")}
+                >
+                    Create event
+                </button>
+            </div>
+
             <h1 className="text-2xl font-bold mb-4">Upcoming Events</h1>
 
             {isLoading && <p>Loading...</p>}
