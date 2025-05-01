@@ -7,6 +7,7 @@ import java.util.*;
 public class DayArticles {
     public LocalDate day;
     public List<Article> articles;
+    public int id;
 
     public DayArticles(LocalDate day, List<Article> articles) {
         this.day = day;

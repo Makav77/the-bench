@@ -61,4 +61,19 @@ public class DayArticlesUtils {
             System.err.println("Erreur lors de l'insertion des articles : " + e.getMessage());
         }
     }
+
+    public static List<DayArticles> getAllDayArticles() {
+        List<DayArticles> dayArticlesList = new ArrayList<>();
+        try {
+            DayArticlesDAO dayArticlesDAO = new DayArticlesDAO();
+            ArticlesDAO articlesDAO = new ArticlesDAO();
+            dayArticlesList = dayArticlesDAO.getAllDayArticles();
+            for (DayArticles dayArticle : dayArticlesList) {
+                dayArticle.articles = articlesDAO.getArticlesByDayId(dayArticle.id);
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération des articles : " + e.getMessage());
+        }
+        return dayArticlesList;
+    }
 }

@@ -52,6 +52,7 @@ public class DayArticlesDAO {
                 Date date = rs.getDate("day");
                 LocalDate localDate = date.toLocalDate();
                 DayArticles dayArticles = new DayArticles(localDate, new ArrayList<Article>());
+                dayArticles.id = rs.getInt("id");
                 dayArticlesList.add(dayArticles);
             }
         } catch (SQLException e) {
@@ -70,6 +71,7 @@ public class DayArticlesDAO {
                 Date date = rs.getDate("day");
                 LocalDate localDate = date.toLocalDate();
                 dayArticles = new DayArticles(localDate, new ArrayList<Article>());
+                dayArticles.id = rs.getInt("id");
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la récupération des articles : " + e.getMessage());

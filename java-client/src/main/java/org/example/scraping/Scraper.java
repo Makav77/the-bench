@@ -73,7 +73,6 @@ public class Scraper {
             System.out.println(dayArticles.size());
             DayArticlesUtils.printDayArticles(dayArticles);
             DayArticlesUtils.InsertDayArticles(dayArticles);
-            //System.out.println(news.asNormalizedText());
         } catch (Exception e) {
             e.printStackTrace();
         }
