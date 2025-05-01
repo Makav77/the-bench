@@ -20,6 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.ScrollPane?>
 
 <BorderPane fx:controller="org.example.controller.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #1F1F2D;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <left>
@@ -93,95 +94,8 @@
    <center>
       <StackPane fx:id="contentStack" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <BorderPane fx:id="journalPane" prefHeight="200.0" prefWidth="200.0" visible="false">
-               <top>
-                  <HBox prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #333F4C;" BorderPane.alignment="CENTER">
-                     <children>
-                        <ButtonBar buttonMinWidth="65.0" prefHeight="90.0" prefWidth="250.0" style="-fx-padding: 10%;">
-                          <buttons>
-                              <Button mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Machin" textFill="#59747b">
-                                 <effect>
-                                    <Glow level="0.57" />
-                                 </effect>
-                                 <font>
-                                    <Font name="Corbel" size="14.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor></Button>
-                              <Button layoutX="30.0" layoutY="43.0" mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Cinema" textFill="#59747b">
-                                 <font>
-                                    <Font name="Corbel" size="14.0" />
-                                 </font>
-                                 <effect>
-                                    <Glow level="0.57" />
-                                 </effect>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                            <Button mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="News" textFill="#59747b">
-                                 <font>
-                                    <Font name="Corbel" size="14.0" />
-                                 </font>
-                                 <effect>
-                                    <Glow level="0.57" />
-                                 </effect>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor></Button>
-                          </buttons>
-                        </ButtonBar>
-                        <VBox prefHeight="200.0" prefWidth="500.0">
-                           <children>
-                              <HBox prefHeight="65.0" prefWidth="500.0">
-                                 <children>
-                                    <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
-                                       <font>
-                                          <Font name="Corbel" size="17.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets left="20.0" top="35.0" />
-                                       </HBox.margin>
-                                    </Text>
-                                    <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons/magnifier.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets left="5.0" top="30.0" />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <TextField prefWidth="500.0" promptText="Type to search...">
-                                       <font>
-                                          <Font name="Corbel Italic" size="12.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets left="5.0" right="20.0" top="30.0" />
-                                       </HBox.margin>
-                                    </TextField>
-                                 </children>
-                              </HBox>
-                              <SplitMenuButton mnemonicParsing="false" prefHeight="10.0" prefWidth="500.0" style="-fx-background-color: #3D4051;" text="Sort by">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="Most Recent Date" />
-                                  <MenuItem mnemonicParsing="false" text="Oldest Date" />
-                                </items>
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" left="100.0" right="20.0" top="5.0" />
-                                 </VBox.margin>
-                                 <font>
-                                    <Font name="Corbel" size="14.0" />
-                                 </font>
-                              </SplitMenuButton>
-                           </children>
-                        </VBox>
-                     </children>
-                     <effect>
-                        <DropShadow radius="4.75" width="0.0" />
-                     </effect>
-                  </HBox>
-               </top>
+            <BorderPane fx:id="contentPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+
             </BorderPane>
             <BorderPane fx:id="pluginsPane" prefHeight="200.0" prefWidth="200.0" visible="false">
                <top>
