@@ -19,32 +19,26 @@ public class MainController {
 
     @FXML
     private void initialize() {
+        loadView("/ui/journal.fxml");
         journalButton.setOnAction(e -> loadView("/ui/journal.fxml"));
         pluginsButton.setOnAction(e -> loadView("/ui/plugins.fxml"));
-
-        //pluginsButton.setOnAction(e -> showSection("plugins"));
-        themesButton.setOnAction(e -> showSection("themes"));
+        themesButton.setOnAction(e -> loadView("/ui/themes.fxml"));
     }
 
     private void showSection(String section) {
-        //journalPane.setVisible("journal".equals(section));
+        journalPane.setVisible("journal".equals(section));
         pluginsPane.setVisible("plugins".equals(section));
         themesPane.setVisible("themes".equals(section));
     }
     private void loadView(String fxmlPath) {
         try {
-            //pluginsPane.setVisible(false);
-            themesPane.setVisible(false);
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Pane view = loader.load();
             /*contentPane.getChildren().setAll(view);*/
             Parent parent = contentPane.getParent();
-            System.out.println("debug 1");
             if (parent instanceof Pane paneParent) {
-                System.out.println("debug 2");
                 int index = paneParent.getChildren().indexOf(contentPane);
                 if (index != -1) {
-                    System.out.println("debug 3");
                     paneParent.getChildren().set(index, view);
                 }
             }
