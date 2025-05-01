@@ -20,8 +20,9 @@ public class MainController {
     @FXML
     private void initialize() {
         journalButton.setOnAction(e -> loadView("/ui/journal.fxml"));
+        pluginsButton.setOnAction(e -> loadView("/ui/plugins.fxml"));
 
-        pluginsButton.setOnAction(e -> showSection("plugins"));
+        //pluginsButton.setOnAction(e -> showSection("plugins"));
         themesButton.setOnAction(e -> showSection("themes"));
     }
 
@@ -32,18 +33,22 @@ public class MainController {
     }
     private void loadView(String fxmlPath) {
         try {
-            pluginsPane.setVisible(false);
+            //pluginsPane.setVisible(false);
             themesPane.setVisible(false);
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Pane view = loader.load();
             /*contentPane.getChildren().setAll(view);*/
             Parent parent = contentPane.getParent();
+            System.out.println("debug 1");
             if (parent instanceof Pane paneParent) {
+                System.out.println("debug 2");
                 int index = paneParent.getChildren().indexOf(contentPane);
                 if (index != -1) {
+                    System.out.println("debug 3");
                     paneParent.getChildren().set(index, view);
                 }
             }
+            contentPane = (BorderPane) view;
             contentPane.setVisible(true);
             System.out.println("Vue chargée : " + fxmlPath);
         } catch (Exception e) {
