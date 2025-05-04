@@ -50,9 +50,9 @@
                             </cursor></Button>
                     </buttons>
                 </ButtonBar>
-                <VBox prefHeight="200.0" prefWidth="500.0">
+                <VBox prefHeight="200.0" prefWidth="800.0">
                     <children>
-                        <HBox prefHeight="65.0" prefWidth="500.0">
+                        <HBox prefHeight="65.0" prefWidth="800.0">
                             <children>
                                 <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
                                     <font>
@@ -70,17 +70,35 @@
                                         <Insets left="5.0" top="30.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <TextField prefWidth="500.0" promptText="Type to search...">
+                                <TextField fx:id="searchField" prefWidth="400.0" promptText="Type to search...">
                                     <font>
                                         <Font name="Corbel Italic" size="12.0" />
                                     </font>
                                     <HBox.margin>
-                                        <Insets left="5.0" right="20.0" top="30.0" />
+                                        <Insets left="5.0" right="5.0" top="30.0" />
                                     </HBox.margin>
                                 </TextField>
+                                <Button text="Search" fx:id="searchButton" mnemonicParsing="false"
+                                        style="-fx-background-color: #59747b; -fx-text-fill: white;" prefWidth="200.0">
+                                    <font>
+                                        <Font name="Corbel" size="12.0" />
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets top="30.0" right="20.0" />
+                                    </HBox.margin>
+                                </Button>
+                                <Button text="Update" fx:id="updateButton" mnemonicParsing="false"
+                                        style="-fx-background-color: #59747b; -fx-text-fill: white;" prefWidth="200.0">
+                                    <font>
+                                        <Font name="Corbel" size="12.0" />
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets top="30.0" right="20.0" left="20.0" />
+                                    </HBox.margin>
+                                </Button>
                             </children>
                         </HBox>
-                        <SplitMenuButton mnemonicParsing="false" prefHeight="10.0" prefWidth="500.0" style="-fx-background-color: #3D4051;" text="Sort by">
+                        <SplitMenuButton mnemonicParsing="false" prefHeight="10.0" prefWidth="408.0" style="-fx-background-color: #3D4051;" text="Sort by">
                             <items>
                                 <MenuItem mnemonicParsing="false" text="Most Recent Date" />
                                 <MenuItem mnemonicParsing="false" text="Oldest Date" />
@@ -101,13 +119,13 @@
         </HBox>
     </top>
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background: #3D4051;">
-            <content>
-                <VBox fx:id="articleContainer" spacing="10">
-                    <children>
-                    </children>
-                </VBox>
-            </content>
-        </ScrollPane>
+        <StackPane>
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" style="-fx-background: #3D4051;">
+                <content>
+                    <VBox fx:id="articleContainer" spacing="10" />
+                </content>
+            </ScrollPane>
+            <ProgressIndicator fx:id="spinner" visible="false" maxWidth="100" maxHeight="100" />
+        </StackPane>
     </center>
 </BorderPane>

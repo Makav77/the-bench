@@ -1,11 +1,15 @@
 package org.example.controller;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.*;
 import org.example.scraping.Article;
 import org.example.scraping.DayArticles;
 import org.example.scraping.DayArticlesUtils;
+import org.example.scraping.Scraper;
 
 import java.util.List;
 
@@ -13,12 +17,18 @@ public class JournalController {
 
     @FXML
     private VBox articleContainer;
+    @FXML private Button updateButton;
+    @FXML private ProgressIndicator spinner;
 
     @FXML
     private void initialize() {
         System.out.println("Vue JournalController chargée !");
         List<DayArticles> dayArticlesList = DayArticlesUtils.getAllDayArticles();
+        dayArticlesList = dayArticlesList.stream().sorted(
+                (a, b) -> b.day.compareTo(a.day)
+        ).toList();
         displayDayArticles(dayArticlesList);
+        updateButton.setOnAction(e -> updateDayArticles());
     }
 
     public void addArticle(String title, String content) {
@@ -56,5 +66,33 @@ public class JournalController {
                 articleContainer.getChildren().add(articleRow);
             }
         }
+    }
+    private void updateDayArticles() {
+        spinner.setVisible(true);
+
+        Task<Void> scrapingTask = new Task<>(){
+            @Override
+            protected Void call() throws Exception {
+                Scraper.getNewsParis();
+                return null;
+            }
+        };
+        scrapingTask.setOnSucceeded(event -> {
+            List<DayArticles> dayArticlesList = DayArticlesUtils.getAllDayArticles();
+            dayArticlesList = dayArticlesList.stream().sorted(
+                    (a, b) -> b.day.compareTo(a.day)
+            ).toList();
+            displayDayArticles(dayArticlesList);
+            spinner.setVisible(false);
+        } );
+        scrapingTask.setOnFailed(event -> {
+            spinner.setVisible(false);
+            Throwable e = scrapingTask.getException();
+            e.printStackTrace();
+        });
+
+        Thread scrapingThread = new Thread(scrapingTask);
+        scrapingThread.setDaemon(true);
+        scrapingThread.start();
     }
 }
