@@ -9,7 +9,7 @@ export class RefreshToken {
     @Column({ type: "text" })
     token: string;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: "timestamptz" })
     expiresAt: Date;
 
     @Column({ default: false })

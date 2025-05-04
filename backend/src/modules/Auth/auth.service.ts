@@ -26,7 +26,7 @@ export class AuthService {
         const user = await this.userService.findByEmail(email);
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            throw new UnauthorizedException("Mot de passe incorrect");
+            throw new UnauthorizedException("Incorrect password");
         }
 
         const payload = { sub: user.id, email: user.email, role: user.role };
@@ -71,18 +71,18 @@ export class AuthService {
         });
 
         if (!stored || stored.revoked) {
-            throw new UnauthorizedException("Refresh token invalide ou révoqué.");
+            throw new UnauthorizedException("Refresh token invalid or revoked.");
         }
 
         if (stored.expiresAt < new Date()) {
-            throw new UnauthorizedException("Refresh token invalide");
+            throw new UnauthorizedException("Invalid refresh token.");
         }
 
         let payload: any;
         try {
             payload = this.jwtService.verify(oldToken);
         } catch {
-            throw new UnauthorizedException("Refresh token invalide.");
+            throw new UnauthorizedException("Invalid refresh token.");
         }
 
         const newAccessToken = this.jwtService.sign(
