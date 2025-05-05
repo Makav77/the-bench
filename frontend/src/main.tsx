@@ -13,6 +13,7 @@ import EventsPage from "./components/Events/EventsPage";
 import EventDetailPage from "./components/Events/EventDetailPage";
 import { PublicRoute } from "./components/Utils/PublicRoute";
 import ProtectedRoute from "./components/Login/ProtectedRoute";
+import CreateEventPage from "./components/Events/CreateEventPage";
 
 const rootElement = document.getElementById("root");
 
@@ -33,6 +34,7 @@ if (rootElement) {
                                 <Route path="homepage" element={<Homepage />} />
                                 <Route path="events" element={<EventsPage />} />
                                 <Route path="events/:id" element={<EventDetailPage />} />
+                                <Route path="events/create" element={<CreateEventPage />} />
                             </Route>
                         </Route>
                     </Routes>

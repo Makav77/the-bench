@@ -1,4 +1,5 @@
 import apiClient from "./apiClient";
+import { EventFormData } from "../components/Events/EventForm";
 
 export interface EventSummary {
     id: string;
@@ -24,5 +25,10 @@ export const getEvents = async (page = 1, limit = 5): Promise<{ data: EventSumma
 
 export const getEvent = async (id: string): Promise<EventDetails> => {
     const response = await apiClient.get(`/events/${id}`);
+    return response.data;
+}
+
+export const createEvent = async (data: EventFormData): Promise<EventDetails> => {
+    const response = await apiClient.post("/events", data);
     return response.data;
 }

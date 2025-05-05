@@ -10,26 +10,26 @@ function EventsPage() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        async function load() {
-            setIsLoading(true);
-            setError(null);
+useEffect(() => {
+    async function load() {
+        setIsLoading(true);
+        setError(null);
 
-            try {
-                const { data, lastPage } = await getEvents(page, 5);
-                setEvents(data);
-                setLastPage(lastPage);
-            } catch(error) {
-                setError("Impossible de charger les événements : " + error);
-            } finally {
-                setIsLoading(false);
-            }
+        try {
+            const { data, lastPage } = await getEvents(page, 5);
+            setEvents(data);
+            setLastPage(lastPage);
+        } catch(error) {
+            setError("Impossible de charger les événements : " + error);
+        } finally {
+            setIsLoading(false);
         }
-        load();
-    }, [page]);
+    }
+    load();
+}, [page]);
 
     return (
-        <div className="p-6">
+        <div className="p-6 w-[40%] mx-auto">
             <div className="flex justify-end mb-4 h-10">
                 <button
                     type="button"
