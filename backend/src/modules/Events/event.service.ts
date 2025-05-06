@@ -28,7 +28,7 @@ export class EventService {
     }
 
     async findOneEvent(id: string): Promise<Event> {
-        const event = await this.eventRepo.findOne({ 
+        const event = await this.eventRepo.findOne({
             where: { id },
             relations: ['author', 'participantsList'],
         });
@@ -49,13 +49,17 @@ export class EventService {
     }
 
     async updateEvent(id: string, updateEventDTO: UpdateEventDTO, user: User): Promise <Event> {
-        const event = await this.eventRepo.findOne({ where: { id }, relations: ["author"] });
+        const event = await this.eventRepo.findOne({
+            where: { id },
+            relations: ["author"] }
+        );
+
         if (!event) {
             throw new ForbiddenException("Evenement introuvable");
         }
 
         if (event.author.id !== user.id && user.role !== Role.ADMIN) {
-            throw new ForbiddenException("Vous n'êtes pas autorisé à modifier cet événement");
+            throw new ForbiddenException("You are not allowed to edit this event.");
         }
 
         const updated = this.eventRepo.merge(event, updateEventDTO);
@@ -63,13 +67,17 @@ export class EventService {
     }
 
     async removeEvent(id: string, user: User): Promise<void> {
-        const event = await this.eventRepo.findOne({ where: { id }, relations: ["author"] });
+        const event = await this.eventRepo.findOne({
+            where: { id },
+            relations: ["author"]
+        });
+
         if (!event) {
             throw new ForbiddenException("Evénement introuvable");
         }
 
         if (event.author.id !== user.id && user.role !== Role.ADMIN) {
-            throw new ForbiddenException("Vous n'êtes pas autorisé à supprimer cet événement");
+            throw new ForbiddenException("You are not allowed to delete this event.");
         }
 
         await this.eventRepo.delete(id);
