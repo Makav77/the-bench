@@ -14,7 +14,7 @@ export class PostsService {
     ) {}
 
     async findAllPosts(): Promise<Posts[]> {
-        return this.postRepo.find({ relations: ["author"], order: { createdAt: "ASC"} })
+        return this.postRepo.find({ relations: ["author"], order: { createdAt: "DESC"} })
     }
 
     async findOnePost(id: string): Promise<Posts> {
