@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
+import { toLocalInput } from "../Utils/date";
 
 export interface EventFormData {
     name: string;
@@ -15,13 +16,22 @@ interface EventFormProps {
 }
 
 export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
-    const [form, setForm] = useState<EventFormData>({
-        name: defaultValues?.name ?? "",
-        startDate: defaultValues?.startDate ?? "",
-        endDate: defaultValues?.endDate ?? "",
-        place: defaultValues?.place ?? "",
-        maxNumberOfParticipants:defaultValues?.maxNumberOfParticipants ?? undefined,
-        description: defaultValues?.description ?? "",
+    const [form, setForm] = useState<EventFormData>(() => {
+        if (defaultValues) {
+            return {
+                ...defaultValues,
+                startDate: toLocalInput(defaultValues.startDate),
+                endDate:   toLocalInput(defaultValues.endDate),
+            };
+        }
+        return {
+            name: "",
+            startDate: "",
+            endDate: "",
+            place: "",
+            maxNumberOfParticipants: undefined,
+            description: "",
+        };
     });
 
     const [error, setError] = useState<string | null>(null);

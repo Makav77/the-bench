@@ -9,16 +9,16 @@ export class RefreshToken {
     @Column({ type: "text" })
     token: string;
 
-    @Column({ type: "timestamptz" })
+    @Column({ type: "timestamp" })
     expiresAt: Date;
 
     @Column({ default: false })
     revoked: boolean;
 
-    @CreateDateColumn({ type: "timestamptz" })
+    @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
-    @UpdateDateColumn({ type: "timestamptz" })
+    @UpdateDateColumn({ type: "timestamp" })
     updateAt: Date;
 
     @ManyToOne(() => User, (user) => user.refreshTokens, { onDelete: "CASCADE" })

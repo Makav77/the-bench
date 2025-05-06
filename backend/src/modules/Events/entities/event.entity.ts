@@ -9,16 +9,16 @@ export class Event {
     @Column()
     name: string;
 
-    @Column({ type: "timestamptz" })
+    @Column({ type: "timestamp" })
     startDate: Date;
 
-    @Column({ type: "timestamptz" })
+    @Column({ type: "timestamp" })
     endDate: Date;
 
-    @CreateDateColumn({ type: "timestamptz" })
+    @CreateDateColumn({ type: "timestamp" })
     createdDate: Date;
 
-    @UpdateDateColumn({ type: "timestamptz" })
+    @UpdateDateColumn({ type: "timestamp" })
     updatedDate: Date;
 
     @Column()

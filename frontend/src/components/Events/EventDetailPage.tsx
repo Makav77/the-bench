@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
 import { getEvent, EventDetails } from "../../api/eventService";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { deleteEvent } from "../../api/eventService";
+import { toast } from "react-toastify";
 
 function EventDetailPage() {
     const { id } = useParams<{ id: string }>();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const isOwner = user && event && user.id === event.author.id;
+    const isAdmin = user && user.role === "admin";
 
     useEffect(() => {
         async function load() {
@@ -43,11 +49,28 @@ function EventDetailPage() {
         return null;
     }
 
+    const handleDelete = async () => {
+        const confirmed = window.confirm("You are about to delete an event. Would you like to confirm?");
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            console.log("id :" + id);
+            await deleteEvent(id!);
+            toast.success("Event successfully deleted!")
+            navigate("/events");
+        } catch (error) {
+            console.error("Error while deleting: " + error);
+            toast.error("Unable to delete event.")
+        }
+    };
+
     return (
         <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
             <button
                 onClick={() => navigate("/events")}
-                className="text-blue-600 underline"
+                className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
             >
                 ← Back
             </button>
@@ -86,6 +109,24 @@ function EventDetailPage() {
             <p>
                 <strong>Participants :</strong> {event.participantsList.length}
             </p>
+
+            {(isOwner || isAdmin) && (
+                <div className="mt-4 flex gap-2 justify-center">
+                    <button
+                        onClick={() => navigate(`/events/${id}/edit`)}
+                        className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                    >
+                        Edit event
+                    </button>
+                    
+                    <button
+                        onClick={handleDelete}
+                        className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                    >
+                        Delete event
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

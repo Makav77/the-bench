@@ -32,3 +32,13 @@ export const createEvent = async (data: EventFormData): Promise<EventDetails> =>
     const response = await apiClient.post("/events", data);
     return response.data;
 }
+
+export const updateEvent = async (id: string, data: EventFormData): Promise<EventDetails> => {
+    const response = await apiClient.patch(`/events/${id}`, data);
+    return response.data;
+}
+
+export const deleteEvent = async (id: string): Promise<void> => {
+    const response = await apiClient.delete(`/events/${id}`);
+    return response.data;
+}
