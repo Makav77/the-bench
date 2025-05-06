@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { getEvents, EventSummary } from "../../api/eventService";
+import { getEvents, EventSummary, subscribeEvent } from "../../api/eventService";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 function EventsPage() {
     const [events, setEvents] = useState<EventSummary[]>([]);
@@ -9,24 +11,38 @@ function EventsPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { user } = useAuth();
 
-useEffect(() => {
-    async function load() {
-        setIsLoading(true);
-        setError(null);
+    useEffect(() => {
+        async function load() {
+            setIsLoading(true);
+            setError(null);
 
+            try {
+                const { data, lastPage } = await getEvents(page, 5);
+                setEvents(data);
+                setLastPage(lastPage);
+            } catch(error) {
+                setError("Impossible de charger les événements : " + error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        load();
+    }, [page]);
+
+    const handleSubscribe = async (eventId: string) => {
         try {
-            const { data, lastPage } = await getEvents(page, 5);
-            setEvents(data);
-            setLastPage(lastPage);
-        } catch(error) {
-            setError("Impossible de charger les événements : " + error);
-        } finally {
-            setIsLoading(false);
+            const updated = await subscribeEvent(eventId);
+            setEvents((ev) =>
+                ev.map((e) => (e.id === eventId ? { ...e, participantsList: updated.participantsList } : e))
+            );
+            toast.success("Succesful registration");
+        } catch (error) {
+            console.error(error);
+            toast.error("Error during registration");
         }
     }
-    load();
-}, [page]);
 
     return (
         <div className="p-6 w-[40%] mx-auto">
@@ -49,11 +65,44 @@ useEffect(() => {
                 {events.map((event) => (
                     <div
                         key={event.id}
-                        className="p-4 border rounded cursor-pointer hover:shadow"
+                        className="p-4 border rounded cursor-pointer hover:shadow flex justify-between items-center"
                         onClick={() => navigate(`/events/${event.id}`)}
                     >
-                        <h2 className="text-lg font-semibold">{event.name}</h2>
-                        <p>{new Date(event.startDate).toLocaleString()}</p>
+                        <div className="flex flex-col">
+                            <h2 className="text-lg font-semibold">{event.name}</h2>
+                            <p>{new Date(event.startDate).toLocaleString()}</p>
+                        </div>
+
+                        {(() => {
+                            const isSubscribed = event.participantsList.some((u) => u.id === user?.id);
+                            const isFull = event.maxNumberOfParticipants !== undefined
+                                && event.participantsList.length >= event.maxNumberOfParticipants
+                                && !isSubscribed;
+
+                            if (isSubscribed) {
+                                return <p className="text-blue-600 font-semibold">You are registered</p>
+                            }
+
+                            return (
+                                <>
+                                    {event.maxNumberOfParticipants === null || event.maxNumberOfParticipants === undefined ? (
+                                        <span className="text-green-700 font-semibold">Open event</span>
+                                    ) : isFull ? (
+                                        <span className="text-red-500 font-semibold">Event full</span>
+                                    ) : (
+                                        <button
+                                            onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleSubscribe(event.id);
+                                            }}
+                                            className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700"
+                                        >
+                                            Register
+                                        </button>
+                                    )}
+                                </>
+                            );
+                        })()}
                     </div>
                 ))}
             </div>

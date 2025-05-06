@@ -16,14 +16,11 @@ export class EventService {
     async findAllEvents(page = 1, limit = 5): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
         const [data, total] = await this.eventRepo.findAndCount({
-            where: {
-                startDate: MoreThan(new Date()),
-            },
-            order: {
-                startDate: "ASC",
-            },
+            where: { startDate: MoreThan(new Date()) },
+            order: { startDate: "ASC" },
             skip: offset,
             take: limit,
+            relations: ["participantsList"],
         });
 
         const lastPage = Math.ceil(total / limit);

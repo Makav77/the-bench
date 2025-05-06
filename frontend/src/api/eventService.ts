@@ -5,6 +5,8 @@ export interface EventSummary {
     id: string;
     name: string;
     startDate: string;
+    maxNumberOfParticipants?: number;
+    participantsList: { id: string }[];
 }
 
 export interface EventDetails extends EventSummary {

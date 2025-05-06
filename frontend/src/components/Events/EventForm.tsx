@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { toLocalInput } from "../Utils/date";
+import { toLocalInput } from "../Utils/Date";
 
 export interface EventFormData {
     name: string;
@@ -21,7 +21,7 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
             return {
                 ...defaultValues,
                 startDate: toLocalInput(defaultValues.startDate),
-                endDate:   toLocalInput(defaultValues.endDate),
+                endDate: toLocalInput(defaultValues.endDate),
             };
         }
         return {
