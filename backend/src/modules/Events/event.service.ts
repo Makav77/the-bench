@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, MoreThan } from "typeorm";
 import { Event } from "./entities/event.entity";
@@ -76,5 +76,46 @@ export class EventService {
         }
 
         await this.eventRepo.delete(id);
+    }
+
+    async subscribe(id: string, user: User): Promise<Event> {
+        const event = await this.eventRepo.findOne({
+            where: { id },
+            relations: ["participantsList", "author"],
+        });
+
+        if (!event) {
+            throw new NotFoundException("Event not found.");
+        }
+
+        if (event.participantsList?.some((u) => u.id === user.id)) {
+            throw new BadRequestException("You are already registered for this event.")
+        }
+
+        if (event.maxNumberOfParticipants !== undefined && (event.participantsList ?? []).length >= event.maxNumberOfParticipants) {
+            throw new BadRequestException("The event is full.")
+        }
+
+        event.participantsList?.push(user);
+        return this.eventRepo.save(event);
+    }
+
+    async unsubscribe(id: string, user: User): Promise<Event> {
+        const event = await this.eventRepo.findOne({
+            where: { id },
+            relations: ["participantsList"],
+        });
+
+        if (!event) {
+            throw new NotFoundException("Event not found.");
+        }
+
+        const index = (event.participantsList ?? []).findIndex((u) => u.id === user.id);
+        if (index === -1) {
+            throw new BadRequestException("You are not registered for this event.");
+        }
+
+        (event.participantsList ?? []).splice(index, 1);
+        return this.eventRepo.save(event);
     }
 }

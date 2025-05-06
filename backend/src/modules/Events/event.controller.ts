@@ -7,8 +7,6 @@ import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
 import { User } from "../Users/entities/user.entity";
 
-
-
 @Controller("events")
 export class EventController {
     constructor(private readonly eventService: EventService) {}
@@ -57,4 +55,23 @@ export class EventController {
         return this.eventService.removeEvent(id, user);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Post(":id/subscribe")
+    async subscribe(
+        @Param("id") id:string,
+        @Req() req: Request
+    ): Promise<Event> {
+        const user = req.user as User;
+        return this.eventService.subscribe(id, user);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(":id/subscribe")
+    async unsubscribe(
+        @Param("id") id:string,
+        @Req() req: Request,
+    ): Promise<Event> {
+        const user = req.user as User;
+        return this.eventService.unsubscribe(id, user);
+    }
 }
