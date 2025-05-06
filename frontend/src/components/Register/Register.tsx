@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { createUser, Role } from "../../api/userService";
 
 interface registerCredentials {
     id: string,
@@ -10,7 +11,9 @@ interface registerCredentials {
     lastname: string,
     email: string,
     password: string,
-    dateOfBirth: string
+    dateOfBirth: string,
+    profilePicture: string,
+    role: Role
 };
 
 enum registerState {
@@ -28,7 +31,9 @@ function Signup() {
         lastname: "",
         email: "",
         password: "",
-        dateOfBirth: ""
+        dateOfBirth: "",
+        profilePicture: "",
+        role: Role.USER,
     });
     const [currentRegisterState, setCurrentRegisterState] = useState<registerState>(
         registerState.noError
@@ -58,7 +63,7 @@ function Signup() {
         setCurrentRegisterState(registerState.noError);
     }
 
-    function handleSubmit(e: FormEvent) {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         if (!registerCredentials.firstname || !registerCredentials.lastname || !registerCredentials.email || !registerCredentials.password || !registerCredentials.dateOfBirth) {
             setCurrentRegisterState(registerState.missingCredentials);
@@ -66,15 +71,14 @@ function Signup() {
         }
         setCurrentRegisterState(registerState.noError);
         registerCredentials.id = uuidv4();
-        console.log(registerCredentials);
-        setRegisterCredentials({
-            id: "",
-            firstname: "",
-            lastname: "",
-            email: "",
-            password: "",
-            dateOfBirth: ""
-        });
+
+        try {
+            const created = await createUser(registerCredentials);
+            console.log("Utilisateur créé :", created);
+            navigate("/");
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -187,7 +191,7 @@ function Signup() {
                         aria-label="register-button"
                         className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
                     >
-                        t("buttonRegister")
+                        {t("buttonRegister")}
                     </button>
                 </div>
             </form>
