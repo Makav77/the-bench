@@ -23,7 +23,7 @@ function EventsPage() {
                 setEvents(data);
                 setLastPage(lastPage);
             } catch(error) {
-                setError("Impossible de charger les événements : " + error);
+                setError("Unable to load events : " + error);
             } finally {
                 setIsLoading(false);
             }
@@ -113,7 +113,7 @@ function EventsPage() {
                     onClick={() => setPage((p) => p - 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
                 >
-                    ← Back
+                    ← Prev
                 </button>
 
                 <span>
@@ -121,9 +121,9 @@ function EventsPage() {
                 </span>
 
                 <button
-                disabled={page >= lastPage}
-                onClick={() => setPage((p) => p + 1)}
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    disabled={page >= lastPage}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
                 >
                     Next →
                 </button>

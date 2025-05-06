@@ -3,7 +3,7 @@ import apiClient from "./apiClient";
 export interface PostSummary {
     id: string;
     title: string;
-    updateAt: string;
+    updatedAt: string;
     author: { id: string; firstname: string; lastname: string; };
 }
 
