@@ -14,8 +14,6 @@ function EventDetailPage() {
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const isOwner = user && event && user.id === event.author.id;
-    const isAdmin = user && user.role === "admin";
 
     useEffect(() => {
         async function load() {
@@ -27,14 +25,14 @@ function EventDetailPage() {
                     const event = await getEvent(id);
                     setEvent(event);
                 } else {
-                    setError("ID invalide");
+                    setError("Invalid ID");
                 }
             } catch(error) {
-                setError("Impossible de charger l'événement : " + error);
+                setError("Unable to load event : " + error);
             } finally {
                 setIsLoading(false);
             }
-        }
+        };
         load();
     }, [id]);
 
@@ -50,6 +48,8 @@ function EventDetailPage() {
         return null;
     }
 
+    const isOwner = user && event && user.id === event.author.id;
+    const isAdmin = user && user.role === "admin";
     const isSubscribe = event.participantsList.some((u) => u.id === user?.id);
     const isFull = event.maxNumberOfParticipants !== undefined
         && event.participantsList.length >= event.maxNumberOfParticipants
@@ -61,8 +61,7 @@ function EventDetailPage() {
             setEvent(updated);
             toast.success("Successful registration !");
         } catch(error) {
-            console.error(error);
-            toast.error("Error during registration.")
+            toast.error("Error during registration : " + error);
         }
     };
 
@@ -72,8 +71,7 @@ function EventDetailPage() {
             setEvent(updated);
             toast.success("Unsubscribe successful !");
         } catch (error) {
-            console.error(error);
-            toast.error("Error unsubscribing.")
+            toast.error("Error unsubscribing : " + error);
         }
     }
 
@@ -84,13 +82,11 @@ function EventDetailPage() {
         }
 
         try {
-            console.log("id :" + id);
             await deleteEvent(id!);
             toast.success("Event successfully deleted!")
             navigate("/events");
         } catch (error) {
-            console.error("Error while deleting: " + error);
-            toast.error("Unable to delete event.")
+            toast.error("Unable to delete event : " + error);
         }
     };
 
