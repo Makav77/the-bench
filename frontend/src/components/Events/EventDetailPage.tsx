@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { deleteEvent } from "../../api/eventService";
 import { toast } from "react-toastify";
+import { subscribeEvent, unsubscribeEvent } from "../../api/eventService";
 
 function EventDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -49,6 +50,33 @@ function EventDetailPage() {
         return null;
     }
 
+    const isSubscribe = event.participantsList.some((u) => u.id === user?.id);
+    const isFull = event.maxNumberOfParticipants !== undefined
+        && event.participantsList.length >= event.maxNumberOfParticipants
+        && !isSubscribe;
+
+    const handleSubscribe = async () => {
+        try {
+            const updated = await subscribeEvent(id!);
+            setEvent(updated);
+            toast.success("Successful registration !");
+        } catch(error) {
+            console.error(error);
+            toast.error("Error during registration.")
+        }
+    };
+
+    const handleUnsubscribe = async () => {
+        try {
+            const updated = await unsubscribeEvent(id!);
+            setEvent(updated);
+            toast.success("Unsubscribe successful !");
+        } catch (error) {
+            console.error(error);
+            toast.error("Error unsubscribing.")
+        }
+    }
+
     const handleDelete = async () => {
         const confirmed = window.confirm("You are about to delete an event. Would you like to confirm?");
         if (!confirmed) {
@@ -68,12 +96,34 @@ function EventDetailPage() {
 
     return (
         <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
-            <button
-                onClick={() => navigate("/events")}
-                className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
-            >
-                ← Back
-            </button>
+            <div className="flex justify-between gap-4">
+                <button
+                    onClick={() => navigate("/events")}
+                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
+                >
+                    ← Back
+                </button>
+
+                {isSubscribe ? (
+                    <button
+                        onClick={handleUnsubscribe}
+                        className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700"
+                    >
+                        Unsubscribe
+                    </button>
+                ) : isFull ? (
+                    <p className="text-gray-500 text-l font-semibold">
+                        Event full
+                    </p>
+                ) : (
+                    <button
+                        onClick={handleSubscribe}
+                        className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700"
+                    >
+                        Subscribe
+                    </button>
+                )}
+            </div>
 
             <h1 className="text-2xl font-bold">{event.name}</h1>
             <p>

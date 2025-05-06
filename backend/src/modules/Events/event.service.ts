@@ -103,7 +103,7 @@ export class EventService {
     async unsubscribe(id: string, user: User): Promise<Event> {
         const event = await this.eventRepo.findOne({
             where: { id },
-            relations: ["participantsList"],
+            relations: ["participantsList", "author"],
         });
 
         if (!event) {
