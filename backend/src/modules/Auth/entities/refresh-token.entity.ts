@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { User } from "src/modules/Users/entities/user.entity";
+import { User } from "../../../modules/Users/entities/user.entity";
 
-@Entity({ name: "refresh_tokens "})
+@Entity({ name: "refresh_tokens"})
 export class RefreshToken {
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -15,10 +15,10 @@ export class RefreshToken {
     @Column({ default: false })
     revoked: boolean;
 
-    @CreateDateColumn({ type: "timestamptz" })
+    @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
-    @UpdateDateColumn({ type: "timestamptz" })
+    @UpdateDateColumn({ type: "timestamp" })
     updateAt: Date;
 
     @ManyToOne(() => User, (user) => user.refreshTokens, { onDelete: "CASCADE" })

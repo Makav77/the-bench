@@ -14,7 +14,6 @@ export class AuthController {
         @Body() loginUserDTO: LoginUserDTO,
         @Res({ passthrough: true }) res: Response,
     ) {
-        console.log("CREDENTIALS +" + JSON.stringify(loginUserDTO));
         const { accessToken, refreshToken, refreshOptions } = await this.authService.login(loginUserDTO);
         res.cookie("refreshToken", refreshToken, refreshOptions);
         return { accessToken };
@@ -43,7 +42,7 @@ export class AuthController {
         const oldToken = req.cookies["refreshToken"];
         await this.authService.logout(oldToken);
         res.clearCookie("refreshToken", { path: "/" });
-        return { message: "Déconnexion réussie." };
+        return { message: "Logout successfull." };
     }
 
     @UseGuards(JwtAuthGuard)
