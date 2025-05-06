@@ -13,8 +13,18 @@ export class PostsService {
         private readonly postRepo: Repository<Posts>,
     ) {}
 
-    async findAllPosts(): Promise<Posts[]> {
-        return this.postRepo.find({ relations: ["author"], order: { createdAt: "DESC"} })
+    async findAllPosts(page = 1, limit = 10): Promise<{ data: Posts[]; total: number; page: number; lastPage: number }> {
+        const offset = (page - 1) * limit;
+
+        const [data, total] = await this.postRepo.findAndCount({
+            relations: ["author"],
+            order: { createdAt: "ASC" },
+            skip: offset,
+            take: limit,
+        });
+
+        const lastPage = Math.ceil(total / limit);
+        return { data, total, page, lastPage };
     }
 
     async findOnePost(id: string): Promise<Posts> {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, Query } from '@nestjs/common';
 import { PostsService } from './post.service';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
@@ -13,7 +13,10 @@ export class PostsController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async findAllPosts(): Promise<Posts[]> {
+    async findAllPosts(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number
+    ): Promise<{ data: Posts[]; total: number; page: number; lastPage: number; }> {
         return this.postsService.findAllPosts();
     }
 
