@@ -1,5 +1,6 @@
 {
     "login": "Connexion",
     "logout": "Déconnexion",
-    "profile": "Profil"
+    "profile": "Profil",
+    "hello": "Bonjour {{firstname}}"
 }

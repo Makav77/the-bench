@@ -1,24 +1,34 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/authService";
+import { useAuth } from "../../context/AuthContext";
+
 
 interface loginCredentials {
     email: string;
     password: string;
+    rememberMe: boolean;
 }
 
-export enum loginState {
+enum loginState {
     noError = "noError",
     missingCredentials = "missingCredentials",
+    invalidCredentials = "invalidCredentials",
 }
 
 function Login() {
+    const { login } = useAuth();
     const { t } = useTranslation("Login");
+    const navigate = useNavigate();
+
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [loginCredentials, setLoginCredentials] = useState<loginCredentials>({
         email: "",
         password: "",
+        rememberMe: false,
     });
     const [currentLoginState, setCurrentLoginState] = useState<loginState>(
         loginState.noError
@@ -38,6 +48,8 @@ function Login() {
         switch (currentLoginState) {
             case loginState.missingCredentials:
                 return t("missingCredentials");
+            case loginState.invalidCredentials:
+                return t("invalidCredentials");
             default:
                 return null;
         }
@@ -50,7 +62,14 @@ function Login() {
         setCurrentLoginState(loginState.noError);
     };
 
-    function handleSubmit(e: FormEvent) {
+    function handleCheckboxChange(e: ChangeEvent<HTMLInputElement>) {
+        setLoginCredentials(prev => ({
+            ...prev,
+            rememberMe: e.target.checked,
+        }));
+    }
+
+    async function handleSubmit(e: FormEvent) {
         e.preventDefault();
         if (!loginCredentials.email || !loginCredentials.password) {
             setCurrentLoginState(loginState.missingCredentials);
@@ -58,13 +77,21 @@ function Login() {
         }
         setCurrentLoginState(loginState.noError);
         setIsLoading(true);
-        setLoginCredentials({
-            email: "",
-            password: "",
-        });
-        setTimeout(() => {
+        console.log("Credentials : " + JSON.stringify(loginCredentials));
+        try {
+            const data = await loginUser(loginCredentials);
+
+            if (data?.accessToken) {
+                login(data.accessToken);
+            }
+
+            navigate("/resetpassword");
+        } catch (error) {
+            console.error("Login failed : " + error);
+            setCurrentLoginState(loginState.invalidCredentials)
+        } finally {
             setIsLoading(false);
-        }, 500);
+        }
     }
 
     return (
@@ -142,6 +169,8 @@ function Login() {
                         aria-label="rememberMe-checkbox"
                         autoComplete="off"
                         className="appearance-none w-4 h-4 self-center border-2 border-gray-500 checked:bg-[#F00969] checked:border-black hover:cursor-pointer"
+                        checked={loginCredentials.rememberMe}
+                        onChange={handleCheckboxChange}
                     />
                     {t("rememberMe")}
                 </div>
@@ -149,7 +178,7 @@ function Login() {
                 <button
                     type="submit"
                     aria-label="login-button"
-                    className="border-none bg-[#488ACF] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                    className="border-none bg-[#488ACF] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300"
                     disabled={isLoading}
                 >
                     {isLoading ? (

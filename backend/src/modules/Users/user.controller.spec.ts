@@ -3,28 +3,38 @@ import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { Role, User } from "./entities/user.entity";
 import { CreateUserDTO } from "./dto/create-user.dto";
+import { UpdateUserDTO } from "./dto/update-user.dto";
 
 describe("UserController", () => {
     let userController: UserController;
     let userService: UserService;
 
-    beforeEach(async() => {
+    const mockUser: User = {
+        id: "jd8hze31-di8t-280o-jz91m5nwg85t",
+        firstname: "Jane",
+        lastname: "Doe",
+        password: "password123",
+        email: "test@example.com",
+        dateOfBirth: new Date("2010-12-12"),
+        role: Role.USER,
+        profilePicture: "none",
+        refreshTokens: [],
+        eventsCreated: [],
+        eventsParticipating: []
+    };
+
+    beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
             controllers: [UserController],
             providers: [
                 {
                     provide: UserService,
                     useValue: {
-                        create: jest.fn().mockResolvedValue({
-                            id: "jd8hze31-di8t-280o-jz91m5nwg85t",
-                            firstname: "Jane",
-                            lastname: "Doe",
-                            password: "password123",
-                            email: "test@example.com",
-                            dateOfBirth: new Date("2010-12-12"),
-                            role: Role.USER,
-                            profilePicture: "none"
-                          }),
+                        create: jest.fn().mockResolvedValue(mockUser),
+                        findAll: jest.fn().mockResolvedValue([mockUser]),
+                        findOne: jest.fn().mockResolvedValue(mockUser),
+                        update: jest.fn().mockResolvedValue({ ...mockUser, email: "updated@example.com" }),
+                        remove: jest.fn().mockResolvedValue(undefined),
                     },
                 },
             ],
@@ -35,7 +45,7 @@ describe("UserController", () => {
     });
 
     describe("Create", () => {
-        test("should create a new user", async() => {
+        test("should create a new user", async () => {
             const new_user: CreateUserDTO = {
                 id: "",
                 firstname: "Jane",
@@ -47,13 +57,36 @@ describe("UserController", () => {
                 role: Role.USER,
             };
 
-            const expectedUser = {
-                ...new_user,
-                id: "jd8hze31-di8t-280o-jz91m5nwg85t",
-                email: "test@example.com"
+            await expect(userController.create(new_user)).resolves.toEqual(mockUser);
+        });
+    });
+
+    describe("findAll", () => {
+        test("should return an array of users", async () => {
+            await expect(userController.findAll()).resolves.toEqual([mockUser]);
+        });
+    });
+
+    describe("findOne", () => {
+        test("should return a user by id", async () => {
+            await expect(userController.findOne("jd8hze31-di8t-280o-jz91m5nwg85t")).resolves.toEqual(mockUser);
+        });
+    });
+
+    describe("update", () => {
+        test("should update a user and return it", async () => {
+            const updateUserDTO: UpdateUserDTO = {
+                email: "updated@example.com"
             };
 
-            await expect(userController.create(new_user)).resolves.toEqual(expectedUser);
-        })
-    })
+            const updatedUser = { ...mockUser, email: "updated@example.com" };
+            await expect(userController.update(mockUser.id, updateUserDTO)).resolves.toEqual(updatedUser);
+        });
+    });
+
+    describe("remove", () => {
+        test("should delete the user", async () => {
+            await expect(userController.remove(mockUser.id)).resolves.toBeUndefined();
+        });
+    });
 })

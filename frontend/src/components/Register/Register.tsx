@@ -75,20 +75,10 @@ function Signup() {
         try {
             const created = await createUser(registerCredentials);
             console.log("Utilisateur créé :", created);
+            navigate("/");
         } catch (error) {
             console.error(error);
         }
-
-        setRegisterCredentials({
-            id: "",
-            firstname: "",
-            lastname: "",
-            email: "",
-            password: "",
-            dateOfBirth: "",
-            profilePicture: "",
-            role: Role.USER
-        });
     }
 
     return (
