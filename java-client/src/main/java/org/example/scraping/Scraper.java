@@ -3,6 +3,7 @@ package org.example.scraping;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import org.example.dao.DayArticlesDAO;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Scraper {
-    public static void getNewParis() {
+    public static void getNewsParis() {
         // à réactiver pour debug
         Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
         Logger.getLogger("org.apache.http").setLevel(Level.OFF);
@@ -46,7 +47,7 @@ public class Scraper {
                         dayArticles.add(currentArticles);
                     }
                     currentArticles = new DayArticles(
-                            DayArticles.resolveDayNameToDate(elementText, LocalDate.now()),
+                            DayArticlesUtils.resolveDayNameToDate(elementText, LocalDate.now()),
                             new ArrayList<>()
                     );
                 } else {
@@ -70,13 +71,8 @@ public class Scraper {
             }
 
             System.out.println(dayArticles.size());
-            for(DayArticles day : dayArticles) {
-                System.out.println("Jour : " + day.day);
-                for (Article article : day.articles) {
-                    System.out.println("  " + article.time + " - " + article.title);
-                }
-            }
-            //System.out.println(news.asNormalizedText());
+            DayArticlesUtils.printDayArticles(dayArticles);
+            DayArticlesUtils.InsertDayArticles(dayArticles);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ import org.example.scraping.DayArticles;
 import java.time.LocalDate;
 import java.util.Locale;
 
+import org.example.scraping.DayArticlesUtils;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +15,7 @@ public class ResolveDayTest {
         String dayName = "Dimanche";
         LocalDate expectedDate = LocalDate.of(2025, 3, 30); // Dimanche 30 mars
 
-        LocalDate result = DayArticles.resolveDayNameToDate(dayName, today);
+        LocalDate result = DayArticlesUtils.resolveDayNameToDate(dayName, today);
         assertEquals(expectedDate, result);
     }
 
@@ -24,7 +25,7 @@ public class ResolveDayTest {
         String dayName = "Vendredi";
         LocalDate expectedDate = LocalDate.of(2025, 4, 4); // Vendredi 4 avril
 
-        LocalDate result = DayArticles.resolveDayNameToDate(dayName, today);
+        LocalDate result = DayArticlesUtils.resolveDayNameToDate(dayName, today);
         assertEquals(expectedDate, result);
     }
 }

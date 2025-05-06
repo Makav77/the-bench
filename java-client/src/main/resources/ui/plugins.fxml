@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.PluginsController" fx:id="pluginsPane" prefHeight="200.0" prefWidth="200.0">
+    <top>
+        <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #333F4C;" BorderPane.alignment="CENTER">
+            <children>
+                <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload plugins here:">
+                    <font>
+                        <Font name="Corbel" size="18.0" />
+                    </font>
+                    <effect>
+                        <Glow level="0.74" />
+                    </effect>
+                    <HBox.margin>
+                        <Insets left="30.0" top="40.0" />
+                    </HBox.margin>
+                </Text>
+                <Button mnemonicParsing="false" prefWidth="120.0" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Select file..." textFill="#59747b">
+                    <HBox.margin>
+                        <Insets left="20.0" top="35.0" />
+                    </HBox.margin>
+                    <font>
+                        <Font name="Corbel" size="14.0" />
+                    </font>
+                    <effect>
+                        <Glow level="0.57" />
+                    </effect>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+            </children>
+            <effect>
+                <DropShadow radius="4.75" width="0.0" />
+            </effect>
+        </HBox>
+    </top>
+    <center>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: #59747b; -fx-border-style: dashed; -fx-border-radius: 20; -fx-border-width: 5;" BorderPane.alignment="CENTER">
+            <children>
+                <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Drag and Drop your file here" textAlignment="CENTER">
+                    <font>
+                        <Font name="Corbel" size="24.0" />
+                    </font>
+                    <effect>
+                        <Glow level="0.5" />
+                    </effect>
+                </Text>
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+            </BorderPane.margin>
+        </HBox>
+    </center>
+</BorderPane>
