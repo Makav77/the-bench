@@ -1,3 +1,4 @@
+import { PostModule } from './../Posts/post.module';
 import { PostsController } from './../Posts/post.controller';
 import { AuthModule } from "./../Auth/auth.module";
 import { AuthController } from "./../Auth/auth.controller";
@@ -12,6 +13,7 @@ import { EventModule } from "../Events/event.module";
 
 @Module({
     imports: [
+        PostModule, 
         ScheduleModule.forRoot(),
         AuthModule,
         TypeOrmModule.forRoot(databaseConfig),
