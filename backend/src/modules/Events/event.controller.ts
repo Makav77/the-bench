@@ -11,6 +11,7 @@ import { User } from "../Users/entities/user.entity";
 export class EventController {
     constructor(private readonly eventService: EventService) {}
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAllEvents(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -19,6 +20,7 @@ export class EventController {
         return this.eventService.findAllEvents(page, limit);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     async findOneEvent(@Param("id") id: string): Promise<Event> {
         return this.eventService.findOneEvent(id);

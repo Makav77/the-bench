@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { User } from "src/modules/Users/entities/user.entity";
 
 @Entity("posts")
-export class Post {
+export class Posts {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 

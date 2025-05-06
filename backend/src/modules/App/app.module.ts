@@ -1,3 +1,4 @@
+import { PostsController } from './../Posts/post.controller';
 import { AuthModule } from "./../Auth/auth.module";
 import { AuthController } from "./../Auth/auth.controller";
 import { Module } from "@nestjs/common";
@@ -18,7 +19,8 @@ import { EventModule } from "../Events/event.module";
         AuthModule,
         EventModule,
     ],
-    controllers: [AuthController, AppController],
+    controllers: [
+        PostsController, AuthController, AppController],
     providers: [AppService],
 })
 

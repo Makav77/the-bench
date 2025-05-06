@@ -1,23 +1,23 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Post } from './entities/post.entity';
+import { Posts } from './entities/post.entity';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { User, Role } from '../Users/entities/user.entity';
 
 @Injectable()
-export class ListingService {
+export class PostsService {
     constructor(
-        @InjectRepository(Post)
-        private readonly postRepo: Repository<Post>,
+        @InjectRepository(Posts)
+        private readonly postRepo: Repository<Posts>,
     ) {}
 
-    async findAllPosts(): Promise<Post[]> {
+    async findAllPosts(): Promise<Posts[]> {
         return this.postRepo.find({ relations: ["author"], order: { createdAt: "ASC"} })
     }
 
-    async findOnePost(id: string): Promise<Post> {
+    async findOnePost(id: string): Promise<Posts> {
         const post = await this.postRepo.findOne({
             where: { id },
             relations: ["author"],
@@ -29,7 +29,7 @@ export class ListingService {
         return post;
     }
 
-    async createPost(createPostDTO: CreatePostDTO, author: User): Promise<Post> {
+    async createPost(createPostDTO: CreatePostDTO, author: User): Promise<Posts> {
         const post = this.postRepo.create({
             ...createPostDTO,
             author,
@@ -37,7 +37,7 @@ export class ListingService {
         return this.postRepo.save(post);
     }
 
-    async updatePost(id: string, updatePostDTO: UpdatePostDTO, user: User): Promise<Post> {
+    async updatePost(id: string, updatePostDTO: UpdatePostDTO, user: User): Promise<Posts> {
         const post = await this.postRepo.findOne({
             where: { id },
             relations: ["author"],
