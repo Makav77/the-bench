@@ -31,7 +31,7 @@ export default function EditEventPage() {
 
     return(
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">Edit event</h1>
+            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2">Edit event</h1>
             <EventForm defaultValues={event} onSubmit={handleSubmit} />
         </div>
     );
