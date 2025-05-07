@@ -50,6 +50,6 @@ export class User {
     @OneToMany(() => Posts, (post) => post.author)
     posts: Posts[]
 
-    @OneToMany(() => MarketItem, (marketItems) => marketItems.author)
+    @OneToMany(() => MarketItem, (items) => items.author)
     marketItems: MarketItem[];
 }
