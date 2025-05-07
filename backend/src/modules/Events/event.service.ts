@@ -34,7 +34,7 @@ export class EventService {
         });
 
         if (!event) {
-            throw new NotFoundException(`Event with ID ${id} not found.`);
+            throw new NotFoundException(`Event not found.`);
         }
         return event;
     }
