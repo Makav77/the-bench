@@ -15,7 +15,7 @@ interface EventFormProps {
     onSubmit: (data: EventFormData) => void;
 }
 
-export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
+function EventForm({ defaultValues, onSubmit }: EventFormProps) {
     const [form, setForm] = useState<EventFormData>(() => {
         if (defaultValues) {
             return {
@@ -175,3 +175,5 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         </form>
     );
 }
+
+export default EventForm;
