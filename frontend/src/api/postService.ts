@@ -18,7 +18,7 @@ export const getPosts = async (page = 1, limit = 10): Promise<{ data: PostSummar
 }
 
 export const getPost = async (id: string): Promise<PostDetails> => {
-    const response = await apiClient.get(`/events/${id}`);
+    const response = await apiClient.get(`/posts/${id}`);
     return response.data;
 }
 
