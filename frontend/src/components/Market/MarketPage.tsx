@@ -44,33 +44,38 @@ function MarketPage() {
 
             <h1 className="text-2xl font-bold mb-4">Market</h1>
 
-            {isLoading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
 
-            <div className="grid grid-cols-1 gap-4">
-                {items.map((item) => (
-                    <div
-                        key={item.id}
-                        className="p-4 border rounded cursor-pointer hover:shadow flex justify-between items-center"
-                        onClick={() => navigate(`/market/${item.id}`)}
-                    >
-                        <div className="flex flex-col">
-                            <h2 className="text-lg font-semibold">{item.title}</h2>
-                            <p className="text-gray-600 text-sm">
-                                {item.price != null ? (
-                                    <>Price : {item.price.toFixed(2)} €</>
-                                ) : (
-                                    <></>
-                                )}{" "}
-                                Last update : {new Date(item.updatedAt).toLocaleDateString()}
+            {isLoading ? (
+                <p>Loading market items...</p>
+            ) : items.length === 0 ? (
+                <p>No item to show.</p>
+            ) : (
+                <div className="grid grid-cols-1 gap-4">
+                    {items.map((item) => (
+                        <div
+                            key={item.id}
+                            className="p-4 border rounded cursor-pointer hover:shadow flex justify-between items-center"
+                            onClick={() => navigate(`/market/${item.id}`)}
+                        >
+                            <div className="flex flex-col">
+                                <h2 className="text-lg font-semibold">{item.title}</h2>
+                                <p className="text-gray-600 text-sm">
+                                    {item.price != null ? (
+                                        <>Price : {item.price.toFixed(2)} €</>
+                                    ) : (
+                                        <></>
+                                    )}{" "}
+                                    Last update : {new Date(item.updatedAt).toLocaleDateString()}
+                                </p>
+                            </div>
+                            <p className="text-gray-600 italic">
+                                {item.author.firstname} {item.author.lastname}
                             </p>
                         </div>
-                        <p className="text-gray-600 italic">
-                            {item.author.firstname} {item.author.lastname}
-                        </p>
-                    </div>
-                ))};
-            </div>
+                    ))};
+                </div>
+            )}
 
             <div className="flex justify-center items-center mt-6 gap-4">
                 <button
