@@ -109,6 +109,7 @@ function EventsPage() {
 
             <div className="flex justify-center items-center mt-6 gap-4">
                 <button
+                    type="button"
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
@@ -121,6 +122,7 @@ function EventsPage() {
                 </span>
 
                 <button
+                    type="button"
                     disabled={page >= lastPage}
                     onClick={() => setPage((p) => p + 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"

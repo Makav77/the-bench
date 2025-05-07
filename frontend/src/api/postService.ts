@@ -4,7 +4,7 @@ export interface PostSummary {
     id: string;
     title: string;
     updatedAt: string;
-    author: { id: string; firstname: string; lastname: string; };
+    author: { id: string; firstname: string; lastname: string; role: string; };
 }
 
 export interface PostDetails extends PostSummary {

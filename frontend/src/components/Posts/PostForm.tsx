@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface PostFormProps {
     defaultValues?: { title : string; description: string };
@@ -10,6 +11,7 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
     const [description, setDescription] = useState(defaultValues?.description || "");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -32,11 +34,14 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto p-4 bg-white rounded shadow space-y-4"
+            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
         >
             {error && <p className="text-red-500">{error}</p>}
+
             <div>
-                <label className="block font-semibold">Title</label>
+                <label className="font-semibold">
+                    Title<span className="text-red-500">*</span>
+                </label>
                 <input
                     type="text"
                     value={title}
@@ -46,20 +51,30 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
             </div>
 
             <div>
-                <label className="block font-semibold">Description</label>
+                <label className="font-semibold">
+                    Description<span className="text-red-500">*</span>
+                </label>
                 <textarea
                     rows={5}
+                    maxLength={10000}
                     value={description}
                     onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
                     className="w-full border rounded px-2 py-1"
                 />
             </div>
 
-            <div className="text-right">
+            <div className="flex justify-between">
+                <button
+                    type="button"
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
+                    onClick={() => navigate("/bulletinsboard")}
+                >
+                    Cancel
+                </button>
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
                     {isLoading ? "Loading..." : defaultValues ? "Update" : "Create"}
                 </button>

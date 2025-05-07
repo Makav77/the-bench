@@ -63,7 +63,7 @@ function PostDetailPage() {
     };
 
     return (
-        <div className="pp-6 max-w-2xl mx-auto space-y-4">
+        <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
             <button
                 type="button"
                 onClick={() => navigate("/bulletinsboard")}
@@ -81,20 +81,20 @@ function PostDetailPage() {
             <p className="whitespace-pre-wrap">{post.description}</p>
 
             {(isOwner || isAdmin) && (
-                <div className="flex space-x-2">
+                <div className="mt-4 flex gap-2 justify-center">
                     <button
                         type="button"
                         onClick={() => navigate(`/posts/${id}/edit`)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        Edit
+                        Edit post
                     </button>
                     <button
                         type="button"
                         onClick={handleDelete}
-                        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                        className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        Delete
+                        Delete post
                     </button>
                 </div>
             )}
