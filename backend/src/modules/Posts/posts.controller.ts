@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, Query } from '@nestjs/common';
-import { PostsService } from './post.service';
+import { PostsService } from './posts.service';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
@@ -9,7 +9,7 @@ import { User } from '../Users/entities/user.entity';
 
 @Controller("posts")
 export class PostsController {
-    constructor(private readonly postsService: PostsService) {}
+    constructor(private readonly postsService: PostsService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()

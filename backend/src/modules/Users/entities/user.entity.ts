@@ -1,6 +1,7 @@
 import { RefreshToken } from '../../../modules/Auth/entities/refresh-token.entity';
 import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { Event } from '../../../modules/Events/entities/event.entity';
+import { Posts } from 'src/modules/Posts/entities/post.entity';
 
 export enum Role {
     USER = "user",
@@ -44,4 +45,7 @@ export class User {
 
     @ManyToMany(() => Event, (event) => event.participantsList)
     eventsParticipating: Event[];
+
+    @OneToMany(() => Posts, (post) => post.author)
+    posts: Posts[]
 }
