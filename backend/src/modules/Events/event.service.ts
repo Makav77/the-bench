@@ -34,7 +34,7 @@ export class EventService {
         });
 
         if (!event) {
-            throw new NotFoundException(`Event not found.`);
+            throw new NotFoundException("Event not found.");
         }
         return event;
     }
@@ -73,7 +73,7 @@ export class EventService {
         });
 
         if (!event) {
-            throw new ForbiddenException("Evénement introuvable");
+            throw new NotFoundException("Event not found.");
         }
 
         if (event.author.id !== user.id && user.role !== Role.ADMIN) {

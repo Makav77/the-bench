@@ -63,4 +63,21 @@ export class MarketService {
         const updated = this.marketRepo.merge(item, updateItemDTO);
         return this.marketRepo.save(updated);
     }
+
+    async removeItem(id: string, user: User): Promise<void> {
+        const item = await this.marketRepo.findOne({
+            where: { id },
+            relations: ["author"],
+        });
+
+        if (!item) {
+            throw new NotFoundException("Item not found.");
+        }
+
+        if (item.author.id !== user.id && user.role !== Role.ADMIN) {
+            throw new ForbiddenException("You are not allowed to delete this item.");
+        }
+
+        await this.marketRepo.delete(id);
+    }
 }
