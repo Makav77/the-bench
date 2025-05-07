@@ -1,3 +1,4 @@
+import { MarketController } from './../Market/market.controller';
 import { MarketService } from './../Market/market.service';
 import { PostsModule } from '../Posts/posts.module';
 import { PostsController } from '../Posts/posts.controller';
@@ -24,9 +25,13 @@ import { EventController } from '../Events/event.controller';
         PostsModule,
     ],
     controllers: [
-        EventController, PostsController, AuthController, AppController],
-    providers: [
-        MarketService, AppService],
+        MarketController,
+        EventController,
+        PostsController,
+        AuthController,
+        AppController
+    ],
+    providers: [AppService],
 })
 
 export class AppModule { }
