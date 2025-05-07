@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import EventForm, { EventFormData } from "./EventForm";
 import { createEvent } from "../../api/eventService";
+import { toast } from "react-toastify";
 
-
-export default function CreateEventPage() {
+function CreateEventPage() {
     const navigate = useNavigate();
 
     const handleSubmit = async (data: EventFormData) => {
         const event = await createEvent(data);
+        toast.success("Event created !");
         navigate(`/events/${event.id}`);
     };
 
@@ -18,3 +19,5 @@ export default function CreateEventPage() {
         </div>
     );
 }
+
+export default CreateEventPage;

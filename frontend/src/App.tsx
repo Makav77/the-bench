@@ -11,6 +11,10 @@ import EventsPage from "./components/Events/EventsPage";
 import EventDetailPage from "./components/Events/EventDetailPage";
 import CreateEventPage from "./components/Events/CreateEventPage";
 import EditEventPage from "./components/Events/EditEventPage";
+import BulletinsBoardPage from "./components/Posts/BulletinsBoardPage";
+import PostDetailPage from "./components/Posts/PostDetailPage";
+import CreatePostPage from "./components/Posts/CreatePostPage";
+import EditPostPage from "./components/Posts/EditPostPage";
 import { ToastContainer } from "react-toastify";
 
 export default function App() {
@@ -31,6 +35,10 @@ export default function App() {
                             <Route path="events/:id" element={<EventDetailPage />} />
                             <Route path="events/create" element={<CreateEventPage />} />
                             <Route path="events/:id/edit" element={<EditEventPage />} />
+                            <Route path="bulletinsboard" element={<BulletinsBoardPage />} />
+                            <Route path="posts/:id" element={<PostDetailPage />} />
+                            <Route path="posts/create" element={<CreatePostPage />} />
+                            <Route path="posts/:id/edit" element={<EditPostPage />} />
                         </Route>
                     </Route>
                 </Routes>
