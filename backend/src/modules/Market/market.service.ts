@@ -37,4 +37,12 @@ export class MarketService {
         }
         return item;
     }
+
+    async createItem(createItemDTO: CreateMarketItemDTO, user: User): Promise<MarketItem> {
+        const item = this.marketRepo.create({
+            ...createItemDTO,
+            author: user
+        });
+        return this.marketRepo.save(item);
+    }
 }
