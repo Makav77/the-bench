@@ -9,7 +9,6 @@ function BulletinsBoardPage() {
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {

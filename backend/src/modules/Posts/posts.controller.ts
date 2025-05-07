@@ -17,7 +17,7 @@ export class PostsController {
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number
     ): Promise<{ data: Posts[]; total: number; page: number; lastPage: number; }> {
-        return this.postsService.findAllPosts();
+        return this.postsService.findAllPosts(page, limit);
     }
 
     @UseGuards(JwtAuthGuard)

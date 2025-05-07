@@ -112,7 +112,7 @@ function EventsPage() {
                     type="button"
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
                     ← Prev
                 </button>
@@ -125,7 +125,7 @@ function EventsPage() {
                     type="button"
                     disabled={page >= lastPage}
                     onClick={() => setPage((p) => p + 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
                     Next →
                 </button>
