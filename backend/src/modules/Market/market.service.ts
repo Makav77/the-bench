@@ -45,4 +45,22 @@ export class MarketService {
         });
         return this.marketRepo.save(item);
     }
+
+    async updateItem(id: string, updateItemDTO: UpdateMarketItemDTO, user: User): Promise<MarketItem> {
+        const item = await this.marketRepo.findOne({
+            where: { id },
+            relations: ["author"],
+        });
+
+        if (!item) {
+            throw new NotFoundException("Item not found.");
+        }
+
+        if (item.author.id !== user.id && user.role !== Role.ADMIN) {
+            throw new ForbiddenException("You are not allowed to edit this item.");
+        }
+
+        const updated = this.marketRepo.merge(item, updateItemDTO);
+        return this.marketRepo.save(updated);
+    }
 }
