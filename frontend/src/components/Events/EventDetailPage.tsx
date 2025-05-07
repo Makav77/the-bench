@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { getEvent, EventDetails } from "../../api/eventService";
+import { getEvent, EventDetails, deleteEvent, subscribeEvent, unsubscribeEvent } from "../../api/eventService";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { deleteEvent } from "../../api/eventService";
 import { toast } from "react-toastify";
-import { subscribeEvent, unsubscribeEvent } from "../../api/eventService";
 
 function EventDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -24,11 +22,10 @@ function EventDetailPage() {
                 if (id) {
                     const event = await getEvent(id);
                     setEvent(event);
-                } else {
-                    setError("Invalid ID");
                 }
             } catch(error) {
-                setError("Unable to load event : " + error);
+                console.error(error);
+                toast.error("Unable to load event.");
             } finally {
                 setIsLoading(false);
             }
