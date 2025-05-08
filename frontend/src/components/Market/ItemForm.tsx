@@ -10,8 +10,12 @@ export interface ItemFormData {
     contactPhone?: string;
 }
 
+export type DefaultItemFormData = Omit<ItemFormData, "images"> & {
+    images?: string[];
+};
+
 interface ItemFormProps {
-    defaultValues?: ItemFormData;
+    defaultValues?: DefaultItemFormData;
     onSubmit: (data: ItemFormData) => void;
 }
 
@@ -25,14 +29,14 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
         contactPhone: defaultValues?.contactPhone || "",
     }));
 
-    const [previewURLs, setPreviewURLs] = useState<string[]>([]);
+    const [previewURLs, setPreviewURLs] = useState<string[]>(defaultValues?.images || []);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         if (defaultValues?.images) {
-            setPreviewURLs(defaultValues.images as unknown as string[]);
+            setPreviewURLs(defaultValues.images);
         }
     }, [defaultValues]);
 
