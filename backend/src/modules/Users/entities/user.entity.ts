@@ -2,6 +2,7 @@ import { RefreshToken } from '../../../modules/Auth/entities/refresh-token.entit
 import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { Event } from '../../../modules/Events/entities/event.entity';
 import { Posts } from 'src/modules/Posts/entities/post.entity';
+import { MarketItem } from 'src/modules/Market/entities/market.entity';
 
 export enum Role {
     USER = "user",
@@ -48,4 +49,7 @@ export class User {
 
     @OneToMany(() => Posts, (post) => post.author)
     posts: Posts[]
+
+    @OneToMany(() => MarketItem, (items) => items.author)
+    marketItems: MarketItem[];
 }

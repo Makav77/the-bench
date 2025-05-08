@@ -34,7 +34,7 @@ export class EventService {
         });
 
         if (!event) {
-            throw new NotFoundException(`Event with ID ${id} not found.`);
+            throw new NotFoundException("Event not found.");
         }
         return event;
     }
@@ -48,14 +48,14 @@ export class EventService {
         return this.eventRepo.save(event);
     }
 
-    async updateEvent(id: string, updateEventDTO: UpdateEventDTO, user: User): Promise <Event> {
+    async updateEvent(id: string, updateEventDTO: UpdateEventDTO, user: User): Promise<Event> {
         const event = await this.eventRepo.findOne({
             where: { id },
-            relations: ["author"] }
-        );
+            relations: ["author"],
+        });
 
         if (!event) {
-            throw new ForbiddenException("Evenement introuvable");
+            throw new NotFoundException("Event not found.");
         }
 
         if (event.author.id !== user.id && user.role !== Role.ADMIN) {
@@ -73,7 +73,7 @@ export class EventService {
         });
 
         if (!event) {
-            throw new ForbiddenException("Evénement introuvable");
+            throw new NotFoundException("Event not found.");
         }
 
         if (event.author.id !== user.id && user.role !== Role.ADMIN) {

@@ -1,3 +1,6 @@
+import { MarketModule } from './../Market/market.module';
+import { MarketController } from './../Market/market.controller';
+import { MarketService } from './../Market/market.service';
 import { PostsModule } from '../Posts/posts.module';
 import { PostsController } from '../Posts/posts.controller';
 import { AuthModule } from "./../Auth/auth.module";
@@ -15,15 +18,20 @@ import { EventController } from '../Events/event.controller';
 @Module({
     imports: [
         ScheduleModule.forRoot(),
-        AuthModule,
         TypeOrmModule.forRoot(databaseConfig),
         UserModule,
         AuthModule,
         EventModule,
         PostsModule,
+        MarketModule,
     ],
     controllers: [
-        EventController, PostsController, AuthController, AppController],
+        MarketController,
+        EventController,
+        PostsController,
+        AuthController,
+        AppController
+    ],
     providers: [AppService],
 })
 
