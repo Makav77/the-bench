@@ -67,7 +67,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         }
 
         try {
-            await onSubmit(form);
+            onSubmit(form);
         } catch (error) {
             setError((error instanceof Error && error.message) ? error.message : "Error");
         } finally {
