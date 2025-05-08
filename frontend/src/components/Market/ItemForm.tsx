@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent, useEffect} from "react";
+import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export interface ItemFormData {
@@ -33,6 +33,8 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
 
     useEffect(() => {
         if (defaultValues?.images) {
@@ -87,8 +89,8 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
 
     return (
         <form
-            onClick={handleSubmit}
-            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
+            onSubmit={handleSubmit}
+            className="max-w-xl mx-auto space-y-4 p-8 bg-white rounded shadow"
         >
             {error && <p className="test-red-500">{error}</p>}
 
@@ -119,7 +121,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 />
             </div>
 
-            <div>
+            <div className="flex flex-col">
                 <label className="font-semibold">
                     Price (€)
                 </label>
@@ -134,17 +136,26 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 />
             </div>
 
-            <div>
+            <div className="flex flex-col">
                 <label className="font-semibold">
                     Pictures
                 </label>
+                <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="bg-green-600 hover:bg-green-700 text-white rounded cursor-pointer w-[30%] h-8"
+                >
+                    Select files
+                </button>
                 <input
+                    ref={fileInputRef}
                     name="images"
                     type="file"
                     multiple
                     accept="image/*"
                     onChange={handleFilesChange}
                     className="w-full"
+                    hidden
                 />
                 {previewURLs.length > 0 && (
                     <div className="grid grid-cols-3 gap-2 mt-2">
@@ -190,7 +201,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 <button
                     type="button"
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
-                    onClick={() => navigate("/market")}
+                    onClick={() => navigate("/marketplace")}
                 >
                     Cancel
                 </button>

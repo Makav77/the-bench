@@ -43,7 +43,7 @@ export default function App() {
                             <Route path="posts/:id" element={<PostDetailPage />} />
                             <Route path="posts/create" element={<CreatePostPage />} />
                             <Route path="posts/:id/edit" element={<EditPostPage />} />
-                            <Route path="market" element={<MarketPage />} />
+                            <Route path="marketplace" element={<MarketPage />} />
                             <Route path="market/create" element={<CreateItemPage />} />
                             <Route path="market/:id" element={<ItemDetailsPage />} />
                             <Route path="market/:id/edit" element={<EditItemPage />} />

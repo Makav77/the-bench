@@ -66,7 +66,7 @@ function ItemDetailsPage() {
         <div className="p-6 space-y-4 border mt-10 w-[40%] mx-auto">
             <div className="flex justify-between gap-4">
                 <button
-                    onClick={() => navigate("/market")}
+                    onClick={() => navigate("/marketplace")}
                     className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
                 >
                     ← Back to market
@@ -78,10 +78,10 @@ function ItemDetailsPage() {
                     Last update on {new Date(item.updatedAt).toLocaleString()}
                 </p>
 
-                {item.price != null ? (
-                    <p className="text-xl font-semibold">Prix : {item.price.toFixed(2)} €</p>
-                ) : (
-                    <></>
+                {typeof item.price === "number" && (
+                    <p className="text-xl font-semibold">
+                        Prix : {item.price.toFixed(2)} €
+                    </p>
                 )}
 
                 <p className="whitespace-pre-wrap">{item.description}</p>
