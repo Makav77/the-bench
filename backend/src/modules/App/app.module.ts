@@ -14,11 +14,15 @@ import { UserModule } from "../Users/user.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { EventModule } from "../Events/event.module";
 import { EventController } from '../Events/event.controller';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
     imports: [
         ScheduleModule.forRoot(),
         TypeOrmModule.forRoot(databaseConfig),
+        MulterModule.register({
+            dest: "./uploads",
+        }),
         UserModule,
         AuthModule,
         EventModule,

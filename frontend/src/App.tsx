@@ -15,6 +15,10 @@ import BulletinsBoardPage from "./components/Posts/BulletinsBoardPage";
 import PostDetailPage from "./components/Posts/PostDetailPage";
 import CreatePostPage from "./components/Posts/CreatePostPage";
 import EditPostPage from "./components/Posts/EditPostPage";
+import MarketPage from "./components/Market/MarketPage";
+import CreateItemPage from "./components/Market/CreateItemPage";
+import EditItemPage from "./components/Market/EditItemPage";
+import ItemDetailsPage from "./components/Market/ItemDetailsPage";
 import { ToastContainer } from "react-toastify";
 
 export default function App() {
@@ -39,6 +43,10 @@ export default function App() {
                             <Route path="posts/:id" element={<PostDetailPage />} />
                             <Route path="posts/create" element={<CreatePostPage />} />
                             <Route path="posts/:id/edit" element={<EditPostPage />} />
+                            <Route path="marketplace" element={<MarketPage />} />
+                            <Route path="market/create" element={<CreateItemPage />} />
+                            <Route path="market/:id" element={<ItemDetailsPage />} />
+                            <Route path="market/:id/edit" element={<EditItemPage />} />
                         </Route>
                     </Route>
                 </Routes>

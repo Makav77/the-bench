@@ -60,12 +60,21 @@ function MarketPage() {
                         >
                             <div className="flex flex-col">
                                 <h2 className="text-lg font-semibold">{item.title}</h2>
+
+
+                                {item.images?.[0] && (
+                                    <img
+                                        src={item.images[0]}
+                                        alt={item.title}
+                                        className="w-24 h-24 object-cover"
+                                    />
+                                )}
+
+
                                 <p className="text-gray-600 text-sm">
-                                    {item.price != null ? (
-                                        <>Price : {item.price.toFixed(2)} €</>
-                                    ) : (
-                                        <></>
-                                    )}{" "}
+                                {typeof item.price === "number" && (
+                                    <>Price : {item.price.toFixed(2)} €</>
+                                )}
                                     Last update : {new Date(item.updatedAt).toLocaleDateString()}
                                 </p>
                             </div>
@@ -73,7 +82,7 @@ function MarketPage() {
                                 {item.author.firstname} {item.author.lastname}
                             </p>
                         </div>
-                    ))};
+                    ))}
                 </div>
             )}
 

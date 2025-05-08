@@ -56,32 +56,32 @@ function ItemDetailsPage() {
         try {
             await deleteItem(id!);
             toast.success("Item successfully deleted!");
-            navigate("/market");
+            navigate("/marketplace");
         } catch (error) {
             toast.error("Unable to delete item : " + error);
         }
     };
 
     return (
-        <div className="p-6 space-y-4 border mt-10 w-[40%] mx-auto">
-            <div className="flex justify-between gap-4">
+        <div className="px-10 py-8 space-y-4 border mt-10 w-[40%] mx-auto">
+            <div className="">
                 <button
-                    onClick={() => navigate("/market")}
-                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
+                    onClick={() => navigate("/marketplace")}
+                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white mb-8"
                 >
                     ← Back to market
                 </button>
 
-                <h1 className="text-2xl font-bold">{item.title}</h1>
-                <p className="text-gray-600 text-sm">
-                    Published on {new Date(item.createdAt).toLocaleString()}{" "}
+                <h1 className="text-5xl font-bold mb-4">{item.title}</h1>
+                <p className="text-gray-600 text-sm mb-4">
+                    Published on {new Date(item.createdAt).toLocaleString()}<br />
                     Last update on {new Date(item.updatedAt).toLocaleString()}
                 </p>
 
-                {item.price != null ? (
-                    <p className="text-xl font-semibold">Prix : {item.price.toFixed(2)} €</p>
-                ) : (
-                    <></>
+                {typeof item.price === "number" && (
+                    <p className="text-xl font-semibold">
+                        Prix : {item.price.toFixed(2)} €
+                    </p>
                 )}
 
                 <p className="whitespace-pre-wrap">{item.description}</p>
@@ -100,32 +100,26 @@ function ItemDetailsPage() {
                     </div>
                 )}
 
-                <div className="space-y-2">
-                    {item.contactEmail && (
-                        <a
-                            href={`mailto:${item.contactEmail}`}
-                            className="text-blue-600 hover:underline"
-                        >
-                            Contact by mail
-                        </a>
-                    )}
-
-                    {item.contactPhone && (
-                        <a
-                            href={`tel:${item.contactPhone}`}
-                            className="text-blue-600 hover:underline"
-                        >
-                            Contact by phone
-                        </a>
-                    )}
-                </div>
-
-                <p className="text-gray-700">
+                <p className="text-gray-700 mt-5">
                     Sell by{" "}
                     <strong>
                         {item.author.firstname} {item.author.lastname}
                     </strong>
                 </p>
+
+                <div className="mt-3">
+                    {item.contactEmail && (
+                        <p>
+                            Contact by mail : {item.contactEmail}
+                        </p>
+                    )}
+
+                    {item.contactPhone && (
+                        <p>
+                            Contact by phone : {item.contactPhone}
+                        </p>
+                    )}
+                </div>
 
                 {(isOwner || isAdmin) && (
                     <div className="mt-4 flex gap-2 justify-center">

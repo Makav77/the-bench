@@ -32,16 +32,6 @@ export class MarketController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    async createItem(
-        @Body() createItemDTO: CreateMarketItemDTO,
-        @Req() req: Request,
-    ): Promise<MarketItem> {
-        const user = req.user as User;
-        return this.marketService.createItem(createItemDTO, user);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Post(":id/images")
     @UseInterceptors(
         FilesInterceptor("images", 5, {
             storage: diskStorage({
@@ -62,28 +52,52 @@ export class MarketController {
             limits: { fileSize: 2 * 1024 * 1024 },
         }),
     )
-
-    async uploadImages(
-        @Param("id") id: string,
-        @UploadedFiles() files: Array<Express.Multer.File>,
+    async createItem(
+        @UploadedFiles() files: Express.Multer.File[],
+        @Body() createItemDTO: CreateMarketItemDTO,
         @Req() req: Request,
-    ) {
-        const urls = files.map(f => `/uploads/market/${f.filename}`);
-        const item = await this.marketService.findOneItem(id);
+    ): Promise<MarketItem> {
         const user = req.user as User;
-        item.images = item.images ? [...item.images, ...urls]: urls;
-        return this.marketService.updateItem(id, { images: item.images }, user);
+        const safeFiles = files ?? [];
+        const urls = safeFiles.map(file => `/uploads/market/${file.filename}`);
+        return this.marketService.createItem({ ...createItemDTO, images: urls }, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Patch(":id")
+    @UseInterceptors(
+        FilesInterceptor("images", 5, {
+            storage: diskStorage({
+                destination: "./uploads/market",
+                filename: (_req, file, callback) => {
+                    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+                    const ext = extname(file.originalname);
+                    callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+                },
+            }),
+            fileFilter: (_req, file, callback) => {
+                if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+                    callback(null, true);
+                } else {
+                    callback(new Error("Unsupported file type."), false);
+                }
+            },
+            limits: { fileSize: 2 * 1024 * 1024 },
+        }),
+    )
     async updateItem(
         @Param("id") id: string,
-        @Body() updateItemDTO: UpdateMarketItemDTO,
+        @UploadedFiles() files: Express.Multer.File[],
+        @Body() updateMarketItemDTO: UpdateMarketItemDTO,
         @Req() req: Request,
-    ): Promise<MarketItem> {
+    ) {
         const user = req.user as User;
-        return this.marketService.updateItem(id, updateItemDTO, user);
+        const safeFiles = files ?? [];
+        const urls = safeFiles.map(file => `/uploads/market/${file.filename}`);
+        const existing = await this.marketService.findOneItem(id);
+        const allImages = existing.images ? [...existing.images, ...urls] : urls;
+
+        return this.marketService.updateItem(id, { ...updateMarketItemDTO, images: allImages }, user);
     }
 
     @UseGuards(JwtAuthGuard)
