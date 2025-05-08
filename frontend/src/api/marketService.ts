@@ -6,13 +6,13 @@ export interface MarketItemSummary {
     title: string;
     price?: number;
     updatedAt: string;
+    images?: string[];
     author: { id: string; firstname: string; lastname: string; role: string; };
 }
 
 export interface MarketItemDetails extends MarketItemSummary {
     description: string;
     createdAt: string;
-    images?: string[];
     contactEmail?: string;
     contactPhone?: string;
 }
@@ -48,13 +48,21 @@ export const getItem = async (id: string): Promise<MarketItemDetails> => {
 
 export const createItem = async (data: ItemFormData): Promise<MarketItemDetails> => {
     const formData = toFormData(data);
-    const response = await apiClient.post("/market", formData);
+    const response = await apiClient.post("/market", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
     return response.data;
 }
 
 export const updateItem = async (id: string, data: ItemFormData): Promise<MarketItemDetails> => {
     const formData = toFormData(data);
-    const response = await apiClient.patch(`/market/${id}`, formData);
+    const response = await apiClient.patch(`/market/${id}`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
     return response.data;
 }
 

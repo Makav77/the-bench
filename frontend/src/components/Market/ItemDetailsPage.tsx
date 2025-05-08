@@ -56,7 +56,7 @@ function ItemDetailsPage() {
         try {
             await deleteItem(id!);
             toast.success("Item successfully deleted!");
-            navigate("/market");
+            navigate("/marketplace");
         } catch (error) {
             toast.error("Unable to delete item : " + error);
         }
@@ -86,7 +86,11 @@ function ItemDetailsPage() {
 
                 <p className="whitespace-pre-wrap">{item.description}</p>
 
-                {item.images && item.images.length > 0 && (
+                {item.images?.map((url, idx) => (
+                    <img key={idx} src={url} alt={`Image ${idx+1}`} />
+                ))}
+
+                {/* {item.images && item.images.length > 0 && (
                     <div className="grid grid-cols-3 gap-4 my-4">
                         {item.images.map((url, index) => (
                             <img
@@ -98,7 +102,7 @@ function ItemDetailsPage() {
                             />
                         ))}
                     </div>
-                )}
+                )} */}
 
                 <div className="space-y-2">
                     {item.contactEmail && (

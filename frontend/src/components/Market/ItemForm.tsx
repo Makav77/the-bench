@@ -68,7 +68,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
         setPreviewURLs(URLs);
     }
 
-    function handleSubmit(e: FormEvent) {
+    async function handleSubmit(e: FormEvent) {
         e.preventDefault();
         setError(null);
 
@@ -79,7 +79,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
         setIsSubmitting(true);
 
         try {
-            onSubmit(form);
+            await onSubmit(form);
         } catch (error) {
             setError("Error : " + error);
         } finally {

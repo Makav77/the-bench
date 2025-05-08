@@ -16,7 +16,7 @@ export class MarketService {
     async findAllItems(page = 1, limit = 10): Promise<{ data: MarketItem[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
         const [data, total] = await this.marketRepo.findAndCount({
-            order: { createdAt: "ASC" },
+            order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
             relations: ["author"],
@@ -38,7 +38,7 @@ export class MarketService {
         return item;
     }
 
-    async createItem(createItemDTO: CreateMarketItemDTO, user: User): Promise<MarketItem> {
+    async createItem(createItemDTO: CreateMarketItemDTO, user: User & { images?: string[] }): Promise<MarketItem> {
         const item = this.marketRepo.create({
             ...createItemDTO,
             author: user
@@ -46,7 +46,7 @@ export class MarketService {
         return this.marketRepo.save(item);
     }
 
-    async updateItem(id: string, updateItemDTO: UpdateMarketItemDTO, user: User): Promise<MarketItem> {
+    async updateItem(id: string, updateItemDTO: UpdateMarketItemDTO, user: User & { images?: string[] }): Promise<MarketItem> {
         const item = await this.marketRepo.findOne({
             where: { id },
             relations: ["author"],
