@@ -28,13 +28,13 @@ export class EventService {
     }
 
     async findOneEvent(id: string): Promise<Event> {
-        const event = await this.eventRepo.findOne({ 
+        const event = await this.eventRepo.findOne({
             where: { id },
             relations: ['author', 'participantsList'],
         });
 
         if (!event) {
-            throw new NotFoundException(`Event with ID ${id} not found.`);
+            throw new NotFoundException("Event not found.");
         }
         return event;
     }
@@ -48,14 +48,18 @@ export class EventService {
         return this.eventRepo.save(event);
     }
 
-    async updateEvent(id: string, updateEventDTO: UpdateEventDTO, user: User): Promise <Event> {
-        const event = await this.eventRepo.findOne({ where: { id }, relations: ["author"] });
+    async updateEvent(id: string, updateEventDTO: UpdateEventDTO, user: User): Promise<Event> {
+        const event = await this.eventRepo.findOne({
+            where: { id },
+            relations: ["author"],
+        });
+
         if (!event) {
-            throw new ForbiddenException("Evenement introuvable");
+            throw new NotFoundException("Event not found.");
         }
 
         if (event.author.id !== user.id && user.role !== Role.ADMIN) {
-            throw new ForbiddenException("Vous n'êtes pas autorisé à modifier cet événement");
+            throw new ForbiddenException("You are not allowed to edit this event.");
         }
 
         const updated = this.eventRepo.merge(event, updateEventDTO);
@@ -63,16 +67,38 @@ export class EventService {
     }
 
     async removeEvent(id: string, user: User): Promise<void> {
-        const event = await this.eventRepo.findOne({ where: { id }, relations: ["author"] });
+        const event = await this.eventRepo.findOne({
+            where: { id },
+            relations: ["author"]
+        });
+
         if (!event) {
-            throw new ForbiddenException("Evénement introuvable");
+            throw new NotFoundException("Event not found.");
         }
 
         if (event.author.id !== user.id && user.role !== Role.ADMIN) {
-            throw new ForbiddenException("Vous n'êtes pas autorisé à supprimer cet événement");
+            throw new ForbiddenException("You are not allowed to delete this event.");
         }
 
         await this.eventRepo.delete(id);
+    }
+
+    async removeParticipant(eventId: string, userIdToRemove: string, user: User): Promise<Event> {
+        const event = await this.eventRepo.findOne({
+            where: { id: eventId },
+            relations: ["participantsList", "author"]
+        });
+
+        if (!event) {
+            throw new NotFoundException("Event not found.");
+        }
+
+        if (event.author.id !== user.id && user.role !== Role.ADMIN) {
+            throw new ForbiddenException("You are not allowed to edit the participant list.");
+        }
+
+        event.participantsList = event.participantsList?.filter((user) => user.id !== userIdToRemove);
+        return this.eventRepo.save(event);
     }
 
     async subscribe(id: string, user: User): Promise<Event> {

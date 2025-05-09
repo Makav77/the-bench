@@ -1,3 +1,10 @@
+import { FlashpostsModule } from './../FlashPosts/flashposts.module';
+import { FlashPostsController } from './../FlashPosts/flashposts.controller';
+import { MarketModule } from './../Market/market.module';
+import { MarketController } from './../Market/market.controller';
+import { MarketService } from './../Market/market.service';
+import { PostsModule } from '../Posts/posts.module';
+import { PostsController } from '../Posts/posts.controller';
 import { AuthModule } from "./../Auth/auth.module";
 import { AuthController } from "./../Auth/auth.controller";
 import { Module } from "@nestjs/common";
@@ -8,17 +15,31 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "../Users/user.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { EventModule } from "../Events/event.module";
+import { EventController } from '../Events/event.controller';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
     imports: [
         ScheduleModule.forRoot(),
-        AuthModule,
         TypeOrmModule.forRoot(databaseConfig),
+        MulterModule.register({
+            dest: "./uploads",
+        }),
         UserModule,
         AuthModule,
         EventModule,
+        PostsModule,
+        MarketModule,
+        FlashpostsModule,
     ],
-    controllers: [AuthController, AppController],
+    controllers: [
+        FlashPostsController,
+        MarketController,
+        EventController,
+        PostsController,
+        AuthController,
+        AppController
+    ],
     providers: [AppService],
 })
 

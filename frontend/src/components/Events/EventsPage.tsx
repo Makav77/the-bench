@@ -23,7 +23,7 @@ function EventsPage() {
                 setEvents(data);
                 setLastPage(lastPage);
             } catch(error) {
-                setError("Impossible de charger les événements : " + error);
+                setError("Unable to load events : " + error);
             } finally {
                 setIsLoading(false);
             }
@@ -109,11 +109,12 @@ function EventsPage() {
 
             <div className="flex justify-center items-center mt-6 gap-4">
                 <button
+                    type="button"
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    ← Back
+                    ← Prev
                 </button>
 
                 <span>
@@ -121,9 +122,10 @@ function EventsPage() {
                 </span>
 
                 <button
-                disabled={page >= lastPage}
-                onClick={() => setPage((p) => p + 1)}
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    type="button"
+                    disabled={page >= lastPage}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
                     Next →
                 </button>

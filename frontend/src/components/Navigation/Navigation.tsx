@@ -32,7 +32,7 @@ function Navigation() {
                 type="button"
                 aria-label="listings-button"
                 className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
-                onClick={() => navigate("/listings")}
+                onClick={() => navigate("/bulletinsboard")}
             >
                 {t("listings")}
             </button>

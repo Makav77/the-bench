@@ -11,6 +11,7 @@ import { User } from "../Users/entities/user.entity";
 export class EventController {
     constructor(private readonly eventService: EventService) {}
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAllEvents(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -19,6 +20,7 @@ export class EventController {
         return this.eventService.findAllEvents(page, limit);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     async findOneEvent(@Param("id") id: string): Promise<Event> {
         return this.eventService.findOneEvent(id);
@@ -73,5 +75,16 @@ export class EventController {
     ): Promise<Event> {
         const user = req.user as User;
         return this.eventService.unsubscribe(id, user);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(":id/participants/:userId")
+    async removeParticipant(
+        @Param("id") eventId: string,
+        @Param("userId") userId: string,
+        @Req() req: Request,
+    ): Promise<Event> {
+        const user = req.user as User;
+        return this.eventService.removeParticipant(eventId, userId, user);
     }
 }

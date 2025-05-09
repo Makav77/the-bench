@@ -17,7 +17,10 @@ export interface EventDetails extends EventSummary {
     maxNumberOfParticipants?: number;
     description: string;
     author: { id: string; firstname: string; lastname: string };
-    participantsList: { id: string }[];
+    participantsList: {
+        lastname: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
+        firstname: ReactI18NextChildren | Iterable<ReactI18NextChildren>; id: string 
+}[];
 }
 
 export const getEvents = async (page = 1, limit = 5): Promise<{ data: EventSummary[]; total: number; page: number; lastPage: number }> => {
@@ -52,5 +55,10 @@ export const subscribeEvent = async (id: string): Promise<EventDetails> => {
 
 export const unsubscribeEvent = async (id: string): Promise<EventDetails> => {
     const response = await apiClient.delete<EventDetails>(`/events/${id}/subscribe`)
+    return response.data;
+}
+
+export const removeParticipant = async (eventId: string, userId: string): Promise<EventDetails> => {
+    const response = await apiClient.delete<EventDetails>(`/events/${eventId}/participants/${userId}`);
     return response.data;
 }
