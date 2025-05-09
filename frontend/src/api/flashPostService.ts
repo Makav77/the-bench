@@ -14,7 +14,7 @@ export interface FlashPostDetails extends FlashPostSummary {
 }
 
 export const getFlashPosts = async (page = 1, limit = 5): Promise<{ data: FlashPostSummary[]; total: number; page: number; lastPage: number; }> => {
-    const response = await apiClient.get("/flasposts", { params: { page, limit } });
+    const response = await apiClient.get("/flashposts", { params: { page, limit } });
     return response.data;
 }
 
