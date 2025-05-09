@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { getPosts, PostSummary } from "../../api/postService";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
 function BulletinsBoardPage() {
@@ -31,13 +30,21 @@ function BulletinsBoardPage() {
 
     return (
         <div className="p-6 w-[30%] mx-auto">
-            <div className="flex justify-end mb-4 h-10">
+            <div className="flex justify-end mb-4 h-10 gap-4">
                 <button
                     type="button"
                     onClick={() => navigate("/posts/create")}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
                 >
                     Create Post
+                </button>
+
+                <button
+                    type="button"
+                    onClick={() => navigate("/flashposts/create")}
+                    className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
+                >
+                    Create Flash Post
                 </button>
             </div>
 
