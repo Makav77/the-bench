@@ -1,8 +1,9 @@
 import { RefreshToken } from '../../../modules/Auth/entities/refresh-token.entity';
-import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany, OneToOne } from 'typeorm';
 import { Event } from '../../../modules/Events/entities/event.entity';
 import { Posts } from 'src/modules/Posts/entities/post.entity';
 import { MarketItem } from 'src/modules/Market/entities/market.entity';
+import { FlashPost } from 'src/modules/FlashPosts/entities/flash-post.entity';
 
 export enum Role {
     USER = "user",
@@ -48,8 +49,11 @@ export class User {
     eventsParticipating: Event[];
 
     @OneToMany(() => Posts, (post) => post.author)
-    posts: Posts[]
+    posts: Posts[];
 
     @OneToMany(() => MarketItem, (items) => items.author)
     marketItems: MarketItem[];
+
+    @OneToMany(() => FlashPost, (flashPost) => flashPost.author)
+    flashPosts: FlashPost[];
 }

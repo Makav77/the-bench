@@ -1,3 +1,5 @@
+import { FlashpostsModule } from './../FlashPosts/flashposts.module';
+import { FlashpostsController } from './../FlashPosts/flashposts.controller';
 import { MarketModule } from './../Market/market.module';
 import { MarketController } from './../Market/market.controller';
 import { MarketService } from './../Market/market.service';
@@ -28,8 +30,10 @@ import { MulterModule } from '@nestjs/platform-express';
         EventModule,
         PostsModule,
         MarketModule,
+        FlashpostsModule,
     ],
     controllers: [
+        FlashpostsController,
         MarketController,
         EventController,
         PostsController,
