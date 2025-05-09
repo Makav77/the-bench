@@ -8,7 +8,7 @@ import { Request } from 'express';
 import { User } from '../Users/entities/user.entity';
 
 @Controller("flashposts")
-export class FlashpostsController {
+export class FlashPostsController {
     constructor(private readonly flashpostsService: FlashPostsService) {}
 
     @UseGuards(JwtAuthGuard)
