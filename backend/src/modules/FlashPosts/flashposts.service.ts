@@ -6,6 +6,7 @@ import { CreateFlashPostDTO } from './dto/create-flash-post.dto';
 import { UpdateFlashPostDTO } from './dto/update-flash-post.dto';
 import { User, Role } from '../Users/entities/user.entity';
 import { subHours } from "date-fns";
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class FlashPostsService {
@@ -97,5 +98,10 @@ export class FlashPostsService {
     async purgeExpired(): Promise<void> {
         const limit = subHours(new Date(), 24);
         await this.flashRepo.delete({ createdAt: LessThan(limit) });
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async handleCronPurgeExpired() {
+        await this.purgeExpired();
     }
 }
