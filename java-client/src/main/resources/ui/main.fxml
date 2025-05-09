@@ -22,11 +22,11 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.ScrollPane?>
 
-<BorderPane fx:controller="org.example.controller.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #1F1F2D;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="mainPane" fx:controller="org.example.controller.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="dark-background" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-alignment:  CENTER_LEFT; -fx-background-color: #3D4051;" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="medium-background" style="-fx-alignment:  CENTER_LEFT;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="journalButton" contentDisplay="TOP" mnemonicParsing="false" prefHeight="300.0" prefWidth="123.0" style="-fx-background-color: #3D4051; -fx-border-color: #59747B; -fx-border-style: solid none none none;" styleClass="button-hovered" text="Journal" textFill="#59747b">
+            <Button fx:id="journalButton" contentDisplay="TOP" mnemonicParsing="false"   prefHeight="300.0" prefWidth="123.0" styleClass="nav-button" style="-fx-border-style: solid none none none;"  text="Journal">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -41,7 +41,7 @@
                   <Font name="Corbel" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="pluginsButton" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="300.0" prefWidth="123.0" style="-fx-background-color: #3D4051; -fx-border-style: solid none none none; -fx-border-color: #59747B;" text="Plugins" textFill="#59747b">
+            <Button fx:id="pluginsButton" styleClass="nav-button" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="300.0" prefWidth="123.0" style="-fx-border-style: solid none none none;" text="Plugins">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -56,7 +56,7 @@
                   <Font name="Corbel" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="themesButton" contentDisplay="TOP" layoutX="10.0" layoutY="92.0" mnemonicParsing="false" prefHeight="300.0" prefWidth="123.0" style="-fx-background-color: #3D4051; -fx-border-style: solid none solid none; -fx-border-color: #59747B;" text="Themes" textFill="#59747b">
+            <Button fx:id="themesButton" styleClass="nav-button" contentDisplay="TOP" layoutX="10.0" layoutY="92.0" mnemonicParsing="false" prefHeight="300.0" prefWidth="123.0" style="-fx-border-style: solid none solid none;" text="Themes">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -71,19 +71,9 @@
                   <Font name="Corbel" size="18.0" />
                </font>
             </Button>
-            <ToggleButton mnemonicParsing="false" style="-fx-background-color: #59747b;" text="Online mode">
-               <VBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="Corbel" size="13.0" />
-               </font>
-               <effect>
-                  <Glow level="0.0" />
-               </effect></ToggleButton>
          </children>
          <effect>
-            <Bloom threshold="0.41">
+            <Bloom threshold="0.69">
                <input>
                   <DropShadow height="0.0" radius="4.75" />
                </input>
@@ -92,9 +82,9 @@
       </VBox>
    </left>
    <center>
-      <StackPane fx:id="contentStack" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <StackPane fx:id="contentStack" styleClass="dark-background" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <BorderPane fx:id="contentPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <BorderPane fx:id="contentPane" styleClass="dark-background"  prefHeight="200.0" prefWidth="200.0" visible="false">
 
             </BorderPane>
          </children>

@@ -10,6 +10,7 @@ import org.example.scraping.Article;
 import org.example.scraping.DayArticles;
 import org.example.scraping.DayArticlesUtils;
 import org.example.scraping.Scraper;
+import org.example.theme.ThemeManager;
 
 import java.util.List;
 
@@ -19,9 +20,11 @@ public class JournalController {
     private VBox articleContainer;
     @FXML private Button updateButton;
     @FXML private ProgressIndicator spinner;
+    @FXML private BorderPane journalPane;
 
     @FXML
     private void initialize() {
+        ThemeManager.applyThemeToRoot(journalPane);
         System.out.println("Vue JournalController chargée !");
         List<DayArticles> dayArticlesList = DayArticlesUtils.getAllDayArticles();
         dayArticlesList = dayArticlesList.stream().sorted(

@@ -1,0 +1,55 @@
+/*
+darkBackground: #FAEDCD
+accentColor: #D4A373
+buttonColor: #CCD5AE
+lightBackground: #E9EDC9
+mediumBackground: #CCD5AE
+*/
+
+.nav-button {
+    -fx-background-color: #D4A373;
+    -fx-text-fill: #FEFAE0;
+}
+
+.dark-background {
+    -fx-background-color: #FAEDCD;
+}
+
+.medium-background {
+    -fx-background-color: #CCD5AE;
+}
+
+.light-background {
+    -fx-background-color: #E9EDC9;
+}
+
+.bordered-button {
+    -fx-border-color: #D4A373;
+    -fx-text-fill: #D4A373;
+}
+
+.text-fill-accent {
+    -fx-fill: #D4A373;
+}
+
+.accent-color-button {
+    -fx-background-color: #D4A373;
+}
+
+.button-light-bordered {
+    -fx-background-color: #FEFAE0;
+    -fx-border-color: #D4A373;
+    -fx-text-fill: #D4A373;
+}
+
+.textfill-accent {
+    -fx-text-fill: #D4A373;
+}
+
+.accent-color {
+    -fx-background-color: #D4A373;
+}
+
+.accent-border {
+    -fx-border-color: #D4A373;
+}

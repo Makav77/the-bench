@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import org.example.theme.ThemeManager;
 
 public class MainController {
     @FXML private StackPane contentStack;
@@ -16,9 +17,16 @@ public class MainController {
     @FXML private Button pluginsButton;
     @FXML private Button themesButton;
     @FXML private BorderPane contentPane;
+    @FXML private BorderPane mainPane;
 
     @FXML
     private void initialize() {
+        ThemeManager.applyThemeToRoot(mainPane);
+        journalButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                ThemeManager.applyTheme(newScene);
+            }
+        });
         loadView("/ui/journal.fxml");
         journalButton.setOnAction(e -> loadView("/ui/journal.fxml"));
         pluginsButton.setOnAction(e -> loadView("/ui/plugins.fxml"));
@@ -34,6 +42,11 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Pane view = loader.load();
+            view.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    ThemeManager.applyTheme(newScene);
+                }
+            });
             /*contentPane.getChildren().setAll(view);*/
             Parent parent = contentPane.getParent();
             if (parent instanceof Pane paneParent) {
