@@ -16,8 +16,11 @@ export class FlashPostsService {
 
     async findAllFlashPosts(page = 1, limit = 5): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
+        const lessThanADay = subHours(new Date(), 24);
+
 
         const [data, total] = await this.flashRepo.findAndCount({
+            where: { createdAt: MoreThan(lessThanADay) },
             relations: ["author"],
             order: { createdAt: "DESC"},
             skip: offset,
@@ -25,7 +28,6 @@ export class FlashPostsService {
         });
 
         const lastPage = Math.ceil(total / limit);
-        // const lessThanADay = subHours(new Date(), 24);
         return { data, total, page, lastPage };
     }
 
