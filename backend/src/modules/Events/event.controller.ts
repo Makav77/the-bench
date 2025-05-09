@@ -76,4 +76,15 @@ export class EventController {
         const user = req.user as User;
         return this.eventService.unsubscribe(id, user);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(":id/participants/:userId")
+    async removeParticipant(
+        @Param("id") eventId: string,
+        @Param("userId") userId: string,
+        @Req() req: Request,
+    ): Promise<Event> {
+        const user = req.user as User;
+        return this.eventService.removeParticipant(eventId, userId, user);
+    }
 }

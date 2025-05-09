@@ -83,6 +83,24 @@ export class EventService {
         await this.eventRepo.delete(id);
     }
 
+    async removeParticipant(eventId: string, userIdToRemove: string, user: User): Promise<Event> {
+        const event = await this.eventRepo.findOne({
+            where: { id: eventId },
+            relations: ["participantsList", "author"]
+        });
+
+        if (!event) {
+            throw new NotFoundException("Event not found.");
+        }
+
+        if (event.author.id !== user.id && user.role !== Role.ADMIN) {
+            throw new ForbiddenException("You are not allowed to edit the participant list.");
+        }
+
+        event.participantsList = event.participantsList?.filter((user) => user.id !== userIdToRemove);
+        return this.eventRepo.save(event);
+    }
+
     async subscribe(id: string, user: User): Promise<Event> {
         const event = await this.eventRepo.findOne({
             where: { id },

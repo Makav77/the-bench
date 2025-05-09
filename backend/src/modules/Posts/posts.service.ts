@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Posts } from './entities/post.entity';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
@@ -18,7 +18,7 @@ export class PostsService {
 
         const [data, total] = await this.postRepo.findAndCount({
             relations: ["author"],
-            order: { createdAt: "ASC" },
+            order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
         });
@@ -54,7 +54,7 @@ export class PostsService {
         });
 
         if (!post) {
-            throw new ForbiddenException("Post not found");
+            throw new NotFoundException("Post not found");
         }
 
         if (post.author.id !== user.id && user.role !== Role.ADMIN) {
