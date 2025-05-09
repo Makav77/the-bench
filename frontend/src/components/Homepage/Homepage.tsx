@@ -2,7 +2,7 @@ import WeatherCard from "./Cards/WeatherCard";
 
 function Homepage() {
     return (
-        <div className="p-6 w-[70%] mx-auto">
+        <div className="p-6 w-[90%] mx-auto">
             <div className="grid grid-cols-2 grid-rows-3 gap-4 border-3 bg-white">
                 <div className="bg-[#77B5F5] col-span-1 row-span-1 border-1 m-5 text-center h-50 grid place-items-center">Suggestions</div>
                 <div className="bg-[#77B5F5] col-span-1 row-span-1 border-1 m-5 text-center h-50 grid place-items-center"><WeatherCard /></div>
