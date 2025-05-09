@@ -3,6 +3,7 @@ import { getPosts, PostSummary } from "../../api/postService";
 import { getFlashPosts, FlashPostSummary } from "../../api/flashPostService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import CountdownTimer from "../FlashPosts/CountdownTimer";
 
 function BulletinsBoardPage() {
     const [posts, setPosts] = useState<PostSummary[]>([]);
@@ -76,32 +77,36 @@ function BulletinsBoardPage() {
             <section className="mb-8">
                 <h2 className="text-xl font-semibold mb-2">Flash Posts (24h)</h2>
 
-                {flashLoading
-                    ? <p>Loading flash posts...</p>
-                    : flashPosts.length === 0
-                        ? <p className="italic text-gray-500">No flash posts right now.</p>
-                        : (
-                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4">
-                                {flashPosts.map((flashpost) => {
-                                    const cardClass = flashpost.author.role === "admin" ? "border bg-green-400" : "border";
-                                    return (
-                                        <div
-                                            key={flashpost.id}
-                                            onClick={() => navigate(`/flashposts/${flashpost.id}`)}
-                                            className={`p-4 border ${cardClass} rounded cursor-pointer hover:shadow flex justify-between items-center`}
-                                        >
-                                            <div className="flex flex-col">
-                                                <h2 className="text-lg font-semibold">{flashpost.title}</h2>
-                                                <p className="text-sm text-gray-600">
-                                                    Last update at {new Date(flashpost.updatedAt).toLocaleString()} by {" "} {flashpost.author.firstname} {flashpost.author.lastname}
-                                                </p>
+                    {flashLoading
+                        ? <p>Loading flash posts...</p>
+                        : flashPosts.length === 0
+                            ? <p className="italic text-gray-500">No flash posts right now.</p>
+                            : (
+                                <div className="grid grid-cols-1 gap-4 border p-4 mb-4">
+                                    {flashPosts.map((flashpost) => {
+                                        const cardClass = flashpost.author.role === "admin" ? "border bg-green-400" : "border";
+                                        return (
+                                            <div
+                                                key={flashpost.id}
+                                                onClick={() => navigate(`/flashposts/${flashpost.id}`)}
+                                                className={`p-4 border ${cardClass} rounded cursor-pointer hover:shadow flex justify-between items-center`}
+                                            >
+                                                <div className="flex flex-col w-full">
+                                                    <h2 className="text-lg font-semibold">{flashpost.title}</h2>
+                                                    <div className="flex justify-between">
+                                                        <p className="text-sm text-gray-600">
+                                                            Last update at {new Date(flashpost.updatedAt).toLocaleString()}
+                                                        </p>
+                                                        <CountdownTimer createdAt={flashpost.updatedAt} />
+                                                    </div>
+                                                    <p className="text-sm text-gray-600">Author : {flashpost.author.firstname} {flashpost.author.lastname}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )
-                }
+                                        );
+                                    })}
+                                </div>
+                            )
+                    }
 
                 <div className="flex justify-center items-center gap-4">
                     <button

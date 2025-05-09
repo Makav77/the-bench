@@ -3,6 +3,7 @@ import { getFlashPost, deleteFlashPost, FlashPostDetails } from "../../api/flash
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import CountdownTimer from "./CountdownTimer";
 
 function FlashPostDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -78,6 +79,9 @@ function FlashPostDetailPage() {
                 {new Date(flashPost.updatedAt).toLocaleString()}) by{' '}
                 {flashPost.author.firstname} {flashPost.author.lastname}
             </p>
+
+            <CountdownTimer createdAt={flashPost.createdAt} />
+
             <p className="whitespace-pre-wrap">{flashPost.description}</p>
 
             {(isOwner || isAdmin) && (

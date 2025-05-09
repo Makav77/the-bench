@@ -12,10 +12,10 @@ export class FlashPost {
     @Column("text")
     description: string;
 
-    @CreateDateColumn({ type: "timestamp" })
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt: Date;
 
-    @UpdateDateColumn({ type: "timestamp" })
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt: Date;
 
     @ManyToOne(() => User, (user) => user.flashPosts, { nullable: false })

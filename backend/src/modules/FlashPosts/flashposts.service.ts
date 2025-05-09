@@ -53,7 +53,7 @@ export class FlashPostsService {
         });
 
         if (flashPostActive > 0) {
-            throw new BadRequestException("You alreadu have an active flash post.");
+            throw new BadRequestException("You already have an active flash post.");
         }
 
         const post = this.flashRepo.create({ ...createFlashPostDTO, author: author });
