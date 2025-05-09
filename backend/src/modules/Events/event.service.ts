@@ -86,7 +86,7 @@ export class EventService {
     async removeParticipant(eventId: string, userIdToRemove: string, user: User): Promise<Event> {
         const event = await this.eventRepo.findOne({
             where: { id: eventId },
-            relations: ["author"]
+            relations: ["participantsList", "author"]
         });
 
         if (!event) {
