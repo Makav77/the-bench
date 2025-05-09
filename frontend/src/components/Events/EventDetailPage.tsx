@@ -3,6 +3,7 @@ import { getEvent, EventDetails, deleteEvent, subscribeEvent, unsubscribeEvent }
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import { removeParticipant } from "../../api/eventService";
 
 function EventDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -12,6 +13,8 @@ function EventDetailPage() {
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showModal, setShowModal] = useState(false);
+    const [removingId, setRemovingId] = useState<string | null>(null);
 
     useEffect(() => {
         async function load() {
@@ -92,30 +95,42 @@ function EventDetailPage() {
             <div className="flex justify-between gap-4">
                 <button
                     onClick={() => navigate("/events")}
-                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
+                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white h-10"
                 >
                     ← Back
                 </button>
 
-                {isSubscribe ? (
-                    <button
-                        onClick={handleUnsubscribe}
-                        className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700"
-                    >
-                        Unsubscribe
-                    </button>
-                ) : isFull ? (
-                    <p className="text-gray-500 text-l font-semibold">
-                        Event full
-                    </p>
-                ) : (
-                    <button
-                        onClick={handleSubscribe}
-                        className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700"
-                    >
-                        Subscribe
-                    </button>
-                )}
+                <div className="flex flex-col gap-2">
+                    {isSubscribe ? (
+                        <button
+                            onClick={handleUnsubscribe}
+                            className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 cursor-pointer"
+                        >
+                            Unsubscribe
+                        </button>
+                    ) : isFull ? (
+                        <p className="text-gray-500 text-l font-semibold">
+                            Event full
+                        </p>
+                    ) : (
+                        <button
+                            onClick={handleSubscribe}
+                            className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700 cursor-pointer"
+                        >
+                            Subscribe
+                        </button>
+                    )}
+
+                    {(isOwner || isAdmin) && (
+                        <button
+                            onClick={() => setShowModal(true)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 border rounded cursor-pointer"
+                        >
+                            Participant list
+                        </button>
+                    )
+                    }
+                </div>
             </div>
 
             <h1 className="text-2xl font-bold">{event.name}</h1>
@@ -170,6 +185,58 @@ function EventDetailPage() {
                     </button>
                 </div>
             )}
+
+
+
+
+            {showModal && (
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
+                    <div className="bg-white rounded p-6 w-96 max-h-[70vh] overflow-auto">
+                        {event.maxNumberOfParticipants && (
+                            <h2 className="text-xl font-bold mb-4">Registered ({event.participantsList.length} / {event.maxNumberOfParticipants})</h2>
+                        )}
+                        <ul className="space-y-2">
+                            {event.participantsList.map(user => (
+                                <li
+                                    key={user.id}
+                                    className="flex justify-between items-center px-5"
+                                >
+                                    <span>{user.firstname} {user.lastname}</span>
+                                    <button
+                                        disabled={removingId === user.id}
+                                        onClick={async () => {
+                                            setRemovingId(user.id);
+                                            try {
+                                                const updated = await removeParticipant(id!, user.id);
+                                                setEvent(updated);
+                                                toast.success("User deleted.");
+                                            } catch (error) {
+                                                toast.error("Error : " + error);
+                                            } finally {
+                                                setRemovingId(null);
+                                            }
+                                        }}
+                                        className="text-red-600 hover:underline disabled:opacity-50 cursor-pointer underline"
+                                    >
+                                        Unsubscribe
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+
+
+
+
+
         </div>
     );
 }
