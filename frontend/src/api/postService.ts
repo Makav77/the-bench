@@ -27,7 +27,7 @@ export const createPost = async (data: { title: string; description: string; }):
     return response.data;
 }
 
-export const updatePost = async (id: string, data: { title?: string; description?: string; }) => {
+export const updatePost = async (id: string, data: { title?: string; description?: string; }): Promise<PostDetails> => {
     const response = await apiClient.patch(`/posts/${id}`, data);
     return response.data;
 }
