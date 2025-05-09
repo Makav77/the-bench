@@ -101,35 +101,36 @@ function EventDetailPage() {
                 </button>
 
                 <div className="flex flex-col gap-2">
-                    {isSubscribe ? (
-                        <button
-                            onClick={handleUnsubscribe}
-                            className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 cursor-pointer"
-                        >
-                            Unsubscribe
-                        </button>
-                    ) : isFull ? (
-                        <p className="text-gray-500 text-l font-semibold">
-                            Event full
-                        </p>
+                    {event.maxNumberOfParticipants == null ? (
+                        <p className="text-green-600 text-l font-semibold">Open event</p>
                     ) : (
-                        <button
-                            onClick={handleSubscribe}
-                            className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700 cursor-pointer"
-                        >
-                            Subscribe
-                        </button>
+                        isSubscribe ? (
+                            <button
+                                onClick={handleUnsubscribe}
+                                className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 cursor-pointer border"
+                            >
+                                Unsubscribe
+                            </button>
+                        ) : isFull ? (
+                            <p className="text-gray-500 text-l font-semibold">Event full</p>
+                        ) : (
+                            <button
+                                onClick={handleSubscribe}
+                                className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700 cursor-pointer"
+                            >
+                                Subscribe
+                            </button>
+                        )
                     )}
 
-                    {(isOwner || isAdmin) && (
+                    {event.maxNumberOfParticipants != null && (isOwner || isAdmin) && (
                         <button
                             onClick={() => setShowModal(true)}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 border rounded cursor-pointer"
                         >
                             Participant list
                         </button>
-                    )
-                    }
+                    )}
                 </div>
             </div>
 
@@ -186,9 +187,6 @@ function EventDetailPage() {
                 </div>
             )}
 
-
-
-
             {showModal && (
                 <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
                     <div className="bg-white rounded p-6 w-96 max-h-[70vh] overflow-auto">
@@ -232,11 +230,6 @@ function EventDetailPage() {
                     </div>
                 </div>
             )}
-
-
-
-
-
         </div>
     );
 }
