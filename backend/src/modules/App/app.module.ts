@@ -1,3 +1,4 @@
+import { GalleryService } from './../Gallery/gallery.service';
 import { FlashpostsModule } from './../FlashPosts/flashposts.module';
 import { FlashPostsController } from './../FlashPosts/flashposts.controller';
 import { MarketModule } from './../Market/market.module';
@@ -40,7 +41,8 @@ import { MulterModule } from '@nestjs/platform-express';
         AuthController,
         AppController
     ],
-    providers: [AppService],
+    providers: [
+        GalleryService, AppService],
 })
 
 export class AppModule { }
