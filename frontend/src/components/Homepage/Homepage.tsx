@@ -1,5 +1,6 @@
 import WeatherCard from "./Cards/WeatherCard";
 import LatestMarketItemCard from "./Cards/LatestMarketItemCard";
+import LatestPostCard from "./Cards/LatestPostCard";
 
 function Homepage() {
     return (
@@ -12,7 +13,10 @@ function Homepage() {
                     <h1 className="font-bold text-2xl text-left p-3">Last item on sell</h1>
                     <LatestMarketItemCard />
                 </div>
-                <div className="bg-[#77B5F5] col-span-1 row-span-1 border-1 m-5 text-center h-50 grid place-items-center">Dernière annonce</div>
+                <div className="bg-[#77B5F5] col-span-1 row-span-1 border-1 m-5 grid">
+                    <h1 className="font-bold text-2xl text-left p-3">Last post</h1>
+                    <LatestPostCard />
+                </div>
 
                 <div className="bg-[#77B5F5] col-span-1 row-span-1 border-1 m-5 text-center h-50 grid place-items-center">Prochain événement</div>
                 <div className="bg-[#77B5F5] col-span-1 row-span-1 border-1 m-5 text-center h-50 grid place-items-center">Annonce flash</div>
