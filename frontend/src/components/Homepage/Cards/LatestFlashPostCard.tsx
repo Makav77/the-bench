@@ -41,7 +41,7 @@ function LatestFlashPostCard() {
 
     return (
         <div
-            onClick={() => navigate(`/posts/${flashPost.id}`)}
+            onClick={() => navigate(`/flashposts/${flashPost.id}`)}
             className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-lg shadow hover:cursor-pointer hover:shadow-md transition h-25 px-5 mb-10"
         >
             <div className="pr-4">
