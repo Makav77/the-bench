@@ -7,9 +7,9 @@ import NextEventCard from "./Cards/NextEventCard";
 function Homepage() {
     return (
         <div>
-            <div className="p-6 w-[70%] mx-auto">
+            <div className="p-6 w-[50%] mx-auto">
                 <p className="text-xl bg-white rounded-3xl p-6 font-semibold">
-                    Welcome to "The Bench," your app dedicated to the residents of your neighborhood, allowing you to connect, organize events, exchange services and strengthen the social bonds of your neighborhood.
+                    Welcome to "The Bench", your app dedicated to the residents of your neighborhood, allowing you to connect, organize events, exchange services and strengthen the social bonds of your neighborhood.
                 </p>
             </div>
             <div className="p-6 w-[50%] mx-auto">
