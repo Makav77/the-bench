@@ -29,6 +29,8 @@ import FlashPostDetailPage from "./components/FlashPosts/FlashPostDetailPage";
 import CreateFlashPostForm from "./components/FlashPosts/CreateFlashPostForm";
 import EditFlashPostPage from "./components/FlashPosts/EditFlashPostForm";
 
+import CommunityPage from "./components/Community/CommunityPage";
+
 import { ToastContainer } from "react-toastify";
 
 export default function App() {
@@ -60,6 +62,7 @@ export default function App() {
                             <Route path="market/create" element={<CreateItemPage />} />
                             <Route path="market/:id" element={<ItemDetailsPage />} />
                             <Route path="market/:id/edit" element={<EditItemPage />} />
+                            <Route path="community" element={<CommunityPage />} />
                         </Route>
                     </Route>
                 </Routes>
