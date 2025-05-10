@@ -1,9 +1,7 @@
-import { GalleryService } from './../Gallery/gallery.service';
 import { FlashpostsModule } from './../FlashPosts/flashposts.module';
 import { FlashPostsController } from './../FlashPosts/flashposts.controller';
 import { MarketModule } from './../Market/market.module';
 import { MarketController } from './../Market/market.controller';
-import { MarketService } from './../Market/market.service';
 import { PostsModule } from '../Posts/posts.module';
 import { PostsController } from '../Posts/posts.controller';
 import { AuthModule } from "./../Auth/auth.module";
@@ -41,8 +39,7 @@ import { MulterModule } from '@nestjs/platform-express';
         AuthController,
         AppController
     ],
-    providers: [
-        GalleryService, AppService],
+    providers: [AppService],
 })
 
 export class AppModule { }
