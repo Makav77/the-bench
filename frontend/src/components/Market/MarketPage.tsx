@@ -31,7 +31,7 @@ function MarketPage() {
     }, [page]);
 
     return (
-        <div className="p-6 w-[40%] mx-auto">
+        <div className="p-6 w-[30%] mx-auto">
             <div className="flex justify-end mb-4 h-10">
                 <button
                     type="button"
@@ -55,21 +55,11 @@ function MarketPage() {
                     {items.map((item) => (
                         <div
                             key={item.id}
-                            className="p-4 border rounded cursor-pointer hover:shadow flex justify-between items-center"
+                            className="p-4 border rounded-3xl cursor-pointer hover:shadow flex justify-between items-center"
                             onClick={() => navigate(`/market/${item.id}`)}
                         >
                             <div className="flex flex-col">
                                 <h2 className="text-lg font-semibold">{item.title}</h2>
-
-
-                                {item.images?.[0] && (
-                                    <img
-                                        src={item.images[0]}
-                                        alt={item.title}
-                                        className="w-24 h-24 object-cover"
-                                    />
-                                )}
-
 
                                 <p className="text-gray-600 text-sm">
                                 {typeof item.price === "number" && (
@@ -77,10 +67,19 @@ function MarketPage() {
                                 )}
                                     Last update : {new Date(item.updatedAt).toLocaleDateString()}
                                 </p>
+
+                                <p className="text-gray-600">
+                                    Item by <span className="italic">{item.author.firstname} {item.author.lastname}</span>
+                                </p>
                             </div>
-                            <p className="text-gray-600 italic">
-                                {item.author.firstname} {item.author.lastname}
-                            </p>
+                            
+                            {item.images?.[0] && (
+                                <img
+                                    src={item.images[0]}
+                                    alt={item.title}
+                                    className="w-24 h-24 object-cover rounded-2xl"
+                                />
+                            )}
                         </div>
                     ))}
                 </div>
