@@ -26,9 +26,9 @@ function WeatherCard() {
     }
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow">
-            <h3 className="font-semibold mb-1">
-                Météo du quartier
+        <div className="flex flex-col justify-center items-center w-3/4 mx-auto bg-white rounded-lg shadow h-25 px-5 pr-4  mb-10">
+            <h3 className="text-lg font-bold">
+                Neighborhood weather
             </h3>
             <p>{weather.temp.toFixed(1)}°C, {weather.desc}</p>
         </div>

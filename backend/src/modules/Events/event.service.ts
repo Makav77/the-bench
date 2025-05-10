@@ -20,7 +20,7 @@ export class EventService {
             order: { startDate: "ASC" },
             skip: offset,
             take: limit,
-            relations: ["participantsList"],
+            relations: ["participantsList", "author"],
         });
 
         const lastPage = Math.ceil(total / limit);
