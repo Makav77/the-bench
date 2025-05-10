@@ -6,6 +6,7 @@ export interface EventSummary {
     name: string;
     startDate: string;
     maxNumberOfParticipants?: number;
+    author: { id: string; firstname: string; lastname: string };
     participantsList: { id: string }[];
 }
 
@@ -17,10 +18,7 @@ export interface EventDetails extends EventSummary {
     maxNumberOfParticipants?: number;
     description: string;
     author: { id: string; firstname: string; lastname: string };
-    participantsList: {
-        lastname: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
-        firstname: ReactI18NextChildren | Iterable<ReactI18NextChildren>; id: string 
-}[];
+    participantsList: { id: string }[];
 }
 
 export const getEvents = async (page = 1, limit = 5): Promise<{ data: EventSummary[]; total: number; page: number; lastPage: number }> => {
