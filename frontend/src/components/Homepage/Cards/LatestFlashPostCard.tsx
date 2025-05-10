@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPosts, PostSummary } from "../../../api/postService";
+import { getFlashPosts, FlashPostSummary } from "../../../api/flashPostService";
+import CountdownTimer from "../../FlashPosts/CountdownTimer";
 
-function LatestPostCard() {
-    const [post, setPost] = useState<PostSummary | null>(null);
+function LatestFlashPostCard() {
+    const [flashPost, setFlashPost] = useState<FlashPostSummary | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -11,9 +12,9 @@ function LatestPostCard() {
     useEffect(() => {
         async function load() {
             try {
-                const { data } = await getPosts(1, 1);
+                const { data } = await getFlashPosts(1, 1);
                 if (data.length > 0) {
-                    setPost(data[0]);
+                    setFlashPost(data[0]);
                 } else {
                     setError("No post available.");
                 }
@@ -34,27 +35,30 @@ function LatestPostCard() {
         return <p className="p-6 text-red-500">{error}</p>
     }
 
-    if (!post) {
+    if (!flashPost) {
         return <p className="p-6">No post available</p>
     }
 
     return (
         <div
-            onClick={() => navigate(`/posts/${post.id}`)}
+            onClick={() => navigate(`/posts/${flashPost.id}`)}
             className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-lg shadow hover:cursor-pointer hover:shadow-md transition h-25 px-5 mb-10"
         >
             <div className="pr-4">
-                <h4 className="text-lg font-bold">{post.title}</h4>
+                <h4 className="text-lg font-bold">{flashPost.title}</h4>
                 <p className="text-sm text-gray-500">
-                    Last update {new Date(post.updatedAt).toLocaleDateString()}
+                    Last update {new Date(flashPost.updatedAt).toLocaleDateString()}
                 </p>
             </div>
 
             <div>
-                <p>Author : {post.author.firstname} {post.author.lastname}</p>
+                <p>Author : {flashPost.author.firstname} {flashPost.author.lastname}</p>
+                <div className="text-center">
+                    <CountdownTimer createdAt={flashPost.updatedAt} />
+                </div>
             </div>
         </div>
     );
 }
 
-export default LatestPostCard;
+export default LatestFlashPostCard;
