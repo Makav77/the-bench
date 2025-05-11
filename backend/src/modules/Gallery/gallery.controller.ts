@@ -75,6 +75,16 @@ export class GalleryController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Delete(":id/like")
+    async unlikeGalleryItem(
+        @Param("id") id: string,
+        @Req() req: Request,
+    ): Promise<GalleryItem> {
+        const user = req.user as User;
+        return this.galleryService.unkikeGalleryItem(id, user);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Delete("id")
     async removeGalleryItem(
         @Param("id") id: string,

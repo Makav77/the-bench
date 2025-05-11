@@ -47,7 +47,10 @@ export class GalleryService {
     }
 
     async likeGalleryItem(id: string, user: User): Promise<GalleryItem> {
-        const galleryItem = await this.galleryRepo.findOne({ where: { id } });
+        const galleryItem = await this.galleryRepo.findOne({
+            where: { id },
+            relations: ["likes", "author"],
+        });
 
         if (!galleryItem) {
             throw new NotFoundException("Gallery item not found.");
@@ -58,6 +61,20 @@ export class GalleryService {
             ? galleryItem.likedBy.filter(u => u.id !== user.id)
             : [...galleryItem.likedBy, user];
 
+        return this.galleryRepo.save(galleryItem);
+    }
+
+    async unlikeGalleryItem(id: string, user: User): Promise<GalleryItem> {
+        const galleryItem = await this.galleryRepo.findOne({
+            where: { id },
+            relations: ["likes", "author"],
+        });
+
+        if (!galleryItem) {
+            throw new NotFoundException("Gallery item not found.");
+        }
+
+        galleryItem.likedBy = galleryItem.likedBy.filter(u => u.id !== user.id);
         return this.galleryRepo.save(galleryItem);
     }
 
