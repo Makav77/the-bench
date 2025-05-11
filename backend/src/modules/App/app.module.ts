@@ -1,3 +1,5 @@
+import { GalleryModule } from './../Gallery/gallery.module';
+import { GalleryController } from './../Gallery/gallery.controller';
 import { FlashpostsModule } from './../FlashPosts/flashposts.module';
 import { FlashPostsController } from './../FlashPosts/flashposts.controller';
 import { MarketModule } from './../Market/market.module';
@@ -19,6 +21,7 @@ import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
     imports: [
+        GalleryModule, 
         ScheduleModule.forRoot(),
         TypeOrmModule.forRoot(databaseConfig),
         MulterModule.register({
@@ -32,6 +35,7 @@ import { MulterModule } from '@nestjs/platform-express';
         FlashpostsModule,
     ],
     controllers: [
+        GalleryController,
         FlashPostsController,
         MarketController,
         EventController,
