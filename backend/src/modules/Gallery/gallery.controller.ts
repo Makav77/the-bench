@@ -25,9 +25,8 @@ const multerOptions = {
             callback(new Error("Unsupported file type."), false);
         }
     },
-    limits: { fileSize: 1 * 1024 * 1024 },
+    limits: { fileSize: 3 * 1024 * 1024 },
 };
-
 
 @Controller("gallery")
 export class GalleryController {
@@ -55,7 +54,7 @@ export class GalleryController {
         @UploadedFile() file: Express.Multer.File,
         @Body() createGalleryItemDTO: CreateGalleryItemDTO,
         @Req() req: Request,
-    ) {
+    ): Promise<GalleryItem> {
         const user = req.user as User;
         if (!file) {
             throw new BadRequestException("You must upload one image.");
@@ -66,26 +65,16 @@ export class GalleryController {
 
     @UseGuards(JwtAuthGuard)
     @Post(":id/like")
-    async likeGalleryItem(
+    async toggleLike(
         @Param("id") id: string,
         @Req() req: Request,
     ): Promise<GalleryItem> {
         const user = req.user as User;
-        return this.galleryService.likeGalleryItem(id, user);
+        return this.galleryService.toggleLike(id, user);
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete(":id/like")
-    async unlikeGalleryItem(
-        @Param("id") id: string,
-        @Req() req: Request,
-    ): Promise<GalleryItem> {
-        const user = req.user as User;
-        return this.galleryService.unkikeGalleryItem(id, user);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Delete("id")
+    @Delete(":id")
     async removeGalleryItem(
         @Param("id") id: string,
         @Req() req: Request,

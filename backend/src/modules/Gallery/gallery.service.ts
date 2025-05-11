@@ -4,6 +4,8 @@ import { Repository, MoreThan } from "typeorm";
 import { GalleryItem } from "./entities/gallery-item.entity";
 import { CreateGalleryItemDTO } from "./dto/create-gallery-item.dto";
 import { User, Role } from "../Users/entities/user.entity";
+import { join } from "path";
+import { unlink } from "fs/promises";
 
 @Injectable()
 export class GalleryService {
@@ -46,35 +48,19 @@ export class GalleryService {
         return this.galleryRepo.save(galleryItem);
     }
 
-    async likeGalleryItem(id: string, user: User): Promise<GalleryItem> {
-        const galleryItem = await this.galleryRepo.findOne({
-            where: { id },
-            relations: ["likes", "author"],
-        });
-
-        if (!galleryItem) {
-            throw new NotFoundException("Gallery item not found.");
-        }
-        const alreadyLiked = galleryItem.likedBy.find(u => u.id === user.id);
-
-        galleryItem.likedBy = alreadyLiked
-            ? galleryItem.likedBy.filter(u => u.id !== user.id)
-            : [...galleryItem.likedBy, user];
-
-        return this.galleryRepo.save(galleryItem);
-    }
-
-    async unlikeGalleryItem(id: string, user: User): Promise<GalleryItem> {
-        const galleryItem = await this.galleryRepo.findOne({
-            where: { id },
-            relations: ["likes", "author"],
-        });
+    async toggleLike(id: string, user: User): Promise<GalleryItem> {
+        const galleryItem = await this.findOneGalleryItem(id);
 
         if (!galleryItem) {
             throw new NotFoundException("Gallery item not found.");
         }
 
-        galleryItem.likedBy = galleryItem.likedBy.filter(u => u.id !== user.id);
+        const index = galleryItem.likedBy.findIndex(u => u.id === user.id);
+        if (index !== -1) {
+            galleryItem.likedBy.splice(index, 1);
+        } else {
+            galleryItem.likedBy.push(user)
+        }
         return this.galleryRepo.save(galleryItem);
     }
 
@@ -90,6 +76,14 @@ export class GalleryService {
 
         if (galleryItem.author.id !== user.id && user.role !== Role.ADMIN) {
             throw new ForbiddenException("You are not allowed to delete this item.");
+        }
+
+        const filePath = join(process.cwd(), "uploads", "gallery", galleryItem.url.split("/").pop()!);
+
+        try {
+            await unlink(filePath);
+        } catch (error) {
+            console.error("Could not delete file.");
         }
 
         await this.galleryRepo.delete(id);

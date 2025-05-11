@@ -24,7 +24,7 @@ export class GalleryItem {
     @ManyToMany(() => User, (user) => user.likedGalleryItems)
     @JoinTable({
         name: "gallery_item_likes",
-        joinColumn: { name: "item_id", referencedColumnName: "id" },
+        joinColumn: { name: "gallery_item_id", referencedColumnName: "id" },
         inverseJoinColumn: { name: "user_id", referencedColumnName: "id" },
     })
     likedBy: User[];
