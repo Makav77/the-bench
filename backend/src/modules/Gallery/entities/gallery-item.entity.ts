@@ -15,9 +15,6 @@ export class GalleryItem {
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
-    @UpdateDateColumn({ type: "timestamp" })
-    updatedAt: Date;
-
     @ManyToOne(() => User, (user) => user.galleryItems, { nullable: false })
     author: User;
 
