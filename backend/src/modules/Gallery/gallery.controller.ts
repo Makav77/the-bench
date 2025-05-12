@@ -49,7 +49,7 @@ export class GalleryController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    @UseInterceptors(FileInterceptor("images", multerOptions))
+    @UseInterceptors(FileInterceptor("url", multerOptions))
     async createGalleryItem(
         @UploadedFile() file: Express.Multer.File,
         @Body() createGalleryItemDTO: CreateGalleryItemDTO,
@@ -60,7 +60,11 @@ export class GalleryController {
             throw new BadRequestException("You must upload one image.");
         }
         const url = `/uploads/gallery/${file.filename}`;
-        return this.galleryService.createGalleryItem( createGalleryItemDTO, url, user);
+        return this.galleryService.createGalleryItem(
+          createGalleryItemDTO.description,
+          url,
+          user,
+        );
     }
 
     @UseGuards(JwtAuthGuard)

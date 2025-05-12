@@ -39,11 +39,15 @@ export class GalleryService {
         return galleryItem;
     }
 
-    async createGalleryItem(createGalleryItemDTO: CreateGalleryItemDTO, url: string, user: User): Promise<GalleryItem> {
-        const galleryItem = await this.galleryRepo.create({
-            ...createGalleryItemDTO,
+    async createGalleryItem(
+        description: string | undefined,
+        url: string,
+        user: User
+    ): Promise<GalleryItem> {
+        const galleryItem = this.galleryRepo.create({
             url,
-            author: user
+            description,
+            author: user,
         });
         return this.galleryRepo.save(galleryItem);
     }

@@ -40,16 +40,18 @@ function GalleryPage() {
     };
 
     return (
-        <div className="p-6 w-[60%] mx-auto">
-            <div className="flex justify-content mb-4">
-                <h1 className="text-2xl font-bold">Gallery</h1>
+        <div className="p-6 w-[50%] mx-auto">
+            <div className="flex justify-end mb-4">
                 <button
-                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                    type="button"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
                     onClick={() => navigate("/gallery/create")}
                 >
                     Add image
                 </button>
             </div>
+
+            <h1 className="text-2xl font-bold mb-4">Gallery</h1>
 
             {isLoading ? (
                 <p>Loading...</p>

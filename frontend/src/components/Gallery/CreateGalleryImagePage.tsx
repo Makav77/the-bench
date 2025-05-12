@@ -1,56 +1,114 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+// frontend/src/components/Gallery/CreateGalleryItemPage.tsx
+
+import { useState, ChangeEvent, FormEvent, useRef } from "react";
 import { createGalleryItem } from "../../api/galleryService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function CreateGalleryItemPage() {
-    const [file, setFile] = useState<File | null>(null);
-    const [description, setDescription] = useState("");
-    const navigate = useNavigate();
+  const [file, setFile] = useState<File | null>(null);
+  const [description, setDescription] = useState("");
+  const [previewURL, setPreviewURL] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files?.[0]) setFile(e.target.files[0]);
-    };
+  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0] ?? null;
+    setFile(f);
+    setError(null);
+    if (f) setPreviewURL(URL.createObjectURL(f));
+  }
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        if (!file) {
-            toast.error("Vous devez sélectionner une image.");
-            return;
-        }
-        try {
-            const item = await createGalleryItem(file, description);
-            toast.success("Image ajoutée !");
-            navigate(`/gallery/${item.id}`);
-        } catch {
-            toast.error("Erreur lors de l'ajout.");
-        }
-    };
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!file) {
+      setError("Vous devez sélectionner une image.");
+      return;
+    }
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      const item = await createGalleryItem(file, description);
+      toast.success("Image ajoutée !");
+      navigate(`/gallery/${item.id}`);
+    } catch {
+      toast.error("Erreur lors de l'ajout.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
     return (
         <div className="p-6 w-[40%] mx-auto">
-            <h1 className="text-2xl font-bold mb-4">Ajouter une image</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block font-semibold">Image *</label>
-                    <input type="file" accept="image/*" onChange={handleFileChange} />
-                </div>
-                <div>
-                    <label className="block font-semibold">Description</label>
-                    <textarea
-                        value={description}
-                        onChange={e => setDescription(e.target.value)}
-                        rows={3}
-                        className="w-full border rounded px-2 py-1"
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="bg-green-600 text-white px-4 py-2 rounded"
-                >
-                    Créer
-                </button>
-            </form>
+        <h1 className="text-4xl font-semibold mb-4">Ajouter une image</h1>
+        <form
+            onSubmit={handleSubmit}
+            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
+        >
+            {error && <p className="text-red-500">{error}</p>}
+
+            <div>
+            <label className="block font-semibold">
+                Image<span className="text-red-500">*</span>
+            </label>
+            <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+                disabled={isSubmitting}
+            >
+                Sélectionner
+            </button>
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleFileChange}
+            />
+            </div>
+
+            {previewURL && (
+            <div>
+                <img
+                src={previewURL}
+                alt="Aperçu"
+                className="h-40 object-cover rounded"
+                />
+            </div>
+            )}
+
+            <div>
+            <label className="block font-semibold">Description</label>
+            <textarea
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full border rounded px-2 py-1"
+                disabled={isSubmitting}
+            />
+            </div>
+
+            <div className="flex justify-between">
+            <button
+                type="button"
+                className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded"
+                onClick={() => navigate("/gallery")}
+                disabled={isSubmitting}
+            >
+                Annuler
+            </button>
+            <button
+                type="submit"
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50"
+                disabled={isSubmitting}
+            >
+                {isSubmitting ? "Envoi..." : "Créer"}
+            </button>
+            </div>
+        </form>
         </div>
     );
 }

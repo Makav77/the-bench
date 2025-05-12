@@ -21,11 +21,15 @@ export const getGalleryItem = async (id: string): Promise<GalleryItemSummary> =>
 
 export const createGalleryItem = async (file: File, description?: string): Promise<GalleryItemSummary> => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("url", file);
     if (description) {
         formData.append("description", description);
     }
-    const response = await apiClient.post("/gallery", formData);
+    const response = await apiClient.post("/gallery", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
     return response.data;
 }
 
