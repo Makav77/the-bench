@@ -42,7 +42,7 @@ export default function GalleryItemDetailPage() {
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow max-w-lg w-full">
-                <button onClick={() => navigate(-1)} className="mb-4 text-blue-600">← Retour</button>
+                <button onClick={() => navigate(-1)} className="mb-4 text-blue-600 cursor-pointer">← Retour</button>
                 <img src={item.url} alt={item.description} className="w-full mb-4 rounded" />
                 {item.description && <p className="mb-4">{item.description}</p>}
                 <p className="text-sm text-gray-500 mb-4">

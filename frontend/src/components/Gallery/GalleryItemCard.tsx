@@ -23,7 +23,7 @@ function GalleryItemCard({ galleryItem, currentUserId, onClick, onToggleLike }: 
 
             <button
                 onClick={e => { e.stopPropagation(); onToggleLike(); }}
-                className="absolute top-2 right-2 flex items-center space-x-1 bg-white/80 p-1 rounded"
+                className="absolute top-2 right-2 flex items-center space-x-1 bg-white/80 p-1 rounded cursor-pointer"
             >
                 <Heart className={classNames("w-5 h-5", liked ? "text-red-600 fill-red-600" : "text-gray-600")} />
                 <span>{galleryItem.likedBy.length}</span>

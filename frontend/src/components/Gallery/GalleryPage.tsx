@@ -56,7 +56,7 @@ function GalleryPage() {
             {isLoading ? (
                 <p>Loading...</p>
             ) : (
-                <div className="grid grid-cols-3 gap 4">
+                <div className="grid grid-cols-3 gap-4">
                     {galleryItems.map(item => (
                         <GalleryItemCard
                             key={item.id}
