@@ -4,8 +4,8 @@ export interface GalleryItemSummary {
     id: string;
     url: string;
     description?: string;
-    author: { id: string; firstName: string; lastName: string; };
-    likedBy: { id: string[] };
+    author: { id: string; firstname: string; lastname: string; };
+    likedBy: { id: string }[];
     createdAt: string;
 }
 

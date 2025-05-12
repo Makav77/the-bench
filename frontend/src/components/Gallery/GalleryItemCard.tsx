@@ -1,4 +1,3 @@
-import React from "react";
 import { GalleryItemSummary } from "../../api/galleryService";
 import { Heart } from "lucide-react";
 import classNames from "classnames";
@@ -10,7 +9,7 @@ interface GalleryItemProps {
     onToggleLike: () => void;
 }
 
-function galleryItemCard({ galleryItem, currentUserId, onClick, onToggleLike }: GalleryItemProps) {
+function GalleryItemCard({ galleryItem, currentUserId, onClick, onToggleLike }: GalleryItemProps) {
     const liked = galleryItem.likedBy.some(u => u.id === currentUserId);
 
     return (
@@ -33,4 +32,4 @@ function galleryItemCard({ galleryItem, currentUserId, onClick, onToggleLike }: 
     )
 }
 
-export default galleryItemCard;
+export default GalleryItemCard;

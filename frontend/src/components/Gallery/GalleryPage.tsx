@@ -3,28 +3,26 @@ import { GalleryItemSummary, getGalleryItems, toggleLikeGalleryItem } from "../.
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import GalleryItemCard from "./GalleryItemCard";
 
 function GalleryPage() {
     const [galleryItems, setGalleryItems] = useState<GalleryItemSummary[]>([]);
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const { user } = useAuth();
 
     useEffect(() => {
         async function load() {
             setIsLoading(true);
-            setError(null);
 
             try {
                 const { data, lastPage } = await getGalleryItems(page, 30);
                 setGalleryItems(data);
                 setLastPage(lastPage);
             } catch (error) {
-                setError("Unable to load gallery items : " + error);
-                toast.error("Unable to load gallery.");
+                toast.error("Unable to load gallery : " + error);
             } finally {
                 setIsLoading(false);
             }
@@ -37,8 +35,7 @@ function GalleryPage() {
             const updated = await toggleLikeGalleryItem(id);
             setGalleryItems(galleryItems.map(i => (i.id === id ? updated : i)));
         } catch (error) {
-            setError("Unable to like or unlike : " + error);
-            toast.error("Unable to like or unline.");
+            toast.error("Unable to like or unline : " + error);
         }
     };
 
@@ -58,10 +55,41 @@ function GalleryPage() {
                 <p>Loading...</p>
             ) : (
                 <div className="grid grid-cols-3 gap 4">
-                    {galleryItems.map(item => {
-                        
-                    })}
+                    {galleryItems.map(item => (
+                        <GalleryItemCard
+                            key={item.id}
+                            galleryItem={item}
+                            onClick={() => navigate(`/gallery/${item.id}`)}
+                            onToggleLike={() => handleToggleLike(item.id)}
+                            currentUserId={user?.id}
+                        />
+                    ))}
+                </div>
             )}
+
+            <div className="flex justify-center items-center mt-6 gap-4">
+                <button
+                    type="button"
+                    disabled={page <= 1}
+                    onClick={() => setPage((p) => p - 1)}
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                >
+                    ← Prev
+                </button>
+
+                <span>
+                    Page {page} / {lastPage}
+                </span>
+
+                <button
+                    type="button"
+                    disabled={page >= lastPage}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                >
+                    Next →
+                </button>
+            </div>
         </div>
     )
     
