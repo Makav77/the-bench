@@ -30,6 +30,9 @@ import CreateFlashPostForm from "./components/FlashPosts/CreateFlashPostForm";
 import EditFlashPostPage from "./components/FlashPosts/EditFlashPostForm";
 
 import CommunityPage from "./components/Community/CommunityPage";
+import GalleryPage from "./components/Gallery/GalleryPage";
+import CreateGalleryItemPage from "./components/Gallery/CreateGalleryImagePage";
+import GalleryItemDetailPage from "./components/Gallery/GalleryItemDetailPage";
 
 import { ToastContainer } from "react-toastify";
 
@@ -63,6 +66,9 @@ export default function App() {
                             <Route path="market/:id" element={<ItemDetailsPage />} />
                             <Route path="market/:id/edit" element={<EditItemPage />} />
                             <Route path="community" element={<CommunityPage />} />
+                            <Route path="gallery" element={<GalleryPage />} />
+                            <Route path="gallery/create" element={<CreateGalleryItemPage />} />
+                            <Route path="gallery/:id" element={<GalleryItemDetailPage />} />
                         </Route>
                     </Route>
                 </Routes>

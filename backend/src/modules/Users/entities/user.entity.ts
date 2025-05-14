@@ -4,6 +4,7 @@ import { Event } from '../../../modules/Events/entities/event.entity';
 import { Posts } from 'src/modules/Posts/entities/post.entity';
 import { MarketItem } from 'src/modules/Market/entities/market.entity';
 import { FlashPost } from 'src/modules/FlashPosts/entities/flash-post.entity';
+import { GalleryItem } from 'src/modules/Gallery/entities/gallery-item.entity';
 
 export enum Role {
     USER = "user",
@@ -56,4 +57,10 @@ export class User {
 
     @OneToMany(() => FlashPost, (flashPost) => flashPost.author)
     flashPosts: FlashPost[];
+
+    @OneToMany(() => GalleryItem, (galleryItem) => galleryItem.author)
+    galleryItems: GalleryItem[];
+
+    @ManyToMany(() => GalleryItem, (galleryItem) => galleryItem.likedBy)
+    likedGalleryItems: GalleryItem[];
 }
