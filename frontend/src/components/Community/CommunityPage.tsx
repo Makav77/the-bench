@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 
 const sections = [
     { label: 'Gallery', path: '/gallery' },
-    { label: 'Survey', path: '/survey' },
-    { label: 'Challenge', path: '/challenge' },
+    { label: 'Polls', path: '/polls' },
+    { label: 'Challenge', path: '/challenges' },
     { label: 'Calendar', path: '/calendar' },
     { label: 'Artisans', path: '/artisans' },
     { label: 'Journal', path: '/journal' },
