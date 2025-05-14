@@ -5,6 +5,8 @@ import { Posts } from 'src/modules/Posts/entities/post.entity';
 import { MarketItem } from 'src/modules/Market/entities/market.entity';
 import { FlashPost } from 'src/modules/FlashPosts/entities/flash-post.entity';
 import { GalleryItem } from 'src/modules/Gallery/entities/gallery-item.entity';
+import { Poll } from 'src/modules/Polls/entities/poll.entity';
+import { PollVote } from 'src/modules/Polls/entities/poll-vote.entity';
 
 export enum Role {
     USER = "user",
@@ -63,4 +65,10 @@ export class User {
 
     @ManyToMany(() => GalleryItem, (galleryItem) => galleryItem.likedBy)
     likedGalleryItems: GalleryItem[];
+
+    @OneToMany(() => Poll, (poll) => poll.author)
+    pollsCreated: Poll[];
+
+    @OneToMany(() => PollVote, (vote) => vote.voter)
+    pollVotes: PollVote[];
 }
