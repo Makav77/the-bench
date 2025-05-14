@@ -29,7 +29,7 @@ function GalleryItemCard({ galleryItem, currentUserId, onClick, onToggleLike }: 
                 <span>{galleryItem.likedBy.length}</span>
             </button>
         </div>
-    )
+    );
 }
 
 export default GalleryItemCard;

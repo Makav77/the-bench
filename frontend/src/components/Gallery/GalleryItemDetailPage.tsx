@@ -6,54 +6,103 @@ import { toast } from "react-toastify";
 
 export default function GalleryItemDetailPage() {
     const { id } = useParams<{ id: string }>();
-    const [item, setItem] = useState<GalleryItemSummary | null>(null);
+    const [galleryItem, setGalleryItem] = useState<GalleryItemSummary | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const { user } = useAuth();
 
     useEffect(() => {
-        if (id) getGalleryItem(id).then(setItem).catch(() => toast.error("Impossible de charger"));
+        async function load() {
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                if (id) {
+                    const galleryItem = await getGalleryItem(id);
+                    setGalleryItem(galleryItem);
+                }
+            } catch (error) {
+                console.error(error);
+                toast.error("Unable to load gallery item");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        load();
     }, [id]);
 
-    if (!item) return <p>Loading...</p>;
+    if (isLoading) {
+        return <p className="p-6">Loading...</p>
+    }
 
-    const isOwner = user?.id === item.author.id;
-    const liked = item.likedBy.some(u => u.id === user?.id);
+    if (error) {
+        return <p className="text-red-500">{error}</p>
+    }
+
+    if (!galleryItem) {
+        return <p>Loading...</p>;
+    }
+
+    const isOwner = user?.id === galleryItem.author.id;
+    const liked = galleryItem.likedBy.some(u => u.id === user?.id);
 
     const handleToggleLike = async () => {
         try {
-            const updated = await toggleLikeGalleryItem(item.id);
-            setItem(updated);
+            const updated = await toggleLikeGalleryItem(galleryItem.id);
+            setGalleryItem(updated);
         } catch {
-            toast.error("Impossible de liker/déliker");
+            toast.error("Unable to like/unlike");
         }
     };
 
     const handleDelete = async () => {
-        if (!window.confirm("Supprimer cette image ?")) return;
+        const confirmed = window.confirm("You are about to delete an image. Would you like to confirm ?");
+        if (!confirmed) {
+            return;
+        }
+        
         try {
-            await deleteGalleryItem(item.id);
-            toast.success("Image supprimée");
+            await deleteGalleryItem(id!);
+            toast.success("Image successfully deleted!");
             navigate("/gallery");
-        } catch {
-            toast.error("Impossible de supprimer");
+        } catch (error) {
+            toast.error("Unable to delete image : " + error);
         }
     };
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow max-w-lg w-full">
-                <button onClick={() => navigate(-1)} className="mb-4 text-blue-600 cursor-pointer">← Retour</button>
-                <img src={item.url} alt={item.description} className="w-full mb-4 rounded" />
-                {item.description && <p className="mb-4">{item.description}</p>}
+                <button 
+                    onClick={() => navigate("/gallery")}
+                    className="mb-4 text-blue-600 cursor-pointer">
+                        ← Prev
+                </button>
+                <img 
+                    src={galleryItem.url} 
+                    alt={galleryItem.description} 
+                    className="w-full mb-4 rounded"
+                />
+
+                {galleryItem.description && <p className="mb-4">{galleryItem.description}</p>}
+
                 <p className="text-sm text-gray-500 mb-4">
-                    Posté par {item.author.firstname} {item.author.lastname} le {new Date(item.createdAt).toLocaleString()}
+                    Published by {galleryItem.author.firstname} {galleryItem.author.lastname} on {new Date(galleryItem.createdAt).toLocaleString()}
                 </p>
+
                 <div className="flex items-center space-x-4">
-                    <button onClick={handleToggleLike} className="flex items-center">
-                        {liked ? '💖' : '🤍'} {item.likedBy.length}
+                    <button 
+                        onClick={handleToggleLike} 
+                        className="flex items-center"
+                    >
+                        {liked ? '💖' : '🤍'} {galleryItem.likedBy.length}
                     </button>
+    
                     {(isOwner || user?.role==='admin') && (
-                        <button onClick={handleDelete} className="text-red-600">Supprimer</button>
+                        <button 
+                            onClick={handleDelete} 
+                            className="text-red-600">Delete</button>
                     )}
                 </div>
             </div>
