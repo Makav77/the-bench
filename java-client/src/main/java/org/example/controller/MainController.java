@@ -22,11 +22,7 @@ public class MainController {
     @FXML
     private void initialize() {
         ThemeManager.applyThemeToRoot(mainPane);
-        journalButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                ThemeManager.applyTheme(newScene);
-            }
-        });
+        ThemeManager.applyThemeToRoot(journalButton);
         loadView("/ui/journal.fxml");
         journalButton.setOnAction(e -> loadView("/ui/journal.fxml"));
         pluginsButton.setOnAction(e -> loadView("/ui/plugins.fxml"));
@@ -42,11 +38,7 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Pane view = loader.load();
-            view.sceneProperty().addListener((obs, oldScene, newScene) -> {
-                if (newScene != null) {
-                    ThemeManager.applyTheme(newScene);
-                }
-            });
+            ThemeManager.applyThemeToRoot(view);
             /*contentPane.getChildren().setAll(view);*/
             Parent parent = contentPane.getParent();
             if (parent instanceof Pane paneParent) {

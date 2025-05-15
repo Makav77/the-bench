@@ -48,10 +48,6 @@ public class ThemeManager {
         });
     }
 
-    public static String getCssPath() {
-        return "/ui/themes/" + currentTheme + "/" + currentTheme + ".css";
-    }
-
     private static void saveThemeToConfig(String themeName) {
         try (OutputStream out = new FileOutputStream(CONFIG_PATH)) {
             Properties props = new Properties();
@@ -71,9 +67,5 @@ public class ThemeManager {
         }
 
         applyTheme(scene);
-    }
-
-    public static String getCurrentTheme() {
-        return currentTheme;
     }
 }
