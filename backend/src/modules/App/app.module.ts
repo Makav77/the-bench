@@ -18,10 +18,11 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { EventModule } from "../Events/event.module";
 import { EventController } from '../Events/event.controller';
 import { MulterModule } from '@nestjs/platform-express';
+import { PollController } from '../Polls/poll.controller';
+import { PollModule } from '../Polls/poll.module';
 
 @Module({
     imports: [
-        GalleryModule, 
         ScheduleModule.forRoot(),
         TypeOrmModule.forRoot(databaseConfig),
         MulterModule.register({
@@ -33,8 +34,11 @@ import { MulterModule } from '@nestjs/platform-express';
         PostsModule,
         MarketModule,
         FlashpostsModule,
+        GalleryModule,
+        PollModule,
     ],
     controllers: [
+        PollController,
         GalleryController,
         FlashPostsController,
         MarketController,
