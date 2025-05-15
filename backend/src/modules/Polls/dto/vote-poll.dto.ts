@@ -1,10 +1,9 @@
-import { IsArray, IsInt, Min, ArrayMinSize, ArrayMaxSize, IsOptional } from "class-validator";
+import { IsArray, IsInt, Min, ArrayMinSize, ArrayMaxSize, IsOptional, IsUUID } from "class-validator";
 
 export class VotePollDTO {
     @IsArray()
     @ArrayMinSize(1)
     @ArrayMaxSize(10)
-    @IsInt({ each: true })
-    @Min(1, { each: true })
-    selectedOptionsIds: number[];
+    @IsUUID("4", { each: true })
+    selectedOptionsIds: string[];
 }
