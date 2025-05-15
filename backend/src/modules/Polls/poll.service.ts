@@ -1,0 +1,127 @@
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, MoreThan } from "typeorm";
+import { Poll } from "./entities/poll.entity";
+import { PollOption } from "./entities/poll-option.entity";
+import { PollVote } from "./entities/poll-vote.entity";
+import { CreatePollDTO, PollType } from "./dto/create-poll.dto";
+import { VotePollDTO } from "./dto/vote-poll.dto";
+import { User, Role } from "../Users/entities/user.entity";
+
+@Injectable()
+export class PollService{
+    constructor(
+        @InjectRepository(Poll)
+        private readonly pollRepo: Repository<Poll>,
+        @InjectRepository(PollOption)
+        private readonly optionRepo: Repository<PollOption>,
+        @InjectRepository(PollVote)
+        private readonly voteRepo: Repository<PollVote>,
+    ) {}
+
+    async findAllPolls(page = 1, limit = 10): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
+        const [data, total] = await this.pollRepo.findAndCount({
+            order: { createdAt: "DESC" },
+            relations: ["author"],
+            skip: (page - 1) * limit,
+            take: limit,
+        });
+
+        const lastPage = Math.ceil(total / limit);
+        return { data, total, page, lastPage };
+    }
+
+    async findOnePoll(id: string): Promise<Poll> {
+        const poll = await this.pollRepo.findOne({
+            where: { id },
+            relations: ["options", "votes", "votes.voter"],
+        });
+
+        if (!poll) {
+            throw new NotFoundException("Poll not found.");
+        }
+
+        return poll;
+    }
+
+    async createPoll(createPollDTO: CreatePollDTO, author: User): Promise<Poll> {
+        const { question, options, type, maxSelections, autoCloseIn } = createPollDTO;
+
+        if (type === PollType.LIMITED && !maxSelections) {
+            throw new BadRequestException("maxSelections required for LIMITED type.");
+        }
+
+        const pollData: Partial<Poll> = { question, type, maxSelections, manualClosed: false, author };
+
+        if (autoCloseIn) {
+            pollData.closesAt = new Date(Date.now() + autoCloseIn * 60 * 60 * 1000);
+        }
+
+        const poll = this.pollRepo.create(pollData);
+        const saved = await this.pollRepo.save(poll);
+
+        const opts = options.map(label =>
+            this.optionRepo.create({ label, poll: saved })
+        );
+        await this.optionRepo.save(opts);
+        return this.findOnePoll(saved.id);
+    }
+
+    async vote(id: string, votePollDTO: VotePollDTO, user: User): Promise<Poll> {
+        const poll = await this.findOnePoll(id);
+        if (user.role === Role.ADMIN) {
+            throw new ForbiddenException("Administrators can't vote.");
+        }
+        if (poll.manualClosed || (poll.closesAt && poll.closesAt < new Date())) {
+            throw new BadRequestException("Sondage closed.");
+        }
+        const prior = await this.voteRepo.findOne({
+            where: {
+                poll: { id },
+                voter: { id: user.id }
+            }
+        });
+
+        if (prior) {
+            throw new BadRequestException("You have already voted.");
+        }
+
+        const optionsIds = votePollDTO.selectedOptionsIds;
+
+        if (poll.type === PollType.SINGLE && optionsIds.length !== 1) {
+            throw new BadRequestException("Single response required.")
+        }
+
+        if (poll.type === PollType.LIMITED && optionsIds.length > poll.maxSelections!) {
+            throw new BadRequestException(`Maximum of ${poll.maxSelections} choices`);
+        }
+
+        for (const optId of optionsIds) {
+            const opt = poll.options.find(o => o.id === optId);
+            if (!opt) {
+                throw new NotFoundException("Invalid option");
+            }
+            const vote = this.voteRepo.create({ poll, option: opt, voter: user });
+            await this.voteRepo.save(vote);
+        }
+        return this.findOnePoll(id);
+    }
+
+    async closePoll(id: string, user: User): Promise<Poll> {
+        const poll = await this.findOnePoll(id);
+        if (poll.author.id !== user.id && user.role !== Role.ADMIN) {
+            throw new ForbiddenException("Unauthorize to close poll.");
+        }
+
+        poll.manualClosed = true;
+        return this.pollRepo.save(poll);
+    }
+
+    async removePoll(id: string, user: User): Promise<void> {
+        const poll = await this.findOnePoll(id);
+        if (poll.author.id !== user.id && user.role !== Role.ADMIN) {
+            throw new ForbiddenException("Unauthorize to delete poll.");
+        }
+        await this.pollRepo.delete(id);
+    }
+}
