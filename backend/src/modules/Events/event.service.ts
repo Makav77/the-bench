@@ -30,7 +30,7 @@ export class EventService {
     async findOneEvent(id: string): Promise<Event> {
         const event = await this.eventRepo.findOne({
             where: { id },
-            relations: ['author', 'participantsList'],
+            relations: ["author", "participantsList"],
         });
 
         if (!event) {

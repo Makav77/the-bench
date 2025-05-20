@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './modules/App/app.module';
+import { ValidationPipe } from '@nestjs/common';
 import cookieParser from "cookie-parser";
 import { join } from 'path';
 
@@ -14,6 +15,12 @@ async function bootstrap() {
         origin: 'http://localhost:5173',
         credentials: true,
     });
+
+    app.useGlobalPipes(new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+    }));
 
     app.useStaticAssets(join(__dirname, "..", "uploads"), {
         prefix: "/uploads/",

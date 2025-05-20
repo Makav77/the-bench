@@ -34,6 +34,10 @@ import GalleryPage from "./components/Gallery/GalleryPage";
 import CreateGalleryItemPage from "./components/Gallery/CreateGalleryImagePage";
 import GalleryItemDetailPage from "./components/Gallery/GalleryItemDetailPage";
 
+import PollsPage from "./components/Polls/PollsPage";
+import PollDetailPage from "./components/Polls/PollDetailPage";
+import CreatePollPage from "./components/Polls/CreatePollPage";
+
 import { ToastContainer } from "react-toastify";
 
 export default function App() {
@@ -69,6 +73,9 @@ export default function App() {
                             <Route path="gallery" element={<GalleryPage />} />
                             <Route path="gallery/create" element={<CreateGalleryItemPage />} />
                             <Route path="gallery/:id" element={<GalleryItemDetailPage />} />
+                            <Route path="polls" element={<PollsPage />} />
+                            <Route path="polls/create" element={<CreatePollPage />} />
+                            <Route path="polls/:id" element={<PollDetailPage />} />
                         </Route>
                     </Route>
                 </Routes>
