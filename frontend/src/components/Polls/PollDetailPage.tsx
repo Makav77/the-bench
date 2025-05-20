@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { PollDetails } from "../../api/pollService";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import PollCountdownTimer from "./PollCountdownTimer";
 
 function PollDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -65,8 +66,18 @@ function PollDetailPage() {
     };
 
     const handleClose = async () => {
-        await closePoll(poll.id);
-        setPoll(await getPoll(poll.id));
+        const confirmed = window.confirm("You are about to close the poll. Would you like to confirm?")
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            await closePoll(poll.id);
+            setPoll(await getPoll(poll.id));
+            toast.success("Poll successfully closed!");
+        } catch (error) {
+            toast.error("Unable to close poll : " + error);
+        }
     }
 
     const handleDelete = async () => {
@@ -84,52 +95,100 @@ function PollDetailPage() {
         }
     }
 
-    return (
-        <div className="p-6 w-[50%] mx-auto space-y-4 bbg-white rounded shadow">
-            <h1 className="text-xl font-bold">{poll.question}</h1>
+    const isExpired = !!poll.closesAt && new Date(poll.closesAt) < new Date();
 
-            <div>
-                {poll.options.map(o => (
-                    <label
-                        key={o.id}
-                        className="block"
-                    >
-                        <input
-                            type={poll.type === "single" ? "radio":"checkbox"}
-                            name="opt"
-                            value={o.id}
-                            disabled={isClosed || hasVoted}
-                        />{" "}
-                        {o.label} ({o.votesCount} votes)
-                    </label>
-                ))}
+    return (
+        <div className="p-6 w-[30%] mx-auto space-y-4 bg-gray-200 rounded-2xl shadow mt-10">
+            <div className="flex justify-between items-center">
+                <button
+                    type="button"
+                    onClick={() => navigate("/polls")}
+                    className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                >
+                    ← Back
+                </button>
+
+                <div>
+                    <p>
+                        {poll.manualClosed || isExpired ? (
+                            <span className="text-gray-500 font-semibold text-sm">Closed</span>
+                        ) : poll.closesAt ? (
+                            <PollCountdownTimer expiresAt={poll.closesAt} />
+                        ) : (
+                            <span className="text-green-600 font-semibold text-sm">Open</span>
+                        )}
+                    </p>
+                </div>
             </div>
 
-            {!isClosed && !hasVoted && (
-                <button onClick={handleVote} className="bg-green-600 text-white px-4 py-2 rounded">
-                    Vote
-                </button>
+            <h1 className="text-2xl font-bold">{poll.question}</h1>
+
+            {!isClosed ? (
+                <div>
+                    {poll.options.map(o => (
+                        <label
+                            key={o.id}
+                            className="block"
+                        >
+                            <input
+                                type={poll.type === "single" ? "radio":"checkbox"}
+                                name="opt"
+                                value={o.id}
+                                disabled={isClosed || hasVoted}
+                            />{" "}
+                            {o.label}
+                        </label>
+                    ))}
+                </div>
+            ) : (
+                <>
+                    <div className="mt-4 p-4 bg-white rounded-2xl shadow w-[60%] mx-auto">
+                        <h2 className="text-lg font-semibold mb-2">Results :</h2>
+                        {(() => {
+                            const totalVotes = poll.options.reduce((sum, o) => sum + o.votesCount, 0);
+                            const sorted = [...poll.options].sort((a, b) => b.votesCount - a.votesCount);
+
+                            return sorted.map(o => {
+                                const pct = totalVotes > 0
+                                ? Math.round((o.votesCount / totalVotes) * 100)
+                                : 0;
+                        
+                                return (
+                                    <p key={o.id} className="text-sm">
+                                        {o.label} =&gt; {pct}%
+                                    </p>
+                                );
+                            });
+                        })()}
+                    </div>
+                </>
             )}
 
-            {(isOwner || isAdmin) && !isClosed && (
-                <button
-                    onClick={handleClose}
-                    className="bg-yellow-600 text-white px-4 py-2 rounded"
-                >
-                    Close
-                </button>
-            )}
+            <div className="w-[80%] mx-auto flex justify-around mt-8">
+                {!isClosed && !hasVoted && (
+                    <button onClick={handleVote} className="w-[25%] bg-green-600 text-white px-6 py-2 rounded cursor-pointer">
+                        Vote
+                    </button>
+                )}
 
-            {(isOwner || isAdmin) && (
-                <button
-                    onClick={handleDelete}
-                    className="bg-red-600 text-white px-4 py-2 rounded"
-                >
-                    Delete
-                </button>
-            )}
+                {(isOwner || isAdmin) && !isClosed && (
+                    <button
+                        onClick={handleClose}
+                        className="w-[25%] bg-yellow-600 text-white px-6 py-1 rounded cursor-pointer"
+                    >
+                        Close
+                    </button>
+                )}
 
-            {isClosed && <p className="text-gray-500">Poll closed</p>}
+                {(isOwner || isAdmin) && (
+                    <button
+                        onClick={handleDelete}
+                        className="w-[25%] bg-red-600 text-white px-6 py-1 rounded cursor-pointer"
+                    >
+                        Delete
+                    </button>
+                )}
+            </div>
         </div>
     );
 }

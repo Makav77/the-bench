@@ -1,4 +1,4 @@
-import { IsArray, IsInt, Min, ArrayMinSize, ArrayMaxSize, IsOptional, IsUUID } from "class-validator";
+import { IsArray, ArrayMinSize, ArrayMaxSize, IsUUID } from "class-validator";
 
 export class VotePollDTO {
     @IsArray()

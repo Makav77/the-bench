@@ -22,7 +22,7 @@ export class PollService{
     async findAllPolls(page = 1, limit = 10): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
         const [data, total] = await this.pollRepo.findAndCount({
             order: { createdAt: "DESC" },
-            relations: ["author"],
+            relations: ["author", "votes"],
             skip: (page - 1) * limit,
             take: limit,
         });
@@ -34,12 +34,16 @@ export class PollService{
     async findOnePoll(id: string): Promise<Poll> {
         const poll = await this.pollRepo.findOne({
             where: { id },
-            relations: ["options", "votes", "votes.voter"],
+            relations: ["author", "options", "votes", "votes.voter", "options.votes"],
         });
 
         if (!poll) {
             throw new NotFoundException("Poll not found.");
         }
+
+        poll.options.forEach(opt => {
+            (opt as any).votesCount = opt.votes?.length ?? 0;
+        })
 
         return poll;
     }
@@ -49,6 +53,12 @@ export class PollService{
 
         if (type === PollType.LIMITED && !maxSelections) {
             throw new BadRequestException("maxSelections required for LIMITED type.");
+        }
+
+        if (type === PollType.LIMITED) {
+            if (maxSelections! > createPollDTO.options.length - 1) {
+                throw new BadRequestException("The maximum number of answers cannot be greater than the number of options - 1.");
+            }
         }
 
         const pollData: Partial<Poll> = { question, type, maxSelections, manualClosed: false, author };

@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "ty
 import { Poll } from "./poll.entity";
 import { PollVote } from "./poll-vote.entity";
 
-@Entity({ name: "poll_option "})
+@Entity({ name: "poll_option"})
 export class PollOption {
     @PrimaryGeneratedColumn("uuid")
     id: string;

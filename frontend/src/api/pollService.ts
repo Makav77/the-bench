@@ -37,14 +37,14 @@ export const createPoll = async (form: {
     options: string[];
     type: "single" | "multiple" | "limited";
     maxSelections?: number;
-    autoCloseInHours?: number;
+    autoCloseIn?: number;
 }): Promise<PollDetails> => {
     const response = await apiClient.post("/polls", form);
     return response.data;
 }
 
-export const votePoll = async (id: string, selectedOptionIds: string[]): Promise<PollDetails> => {
-    const response = await apiClient.post(`/polls/${id}/vote`, { selectedOptionIds });
+export const votePoll = async (id: string, selectedOptionsIds: string[]): Promise<PollDetails> => {
+    const response = await apiClient.post(`/polls/${id}/vote`, { selectedOptionsIds });
     return response.data;
 }
 
@@ -56,3 +56,5 @@ export const closePoll = async (id: string): Promise<PollDetails> => {
 export const deletePoll = async (id: string): Promise<void> => {
     await apiClient.delete(`/polls/${id}`);
 }
+
+// options x => XX%
