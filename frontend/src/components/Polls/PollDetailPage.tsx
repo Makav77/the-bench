@@ -143,7 +143,7 @@ function PollDetailPage() {
             ) : (
                 <>
                     <div className="mt-4 p-4 bg-white rounded-2xl shadow w-[60%] mx-auto">
-                        <h2 className="text-lg font-semibold mb-2">Results :</h2>
+                        <h2 className="text-xl font-semibold mb-2">Results :</h2>
                         {(() => {
                             const totalVotes = poll.options.reduce((sum, o) => sum + o.votesCount, 0);
                             const sorted = [...poll.options].sort((a, b) => b.votesCount - a.votesCount);
@@ -155,7 +155,11 @@ function PollDetailPage() {
                         
                                 return (
                                     <p key={o.id} className="text-sm">
-                                        {o.label} =&gt; {pct}%
+                                        <div className="flex justify-between items-center">
+                                            {o.label} 
+                                            <span className="px-1 my-1 bg-blue-400 rounded">{pct}%</span>
+                                        </div>
+                                        <div className="border-t-1 h-1" />
                                     </p>
                                 );
                             });
