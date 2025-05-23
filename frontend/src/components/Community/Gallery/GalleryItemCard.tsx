@@ -1,4 +1,4 @@
-import { GalleryItemSummary } from "../../api/galleryService";
+import { GalleryItemSummary } from "../../../api/galleryService";
 import { Heart } from "lucide-react";
 import classNames from "classnames";
 

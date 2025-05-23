@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getAllPolls } from "../../api/pollService";
-import { PollSummary } from "../../api/pollService";
+import { getAllPolls } from "../../../api/pollService";
+import { PollSummary } from "../../../api/pollService";
 import { useNavigate } from "react-router-dom";
 import PollCountdownTimer from "./PollCountdownTimer";
 

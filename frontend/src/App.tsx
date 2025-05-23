@@ -30,13 +30,16 @@ import CreateFlashPostForm from "./components/FlashPosts/CreateFlashPostForm";
 import EditFlashPostPage from "./components/FlashPosts/EditFlashPostForm";
 
 import CommunityPage from "./components/Community/CommunityPage";
-import GalleryPage from "./components/Gallery/GalleryPage";
-import CreateGalleryItemPage from "./components/Gallery/CreateGalleryImagePage";
-import GalleryItemDetailPage from "./components/Gallery/GalleryItemDetailPage";
+import GalleryPage from "./components/Community/Gallery/GalleryPage";
+import CreateGalleryItemPage from "./components/Community/Gallery/CreateGalleryImagePage";
+import GalleryItemDetailPage from "./components/Community/Gallery/GalleryItemDetailPage";
 
-import PollsPage from "./components/Polls/PollsPage";
-import PollDetailPage from "./components/Polls/PollDetailPage";
-import CreatePollPage from "./components/Polls/CreatePollPage";
+import PollsPage from "./components/Community/Polls/PollsPage";
+import PollDetailPage from "./components/Community/Polls/PollDetailPage";
+import CreatePollPage from "./components/Community/Polls/CreatePollPage";
+
+import ArtisansListPage from "./components/Community/Artisans/ArtisansListPage";
+import ArtisansByTypePage from "./components/Community/Artisans/ArtisansByTypePage";
 
 import { ToastContainer } from "react-toastify";
 
@@ -76,6 +79,8 @@ export default function App() {
                             <Route path="polls" element={<PollsPage />} />
                             <Route path="polls/create" element={<CreatePollPage />} />
                             <Route path="polls/:id" element={<PollDetailPage />} />
+                            <Route path="artisans" element={<ArtisansListPage />} />
+                            <Route path="artisans/:job" element={<ArtisansByTypePage />} />
                         </Route>
                     </Route>
                 </Routes>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { getPoll, votePoll, closePoll, deletePoll } from "../../api/pollService";
+import { getPoll, votePoll, closePoll, deletePoll } from "../../../api/pollService";
 import { useParams, useNavigate } from "react-router-dom";
-import { PollDetails } from "../../api/pollService";
-import { useAuth } from "../../context/AuthContext";
+import { PollDetails } from "../../../api/pollService";
+import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import PollCountdownTimer from "./PollCountdownTimer";
 
