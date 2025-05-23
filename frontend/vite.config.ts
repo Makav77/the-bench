@@ -7,15 +7,20 @@ export default defineConfig({
     server: {
         proxy: {
             "/uploads": {
-            target: "http://localhost:3000",
-            changeOrigin: true,
-            secure: false,
-        },
+                target: "http://localhost:3000",
+                changeOrigin: true,
+                secure: false,
+            },
             "/market": {
                 target: "http://localhost:3000",
                 changeOrigin: true,
                 secure: false,
-            }
+            },
+            '/places': {
+                target: 'http://localhost:3000',
+                changeOrigin: true,
+                secure: false,
+            },
         }
     }
 });

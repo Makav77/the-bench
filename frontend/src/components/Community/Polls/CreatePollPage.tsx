@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import { createPoll } from "../../api/pollService";
+import { createPoll } from "../../../api/pollService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 

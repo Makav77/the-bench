@@ -20,9 +20,14 @@ import { EventController } from '../Events/event.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { PollController } from '../Polls/poll.controller';
 import { PollModule } from '../Polls/poll.module';
+import { PlacesModule } from '../Places/places.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
     imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
         ScheduleModule.forRoot(),
         TypeOrmModule.forRoot(databaseConfig),
         MulterModule.register({
@@ -36,6 +41,7 @@ import { PollModule } from '../Polls/poll.module';
         FlashpostsModule,
         GalleryModule,
         PollModule,
+        PlacesModule,
     ],
     controllers: [
         PollController,

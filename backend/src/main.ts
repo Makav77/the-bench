@@ -8,6 +8,8 @@ import { join } from 'path';
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: ["error", "warn", "log", "debug", "verbose"] });
     const port = 3000;
+    console.log("✅ API Google Places key:", process.env.GOOGLE_PLACES_API_KEY ? "SET" : "MISSING");
+
 
     app.use(cookieParser());
 
