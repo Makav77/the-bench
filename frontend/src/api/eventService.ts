@@ -5,13 +5,13 @@ export interface EventSummary {
     id: string;
     name: string;
     startDate: string;
+    endDate: string;
     maxNumberOfParticipants?: number;
     author: { id: string; firstname: string; lastname: string };
     participantsList: { id: string }[];
 }
 
 export interface EventDetails extends EventSummary {
-    endDate: string;
     createdDate: string;
     updatedDate: string;
     place: string;
