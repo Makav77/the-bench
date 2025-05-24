@@ -10,9 +10,9 @@ export class ChallengeRegistration {
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
-    // @ManyToOne(() => User, (user) => user.challengeRegistrations, { nullable: false })
-    // user: User;
+    @ManyToOne(() => User, (user) => user.challengeRegistrations, { nullable: false })
+    user: User;
 
-    // @ManyToOne(() => Challenge, (challenge) => challenge.registrations, { nullable: false, onDelete: "CASCADE" })
-    // challenge: Challenge;
+    @ManyToOne(() => Challenge, (challenge) => challenge.registrations, { nullable: false, onDelete: "CASCADE" })
+    challenge: Challenge;
 }

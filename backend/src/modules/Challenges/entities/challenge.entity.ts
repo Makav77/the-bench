@@ -29,12 +29,12 @@ export class Challenge {
     @Column({ type: "text" })
     successCriteria: string;
 
-    // @ManyToOne(() => User, (user) => user.challengesCreated, { nullable: false })
-    // author: User;
+    @ManyToOne(() => User, (user) => user.challengesCreated, { nullable: false })
+    author: User;
 
-    // @OneToMany(() => ChallengeRegistration, (registration) => registration.challenge, { cascade: true })
-    // registrations: ChallengeRegistration[];
+    @OneToMany(() => ChallengeRegistration, (registration) => registration.challenge, { cascade: true })
+    registrations: ChallengeRegistration[];
 
-    // @OneToMany(() => ChallengeCompletion, (completion) => completion.challenge, { cascade: true })
-    // completions: ChallengeCompletion[];
+    @OneToMany(() => ChallengeCompletion, (completion) => completion.challenge, { cascade: true })
+    completions: ChallengeCompletion[];
 }

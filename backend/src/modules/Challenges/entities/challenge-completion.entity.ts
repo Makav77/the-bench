@@ -19,9 +19,9 @@ export class ChallengeCompletion {
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
-    // @ManyToOne(() => User, (user) => user.challengeCompletions, { nullable: false })
-    // user: User;
+    @ManyToOne(() => User, (user) => user.challengeCompletions, { nullable: false })
+    user: User;
 
-    // @ManyToOne(() => Challenge, (challenge) => challenge.completions, { nullable: false, onDelete: "CASCADE" })
-    // challenge: Challenge;
+    @ManyToOne(() => Challenge, (challenge) => challenge.completions, { nullable: false, onDelete: "CASCADE" })
+    challenge: Challenge;
 }
