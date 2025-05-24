@@ -26,19 +26,19 @@ function CalendarPage() {
     }, [year]);
 
     return (
-        <div className="p-6">
+        <div className="p-6 w-[80%] mx-auto">
             <div className="flex justify-between items-center mb-4">
                 <button
-                    className="bg-gray-200 px-3 py-1 rounded"
+                    className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-gray-300"
                     onClick={() => setYear(y => y - 1)}
                 >
                     ← {year - 1}
                 </button>
 
-                <h2 className="text-xl font-bold">{year}</h2>
+                <h2 className="text-3xl font-bold">{year}</h2>
 
                 <button
-                    className="bg-gray-200 px-3 py-1 rounded"
+                    className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-gray-300"
                     onClick={() => setYear(y => y + 1)}
                 >
                     {year + 1} →

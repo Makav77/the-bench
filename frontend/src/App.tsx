@@ -41,6 +41,8 @@ import CreatePollPage from "./components/Community/Polls/CreatePollPage";
 import ArtisansListPage from "./components/Community/Artisans/ArtisansListPage";
 import ArtisansByTypePage from "./components/Community/Artisans/ArtisansByTypePage";
 
+import CalendarPage from "./components/Calendar/CalendarPage";
+
 import { ToastContainer } from "react-toastify";
 
 export default function App() {
@@ -81,6 +83,7 @@ export default function App() {
                             <Route path="polls/:id" element={<PollDetailPage />} />
                             <Route path="artisans" element={<ArtisansListPage />} />
                             <Route path="artisans/:job" element={<ArtisansByTypePage />} />
+                            <Route path="calendar" element={<CalendarPage />} />
                         </Route>
                     </Route>
                 </Routes>
