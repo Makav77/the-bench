@@ -38,7 +38,7 @@ export class ChallengesService {
         return challenge;
     }
 
-    async create(createChallengeDTO: CreateChallengeDTO, author: User): Promise<Challenge> {
+    async createChallenge(createChallengeDTO: CreateChallengeDTO, author: User): Promise<Challenge> {
         const challenge = this.challengeRepo.create({ 
             ...createChallengeDTO,
             author,
