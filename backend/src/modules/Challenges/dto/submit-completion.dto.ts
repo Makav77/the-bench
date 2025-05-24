@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MaxLength, IsNotEmptyObject, ValidateIf, isNotEmptyObject } from "class-validator";
+import { IsString, MaxLength, IsNotEmptyObject, ValidateIf } from "class-validator";
 
 export class SubmitCompletionDTO {
     @ValidateIf(o => !o.text)
