@@ -26,7 +26,7 @@
                         <Insets left="30.0" top="40.0" />
                     </HBox.margin>
                 </Text>
-                <Button mnemonicParsing="false" prefWidth="120.0" styleClass="light-background bordered-button" style="-fx-border-width: 0.5; -fx-border-radius: 5;" text="Select file...">
+                <Button mnemonicParsing="false" prefWidth="120.0" styleClass="light-background bordered-button" style="-fx-border-width: 0.5; -fx-border-radius: 5;" text="Select file..." onAction="#onSelectPluginClicked">
                     <HBox.margin>
                         <Insets left="20.0" top="35.0" />
                     </HBox.margin>
@@ -47,7 +47,7 @@
         </HBox>
     </top>
     <center>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="accent-border" style="-fx-border-style: dashed; -fx-border-radius: 20; -fx-border-width: 5;" BorderPane.alignment="CENTER">
+        <HBox fx:id="dropZone" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" styleClass="accent-border" style="-fx-border-style: dashed; -fx-border-radius: 20; -fx-border-width: 5;" BorderPane.alignment="CENTER">
             <children>
                 <Text styleClass="text-fill-accent" strokeType="OUTSIDE" strokeWidth="0.0" text="Drag and Drop your file here" textAlignment="CENTER">
                     <font>

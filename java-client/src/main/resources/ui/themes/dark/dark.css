@@ -52,3 +52,7 @@ mediumBackground: #333F4C
 .accent-border {
     -fx-border-color: #59747b;
 }
+
+.drag-over-highlight {
+    -fx-effect: dropshadow(gaussian, #59747b, 20, 0.5, 0, 0);
+}

@@ -6,7 +6,12 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import org.example.plugin.Plugin;
+import org.example.plugin.PluginLoader;
 import org.example.theme.ThemeManager;
+
+import java.io.File;
+import java.util.List;
 
 public class MainController {
     @FXML private StackPane contentStack;
@@ -60,6 +65,22 @@ public class MainController {
             System.out.println("Vue chargée : " + fxmlPath);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // Charger les plugins existants dans /plugins
+    public void loadPlugins() {
+        File pluginFolder = new File("plugins");
+        if (pluginFolder.exists()) {
+            File[] jars = pluginFolder.listFiles((dir, name) -> name.endsWith(".jar"));
+            if (jars != null) {
+                for (File jar : jars) {
+                    List<Plugin> plugins = PluginLoader.loadPlugins(jar);
+                    for (Plugin plugin : plugins) {
+                        plugin.start();
+                    }
+                }
+            }
         }
     }
 }
