@@ -50,7 +50,7 @@ export class ChallengesController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete("id")
+    @Delete(":id")
     async removeChallenge(
         @Param("id") id: string,
         @Req() req: Request,
@@ -60,7 +60,7 @@ export class ChallengesController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post(":id/register")
+    @Post(":id/subscribe")
     async subscribe(
         @Param("id") id: string,
         @Req() req: Request,
@@ -70,7 +70,7 @@ export class ChallengesController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete(":id/register")
+    @Delete(":id/subscribe")
     async unsubscribe(
         @Param("id") id: string,
         @Req() req: Request,
@@ -91,7 +91,7 @@ export class ChallengesController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Patch(":id/complete/:completeId")
+    @Patch(":id/complete/:completionId")
     async validateCompletion(
         @Param("id") id: string,
         @Param("completionId") completionId: string,

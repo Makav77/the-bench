@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from "typeorm";
 import { User } from "../../../modules/Users/entities/user.entity";
-// import { ChallengeRegistration } from "./challenge-registration.entity";
-// import { ChallengeCompletion } from "./challenge-completion.entity";
+import { ChallengeRegistration } from "./challenge-registration.entity";
+import { ChallengeCompletion } from "./challenge-completion.entity";
 
 @Entity({ name: "challenges" })
 export class Challenge {
