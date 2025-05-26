@@ -7,12 +7,10 @@ export interface ChallengeSummary {
     startDate: string;
     endDate: string;
     successCriteria: string;
-    author: { id: string; firstname: string; lastname: string;};
+    author: { id: string; firstname: string; lastname: string; };
     registrations: { user: { id: string } }[];
     completions: { id: string; user: { id: string }; validated: boolean }[];
 }
-
-export interface ChallengeDetails extends ChallengeSummary {}
 
 export interface SubmitCompletionPayload {
     text?: string;
@@ -28,7 +26,7 @@ export const getChallenges = async (page = 1, limit = 10): Promise<{ data: Chall
     return response.data;
 }
 
-export const getChallenge = async (id: string): Promise<ChallengeDetails> => {
+export const getChallenge = async (id: string): Promise<ChallengeSummary> => {
     const response = await apiClient.get(`/challenges/${id}`);
     return response.data;
 }
@@ -39,7 +37,7 @@ export const createChallenge = async (payload: {
     startDate: string;
     endDate: string;
     successCriteria: string;
-}): Promise<ChallengeDetails> => {
+}): Promise<ChallengeSummary> => {
     const response = await apiClient.post("/challenges", payload);
     return response.data;
 }
@@ -47,10 +45,10 @@ export const createChallenge = async (payload: {
 export const updateChallenge = async (id: string, payload: {
     title: string;
     description: string;
-    startdDate: string;
+    startDate: string;
     endDate: string;
     successCriteria: string;
-}): Promise<ChallengeDetails> => {
+}): Promise<ChallengeSummary> => {
     const response = await apiClient.patch(`/challenges/${id}`, payload);
     return response.data;
 }
@@ -60,22 +58,22 @@ export const deleteChallenge = async (id: string): Promise<void> => {
     return response.data;
 }
 
-export const subscribeChallenge = async (id: string): Promise<ChallengeDetails> => {
+export const subscribeChallenge = async (id: string): Promise<ChallengeSummary> => {
     const response = await apiClient.post(`/challenges/${id}/subscribe`);
     return response.data;
 }
 
-export const unsubscribeChallenge = async (id: string): Promise<ChallengeDetails> => {
+export const unsubscribeChallenge = async (id: string): Promise<ChallengeSummary> => {
     const response = await apiClient.delete(`/challenge/${id}/subscribe`);
     return response.data;
 }
 
-export const submitCompletion = async (id: string, payload: SubmitCompletionPayload): Promise<ChallengeDetails> => {
+export const submitCompletion = async (id: string, payload: SubmitCompletionPayload): Promise<ChallengeSummary> => {
     const response = await apiClient.post(`/challenges/${id}/complete`, payload);
     return response.data;
 }
 
-export const validateCompletion = async (challengeId: string, completionId: string, payload: ValidateCompletionPayload): Promise<ChallengeDetails> => {
+export const validateCompletion = async (challengeId: string, completionId: string, payload: ValidateCompletionPayload): Promise<ChallengeSummary> => {
     const response = await apiClient.patch(`/challenges/${challengeId}/complete/${completionId}`, payload);
     return response.data;
 }

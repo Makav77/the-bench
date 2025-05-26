@@ -22,6 +22,8 @@ import { PollController } from '../Polls/poll.controller';
 import { PollModule } from '../Polls/poll.module';
 import { PlacesModule } from '../Places/places.module';
 import { ConfigModule } from '@nestjs/config';
+import { ChallengesModule } from '../Challenges/challenges.module';
+import { ChallengesController } from '../Challenges/challenges.controller';
 
 @Module({
     imports: [
@@ -42,8 +44,10 @@ import { ConfigModule } from '@nestjs/config';
         GalleryModule,
         PollModule,
         PlacesModule,
+        ChallengesModule,
     ],
     controllers: [
+        ChallengesController,
         PollController,
         GalleryController,
         FlashPostsController,

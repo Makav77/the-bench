@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getChallenge, deleteChallenge, subscribeChallenge, unsubscribeChallenge, ChallengeDetails } from "../../api/challengeService";
+import { getChallenge, deleteChallenge, subscribeChallenge, unsubscribeChallenge, ChallengeSummary } from "../../api/challengeService";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -9,7 +9,7 @@ function ChallengeDetailPage() {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    const [challenge, setChallenge] = useState<ChallengeDetails | null>(null);
+    const [challenge, setChallenge] = useState<ChallengeSummary | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

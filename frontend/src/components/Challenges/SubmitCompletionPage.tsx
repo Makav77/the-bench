@@ -38,8 +38,19 @@ function SubmitCompletionPage() {
                 className="w-full border rounded px-2 py-1 mb-4"
             />
             <div className="flex justify-between">
-                <button onClick={() => navigate(-1)} className="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
-                <button onClick={handleSubmit} className="bg-green-600 text-white px-4 py-2 rounded">Send</button>
+                <button 
+                    onClick={() => navigate(-1)}
+                    className="bg-gray-400 text-white px-4 py-2 rounded"
+                >
+                    Cancel
+                </button>
+                
+                <button
+                    onClick={handleSubmit}
+                    className="bg-green-600 text-white px-4 py-2 rounded"
+                >
+                    Send
+                </button>
             </div>
         </div>
     );
