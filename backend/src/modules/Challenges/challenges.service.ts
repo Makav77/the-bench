@@ -94,10 +94,10 @@ export class ChallengesService {
         await this.challengeRepo.delete(id);
     }
 
-    async subscribe(id: string, user: User): Promise <void> {
+    async subscribe(id: string, user: User): Promise<Challenge> {
         const challenge = await this.challengeRepo.findOne({
             where: { id },
-            relations: ["author"],
+            relations: ["author", "registrations", "registrations.user"],
         });
 
         if (!challenge) {
@@ -110,9 +110,10 @@ export class ChallengesService {
 
         const register = this.registrationRepo.create({ challenge: challenge, user });
         await this.registrationRepo.save(register);
+        return this.findOneChallenge(id);
     }
 
-    async unsubscribe(id: string, user: User): Promise<void> {
+    async unsubscribe(id: string, user: User): Promise<Challenge> {
         const register = await this.registrationRepo.findOne({
             where: {
                 challenge: { id },
@@ -125,6 +126,7 @@ export class ChallengesService {
         }
 
         await this.registrationRepo.delete(register.id);
+        return this.findOneChallenge(id);
     }
 
     async submitCompletion(id: string, submitCompletionDTO: SubmitCompletionDTO, user: User): Promise<ChallengeCompletion> {

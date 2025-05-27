@@ -105,14 +105,14 @@ function ChallengeDetailPage() {
                 {!isSubscribe
                     ? <button
                         onClick={handleSubscribe}
-                        className="bg-green-600 text-white px-4 py-2 rounded"
+                        className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer"
                     >
                         Subscribe
                     </button>
                     
                     : <button
                         onClick={handleUnsubscribe}
-                        className="bg-yellow-600 text-white px-4 py-2 rounded"
+                        className="bg-yellow-600 text-white px-4 py-2 rounded cursor-pointer"
                     >
                         Unsubscribe
                     </button>
@@ -121,7 +121,7 @@ function ChallengeDetailPage() {
                 {(isOwner || isAdmin) &&
                     <button
                         onClick={() => navigate(`/challenges/${id}/edit`)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded"
+                        className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                     >
                         Edit
                     </button>
@@ -130,7 +130,7 @@ function ChallengeDetailPage() {
                 {(isOwner || isAdmin) &&
                     <button
                         onClick={handleDelete}
-                        className="bg-red-600 text-white px-4 py-2 rounded"
+                        className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
                     >
                         Delete
                     </button>

@@ -64,7 +64,7 @@ export const subscribeChallenge = async (id: string): Promise<ChallengeSummary> 
 }
 
 export const unsubscribeChallenge = async (id: string): Promise<ChallengeSummary> => {
-    const response = await apiClient.delete(`/challenge/${id}/subscribe`);
+    const response = await apiClient.delete(`/challenges/${id}/subscribe`);
     return response.data;
 }
 
