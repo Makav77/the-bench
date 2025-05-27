@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { submitCompletion } from "../../api/challengeService";
+import { submitCompletion } from "../../../api/challengeService";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 

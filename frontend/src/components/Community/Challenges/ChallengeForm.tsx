@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export interface ChallengeFormData {
@@ -14,17 +14,33 @@ interface ChallengeFormProps {
     onSubmit: (data: ChallengeFormData) => Promise<void>;
 }
 
+function formatDate(date: string): string {
+    return date.split("T")[0];
+}
+
 function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
     const [form, setForm] = useState<ChallengeFormData>(() => ({
         title: defaultValues?.title || '',
         description: defaultValues?.description || '',
-        startDate: defaultValues?.startDate || '',
-        endDate: defaultValues?.endDate || '',
+        startDate: defaultValues ? formatDate(defaultValues.startDate) : '',
+        endDate: defaultValues ? formatDate(defaultValues.endDate) : '',
         successCriteria: defaultValues?.successCriteria || '',
     }));
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (defaultValues) {
+            setForm({
+                title: defaultValues.title,
+                description: defaultValues.description,
+                startDate: formatDate(defaultValues.startDate),
+                endDate: formatDate(defaultValues.endDate),
+                successCriteria: defaultValues.successCriteria,
+            });
+        }
+    }, [defaultValues]);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -63,7 +79,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
+            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded-2xl shadow"
         >
             {error && <p className="text-red-500">{error}</p>}
 

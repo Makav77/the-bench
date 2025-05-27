@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import ChallengeForm, { ChallengeFormData } from "./ChallengeForm";
-import { createChallenge } from "../../api/challengeService";
+import { createChallenge } from "../../../api/challengeService";
 import { toast } from "react-toastify";
 
 function CreateChallengePage() {

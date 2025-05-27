@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { getChallenge, deleteChallenge, subscribeChallenge, unsubscribeChallenge, ChallengeSummary } from "../../api/challengeService";
+import { getChallenge, deleteChallenge, subscribeChallenge, unsubscribeChallenge, ChallengeSummary } from "../../../api/challengeService";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 
 function ChallengeDetailPage() {
@@ -84,15 +84,23 @@ function ChallengeDetailPage() {
         }
     }
 
-        return (
-        <div className="p-6 w-[50%] mx-auto space-y-4 bg-white rounded shadow">
+    return (
+        <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
+            <button
+                    type="button"
+                    onClick={() => navigate("/challenges")}
+                    className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                >
+                    ← Back
+            </button>
+
             <h1 className="text-2xl font-bold">{challenge.title}</h1>
             <p>{challenge.description}</p>
-            <p>
+            <p className="italic text-sm">
                 From {new Date(challenge.startDate).toLocaleDateString()} to {new Date(challenge.endDate).toLocaleDateString()}
             </p>
             <p>
-                <strong>Success :</strong> {challenge.successCriteria}
+                <strong>How to win :</strong> {challenge.successCriteria}
             </p>
             <p>
                 <strong>Registered :</strong> {challenge.registrations.length}

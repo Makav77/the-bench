@@ -43,14 +43,14 @@ import ArtisansByTypePage from "./components/Community/Artisans/ArtisansByTypePa
 
 import CalendarPage from "./components/Calendar/CalendarPage";
 
-import EditChallengePage from "./components/Challenges/EditChallengePage";
-import SubmitCompletionPage from "./components/Challenges/SubmitCompletionPage";
-import ValidateCompletionPage from "./components/Challenges/ValidateCompletion";
+import EditChallengePage from "./components/Community/Challenges/EditChallengePage";
+import SubmitCompletionPage from "./components/Community/Challenges/SubmitCompletionPage";
+import ValidateCompletionPage from "./components/Community/Challenges/ValidateCompletion";
 
 import { ToastContainer } from "react-toastify";
-import ChallengesPage from "./components/Challenges/ChallengesPage";
-import CreateChallengePage from "./components/Challenges/CreateChallengePage";
-import ChallengeDetailPage from "./components/Challenges/ChallengeDetailsPage";
+import ChallengesPage from "./components/Community/Challenges/ChallengesPage";
+import CreateChallengePage from "./components/Community/Challenges/CreateChallengePage";
+import ChallengeDetailPage from "./components/Community/Challenges/ChallengeDetailsPage";
 
 export default function App() {
     return (

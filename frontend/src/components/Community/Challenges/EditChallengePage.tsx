@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ChallengeForm, { ChallengeFormData } from "./ChallengeForm";
-import { getChallenge, updateChallenge } from "../../api/challengeService";
-import { ChallengeSummary } from "../../api/challengeService";
+import { getChallenge, updateChallenge } from "../../../api/challengeService";
+import { ChallengeSummary } from "../../../api/challengeService";
 import { toast } from "react-toastify";
 
 export default function EditChallengePage() {
@@ -32,7 +32,7 @@ export default function EditChallengePage() {
 
     return (
         <div className="p-6">
-            <h1 className="text-4xl font-semibold mb-4">Modifier le défi</h1>
+            <h1 className="text-4xl font-semibold mb-4 max-w-xl mx-auto">Edit challenge</h1>
             <ChallengeForm defaultValues={challenge} onSubmit={handleSubmit} />
         </div>
     );

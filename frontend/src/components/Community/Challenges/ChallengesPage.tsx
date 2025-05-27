@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getChallenges, ChallengeSummary } from '../../api/challengeService';
+import { getChallenges, ChallengeSummary } from '../../../api/challengeService';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -23,8 +23,17 @@ function ChallengesPage() {
     }, [page]);
 
     return (
-        <div className="p-6 w-[60%] mx-auto">
-            <div className="flex justify-between mb-4">
+        <div className="w-[25%] mx-auto">
+            <div className="mt-5">
+                <button
+                    onClick={() => navigate("/community")}
+                    className="bg-gray-300 font-bold px-4 py-2 rounded-2xl cursor-pointer hover:bg-gray-200"
+                >
+                    ← Back to Community
+                </button>
+            </div>
+
+            <div className="my-5 flex justify-between mb-4">
                 <h1 className="text-2xl font-bold">Challenges</h1>
                 <button
                     className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"

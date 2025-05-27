@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getChallenge, validateCompletion } from '../../api/challengeService';
+import { getChallenge, validateCompletion } from '../../../api/challengeService';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
