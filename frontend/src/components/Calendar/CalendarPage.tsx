@@ -1,29 +1,58 @@
 import { useState, useEffect } from "react";
-import YearCalendar, { YearEvent } from "./YearCalendar";
+import YearCalendar, { YearItem } from "./YearCalendar";
 import { getEvents, EventSummary } from "../../api/eventService";
+import { ChallengeSummary, getChallenges } from "../../api/challengeService";
 
 function CalendarPage() {
     const [year, setYear] = useState<number>(new Date().getFullYear());
-    const [events, setEvents] = useState<YearEvent[]>([]);
+    const [items, setItems] = useState<YearItem[]>([]);
 
     useEffect(() => {
         (async () => {
-            const { data } = await getEvents(1, 1000);
-            const evs: YearEvent[] = data
-                .filter((e: EventSummary) => {
-                    const start = new Date(e.startDate).getFullYear();
-                    const end = new Date(e.endDate).getFullYear();
-                    return start === year || end === year;
-                })
-                .map((e: EventSummary) => ({
-                    id: e.id,
-                    title: e.name,
-                    start: new Date(e.startDate),
-                    end: new Date(e.endDate),
-                }));
-            setEvents(evs);
+            try {
+                const [eventsRes, challengesRes] = await Promise.all([
+                    getEvents(1, 1000),
+                    getChallenges(1, 1000),
+                ]);
+
+                const eventsData = eventsRes.data as EventSummary[];
+                const challengesData = challengesRes.data as ChallengeSummary[];
+
+                const evs: YearItem[] = eventsData
+                    .filter(e => {
+                        const start = new Date(e.startDate).getFullYear();
+                        const end = new Date(e.endDate).getFullYear();
+                        return start === year || end === year;
+                    })
+                    .map(e => ({
+                        id: e.id,
+                        title: e.name,
+                        start: new Date(e.startDate),
+                        end: new Date(e.endDate),
+                        type: "event",
+                    }));
+
+                const challs: YearItem[] = challengesData
+                    .filter(c => {
+                        const start = new Date(c.startDate).getFullYear();
+                        const end = new Date(c.endDate).getFullYear();
+                        return start === year || end === year;
+                    })
+                    .map(c => ({
+                        id: c.id,
+                        title: c.title,
+                        start: new Date(c.startDate),
+                        end: new Date(c.endDate),
+                        type: "challenge",
+                    }));
+
+                setItems([...evs, ...challs]);
+            } catch (error) {
+                console.error("Unable to load events ou challenges : " + error);
+            }
         })();
     }, [year]);
+
 
     return (
         <div className="p-6 w-[80%] mx-auto">
@@ -44,7 +73,7 @@ function CalendarPage() {
                     {year + 1} →
                 </button>
             </div>
-            <YearCalendar events={events} year={year} />
+            <YearCalendar items={items} year={year} />
         </div>
     );
 }

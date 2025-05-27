@@ -7,6 +7,9 @@ import { FlashPost } from 'src/modules/FlashPosts/entities/flash-post.entity';
 import { GalleryItem } from 'src/modules/Gallery/entities/gallery-item.entity';
 import { Poll } from 'src/modules/Polls/entities/poll.entity';
 import { PollVote } from 'src/modules/Polls/entities/poll-vote.entity';
+import { Challenge } from 'src/modules/Challenges/entities/challenge.entity';
+import { ChallengeRegistration } from 'src/modules/Challenges/entities/challenge-registration.entity';
+import { ChallengeCompletion } from 'src/modules/Challenges/entities/challenge-completion.entity';
 
 export enum Role {
     USER = "user",
@@ -71,4 +74,13 @@ export class User {
 
     @OneToMany(() => PollVote, (vote) => vote.voter)
     pollVotes: PollVote[];
+
+    @OneToMany(() => Challenge, (challenge) => challenge.author)
+    challengesCreated: Challenge[];
+
+    @OneToMany(() => ChallengeRegistration, (registration) => registration.user)
+    challengeRegistrations: ChallengeRegistration[];
+
+    @OneToMany(() => ChallengeCompletion, (completion) => completion.user)
+    challengeCompletions: ChallengeCompletion[];
 }

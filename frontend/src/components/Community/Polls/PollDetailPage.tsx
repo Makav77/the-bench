@@ -141,7 +141,7 @@ function PollDetailPage() {
                     ))}
                 </div>
             ) : (
-                <>
+                <div>
                     <div className="mt-4 p-4 bg-white rounded-2xl shadow w-[60%] mx-auto">
                         <h2 className="text-xl font-semibold mb-2">Results :</h2>
                         {(() => {
@@ -165,7 +165,7 @@ function PollDetailPage() {
                             });
                         })()}
                     </div>
-                </>
+                </div>
             )}
 
             <div className="w-[80%] mx-auto flex justify-around mt-8">
