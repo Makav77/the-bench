@@ -1,8 +1,9 @@
+import { GalleryModule } from './../Gallery/gallery.module';
+import { GalleryController } from './../Gallery/gallery.controller';
 import { FlashpostsModule } from './../FlashPosts/flashposts.module';
 import { FlashPostsController } from './../FlashPosts/flashposts.controller';
 import { MarketModule } from './../Market/market.module';
 import { MarketController } from './../Market/market.controller';
-import { MarketService } from './../Market/market.service';
 import { PostsModule } from '../Posts/posts.module';
 import { PostsController } from '../Posts/posts.controller';
 import { AuthModule } from "./../Auth/auth.module";
@@ -17,9 +18,18 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { EventModule } from "../Events/event.module";
 import { EventController } from '../Events/event.controller';
 import { MulterModule } from '@nestjs/platform-express';
+import { PollController } from '../Polls/poll.controller';
+import { PollModule } from '../Polls/poll.module';
+import { PlacesModule } from '../Places/places.module';
+import { ConfigModule } from '@nestjs/config';
+import { ChallengesModule } from '../Challenges/challenges.module';
+import { ChallengesController } from '../Challenges/challenges.controller';
 
 @Module({
     imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
         ScheduleModule.forRoot(),
         TypeOrmModule.forRoot(databaseConfig),
         MulterModule.register({
@@ -31,8 +41,15 @@ import { MulterModule } from '@nestjs/platform-express';
         PostsModule,
         MarketModule,
         FlashpostsModule,
+        GalleryModule,
+        PollModule,
+        PlacesModule,
+        ChallengesModule,
     ],
     controllers: [
+        ChallengesController,
+        PollController,
+        GalleryController,
         FlashPostsController,
         MarketController,
         EventController,

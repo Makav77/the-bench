@@ -88,7 +88,7 @@ function FlashPostDetailPage() {
                 <div className="mt-4 flex gap-2 justify-center">
                     <button
                         type="button"
-                        onClick={() => navigate(`/flashPosts/${id}/edit`)}
+                        onClick={() => navigate(`/flashposts/${id}/edit`)}
                         className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                     >
                         Edit post

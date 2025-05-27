@@ -4,7 +4,7 @@ import FlashPostForm from "./FlashPostForm";
 import { getFlashPost, updateFlashPost } from "../../api/flashPostService";
 import { toast } from "react-toastify";
 
-function EditFlashPostPage() {
+function EditFlashPostForm() {
     const { id } = useParams<{ id: string }>();
     const [defaults, setDefaults] = useState<{ title: string; description: string; }>();
     const navigate = useNavigate();
@@ -38,4 +38,4 @@ function EditFlashPostPage() {
     );
 }
 
-export default EditFlashPostPage;
+export default EditFlashPostForm;

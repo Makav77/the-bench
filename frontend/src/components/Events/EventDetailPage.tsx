@@ -136,17 +136,17 @@ function EventDetailPage() {
 
             <h1 className="text-2xl font-bold">{event.name}</h1>
             <p>
-                <strong>Début :</strong>{" "}
+                <strong>Start :</strong>{" "}
                 {new Date(event.startDate).toLocaleString()}
             </p>
 
             <p>
-                <strong>Fin :</strong>{" "}
+                <strong>End :</strong>{" "}
                 {new Date(event.endDate).toLocaleString()}
             </p>
 
             <p>
-                <strong>Lieu :</strong> {event.place}
+                <strong>Place :</strong> {event.place}
             </p>
 
             {event.maxNumberOfParticipants && (
@@ -161,7 +161,7 @@ function EventDetailPage() {
             <p className="whitespace-pre-wrap">{event.description}</p>
 
             <p>
-                <strong>Auteur :</strong> {event.author.firstname}{" "}
+                <strong>Author :</strong> {event.author.firstname}{" "}
                 {event.author.lastname}
             </p>
 

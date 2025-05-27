@@ -34,5 +34,5 @@ export const updateFlashPost = async (id: string, data: { title?: string; descri
 }
 
 export const deleteFlashPost = async (id: string): Promise<void> => {
-    await apiClient.delete(`/posts/${id}`);
+    await apiClient.delete(`/flashposts/${id}`);
 }

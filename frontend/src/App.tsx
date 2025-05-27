@@ -29,7 +29,28 @@ import FlashPostDetailPage from "./components/FlashPosts/FlashPostDetailPage";
 import CreateFlashPostForm from "./components/FlashPosts/CreateFlashPostForm";
 import EditFlashPostPage from "./components/FlashPosts/EditFlashPostForm";
 
+import CommunityPage from "./components/Community/CommunityPage";
+import GalleryPage from "./components/Community/Gallery/GalleryPage";
+import CreateGalleryItemPage from "./components/Community/Gallery/CreateGalleryImagePage";
+import GalleryItemDetailPage from "./components/Community/Gallery/GalleryItemDetailPage";
+
+import PollsPage from "./components/Community/Polls/PollsPage";
+import PollDetailPage from "./components/Community/Polls/PollDetailPage";
+import CreatePollPage from "./components/Community/Polls/CreatePollPage";
+
+import ArtisansListPage from "./components/Community/Artisans/ArtisansListPage";
+import ArtisansByTypePage from "./components/Community/Artisans/ArtisansByTypePage";
+
+import CalendarPage from "./components/Calendar/CalendarPage";
+
+import EditChallengePage from "./components/Community/Challenges/EditChallengePage";
+import SubmitCompletionPage from "./components/Community/Challenges/SubmitCompletionPage";
+import ValidateCompletionPage from "./components/Community/Challenges/ValidateCompletion";
+
 import { ToastContainer } from "react-toastify";
+import ChallengesPage from "./components/Community/Challenges/ChallengesPage";
+import CreateChallengePage from "./components/Community/Challenges/CreateChallengePage";
+import ChallengeDetailPage from "./components/Community/Challenges/ChallengeDetailsPage";
 
 export default function App() {
     return (
@@ -60,6 +81,22 @@ export default function App() {
                             <Route path="market/create" element={<CreateItemPage />} />
                             <Route path="market/:id" element={<ItemDetailsPage />} />
                             <Route path="market/:id/edit" element={<EditItemPage />} />
+                            <Route path="community" element={<CommunityPage />} />
+                            <Route path="gallery" element={<GalleryPage />} />
+                            <Route path="gallery/create" element={<CreateGalleryItemPage />} />
+                            <Route path="gallery/:id" element={<GalleryItemDetailPage />} />
+                            <Route path="polls" element={<PollsPage />} />
+                            <Route path="polls/create" element={<CreatePollPage />} />
+                            <Route path="polls/:id" element={<PollDetailPage />} />
+                            <Route path="artisans" element={<ArtisansListPage />} />
+                            <Route path="artisans/:job" element={<ArtisansByTypePage />} />
+                            <Route path="calendar" element={<CalendarPage />} />
+                            <Route path="challenges" element={<ChallengesPage />} />
+                            <Route path="challenges/create" element={<CreateChallengePage />} />
+                            <Route path="challenges/:id" element={<ChallengeDetailPage />} />
+                            <Route path="challenges/:id/edit" element={<EditChallengePage />} />
+                            <Route path="challenges/:id/complete" element={<SubmitCompletionPage />} />
+                            <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
                         </Route>
                     </Route>
                 </Routes>

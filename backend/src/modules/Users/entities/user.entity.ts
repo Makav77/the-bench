@@ -4,6 +4,12 @@ import { Event } from '../../../modules/Events/entities/event.entity';
 import { Posts } from 'src/modules/Posts/entities/post.entity';
 import { MarketItem } from 'src/modules/Market/entities/market.entity';
 import { FlashPost } from 'src/modules/FlashPosts/entities/flash-post.entity';
+import { GalleryItem } from 'src/modules/Gallery/entities/gallery-item.entity';
+import { Poll } from 'src/modules/Polls/entities/poll.entity';
+import { PollVote } from 'src/modules/Polls/entities/poll-vote.entity';
+import { Challenge } from 'src/modules/Challenges/entities/challenge.entity';
+import { ChallengeRegistration } from 'src/modules/Challenges/entities/challenge-registration.entity';
+import { ChallengeCompletion } from 'src/modules/Challenges/entities/challenge-completion.entity';
 
 export enum Role {
     USER = "user",
@@ -56,4 +62,25 @@ export class User {
 
     @OneToMany(() => FlashPost, (flashPost) => flashPost.author)
     flashPosts: FlashPost[];
+
+    @OneToMany(() => GalleryItem, (galleryItem) => galleryItem.author)
+    galleryItems: GalleryItem[];
+
+    @ManyToMany(() => GalleryItem, (galleryItem) => galleryItem.likedBy)
+    likedGalleryItems: GalleryItem[];
+
+    @OneToMany(() => Poll, (poll) => poll.author)
+    pollsCreated: Poll[];
+
+    @OneToMany(() => PollVote, (vote) => vote.voter)
+    pollVotes: PollVote[];
+
+    @OneToMany(() => Challenge, (challenge) => challenge.author)
+    challengesCreated: Challenge[];
+
+    @OneToMany(() => ChallengeRegistration, (registration) => registration.user)
+    challengeRegistrations: ChallengeRegistration[];
+
+    @OneToMany(() => ChallengeCompletion, (completion) => completion.user)
+    challengeCompletions: ChallengeCompletion[];
 }
