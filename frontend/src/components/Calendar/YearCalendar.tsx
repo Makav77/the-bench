@@ -11,19 +11,20 @@ import { useEffect, useState } from "react";
 const locales = { en: enUS };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
-export interface YearEvent {
+export interface YearItem {
     id: string;
     title: string;
     start: Date;
     end: Date;
+    type: "event" | "challenge";
 }
 
 interface YearCalendarProps {
-    events: YearEvent[];
+    items: YearItem[];
     year: number;
 }
 
-function CustomToolbar(toolbar: ToolbarProps<YearEvent, object>) {
+function CustomToolbar(toolbar: ToolbarProps<YearItem, object>) {
     const goToBack = () => toolbar.onNavigate("PREV");
     const goToNext = () => toolbar.onNavigate("NEXT");
     const goToToday = () => toolbar.onNavigate("TODAY");
@@ -63,7 +64,7 @@ function CustomToolbar(toolbar: ToolbarProps<YearEvent, object>) {
     );
 }
 
-function YearCalendar({ events, year }: YearCalendarProps) {
+function YearCalendar({ items, year }: YearCalendarProps) {
     const navigate = useNavigate();
     const today = new Date();
     const isCurrentYear = today.getFullYear() === year;
@@ -90,10 +91,10 @@ function YearCalendar({ events, year }: YearCalendarProps) {
         return {};
     }
 
-    const eventStyleGetter = () => {
+    const eventStyleGetter = (item: YearItem) => {
         return {
             style: {
-                backgroundColor: "#d124b1",
+                backgroundColor: item.type === "event" ? "#3b82f6" : "#d124b1",
                 borderRadius: "4px",
                 color: "white",
                 border: "none",
@@ -105,13 +106,16 @@ function YearCalendar({ events, year }: YearCalendarProps) {
     return (
         <Calendar
             localizer={localizer}
-            events={events}
+            events={items}
             defaultView={Views.MONTH as View}
             views={[Views.MONTH]}
             date={date}
             onNavigate={(newDate) => setDate(newDate)}
             components={{ toolbar: CustomToolbar }}
-            onSelectEvent={(event: YearEvent) => navigate(`/events/${event.id}`)}
+            onSelectEvent={(item: YearItem) => {
+                if (item.type === "event") navigate(`/events/${item.id}`);
+                else navigate(`/challenges/${item.id}`);
+            }}
             dayPropGetter={dayPropGetter}
             eventPropGetter={eventStyleGetter}
             style={{ height: 700 }}
