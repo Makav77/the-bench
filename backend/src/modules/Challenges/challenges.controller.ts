@@ -64,7 +64,7 @@ export class ChallengesController {
     async subscribe(
         @Param("id") id: string,
         @Req() req: Request,
-    ): Promise<void> {
+    ): Promise<Challenge> {
         const user = req.user as User;
         return this.challengesService.subscribe(id, user);
     }
@@ -74,7 +74,7 @@ export class ChallengesController {
     async unsubscribe(
         @Param("id") id: string,
         @Req() req: Request,
-    ): Promise<void> {
+    ): Promise<Challenge> {
         const user = req.user as User;
         return this.challengesService.unsubscribe(id, user);
     }
