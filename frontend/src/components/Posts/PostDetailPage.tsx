@@ -45,7 +45,7 @@ function PostDetailPage() {
     }
 
     const isOwner = user && post && user.id === post.author.id;
-    const isAdmin = user && user.role === "admin";
+    const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
 
     const handleDelete = async () => {
         const confirmed = window.confirm("You are about to delete a post. Would you like to confirm?");
@@ -80,7 +80,7 @@ function PostDetailPage() {
             </p>
             <p className="whitespace-pre-wrap">{post.description}</p>
 
-            {(isOwner || isAdmin) && (
+            {(isOwner || isAdminorModerator) && (
                 <div className="mt-4 flex gap-2 justify-center">
                     <button
                         type="button"

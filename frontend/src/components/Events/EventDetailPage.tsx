@@ -49,7 +49,7 @@ function EventDetailPage() {
     }
 
     const isOwner = user && event && user.id === event.author.id;
-    const isAdmin = user && user.role === "admin";
+    const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isSubscribe = event.participantsList.some((u) => u.id === user?.id);
     const isFull = event.maxNumberOfParticipants !== undefined
         && event.participantsList.length >= event.maxNumberOfParticipants
@@ -123,7 +123,7 @@ function EventDetailPage() {
                         )
                     )}
 
-                    {event.maxNumberOfParticipants != null && (isOwner || isAdmin) && (
+                    {event.maxNumberOfParticipants != null && (isOwner || isAdminorModerator) && (
                         <button
                             onClick={() => setShowModal(true)}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 border rounded cursor-pointer"
@@ -169,7 +169,7 @@ function EventDetailPage() {
                 <strong>Participants :</strong> {event.participantsList.length}
             </p>
 
-            {(isOwner || isAdmin) && (
+            {(isOwner || isAdminorModerator) && (
                 <div className="mt-4 flex gap-2 justify-center">
                     <button
                         onClick={() => navigate(`/events/${id}/edit`)}

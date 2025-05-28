@@ -18,7 +18,7 @@ export class ChallengesService {
         private readonly registrationRepo: Repository<ChallengeRegistration>,
         @InjectRepository(ChallengeCompletion)
         private readonly completionRepo: Repository<ChallengeCompletion>,
-    ) {}
+    ) { }
 
     async findAllChallenges(page = 1, limit = 10): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
@@ -69,7 +69,7 @@ export class ChallengesService {
             throw new NotFoundException("Challenge not found.");
         }
 
-        if (challenge.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (challenge.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to edit this challenge.");
         }
 
@@ -87,7 +87,7 @@ export class ChallengesService {
             throw new NotFoundException("Challenge not found.");
         }
 
-        if (challenge.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (challenge.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to delete this challenge");
         }
 
@@ -163,7 +163,7 @@ export class ChallengesService {
             throw new NotFoundException("Challenge not found.");
         }
 
-        if (challenge.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (challenge.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to validate the completion.");
         }
 

@@ -46,7 +46,7 @@ function ChallengeDetailPage() {
     }
 
     const isOwner = user && challenge && user.id === challenge.author.id;
-    const isAdmin = user && user.role === "admin";
+    const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isSubscribe = challenge.registrations.some((u) => u.user.id === user?.id);
 
     const handleSubscribe = async () => {
@@ -126,7 +126,7 @@ function ChallengeDetailPage() {
                     </button>
                 }
 
-                {(isOwner || isAdmin) &&
+                {(isOwner || isAdminorModerator) &&
                     <button
                         onClick={() => navigate(`/challenges/${id}/edit`)}
                         className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
@@ -135,7 +135,7 @@ function ChallengeDetailPage() {
                     </button>
                 }
 
-                {(isOwner || isAdmin) &&
+                {(isOwner || isAdminorModerator) &&
                     <button
                         onClick={handleDelete}
                         className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"

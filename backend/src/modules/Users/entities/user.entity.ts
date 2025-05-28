@@ -13,7 +13,8 @@ import { ChallengeCompletion } from 'src/modules/Challenges/entities/challenge-c
 
 export enum Role {
     USER = "user",
-    ADMIN = "admin"
+    MODERATOR = "moderator",
+    ADMIN = "admin",
 }
 
 @Entity({ name: "users" })

@@ -84,7 +84,7 @@ function BulletinsBoardPage() {
                             : (
                                 <div className="grid grid-cols-1 gap-4 border p-4 mb-4">
                                     {flashPosts.map((flashpost) => {
-                                        const cardClass = flashpost.author.role === "admin" ? "border bg-green-400" : "border";
+                                        const cardClass = (flashpost.author.role === "admin" || flashpost.author.role === "moderator") ? "border bg-green-400" : "border";
                                         return (
                                             <div
                                                 key={flashpost.id}
@@ -139,7 +139,7 @@ function BulletinsBoardPage() {
                         : (
                             <div className="grid grid-cols-1 gap-4 border p-4 mb-4">
                                 {posts.map((post) => {
-                                    const cardClass = post.author.role === "admin" ? "border bg-green-400" : "border";
+                                    const cardClass = (post.author.role === "admin" || post.author.role === "moderator") ? "border bg-green-400" : "border";
                                     return (
                                         <div
                                             key={post.id}

@@ -12,12 +12,12 @@ export class GalleryService {
     constructor(
         @InjectRepository(GalleryItem)
         private readonly galleryRepo: Repository<GalleryItem>,
-    ) {}
+    ) { }
 
     async findAllGalleryItems(page = 1, limit = 30): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
         const [data, total] = await this.galleryRepo.findAndCount({
-            order: { createdAt: "DESC" }, 
+            order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
             relations: ["author", "likedBy"],
@@ -78,7 +78,7 @@ export class GalleryService {
             throw new NotFoundException("Item not found.");
         }
 
-        if (galleryItem.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (galleryItem.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to delete this item.");
         }
 

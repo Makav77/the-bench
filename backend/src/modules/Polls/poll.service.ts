@@ -9,7 +9,7 @@ import { VotePollDTO } from "./dto/vote-poll.dto";
 import { User, Role } from "../Users/entities/user.entity";
 
 @Injectable()
-export class PollService{
+export class PollService {
     constructor(
         @InjectRepository(Poll)
         private readonly pollRepo: Repository<Poll>,
@@ -17,7 +17,7 @@ export class PollService{
         private readonly optionRepo: Repository<PollOption>,
         @InjectRepository(PollVote)
         private readonly voteRepo: Repository<PollVote>,
-    ) {}
+    ) { }
 
     async findAllPolls(page = 1, limit = 10): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
         const [data, total] = await this.pollRepo.findAndCount({
@@ -79,7 +79,7 @@ export class PollService{
 
     async vote(id: string, votePollDTO: VotePollDTO, user: User): Promise<Poll> {
         const poll = await this.findOnePoll(id);
-        if (user.role === Role.ADMIN) {
+        if (user.role === Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("Administrators can't vote.");
         }
         if (poll.manualClosed || (poll.closesAt && poll.closesAt < new Date())) {
@@ -119,7 +119,7 @@ export class PollService{
 
     async closePoll(id: string, user: User): Promise<Poll> {
         const poll = await this.findOnePoll(id);
-        if (poll.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (poll.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("Unauthorize to close poll.");
         }
 
@@ -129,7 +129,7 @@ export class PollService{
 
     async removePoll(id: string, user: User): Promise<void> {
         const poll = await this.findOnePoll(id);
-        if (poll.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (poll.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("Unauthorize to delete poll.");
         }
         await this.pollRepo.delete(id);
