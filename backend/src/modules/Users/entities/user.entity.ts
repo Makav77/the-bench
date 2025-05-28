@@ -40,9 +40,13 @@ export class User {
     @Column()
     profilePicture?: string;
 
+    @Column({ type: "int", default: 0 })
+    points: number;
+
     @Column({
         type: "enum",
-        enum: Role
+        enum: Role,
+        default: Role.USER
     })
     role: Role;
 

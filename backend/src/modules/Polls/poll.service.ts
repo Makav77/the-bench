@@ -79,8 +79,8 @@ export class PollService {
 
     async vote(id: string, votePollDTO: VotePollDTO, user: User): Promise<Poll> {
         const poll = await this.findOnePoll(id);
-        if (user.role === Role.ADMIN && user.role !== Role.MODERATOR) {
-            throw new ForbiddenException("Administrators can't vote.");
+        if (user.role === Role.ADMIN || user.role === Role.MODERATOR) {
+            throw new ForbiddenException("Administrators and moderators can't vote.");
         }
         if (poll.manualClosed || (poll.closesAt && poll.closesAt < new Date())) {
             throw new BadRequestException("Sondage closed.");
