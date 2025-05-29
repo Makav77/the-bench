@@ -31,12 +31,10 @@ public class UpdateChecker {
                     JSONObject asset = assets.getJSONObject(i);
                     if (asset.getString("name").endsWith(".jar")) {
                         String downloadUrl = asset.getString("browser_download_url");
-                        //downloadJar(downloadUrl, remoteVersion);
                         System.out.println("Url : "+ downloadUrl + " Version : " + remoteVersion);
                         UpdateUI.showUpdatePrompt(remoteVersion, () -> {
-                            /*try {
-                                downloadJar(downloadUrl, remoteVersion);
-                                // Optionnel : alerte après téléchargement
+                            try {
+                                downloadJarAndReplace(downloadUrl, remoteVersion);
                                 Alert info = new Alert(Alert.AlertType.INFORMATION);
                                 info.setTitle("Téléchargement terminé");
                                 info.setHeaderText(null);
@@ -44,9 +42,9 @@ public class UpdateChecker {
                                 info.showAndWait();
                             } catch (Exception e) {
                                 e.printStackTrace();
-                            }*/
+                            }
                         });
-                        System.out.println("Nouvelle version téléchargée !");
+                        System.out.println("Nouvelle version téléchargée");
                         return;
                     }
                 }
@@ -78,18 +76,77 @@ public class UpdateChecker {
         return new JSONObject(response.body());
     }
 
-    private static void downloadJar(String downloadUrl, String version) throws IOException, InterruptedException {
+    private static void downloadJarAndReplace(String downloadUrl, String version) throws Exception {
         String filename = "the-bench-client-" + version + ".jar";
         Path updateDir = Paths.get(DOWNLOAD_DIR);
         if (!Files.exists(updateDir)) {
             Files.createDirectory(updateDir);
         }
+        Path downloadedJar = updateDir.resolve(filename);
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.ALWAYS)
+                .build();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(downloadUrl))
+                .header("User-Agent", "JavaUpdateClient")
                 .build();
 
-        HttpResponse<Path> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofFile(updateDir.resolve(filename)));
+        HttpResponse<Path> response = client.send(request, HttpResponse.BodyHandlers.ofFile(downloadedJar));
+
+        if (response.statusCode() != 200) {
+            throw new IOException("Échec du téléchargement : statut " + response.statusCode());
+        }
+
+        Path currentJar = Paths.get(UpdateChecker.class
+                .getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .toURI());
+
+        String os = System.getProperty("os.name").toLowerCase();
+        boolean isWindows = os.contains("win");
+
+        System.out.println("Debug 3");
+        String scriptName = isWindows ? "update.bat" : "update.sh";
+        Path scriptPath = updateDir.resolve(scriptName);
+
+        String scriptContent;
+        if (isWindows) {
+            scriptContent = String.format("""
+                @echo off
+                timeout /t 3 > nul
+                del "%s"
+                move "%s" "%s"
+                start javaw -jar "%s"
+                """,
+                    currentJar, downloadedJar, currentJar, currentJar);
+        } else {
+            scriptContent = String.format("""
+                #!/bin/bash
+                sleep 5
+                cp "%s" "%s"
+                mv "%s" "%s"
+                cd "%s"
+                nohup java -jar "./%s" &
+                """,
+                downloadedJar.toAbsolutePath(),
+                updateDir.resolve("temp.jar").toAbsolutePath(),
+                updateDir.resolve("temp.jar").toAbsolutePath(),
+                currentJar.getParent().toAbsolutePath(),
+                currentJar.getFileName().toString()
+            );
+        }
+        Files.writeString(scriptPath, scriptContent);
+        if (!isWindows) {
+            scriptPath.toFile().setExecutable(true);
+        }
+
+        new ProcessBuilder(scriptPath.toAbsolutePath().toString())
+                .directory(updateDir.toFile())
+                .start();
+
+        System.exit(0);
     }
+
 }
