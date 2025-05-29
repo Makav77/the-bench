@@ -44,27 +44,29 @@ public class JournalController {
             Scraper.getSeancesChatelet();
             articleContainer.getChildren().clear();
 
-            // Tu peux faire ça dans un thread si tu veux éviter de bloquer l'UI
             new Thread(() -> {
                 try {
-                    List<FilmPresentation> films = Scraper.getSeancesChatelet(); // Méthode existante
+                    List<FilmPresentation> films = Scraper.getSeancesChatelet();
                     javafx.application.Platform.runLater(() -> {
+                        int i = 0;
                         for (FilmPresentation film : films) {
+                            i++;
+                            if (i >= 5) break;
                             VBox filmBox = new VBox(5);
                             filmBox.setStyle("-fx-background-color: #2E3440; -fx-padding: 10; -fx-border-color: #59747b; -fx-border-width: 1;");
-                            filmBox.getChildren().add(new Label("🎬 " + film.titre));
-                            filmBox.getChildren().add(new Label("Genres : " + film.genres));
-                            filmBox.getChildren().add(new Label("Sortie : " + film.dateSortie));
-                            filmBox.getChildren().add(new Label("Durée : " + film.duree));
-                            filmBox.getChildren().add(new Label("Réalisateur : " + film.realisateur));
-                            filmBox.getChildren().add(new Label("Acteurs : " + film.acteurs));
-                            filmBox.getChildren().add(new Label("Synopsis : " + film.synopsis));
+                            filmBox.getChildren().add(styledLabel("🎬 " + film.titre));
+                            filmBox.getChildren().add(styledLabel("Genres : " + film.genres));
+                            filmBox.getChildren().add(styledLabel("Sortie : " + film.dateSortie));
+                            filmBox.getChildren().add(styledLabel("Durée : " + film.duree));
+                            filmBox.getChildren().add(styledLabel("Réalisateur : " + film.realisateur));
+                            filmBox.getChildren().add(styledLabel("Acteurs : " + film.acteurs));
+                            filmBox.getChildren().add(styledLabel("Synopsis : " + film.synopsis));
 
                             for (Seance seance : film.seances) {
                                 HBox seanceBox = new HBox(10);
-                                seanceBox.getChildren().add(new Label("🕒 " + seance.heureDebut + " - " + seance.heureFin));
-                                seanceBox.getChildren().add(new Label("📍 Salle : " + seance.salle));
-                                seanceBox.getChildren().add(new Label("🎞️ Version : " + seance.version));
+                                seanceBox.getChildren().add(styledLabel("🕒 " + seance.heureDebut + " - " + seance.heureFin));
+                                seanceBox.getChildren().add(styledLabel("📍 Salle : " + seance.salle));
+                                seanceBox.getChildren().add(styledLabel("🎞️ Version : " + seance.version));
                                 filmBox.getChildren().add(seanceBox);
                             }
 
@@ -79,6 +81,12 @@ public class JournalController {
                 }
             }).start();
         });
+    }
+
+    private Label styledLabel(String text) {
+        Label label = new Label(text);
+        label.setStyle("-fx-font-size: 17px; -fx-text-fill: white;");
+        return label;
     }
 
     public void addArticle(String title, String content) {
