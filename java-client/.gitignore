@@ -39,3 +39,6 @@ build/
 .DS_Store
 
 data/
+
+dependency-reduced-pom.xml
+update/
