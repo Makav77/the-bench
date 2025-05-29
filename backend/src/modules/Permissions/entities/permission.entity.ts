@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from "typeorm";
-import { Role } from "src/modules/Users/entities/user.entity";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import { UserRestriction } from "./user-restriction.entity";
 
 @Entity({ name: "permissions" })
 export class Permission {
@@ -18,11 +18,6 @@ export class Permission {
     @UpdateDateColumn({ type: "timestamp" })
     updatedAt: Date;
 
-    @ManyToMany(() => Role, (role) => role.permissions)
-    @JoinTable({
-        name: "role_permissions",
-        joinColumn: { name: "permission_id", referencedColumnName: "id" },
-        inverseJoinColumn: { name: "role_id", referencedColumnName: "id" },
-    })
-    roles: Role[]
+    @OneToMany(() => UserRestriction, (userRestriction) => userRestriction.permission)
+    restrictions: UserRestriction[];
 }

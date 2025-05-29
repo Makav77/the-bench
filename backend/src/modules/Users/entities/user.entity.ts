@@ -1,5 +1,5 @@
 import { RefreshToken } from '../../../modules/Auth/entities/refresh-token.entity';
-import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany, OneToOne } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany, OneToOne, JoinTable } from 'typeorm';
 import { Event } from '../../../modules/Events/entities/event.entity';
 import { Posts } from 'src/modules/Posts/entities/post.entity';
 import { MarketItem } from 'src/modules/Market/entities/market.entity';
@@ -10,6 +10,8 @@ import { PollVote } from 'src/modules/Polls/entities/poll-vote.entity';
 import { Challenge } from 'src/modules/Challenges/entities/challenge.entity';
 import { ChallengeRegistration } from 'src/modules/Challenges/entities/challenge-registration.entity';
 import { ChallengeCompletion } from 'src/modules/Challenges/entities/challenge-completion.entity';
+import { Permission } from 'src/modules/Permissions/entities/permission.entity';
+import { UserRestriction } from 'src/modules/Permissions/entities/user-restriction.entity';
 
 export enum Role {
     USER = "user",
@@ -88,4 +90,15 @@ export class User {
 
     @OneToMany(() => ChallengeCompletion, (completion) => completion.user)
     challengeCompletions: ChallengeCompletion[];
+
+    @ManyToMany(() => Permission, { eager: true })
+    @JoinTable({
+        name: "user_permissions",
+        joinColumn: { name: "user_id", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "permission_id", referencedColumnName: "id" },
+    })
+    permissions: Permission[];
+
+    @OneToMany(() => UserRestriction, (ur) => ur.user)
+    restrictions: UserRestriction[];
 }
