@@ -1,0 +1,67 @@
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, LessThanOrEqual, MoreThan } from "typeorm";
+import { Permission } from "./entities/permission.entity";
+import { UserRestriction } from "./entities/user-restriction.entity";
+import { User } from "../Users/entities/user.entity";
+
+@Injectable()
+export class PermissionsService {
+    constructor(
+        @InjectRepository(Permission)
+        private permissionRepo: Repository<Permission>,
+        @InjectRepository(UserRestriction)
+        private userRestrictionRepo: Repository<UserRestriction>
+    ) {}
+
+    async restrictUser(user: User, permissionCode: string, expiresAt: Date): Promise<UserRestriction> {
+        const permission = await this.permissionRepo.findOneBy({ code: permissionCode });
+
+        if (!permission) {
+            throw new NotFoundException("Permission not found");
+        }
+
+        const alreadyRestricted = await this.userRestrictionRepo.count({
+            where: {
+                user: { id: user.id },
+                permission: { id: permission.id },
+                expiresAt: MoreThan(new Date()),
+            },
+        });
+        if (alreadyRestricted > 0) {
+            throw new BadRequestException("User already restricted.");
+        }
+
+        const restricted = this.userRestrictionRepo.create({ user, permission: permission, expiresAt });
+        return this.userRestrictionRepo.save(restricted);
+    }
+
+    async removeRestriction(user: User, permissionCode: string): Promise<void> {
+        const permission = await this.permissionRepo.findOneBy({ code: permissionCode });
+
+        if (!permission) {
+            throw new NotFoundException("Permission not found");
+        }
+
+        await this.userRestrictionRepo.delete({ user: { id: user.id }, permission: { id: permission.id }, });
+    }
+
+    async isRestricted(user: User, permissionCode: string): Promise<boolean> {
+        const permission = await this.permissionRepo.findOneBy({ code: permissionCode });
+
+        if (!permission) {
+            throw new NotFoundException("Permission not found");
+        }
+
+        await this.userRestrictionRepo.delete({ expiresAt: LessThanOrEqual(new Date()) });
+
+        const count = await this.userRestrictionRepo.count({
+            where: {
+                user: { id: user.id },
+                permission: { id: permission.id },
+                expiresAt: MoreThan(new Date()),
+            },
+        });
+        return count > 0;
+    }
+}
