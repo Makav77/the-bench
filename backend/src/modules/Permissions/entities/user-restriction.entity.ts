@@ -7,6 +7,9 @@ export class UserRestriction {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
+    @Column({ type: "text" })
+    reason: string;
+
     @Column({ type: "timestamp", nullable: false })
     expiresAt: Date;
 

@@ -1,7 +1,9 @@
-import { Controller, Post, Get, Delete, Param, Query, Req, BadRequestException, UseGuards } from "@nestjs/common";
+import { Controller, Post, Get, Delete, Param, Body, Req, BadRequestException, UseGuards } from "@nestjs/common";
 import { PermissionsService } from "./permissions.service";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
+import { RestrictUserDTO } from "./dto/restrict-user.dto";
 import { Request } from "express";
+import { User } from "../Users/entities/user.entity";
 
 @Controller("permissions")
 export class PermissionsController {
@@ -11,15 +13,23 @@ export class PermissionsController {
     @Post(":code/restrict")
     async restrictUser(
         @Param("code") code: string,
-        @Query("expiresAt") expiresAt: string,
+        @Body() restrictUserDTO: RestrictUserDTO,
         @Req() req: Request,
     ) {
-        if (!expiresAt) {
-            throw new BadRequestException("expiresAt query parameter is required.");
+        const { userId, reason, days = 0, hours = 0, minutes = 0 } = restrictUserDTO;
+
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + days);
+        expiresAt.setHours(expiresAt.getHours() + hours);
+        expiresAt.setMinutes(expiresAt.getMinutes() + minutes);
+
+        if (expiresAt <= new Date()) {
+            throw new BadRequestException("Duration must be positive.");
         }
-        const user = req.user as any;
-        const date = new Date(expiresAt);
-        return this.permissionsService.restrictUser(user, code, date);
+
+        const user = req.user as User;
+
+        return this.permissionsService.restrictUser(user, code, userId, reason, expiresAt);
     }
 
     @UseGuards(JwtAuthGuard)

@@ -11,19 +11,26 @@ export class PermissionsService {
         @InjectRepository(Permission)
         private permissionRepo: Repository<Permission>,
         @InjectRepository(UserRestriction)
-        private userRestrictionRepo: Repository<UserRestriction>
+        private userRestrictionRepo: Repository<UserRestriction>,
+        @InjectRepository(User)
+        private userRepo: Repository<User>,
     ) {}
 
-    async restrictUser(user: User, permissionCode: string, expiresAt: Date): Promise<UserRestriction> {
+    async restrictUser(user: User, permissionCode: string, targetUserId: string, reason: string, expiresAt: Date): Promise<UserRestriction> {
         const permission = await this.permissionRepo.findOneBy({ code: permissionCode });
 
         if (!permission) {
             throw new NotFoundException("Permission not found");
         }
 
+        const targetUser = await this.userRepo.findOneBy({ id: targetUserId });
+        if (!targetUser) {
+            throw new NotFoundException("User not found.");
+        }
+
         const alreadyRestricted = await this.userRestrictionRepo.count({
             where: {
-                user: { id: user.id },
+                user: { id: targetUserId },
                 permission: { id: permission.id },
                 expiresAt: MoreThan(new Date()),
             },
@@ -32,8 +39,8 @@ export class PermissionsService {
             throw new BadRequestException("User already restricted.");
         }
 
-        const restricted = this.userRestrictionRepo.create({ user, permission: permission, expiresAt });
-        return this.userRestrictionRepo.save(restricted);
+        const restriction = this.userRestrictionRepo.create({ user: targetUser, permission, expiresAt, reason });
+        return this.userRestrictionRepo.save(restriction);
     }
 
     async removeRestriction(user: User, permissionCode: string): Promise<void> {
