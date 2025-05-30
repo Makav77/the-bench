@@ -6,6 +6,7 @@ import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
 import { User } from "../Users/entities/user.entity";
+import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 
 @Controller("events")
 export class EventController {
@@ -27,6 +28,7 @@ export class EventController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @RequiredPermission("create_event")
     @Post()
     async createEvent(
         @Body() createEventDTO: CreateEventDTO,
@@ -58,6 +60,7 @@ export class EventController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @RequiredPermission("register_event")
     @Post(":id/subscribe")
     async subscribe(
         @Param("id") id:string,

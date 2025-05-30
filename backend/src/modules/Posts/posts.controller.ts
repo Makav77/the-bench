@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
 import { Request } from 'express';
 import { Posts } from './entities/post.entity';
 import { User } from '../Users/entities/user.entity';
+import { RequiredPermission } from '../Permissions/decorator/require-permission.decorator';
 
 @Controller("posts")
 export class PostsController {
@@ -27,6 +28,7 @@ export class PostsController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @RequiredPermission("publish_post")
     @Post()
     async createPost(
         @Body() createPostDTO: CreatePostDTO,

@@ -8,6 +8,7 @@ import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { Request } from "express";
 import { GalleryItem } from "./entities/gallery-item.entity";
 import { User } from "../Users/entities/user.entity";
+import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 
 const multerOptions = {
     storage: diskStorage({
@@ -48,6 +49,7 @@ export class GalleryController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @RequiredPermission("publish_gallery")
     @Post()
     @UseInterceptors(FileInterceptor("url", multerOptions))
     async createGalleryItem(

@@ -5,6 +5,7 @@ export const DEFAULT_PERMISSIONS = [
     { code: "register_event", description: "Register for an event" },
     { code: "publish_gallery", description: "Post an image to the gallery" },
     { code: "create_poll", description: "Create a survey" },
+    { code: "vote_poll", description: "Vote a survey" },
     { code: "create_challenge", description: "Create a challenge" },
     { code: "register_challenge", description: "Register for a challenge" },
 ];

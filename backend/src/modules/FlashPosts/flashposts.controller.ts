@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
 import { FlashPost } from './entities/flash-post.entity';
 import { Request } from 'express';
 import { User } from '../Users/entities/user.entity';
+import { RequiredPermission } from '../Permissions/decorator/require-permission.decorator';
 
 @Controller("flashposts")
 export class FlashPostsController {
@@ -27,6 +28,7 @@ export class FlashPostsController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @RequiredPermission("publish_flash_post")
     @Post()
     async createFlashPost(
         @Body() createFlashPostDTO: CreateFlashPostDTO,

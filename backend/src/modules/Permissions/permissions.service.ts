@@ -1,12 +1,13 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
+import { Injectable, NotFoundException, OnModuleInit, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, LessThanOrEqual, MoreThan } from "typeorm";
 import { Permission } from "./entities/permission.entity";
 import { UserRestriction } from "./entities/user-restriction.entity";
 import { User } from "../Users/entities/user.entity";
+import { DEFAULT_PERMISSIONS } from "./ListPermissions";
 
 @Injectable()
-export class PermissionsService {
+export class PermissionsService implements OnModuleInit {
     constructor(
         @InjectRepository(Permission)
         private permissionRepo: Repository<Permission>,
@@ -15,6 +16,17 @@ export class PermissionsService {
         @InjectRepository(User)
         private userRepo: Repository<User>,
     ) {}
+
+    async onModuleInit() {
+        for (const { code, description } of DEFAULT_PERMISSIONS) {
+            const exists = await this.permissionRepo.findOneBy({ code });
+            if (!exists) {
+                await this.permissionRepo.save(
+                    this.permissionRepo.create({ code, description })
+                );
+            }
+        }
+    }
 
     async restrictUser(user: User, permissionCode: string, targetUserId: string, reason: string, expiresAt: Date): Promise<UserRestriction> {
         const permission = await this.permissionRepo.findOneBy({ code: permissionCode });

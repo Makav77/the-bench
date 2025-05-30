@@ -1,14 +1,12 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Inject } from "@nestjs/common";
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { PERMISSION_KEY } from "../decorator/require-permission.decorator";
 import { PermissionsService } from "../permissions.service";
-import { Observable } from "rxjs";
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
     constructor(
         private reflector: Reflector,
-        @Inject(PermissionsService)
         private permissionsService: PermissionsService,
     ) {}
 
@@ -22,8 +20,8 @@ export class PermissionGuard implements CanActivate {
             return true;
         }
 
-        const req = context.switchToHttp().getRequest();
-        const user = req.user;
+        const request = context.switchToHttp().getRequest();
+        const user = request.user;
         const isRestricted = await this.permissionsService.isRestricted(user, code);
 
         if (isRestricted) {

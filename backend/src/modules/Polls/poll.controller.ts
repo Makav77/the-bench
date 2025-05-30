@@ -6,6 +6,7 @@ import { PollService } from "./poll.service";
 import { CreatePollDTO } from "./dto/create-poll.dto";
 import { VotePollDTO } from "./dto/vote-poll.dto";
 import { Request } from "express";
+import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 
 @Controller("polls")
 @UseGuards(JwtAuthGuard)
@@ -28,6 +29,7 @@ export class PollController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @RequiredPermission("create_poll")
     @Post()
     async createPoll(
         @Body() createPollDTO: CreatePollDTO,
@@ -38,6 +40,7 @@ export class PollController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @RequiredPermission("vote_poll")
     @Post(":id/vote")
     async votePoll(
         @Param("id") id: string,
