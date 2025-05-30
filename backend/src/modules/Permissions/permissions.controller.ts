@@ -48,8 +48,8 @@ export class PermissionsController {
         @Param("code") code: string,
         @Req() req: Request,
     ) {
-        const user = req.user as any;
-        const restricted = await this.permissionsService.isRestricted(user, code);
-        return { code, restricted };
+        const user = req.user as User;
+        const { restricted, expiredAt } = await this.permissionsService.isRestricted(user, code);
+        return { code, restricted, expiredAt };
     }
 }

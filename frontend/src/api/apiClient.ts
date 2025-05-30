@@ -20,6 +20,16 @@ apiClient.interceptors.request.use(
     (error: AxiosError) => Promise.reject(error),
 );
 
+apiClient.interceptors.response.use(
+    restrictions => restrictions,
+    async error => {
+        if (error.response?.status === 403) {
+            alert("Action prohibited: You do not have the necessary rights.");
+        }
+        return Promise.reject(error);
+    }
+);
+
 let isRefreshing = false;
 let failedQueue: Array<{
     resolve: (value?: unknown) => void;

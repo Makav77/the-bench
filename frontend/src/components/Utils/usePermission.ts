@@ -1,18 +1,28 @@
+// frontend/src/hooks/usePermission.ts
 import { useState, useEffect } from "react";
-import { isRestricted } from "../../api/permissionsService";
+import apiClient from "../../api/apiClient";
 
-function usePermission(code: string) {
-    const [restricted, setRestricted] = useState<boolean | null>(null);
+export default function usePermission(code: string): { restricted: boolean | null; expiresAt: Date | null } {
+    const [state, setState] = useState<{ restricted: boolean | null; expiresAt: Date | null }>({
+        restricted: null,
+        expiresAt: null,
+    });
+
     useEffect(() => {
-        let mounted = true;
-        isRestricted(code).then(r => {
-            if (mounted) setRestricted(r);
-        }).catch(() => {
-            if (mounted) setRestricted(false);
-        });
-        return () => { mounted = false };
+        (async () => {
+            try {
+                const resp = await apiClient.get<{ code: string; restricted: boolean; expiresAt: string | null }>(
+                    `/permissions/${code}/isRestricted`
+                );
+                setState({
+                    restricted: resp.data.restricted,
+                    expiresAt: resp.data.expiresAt ? new Date(resp.data.expiresAt) : null,
+                });
+            } catch {
+                setState({ restricted: false, expiresAt: null });
+            }
+        })();
     }, [code]);
-    return restricted;
-}
 
-export default usePermission;
+    return state;
+}

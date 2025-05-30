@@ -83,4 +83,30 @@ export class PermissionsService implements OnModuleInit {
         });
         return count > 0;
     }
+
+    async getRestrictionInfo(user: User, permissionCode: string): Promise<{ restricted: boolean; expiresAt: Date | null }> {
+        const permission = await this.permissionRepo.findOneBy({ code: permissionCode });
+        if (!permission) {
+            throw new NotFoundException("Permission not found");
+        }
+
+        await this.userRestrictionRepo.delete({ expiresAt: LessThanOrEqual(new Date()) });
+
+        const active = await this.userRestrictionRepo.findOne({
+            where: {
+                user: {
+                    id: user.id
+                },
+                permission: {
+                    id: permission.id
+                },
+                expiresAt: MoreThan(new Date())
+            },
+        });
+
+        return {
+            restricted: !!active,
+            expiresAt: active?.expiresAt ?? null,
+        };
+    }
 }
