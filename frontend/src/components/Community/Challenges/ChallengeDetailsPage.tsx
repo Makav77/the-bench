@@ -3,12 +3,14 @@ import { getChallenge, deleteChallenge, subscribeChallenge, unsubscribeChallenge
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
+import usePermission from "../../Utils/usePermission";
 
 function ChallengeDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate = useNavigate();
 
+    const { restricted, expiresAt, loading: permLoading } = usePermission("register_challenge");
     const [challenge, setChallenge] = useState<ChallengeSummary | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -84,6 +86,10 @@ function ChallengeDetailPage() {
         }
     }
 
+    if (permLoading) {
+        return <p className="p-6">Checking permissions...</p>
+    }
+
     return (
         <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
             <button
@@ -110,21 +116,27 @@ function ChallengeDetailPage() {
             </p>
 
             <div className="flex gap-2">
-                {!isSubscribe
-                    ? <button
-                        onClick={handleSubscribe}
-                        className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer"
-                    >
-                        Subscribe
-                    </button>
-                    
-                    : <button
+                {!isSubscribe ? (
+                    restricted ? (
+                        <p className="text-red-600 text-l font-semibold">
+                            You are no longer allowed to register for this challenge until{" "}
+                            {new Date(expiresAt!).toLocaleDateString()}
+                        </p>
+                    ) : (
+                        <button
+                            onClick={handleSubscribe}
+                            className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer"
+                        >
+                            Subscribe
+                        </button>
+                    )
+                ) : ( <button
                         onClick={handleUnsubscribe}
                         className="bg-yellow-600 text-white px-4 py-2 rounded cursor-pointer"
                     >
                         Unsubscribe
                     </button>
-                }
+                )}
 
                 {(isOwner || isAdminorModerator) &&
                     <button

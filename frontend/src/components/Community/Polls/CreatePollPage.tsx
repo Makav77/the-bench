@@ -2,6 +2,8 @@ import { useState, FormEvent } from "react";
 import { createPoll } from "../../../api/pollService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import usePermission from "../../Utils/usePermission";
+import { format } from "date-fns";
 
 function CreatePollPage() {
     const [question, setQuestion] = useState("");
@@ -10,6 +12,24 @@ function CreatePollPage() {
     const [maxSelections, setMaxSelections] = useState(0);
     const [autoClose, setAutoClose] = useState(0);
     const navigate = useNavigate();
+
+    const { restricted, expiresAt } = usePermission("create_poll");
+    if (restricted === null) {
+        return <p className="p-6 text-center">Checking permissions ...</p>;
+    }
+
+    if (restricted) {
+        return (
+            <div className="p-6 text-center">
+                <p className="text-red-500">
+                    You are no longer allowed to create a poll until{" "}
+                    {expiresAt
+                        ? format(expiresAt, "dd/MM/yyyy 'à' HH:mm")
+                        : "unknow date"}.
+                </p>
+            </div>
+        );
+    }
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();

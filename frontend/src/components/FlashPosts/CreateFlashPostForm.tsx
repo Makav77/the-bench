@@ -20,7 +20,7 @@ function CreateFlashPostForm() {
                     You are no longer allowed to post flash ads until{" "}
                     {expiresAt
                         ? format(expiresAt, "dd/MM/yyyy 'à' HH:mm")
-                        : "une date inconnue"}.
+                        : "unknow date"}.
                 </p>
             </div>
         );

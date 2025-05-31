@@ -5,12 +5,14 @@ import { PollDetails } from "../../../api/pollService";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import PollCountdownTimer from "./PollCountdownTimer";
+import usePermission from "../../Utils/usePermission";
 
 function PollDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate= useNavigate();
 
+    const { restricted, expiresAt, loading: permLoading } = usePermission("vote_poll");
     const [poll, setPoll] = useState<PollDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -95,6 +97,10 @@ function PollDetailPage() {
         }
     }
 
+    if (permLoading) {
+        return <p className="p-6">Checking permission...</p>;
+    }
+
     const isExpired = !!poll.closesAt && new Date(poll.closesAt) < new Date();
 
     return (
@@ -169,11 +175,21 @@ function PollDetailPage() {
             )}
 
             <div className="w-[80%] mx-auto flex justify-around mt-8">
-                {!isClosed && !hasVoted && (
-                    <button onClick={handleVote} className="w-[25%] bg-green-600 text-white px-6 py-2 rounded cursor-pointer">
-                        Vote
-                    </button>
-                )}
+                {!isClosed && !hasVoted ? (
+                    restricted ? (
+                        <p className="text-red-600 font-semibold">
+                            You are no longer allowed to vote on this poll until{" "}
+                            {new Date(expiresAt!).toLocaleString()}.
+                        </p>
+                    ) : (
+                        <button
+                            onClick={handleVote}
+                            className="w-[25%] bg-green-600 text-white px-6 py-2 rounded cursor-pointer"
+                        >
+                            Vote
+                        </button>
+                    )
+                ) : null}
 
                 {(isOwner || isAdminorModerator) && !isClosed && (
                     <button

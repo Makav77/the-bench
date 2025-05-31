@@ -1,28 +1,30 @@
-// frontend/src/hooks/usePermission.ts
 import { useState, useEffect } from "react";
 import apiClient from "../../api/apiClient";
 
-export default function usePermission(code: string): { restricted: boolean | null; expiresAt: Date | null } {
-    const [state, setState] = useState<{ restricted: boolean | null; expiresAt: Date | null }>({
-        restricted: null,
-        expiresAt: null,
-    });
+export interface PermissionStatus {
+    restricted: boolean;
+    expiresAt?: string;
+}
+
+export default function usePermission(code: string) {
+    const [status, setStatus] = useState<PermissionStatus>({ restricted: false });
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        (async () => {
-            try {
-                const resp = await apiClient.get<{ code: string; restricted: boolean; expiresAt: string | null }>(
-                    `/permissions/${code}/isRestricted`
-                );
-                setState({
-                    restricted: resp.data.restricted,
-                    expiresAt: resp.data.expiresAt ? new Date(resp.data.expiresAt) : null,
-                });
-            } catch {
-                setState({ restricted: false, expiresAt: null });
-            }
-        })();
+        let cancelled = false;
+        apiClient
+            .get<PermissionStatus>(`/permissions/${code}/isRestricted`)
+            .then(res => {
+                if (!cancelled) setStatus(res.data);
+            })
+            .catch(() => {
+                if (!cancelled) setStatus({ restricted: false });
+            })
+            .finally(() => {
+                if (!cancelled) setLoading(false);
+            });
+        return () => { cancelled = true; };
     }, [code]);
 
-    return state;
+    return { ...status, loading };
 }

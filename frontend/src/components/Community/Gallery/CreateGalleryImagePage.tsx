@@ -4,6 +4,8 @@ import { useState, ChangeEvent, FormEvent, useRef } from "react";
 import { createGalleryItem } from "../../../api/galleryService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import usePermission from "../../Utils/usePermission";
+import { format } from "date-fns";
 
 export default function CreateGalleryItemPage() {
     const [file, setFile] = useState<File | null>(null);
@@ -13,6 +15,24 @@ export default function CreateGalleryItemPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
+
+    const { restricted, expiresAt } = usePermission("publish_gallery");
+    if (restricted === null) {
+        return <p className="p-6 text-center">Checking permissions ...</p>;
+    }
+
+    if (restricted) {
+        return (
+            <div className="p-6 text-center">
+                <p className="text-red-500">
+                    You are no longer allowed to publish an image in gallery until{" "}
+                    {expiresAt
+                        ? format(expiresAt, "dd/MM/yyyy 'à' HH:mm")
+                        : "unknow date"}.
+                </p>
+            </div>
+        );
+    }
 
     function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
         const f = e.target.files?.[0] ?? null;
