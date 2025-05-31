@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import usePermission from "../Utils/usePermission";
 
 function EventsPage() {
-    const { restricted, expiresAt, loading: permLoading } = usePermission("subscribe_event");
+    const { restricted, expiresAt, loading: permLoading } = usePermission("register_event");
     const [events, setEvents] = useState<EventSummary[]>([]);
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);

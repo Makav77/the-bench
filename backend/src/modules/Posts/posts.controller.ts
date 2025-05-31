@@ -7,6 +7,7 @@ import { Request } from 'express';
 import { Posts } from './entities/post.entity';
 import { User } from '../Users/entities/user.entity';
 import { RequiredPermission } from '../Permissions/decorator/require-permission.decorator';
+import { PermissionGuard } from '../Permissions/guards/permission.guard';
 
 @Controller("posts")
 export class PostsController {
@@ -27,8 +28,8 @@ export class PostsController {
         return this.postsService.findOnePost(id);
     }
 
-    @UseGuards(JwtAuthGuard)
     @RequiredPermission("publish_post")
+    @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post()
     async createPost(
         @Body() createPostDTO: CreatePostDTO,

@@ -4,14 +4,13 @@ import { Permission } from "./entities/permission.entity";
 import { UserRestriction } from "./entities/user-restriction.entity";
 import { PermissionsService } from "./permissions.service";
 import { PermissionsController } from "./permissions.controller";
-import { PermissionGuard } from "./guards/permission.guard";
-import { APP_GUARD } from "@nestjs/core";
+import { User } from "../Users/entities/user.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Permission, UserRestriction]),
+        TypeOrmModule.forFeature([Permission, User, UserRestriction]),
     ],
-    providers: [PermissionsService, { provide: APP_GUARD, useClass: PermissionGuard }],
+    providers: [PermissionsService],
     controllers: [PermissionsController],
     exports: [PermissionsService],
 })

@@ -11,7 +11,7 @@ function EventDetailPage() {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    const { restricted, expiresAt, loading: permLoading } = usePermission("subscribe_event");
+    const { restricted, expiresAt, loading: permLoading } = usePermission("register_event");
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

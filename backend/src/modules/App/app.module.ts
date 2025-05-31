@@ -24,6 +24,8 @@ import { PlacesModule } from '../Places/places.module';
 import { ConfigModule } from '@nestjs/config';
 import { ChallengesModule } from '../Challenges/challenges.module';
 import { ChallengesController } from '../Challenges/challenges.controller';
+import { PermissionsModule } from '../Permissions/permissions.module';
+import { PermissionsController } from '../Permissions/permissions.controller';
 
 @Module({
     imports: [
@@ -45,6 +47,7 @@ import { ChallengesController } from '../Challenges/challenges.controller';
         PollModule,
         PlacesModule,
         ChallengesModule,
+        PermissionsModule,
     ],
     controllers: [
         ChallengesController,
@@ -55,7 +58,8 @@ import { ChallengesController } from '../Challenges/challenges.controller';
         EventController,
         PostsController,
         AuthController,
-        AppController
+        AppController,
+        PermissionsController,
     ],
     providers: [AppService],
 })

@@ -28,7 +28,7 @@ export class PermissionsService implements OnModuleInit {
         }
     }
 
-    async restrictUser(user: User, permissionCode: string, targetUserId: string, reason: string, expiresAt: Date): Promise<UserRestriction> {
+    async restrictUser(actor: User, permissionCode: string, targetUserId: string, reason: string, expiresAt: Date): Promise<UserRestriction> {
         const permission = await this.permissionRepo.findOneBy({ code: permissionCode });
 
         if (!permission) {

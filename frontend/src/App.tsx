@@ -52,6 +52,8 @@ import ChallengesPage from "./components/Community/Challenges/ChallengesPage";
 import CreateChallengePage from "./components/Community/Challenges/CreateChallengePage";
 import ChallengeDetailPage from "./components/Community/Challenges/ChallengeDetailsPage";
 
+import DashboardPage from "./components/Dashboard/Dashboard";
+
 export default function App() {
     return (
         <AuthProvider>
@@ -97,6 +99,7 @@ export default function App() {
                             <Route path="challenges/:id/edit" element={<EditChallengePage />} />
                             <Route path="challenges/:id/complete" element={<SubmitCompletionPage />} />
                             <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
+                            <Route path="dashboard" element={<DashboardPage />} />
                         </Route>
                     </Route>
                 </Routes>
