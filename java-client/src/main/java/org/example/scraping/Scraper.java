@@ -96,7 +96,7 @@ public class Scraper {
             HtmlPage page = webClient.getPage("https://www.ugc.fr/cinema.html?id=10");
             System.out.println("Seances Chatelet 3");
 
-            webClient.waitForBackgroundJavaScript(5000);
+            webClient.waitForBackgroundJavaScript(10000);
             System.out.println("Seances Chatelet 4");
 
             HtmlElement body = page.getBody();
@@ -134,12 +134,16 @@ public class Scraper {
                 List<HtmlElement> seancesHtml = body.getByXPath("//ul[contains(@class,'component--screening-cards')]//li");
                 for (HtmlElement seanceHtml : seancesHtml) {
                     Seance seance = new Seance();
-                    seance.version = ((HtmlElement) seanceHtml.getFirstByXPath(".//span[contains(@class,'screening-lang')]")).asNormalizedText();
-                    seance.heureDebut = ((HtmlElement) seanceHtml.getFirstByXPath(".//div[contains(@class,'screening-start')]")).asNormalizedText();
-                    seance.heureFin = ((HtmlElement) seanceHtml.getFirstByXPath(".//div[contains(@class,'screening-end')]")).asNormalizedText();
-                    seance.salle = ((HtmlElement) seanceHtml.getFirstByXPath(".//div[contains(@class,'screening-detail')]")).asNormalizedText();
+                    HtmlElement version = (HtmlElement) seanceHtml.getFirstByXPath(".//span[contains(@class,'screening-lang')]");
+                    seance.version = (version != null)? version.asNormalizedText():  "";
+                    HtmlElement heureDebut = (HtmlElement) seanceHtml.getFirstByXPath(".//div[contains(@class,'screening-start')]");
+                    seance.heureDebut = (heureDebut != null)? heureDebut.asNormalizedText(): "";
+                    HtmlElement heureFin = (HtmlElement) seanceHtml.getFirstByXPath(".//div[contains(@class,'screening-end')]");
+                    seance.heureFin = (heureFin != null)? heureFin.asNormalizedText(): "";
+                    HtmlElement salle = (HtmlElement) seanceHtml.getFirstByXPath(".//div[contains(@class,'screening-detail')]");
+                    seance.salle = (salle != null)? salle.asNormalizedText(): "";
                     HtmlElement button = seanceHtml.getFirstByXPath(".//button");
-                    seance.lienReservation = button.getAttribute("onclick").replace("javascript:location.href='", "").replace("'", "");
+                    seance.lienReservation = (button != null)?button.getAttribute("onclick").replace("javascript:location.href='", "").replace("'", ""): "";
                     film.seances.add(seance);
                 }
                 System.out.println("filme : " + film.acteurs);
