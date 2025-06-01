@@ -38,7 +38,7 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Button>
-                        <Button mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="News" textFill="#59747b">
+                        <Button fx:id="newsButton" mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="News" textFill="#59747b">
                             <font>
                                 <Font name="Corbel" size="14.0" />
                             </font>
@@ -98,7 +98,7 @@
                                 </Button>
                             </children>
                         </HBox>
-                        <SplitMenuButton mnemonicParsing="false" prefHeight="10.0" prefWidth="408.0" style="-fx-background-color: #3D4051;" text="Sort by">
+                        <SplitMenuButton fx:id="itemsButton" mnemonicParsing="false" prefHeight="10.0" prefWidth="408.0" style="-fx-background-color: #3D4051;" text="Sort by">
                             <items>
                                 <MenuItem fx:id="ResentButton" mnemonicParsing="false" text="Most Recent Date" />
                                 <MenuItem fx:id="OldButton" mnemonicParsing="false" text="Oldest Date" />

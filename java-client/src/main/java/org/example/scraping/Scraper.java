@@ -43,9 +43,8 @@ public class Scraper {
             DayArticles currentArticles = null;
 
             for (HtmlElement element : newsList) {
-                String elementText = element.asNormalizedText().trim();  // On enlève les espaces (en début et fin de chaine) pour être sûr de bien parser les données
+                String elementText = element.asNormalizedText().trim();
                 if (elementText.matches("^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)$")) {
-                    // Si un jour précédent existe on l'ajoute dans la liste avant de réinitialiser
                     if (currentArticles != null) {
                         dayArticles.add(currentArticles);
                     }
@@ -54,7 +53,6 @@ public class Scraper {
                             new ArrayList<>()
                     );
                 } else {
-                    // regex sous la forme "(chiffre) chiffre h chiffre chiffre puis espace puis texte"
                     Pattern pattern = Pattern.compile("^(\\d{1,2}h\\d{2})\\s+(.+)$");
                     Matcher matcher = pattern.matcher(elementText);
                     if (matcher.find()) {
@@ -81,23 +79,18 @@ public class Scraper {
         }
     }
     public static List<FilmPresentation> getSeancesChatelet(){
-        System.out.println("Seances Chatelet");
         Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF);
         Logger.getLogger("org.apache.http").setLevel(Level.OFF);
         try (WebClient webClient = new WebClient()) {
-            System.out.println("Seances Chatelet 1");
 
             webClient.getOptions().setJavaScriptEnabled(true);
             webClient.getOptions().setCssEnabled(false);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.addRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-            System.out.println("Seances Chatelet 2");
 
             HtmlPage page = webClient.getPage("https://www.ugc.fr/cinema.html?id=10");
-            System.out.println("Seances Chatelet 3");
 
             webClient.waitForBackgroundJavaScript(10000);
-            System.out.println("Seances Chatelet 4");
 
             HtmlElement body = page.getBody();
             //List<HtmlElement> seance = body.getByXPath("//div[@class='slider-item']");
@@ -129,7 +122,7 @@ public class Scraper {
                 film.acteurs = (acteurs != null) ? acteurs.asNormalizedText(): "";
 
                 HtmlElement synopsis = filmBlock.getFirstByXPath(".//p[contains(.,'Synopsis')]//span");
-                film.synopsis = (synopsis != null) ? synopsis.asNormalizedText() : "";
+                film.synopsis = (synopsis != null) ? synopsis.asNormalizedText().replace("voir plus", "") : "";
 
                 List<HtmlElement> seancesHtml = body.getByXPath("//ul[contains(@class,'component--screening-cards')]//li");
                 for (HtmlElement seanceHtml : seancesHtml) {
@@ -146,8 +139,6 @@ public class Scraper {
                     seance.lienReservation = (button != null)?button.getAttribute("onclick").replace("javascript:location.href='", "").replace("'", ""): "";
                     film.seances.add(seance);
                 }
-                System.out.println("filme : " + film.acteurs);
-                System.out.println("filme : " +  film.seances.size());
                 films.add(film);
             }
             return films;
