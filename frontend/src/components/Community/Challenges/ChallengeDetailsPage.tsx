@@ -4,13 +4,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import usePermission from "../../Utils/usePermission";
+import { format } from "date-fns";
 
 function ChallengeDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    const { restricted, expiresAt, loading: permLoading } = usePermission("register_challenge");
+    const { restricted, expiresAt, reason, loading: permLoading } = usePermission("register_challenge");
     const [challenge, setChallenge] = useState<ChallengeSummary | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -118,9 +119,19 @@ function ChallengeDetailPage() {
             <div className="flex gap-2">
                 {!isSubscribe ? (
                     restricted ? (
-                        <p className="text-red-600 text-l font-semibold">
-                            You are no longer allowed to register for this challenge until{" "}
-                            {new Date(expiresAt!).toLocaleDateString()}
+                        <p className="text-red-600 text-l font-semibold text-center">
+                            You are no longer allowed to register to a challenge until{" "}
+                            {expiresAt
+                                ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
+                                : "unknown date"}.
+                            <br />
+                            {reason && (
+                                <span>
+                                    Reason: {reason}
+                                    <br />
+                                </span>
+                            )}
+                            Contact a moderator or administrator for more information.
                         </p>
                     ) : (
                         <button

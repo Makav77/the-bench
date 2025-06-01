@@ -16,7 +16,8 @@ export default function CreateGalleryItemPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
 
-    const { restricted, expiresAt } = usePermission("publish_gallery");
+    const { restricted, expiresAt, reason } = usePermission("publish_gallery");
+
     if (restricted === null) {
         return <p className="p-6 text-center">Checking permissions ...</p>;
     }
@@ -27,8 +28,16 @@ export default function CreateGalleryItemPage() {
                 <p className="text-red-500">
                     You are no longer allowed to publish an image in gallery until{" "}
                     {expiresAt
-                        ? format(expiresAt, "dd/MM/yyyy 'à' HH:mm")
-                        : "unknow date"}.
+                        ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
+                        : "unknown date"}.
+                    <br />
+                    {reason && (
+                        <span>
+                            Reason: {reason}
+                            <br />
+                        </span>
+                    )}
+                    Contact a moderator or administrator for more information.
                 </p>
             </div>
         );

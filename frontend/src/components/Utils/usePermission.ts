@@ -15,7 +15,7 @@ export default function usePermission(code: string) {
                 setExpiresAt(response.expiresAt);
                 setReason(response.reason);
             } catch (error) {
-                console.error("Erreur usePermission :", error);
+                console.error("Error usePermission :", error);
             } finally {
                 setLoading(false);
             }

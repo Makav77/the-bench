@@ -6,13 +6,14 @@ import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import PollCountdownTimer from "./PollCountdownTimer";
 import usePermission from "../../Utils/usePermission";
+import { format } from "date-fns";
 
 function PollDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate= useNavigate();
 
-    const { restricted, expiresAt, loading: permLoading } = usePermission("vote_poll");
+    const { restricted, expiresAt, reason, loading: permLoading } = usePermission("vote_poll");
     const [poll, setPoll] = useState<PollDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -174,12 +175,22 @@ function PollDetailPage() {
                 </div>
             )}
 
-            <div className="w-[80%] mx-auto flex justify-around mt-8">
+            <div className={`${restricted ? 'w-[100%]' : 'w-[80%]'} mx-auto flex justify-around mt-8`}>
                 {!isClosed && !hasVoted ? (
                     restricted ? (
-                        <p className="text-red-600 font-semibold">
-                            You are no longer allowed to vote on this poll until{" "}
-                            {new Date(expiresAt!).toLocaleString()}.
+                        <p className="text-red-600 font-semibold text-center">
+                            You are no longer allowed to vote to a poll until{" "}
+                            {expiresAt
+                                ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
+                                : "unknown date"}.
+                            <br />
+                            {reason && (
+                                <span>
+                                    Reason: {reason}
+                                    <br />
+                                </span>
+                            )}
+                            Contact a moderator or administrator for more information.
                         </p>
                     ) : (
                         <button

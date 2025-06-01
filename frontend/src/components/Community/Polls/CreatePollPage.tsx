@@ -13,7 +13,7 @@ function CreatePollPage() {
     const [autoClose, setAutoClose] = useState(0);
     const navigate = useNavigate();
 
-    const { restricted, expiresAt } = usePermission("create_poll");
+    const { restricted, expiresAt, reason } = usePermission("create_poll");
     if (restricted === null) {
         return <p className="p-6 text-center">Checking permissions ...</p>;
     }
@@ -24,8 +24,16 @@ function CreatePollPage() {
                 <p className="text-red-500">
                     You are no longer allowed to create a poll until{" "}
                     {expiresAt
-                        ? format(expiresAt, "dd/MM/yyyy 'à' HH:mm")
-                        : "unknow date"}.
+                        ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
+                        : "unknown date"}.
+                    <br />
+                    {reason && (
+                        <span>
+                            Reason: {reason}
+                            <br />
+                        </span>
+                    )}
+                    Contact a moderator or administrator for more information.
                 </p>
             </div>
         );
