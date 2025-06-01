@@ -8,7 +8,7 @@ import { format } from "date-fns";
 function CreateEventPage() {
     const navigate = useNavigate();
 
-    const { restricted, expiresAt } = usePermission("create_event");
+    const { restricted, expiresAt, reason } = usePermission("create_event");
     if (restricted === null) {
         return <p className="p-6 text-center">Checking permissions ...</p>;
     }
@@ -19,8 +19,16 @@ function CreateEventPage() {
                 <p className="text-red-500">
                     You are no longer allowed to create an event until{" "}
                     {expiresAt
-                        ? format(expiresAt, "dd/MM/yyyy 'à' HH:mm")
+                        ? format(expiresAt, "dd/MM/yyyy 'at' HH:mm")
                         : "unknow date"}.
+                    {reason && (
+                        <span>
+                            <br />
+                        Reason: {reason}
+                        <br />
+                        </span>
+                    )}
+                    Contact a moderator or administrator for more information.
                 </p>
             </div>
         );

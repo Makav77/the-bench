@@ -49,7 +49,7 @@ export class PermissionsController {
         @Req() req: Request,
     ) {
         const user = req.user as User;
-        const { restricted, expiresAt } = await this.permissionsService.isRestricted(user, code);
-        return { code, restricted, expiresAt };
+        const { restricted, expiresAt, reason } = await this.permissionsService.isRestricted(user, code);
+        return { restricted, expiresAt, reason };
     }
 }

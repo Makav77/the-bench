@@ -65,7 +65,7 @@ export class PermissionsService implements OnModuleInit {
         await this.userRestrictionRepo.delete({ user: { id: user.id }, permission: { id: permission.id }, });
     }
 
-    async isRestricted(user: User, permissionCode: string): Promise<{ restricted: boolean; expiresAt?: Date }> {
+    async isRestricted(user: User, permissionCode: string): Promise<{ restricted: boolean; expiresAt: Date | null; reason: string | null }> {
         const permission = await this.permissionRepo.findOneBy({ code: permissionCode });
 
         if (!permission) {
@@ -80,12 +80,14 @@ export class PermissionsService implements OnModuleInit {
                 permission: { id: permission.id },
                 expiresAt: MoreThan(new Date()),
             },
+            relations: ["permission"],
         });
 
-        if (restriction) {
-            return { restricted: true, expiresAt: restriction.expiresAt };
-        }
-        return { restricted: false };
+        return { 
+            restricted: !!restriction,
+            expiresAt: restriction?.expiresAt ?? null,
+            reason: restriction?.reason ?? null
+        };
     }
 
     async getRestrictionInfo(user: User, permissionCode: string): Promise<{ restricted: boolean; expiresAt: Date | null }> {

@@ -8,9 +8,15 @@ export interface RestrictResponse {
     expiresAt: string;
 }
 
-export async function isRestricted(code: string): Promise<boolean> {
+export interface IsRestrictedResponse {
+    restricted: boolean;
+    expiresAt: string | null;
+    reason: string | null;
+}
+
+export async function isRestricted(code: string): Promise<IsRestrictedResponse> {
     const response = await apiClient.get(`/permissions/${code}/isRestricted`);
-    return response.data.restricted;
+    return response.data;
 }
 
 export async function restrictUser(code: string, reason: string, userId: string, days?: number, hours?: number, minutes?: number): Promise<RestrictResponse> {
