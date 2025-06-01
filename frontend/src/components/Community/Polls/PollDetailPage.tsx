@@ -5,12 +5,15 @@ import { PollDetails } from "../../../api/pollService";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import PollCountdownTimer from "./PollCountdownTimer";
+import usePermission from "../../Utils/usePermission";
+import { format } from "date-fns";
 
 function PollDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate= useNavigate();
 
+    const { restricted, expiresAt, reason, loading: permLoading } = usePermission("vote_poll");
     const [poll, setPoll] = useState<PollDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -48,7 +51,7 @@ function PollDetailPage() {
     }
 
     const isOwner = user && poll && user.id === poll.author.id;
-    const isAdmin = user && user.role === "admin";
+    const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isClosed = poll.manualClosed || (!!poll.closesAt && new Date(poll.closesAt) < new Date());
     const hasVoted = poll.votes.some(v => v.voter.id === user?.id);
 
@@ -93,6 +96,10 @@ function PollDetailPage() {
         } catch (error) {
             toast.error("Unable to delete poll : " + error);
         }
+    }
+
+    if (permLoading) {
+        return <p className="p-6">Checking permission...</p>;
     }
 
     const isExpired = !!poll.closesAt && new Date(poll.closesAt) < new Date();
@@ -168,14 +175,34 @@ function PollDetailPage() {
                 </div>
             )}
 
-            <div className="w-[80%] mx-auto flex justify-around mt-8">
-                {!isClosed && !hasVoted && (
-                    <button onClick={handleVote} className="w-[25%] bg-green-600 text-white px-6 py-2 rounded cursor-pointer">
-                        Vote
-                    </button>
-                )}
+            <div className={`${restricted ? 'w-[100%]' : 'w-[80%]'} mx-auto flex justify-around mt-8`}>
+                {!isClosed && !hasVoted ? (
+                    restricted ? (
+                        <p className="text-red-600 font-semibold text-center">
+                            You are no longer allowed to vote to a poll until{" "}
+                            {expiresAt
+                                ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
+                                : "unknown date"}.
+                            <br />
+                            {reason && (
+                                <span>
+                                    Reason: {reason}
+                                    <br />
+                                </span>
+                            )}
+                            Contact a moderator or administrator for more information.
+                        </p>
+                    ) : (
+                        <button
+                            onClick={handleVote}
+                            className="w-[25%] bg-green-600 text-white px-6 py-2 rounded cursor-pointer"
+                        >
+                            Vote
+                        </button>
+                    )
+                ) : null}
 
-                {(isOwner || isAdmin) && !isClosed && (
+                {(isOwner || isAdminorModerator) && !isClosed && (
                     <button
                         onClick={handleClose}
                         className="w-[25%] bg-yellow-600 text-white px-6 py-1 rounded cursor-pointer"
@@ -184,7 +211,7 @@ function PollDetailPage() {
                     </button>
                 )}
 
-                {(isOwner || isAdmin) && (
+                {(isOwner || isAdminorModerator) && (
                     <button
                         onClick={handleDelete}
                         className="w-[25%] bg-red-600 text-white px-6 py-1 rounded cursor-pointer"

@@ -6,6 +6,8 @@ import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
 import { FlashPost } from './entities/flash-post.entity';
 import { Request } from 'express';
 import { User } from '../Users/entities/user.entity';
+import { RequiredPermission } from '../Permissions/decorator/require-permission.decorator';
+import { PermissionGuard } from '../Permissions/guards/permission.guard';
 
 @Controller("flashposts")
 export class FlashPostsController {
@@ -26,7 +28,8 @@ export class FlashPostsController {
         return this.flashpostsService.findOneFlashPost(id);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @RequiredPermission("publish_flash_post")
+    @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post()
     async createFlashPost(
         @Body() createFlashPostDTO: CreateFlashPostDTO,

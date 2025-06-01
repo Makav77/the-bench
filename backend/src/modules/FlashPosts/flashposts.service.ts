@@ -13,7 +13,7 @@ export class FlashPostsService {
     constructor(
         @InjectRepository(FlashPost)
         private readonly flashRepo: Repository<FlashPost>,
-    ) {}
+    ) { }
 
     async findAllFlashPosts(page = 1, limit = 5): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
@@ -23,7 +23,7 @@ export class FlashPostsService {
         const [data, total] = await this.flashRepo.findAndCount({
             where: { createdAt: MoreThan(lessThanADay) },
             relations: ["author"],
-            order: { createdAt: "DESC"},
+            order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
         });
@@ -70,7 +70,7 @@ export class FlashPostsService {
             throw new NotFoundException("FlashPost not found.");
         }
 
-        if (flashPost.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (flashPost.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to edit this flash post.");
         }
 
@@ -88,7 +88,7 @@ export class FlashPostsService {
             throw new NotFoundException("FlashPost not found.");
         }
 
-        if (flashPost.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (flashPost.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to delete this flash post.");
         }
 

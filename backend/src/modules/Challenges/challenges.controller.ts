@@ -8,6 +8,8 @@ import { User } from "../Users/entities/user.entity";
 import { SubmitCompletionDTO } from "./dto/submit-completion.dto";
 import { ChallengeCompletion } from "./entities/challenge-completion.entity";
 import { ValidateCompletionDTO } from "./dto/validate-completion.dto";
+import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
+import { PermissionGuard } from "../Permissions/guards/permission.guard";
 
 @Controller("challenges")
 export class ChallengesController {
@@ -28,7 +30,8 @@ export class ChallengesController {
         return this.challengesService.findOneChallenge(id);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @RequiredPermission("create_challenge")
+    @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post()
     async createChallenge(
         @Body() createChallengeDTO: CreateChallengeDTO,
@@ -59,7 +62,8 @@ export class ChallengesController {
         return this.challengesService.removeChallenge(id, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @RequiredPermission("register_challenge")
+    @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post(":id/subscribe")
     async subscribe(
         @Param("id") id: string,

@@ -6,6 +6,8 @@ import { PollService } from "./poll.service";
 import { CreatePollDTO } from "./dto/create-poll.dto";
 import { VotePollDTO } from "./dto/vote-poll.dto";
 import { Request } from "express";
+import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
+import { PermissionGuard } from "../Permissions/guards/permission.guard";
 
 @Controller("polls")
 @UseGuards(JwtAuthGuard)
@@ -27,7 +29,8 @@ export class PollController {
         return this.pollService.findOnePoll(id);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @RequiredPermission("create_poll")
+    @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post()
     async createPoll(
         @Body() createPollDTO: CreatePollDTO,
@@ -37,7 +40,8 @@ export class PollController {
         return this.pollService.createPoll(createPollDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @RequiredPermission("vote_poll")
+    @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post(":id/vote")
     async votePoll(
         @Param("id") id: string,

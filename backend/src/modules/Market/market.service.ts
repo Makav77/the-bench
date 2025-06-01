@@ -11,7 +11,7 @@ export class MarketService {
     constructor(
         @InjectRepository(MarketItem)
         private readonly marketRepo: Repository<MarketItem>,
-    ) {}
+    ) { }
 
     async findAllItems(page = 1, limit = 10): Promise<{ data: MarketItem[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
@@ -56,7 +56,7 @@ export class MarketService {
             throw new NotFoundException("Item not found.");
         }
 
-        if (item.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (item.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to edit this item.");
         }
 
@@ -74,7 +74,7 @@ export class MarketService {
             throw new NotFoundException("Item not found.");
         }
 
-        if (item.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (item.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to delete this item.");
         }
 

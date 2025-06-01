@@ -8,6 +8,8 @@ import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { Request } from "express";
 import { GalleryItem } from "./entities/gallery-item.entity";
 import { User } from "../Users/entities/user.entity";
+import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
+import { PermissionGuard } from "../Permissions/guards/permission.guard";
 
 const multerOptions = {
     storage: diskStorage({
@@ -47,7 +49,8 @@ export class GalleryController {
         return this.galleryService.findOneGalleryItem(id);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @RequiredPermission("publish_gallery")
+    @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post()
     @UseInterceptors(FileInterceptor("url", multerOptions))
     async createGalleryItem(

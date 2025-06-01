@@ -11,7 +11,7 @@ export class PostsService {
     constructor(
         @InjectRepository(Posts)
         private readonly postRepo: Repository<Posts>,
-    ) {}
+    ) { }
 
     async findAllPosts(page = 1, limit = 10): Promise<{ data: Posts[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
@@ -57,7 +57,7 @@ export class PostsService {
             throw new NotFoundException("Post not found");
         }
 
-        if (post.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (post.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to edit this post.")
         }
 
@@ -75,7 +75,7 @@ export class PostsService {
             throw new ForbiddenException("Post not found");
         }
 
-        if (post.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (post.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to delete this post.")
         }
 

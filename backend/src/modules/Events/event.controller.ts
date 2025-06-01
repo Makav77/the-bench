@@ -6,6 +6,8 @@ import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
 import { User } from "../Users/entities/user.entity";
+import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
+import { PermissionGuard } from "../Permissions/guards/permission.guard";
 
 @Controller("events")
 export class EventController {
@@ -26,7 +28,8 @@ export class EventController {
         return this.eventService.findOneEvent(id);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission("create_event")
     @Post()
     async createEvent(
         @Body() createEventDTO: CreateEventDTO,
@@ -57,7 +60,8 @@ export class EventController {
         return this.eventService.removeEvent(id, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @RequiredPermission("register_event")
+    @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post(":id/subscribe")
     async subscribe(
         @Param("id") id:string,

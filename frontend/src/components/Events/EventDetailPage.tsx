@@ -4,12 +4,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { removeParticipant } from "../../api/eventService";
+import usePermission from "../Utils/usePermission";
 
 function EventDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate = useNavigate();
 
+    const { restricted, expiresAt, loading: permLoading } = usePermission("register_event");
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ function EventDetailPage() {
     }
 
     const isOwner = user && event && user.id === event.author.id;
-    const isAdmin = user && user.role === "admin";
+    const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isSubscribe = event.participantsList.some((u) => u.id === user?.id);
     const isFull = event.maxNumberOfParticipants !== undefined
         && event.participantsList.length >= event.maxNumberOfParticipants
@@ -90,6 +92,10 @@ function EventDetailPage() {
         }
     };
 
+    if (permLoading) {
+        return <p>Checking permissions…</p>;
+    }
+
     return (
         <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
             <div className="flex justify-between gap-4">
@@ -113,6 +119,11 @@ function EventDetailPage() {
                             </button>
                         ) : isFull ? (
                             <p className="text-gray-500 text-l font-semibold">Event full</p>
+                        ) : restricted ? (
+                            <p className="text-red-600 text-l font-semibold">
+                                You are no longer allowed to register for this event until{" "}
+                                {new Date(expiresAt!).toLocaleDateString()}.
+                            </p>
                         ) : (
                             <button
                                 onClick={handleSubscribe}
@@ -123,7 +134,7 @@ function EventDetailPage() {
                         )
                     )}
 
-                    {event.maxNumberOfParticipants != null && (isOwner || isAdmin) && (
+                    {event.maxNumberOfParticipants != null && (isOwner || isAdminorModerator) && (
                         <button
                             onClick={() => setShowModal(true)}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 border rounded cursor-pointer"
@@ -169,7 +180,7 @@ function EventDetailPage() {
                 <strong>Participants :</strong> {event.participantsList.length}
             </p>
 
-            {(isOwner || isAdmin) && (
+            {(isOwner || isAdminorModerator) && (
                 <div className="mt-4 flex gap-2 justify-center">
                     <button
                         onClick={() => navigate(`/events/${id}/edit`)}

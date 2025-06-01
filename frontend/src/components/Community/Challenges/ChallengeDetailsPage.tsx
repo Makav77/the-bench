@@ -3,12 +3,15 @@ import { getChallenge, deleteChallenge, subscribeChallenge, unsubscribeChallenge
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
+import usePermission from "../../Utils/usePermission";
+import { format } from "date-fns";
 
 function ChallengeDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate = useNavigate();
 
+    const { restricted, expiresAt, reason, loading: permLoading } = usePermission("register_challenge");
     const [challenge, setChallenge] = useState<ChallengeSummary | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -46,7 +49,7 @@ function ChallengeDetailPage() {
     }
 
     const isOwner = user && challenge && user.id === challenge.author.id;
-    const isAdmin = user && user.role === "admin";
+    const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isSubscribe = challenge.registrations.some((u) => u.user.id === user?.id);
 
     const handleSubscribe = async () => {
@@ -84,6 +87,10 @@ function ChallengeDetailPage() {
         }
     }
 
+    if (permLoading) {
+        return <p className="p-6">Checking permissions...</p>
+    }
+
     return (
         <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
             <button
@@ -110,23 +117,39 @@ function ChallengeDetailPage() {
             </p>
 
             <div className="flex gap-2">
-                {!isSubscribe
-                    ? <button
-                        onClick={handleSubscribe}
-                        className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer"
-                    >
-                        Subscribe
-                    </button>
-                    
-                    : <button
+                {!isSubscribe ? (
+                    restricted ? (
+                        <p className="text-red-600 text-l font-semibold text-center">
+                            You are no longer allowed to register to a challenge until{" "}
+                            {expiresAt
+                                ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
+                                : "unknown date"}.
+                            <br />
+                            {reason && (
+                                <span>
+                                    Reason: {reason}
+                                    <br />
+                                </span>
+                            )}
+                            Contact a moderator or administrator for more information.
+                        </p>
+                    ) : (
+                        <button
+                            onClick={handleSubscribe}
+                            className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer"
+                        >
+                            Subscribe
+                        </button>
+                    )
+                ) : ( <button
                         onClick={handleUnsubscribe}
                         className="bg-yellow-600 text-white px-4 py-2 rounded cursor-pointer"
                     >
                         Unsubscribe
                     </button>
-                }
+                )}
 
-                {(isOwner || isAdmin) &&
+                {(isOwner || isAdminorModerator) &&
                     <button
                         onClick={() => navigate(`/challenges/${id}/edit`)}
                         className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
@@ -135,7 +158,7 @@ function ChallengeDetailPage() {
                     </button>
                 }
 
-                {(isOwner || isAdmin) &&
+                {(isOwner || isAdminorModerator) &&
                     <button
                         onClick={handleDelete}
                         className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"

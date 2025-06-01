@@ -15,7 +15,7 @@ const mockUser = {
     "password": "password",
     "dateOfBirth": new Date("2000-01-01"),
     "profilePicture": "none",
-    "role": Role.ADMIN
+    "role": Role.ADMIN && user.role !== Role.MODERATOR
 };
 
 describe("UserService", () => {
@@ -48,35 +48,35 @@ describe("UserService", () => {
         expect(service).toBeDefined();
     })
 
-    test("findAll() should return an array of users", async() => {
+    test("findAll() should return an array of users", async () => {
         repo.find.mockResolvedValue([mockUser as User]);
         const result = await service.findAll();
         expect(result).toEqual([mockUser]);
         expect(repo.find).toHaveBeenCalled();
     });
 
-    test("findOne() should return a user by id", async() => {
+    test("findOne() should return a user by id", async () => {
         repo.findOneBy.mockResolvedValue(mockUser as User);
         const result = await service.findOne("b1c4a89e-4905-5e3c-b57f-dc92627d011e");
         expect(result).toEqual(mockUser);
         expect(repo.findOneBy).toHaveBeenCalledWith({ id: "b1c4a89e-4905-5e3c-b57f-dc92627d011e" });
     });
 
-    test("findOne() should throw NotFoundException if user not found", async() => {
+    test("findOne() should throw NotFoundException if user not found", async () => {
         repo.findOneBy.mockResolvedValue(null);
         await expect(service.findOne("123")).rejects.toThrow(NotFoundException);
     });
 
-    test("create() should create and save a user", async() => {
+    test("create() should create and save a user", async () => {
         repo.create.mockReturnValue(mockUser as User);
         repo.save.mockResolvedValue(mockUser as User);
-        const result = await service.create({ id: "b1c4a89e-4905-5e3c-b57f-dc92627d011e", firstname: "John", lastname: "Doe", email: "test@example.com", password: "password", dateOfBirth: new Date("2000-01-01"), profilePicture: "none", role: Role.ADMIN })
+        const result = await service.create({ id: "b1c4a89e-4905-5e3c-b57f-dc92627d011e", firstname: "John", lastname: "Doe", email: "test@example.com", password: "password", dateOfBirth: new Date("2000-01-01"), profilePicture: "none", role: Role.ADMIN && user.role !== Role.MODERATOR })
         expect(result).toEqual(mockUser);
         expect(repo.create).toHaveBeenCalled();
         expect(repo.save).toHaveBeenCalled();
     });
 
-    test("create() should throw ConflictException if email or id already exist", async() => {
+    test("create() should throw ConflictException if email or id already exist", async () => {
         const new_user: CreateUserDTO = {
             "id": "jdz56q3f-sdz5-56da-daza256s2qa1",
             "firstname": "Jane",
@@ -95,7 +95,7 @@ describe("UserService", () => {
         await expect(service.create(new_user)).rejects.toThrow(ConflictException);
     })
 
-    test("create() should throw unknow error", async() => {
+    test("create() should throw unknow error", async () => {
         const new_user: CreateUserDTO = {
             "id": "jdz56q3f-sdz5-56da-daza256s2qa1",
             "firstname": "Jane",
@@ -112,7 +112,7 @@ describe("UserService", () => {
         await expect(service.create(new_user)).rejects.toThrow("Error");
     })
 
-    test("update() should update and return the user", async() => {
+    test("update() should update and return the user", async () => {
         const updatedUser = { ...mockUser, firstname: "Jane" };
 
         repo.findOneBy.mockResolvedValue(mockUser as User);
@@ -127,18 +127,18 @@ describe("UserService", () => {
         expect(result).toEqual(updatedUser);
     })
 
-    test("update() should throw NotFoundException if user does not exist", async() => {
+    test("update() should throw NotFoundException if user does not exist", async () => {
         repo.findOneBy.mockResolvedValue(null);
         await expect(service.update("123", { firstname: "BadTest" })).rejects.toThrow(NotFoundException);
     })
 
-    test("remove() should delete a user", async() => {
+    test("remove() should delete a user", async () => {
         repo.delete.mockResolvedValue({ affected: 1, raw: {} });
         await service.remove("b1c4a89e-4905-5e3c-b57f-dc92627d011e");
         expect(repo.delete).toHaveBeenCalledWith("b1c4a89e-4905-5e3c-b57f-dc92627d011e");
     });
 
-    test("remove() should throw NotFoundException if user not found", async() => {
+    test("remove() should throw NotFoundException if user not found", async () => {
         repo.delete.mockResolvedValue({ affected: 0, raw: {} });
         await expect(service.remove("123")).rejects.toThrow(NotFoundException);
     })

@@ -11,7 +11,7 @@ export class EventService {
     constructor(
         @InjectRepository(Event)
         private readonly eventRepo: Repository<Event>
-    ) {}
+    ) { }
 
     async findAllEvents(page = 1, limit = 5): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
@@ -58,7 +58,7 @@ export class EventService {
             throw new NotFoundException("Event not found.");
         }
 
-        if (event.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (event.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to edit this event.");
         }
 
@@ -76,7 +76,7 @@ export class EventService {
             throw new NotFoundException("Event not found.");
         }
 
-        if (event.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (event.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to delete this event.");
         }
 
@@ -93,7 +93,7 @@ export class EventService {
             throw new NotFoundException("Event not found.");
         }
 
-        if (event.author.id !== user.id && user.role !== Role.ADMIN) {
+        if (event.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to edit the participant list.");
         }
 

@@ -56,5 +56,3 @@ export const closePoll = async (id: string): Promise<PollDetails> => {
 export const deletePoll = async (id: string): Promise<void> => {
     await apiClient.delete(`/polls/${id}`);
 }
-
-// options x => XX%
