@@ -6,7 +6,7 @@ import { getDay } from "date-fns/getDay";
 import { enUS } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 const locales = { en: enUS };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
@@ -22,14 +22,19 @@ export interface YearItem {
 interface YearCalendarProps {
     items: YearItem[];
     year: number;
+    setYear: Dispatch<SetStateAction<number>>;
 }
 
-function CustomToolbar(toolbar: ToolbarProps<YearItem, object>) {
-    const goToBack = () => toolbar.onNavigate("PREV");
-    const goToNext = () => toolbar.onNavigate("NEXT");
-    const goToToday = () => toolbar.onNavigate("TODAY");
+function CustomToolbar({date, onNavigate, setYear }: ToolbarProps<YearItem, object> & { setYear: React.Dispatch<React.SetStateAction<number>> }) {
+    const today = new Date();
+    const goToBack = () => onNavigate("PREV");
+    const goToNext = () => onNavigate("NEXT");
+    const goToToday = () => {
+        onNavigate("DATE", today);
+        setYear(today.getFullYear());
+    }
 
-    const monthLabel = format(toolbar.date, "LLLL", { locale: enUS });
+    const monthLabel = format(date, "LLLL", { locale: enUS });
 
     return (
         <div className="flex items-center justify-between mb-4">
@@ -64,7 +69,7 @@ function CustomToolbar(toolbar: ToolbarProps<YearItem, object>) {
     );
 }
 
-function YearCalendar({ items, year }: YearCalendarProps) {
+function YearCalendar({ items, year, setYear }: YearCalendarProps) {
     const navigate = useNavigate();
     const today = new Date();
     const isCurrentYear = today.getFullYear() === year;
@@ -111,7 +116,12 @@ function YearCalendar({ items, year }: YearCalendarProps) {
             views={[Views.MONTH]}
             date={date}
             onNavigate={(newDate) => setDate(newDate)}
-            components={{ toolbar: CustomToolbar }}
+            components={{ toolbar: (toolbarProps: any) => (
+                <CustomToolbar
+                    {...toolbarProps}
+                    setYear={setYear}
+                />
+            )}}
             onSelectEvent={(item: YearItem) => {
                 if (item.type === "event") navigate(`/events/${item.id}`);
                 else navigate(`/challenges/${item.id}`);

@@ -73,7 +73,7 @@ function CalendarPage() {
                     {year + 1} →
                 </button>
             </div>
-            <YearCalendar items={items} year={year} />
+            <YearCalendar items={items} year={year} setYear={setYear} />
         </div>
     );
 }
