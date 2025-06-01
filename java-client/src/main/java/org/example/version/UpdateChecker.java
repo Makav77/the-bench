@@ -25,13 +25,11 @@ public class UpdateChecker {
 
             String remoteVersion = release.getString("tag_name").trim();
             if (!remoteVersion.equals(localVersion)) {
-                System.out.println("Nouvelle version disponible : " + remoteVersion);
                 JSONArray assets = release.getJSONArray("assets");
                 for (int i = 0; i < assets.length(); i++) {
                     JSONObject asset = assets.getJSONObject(i);
                     if (asset.getString("name").endsWith(".jar")) {
                         String downloadUrl = asset.getString("browser_download_url");
-                        System.out.println("Url : "+ downloadUrl + " Version : " + remoteVersion);
                         UpdateUI.showUpdatePrompt(remoteVersion, () -> {
                             try {
                                 downloadJarAndReplace(downloadUrl, remoteVersion);
@@ -44,12 +42,9 @@ public class UpdateChecker {
                                 e.printStackTrace();
                             }
                         });
-                        System.out.println("Nouvelle version téléchargée");
                         return;
                     }
                 }
-            } else {
-                System.out.println("L'application est à jour. (version " + localVersion + ")");
             }
 
         } catch (Exception e) {
@@ -107,34 +102,42 @@ public class UpdateChecker {
         String os = System.getProperty("os.name").toLowerCase();
         boolean isWindows = os.contains("win");
 
-        System.out.println("Debug 3");
         String scriptName = isWindows ? "update.bat" : "update.sh";
         Path scriptPath = updateDir.resolve(scriptName);
 
         String scriptContent;
+        Path tempJar = updateDir.resolve("temp.jar");
+
         if (isWindows) {
             scriptContent = String.format("""
                 @echo off
-                timeout /t 3 > nul
-                del "%s"
-                move "%s" "%s"
-                start javaw -jar "%s"
+                timeout /t 5 > nul
+                echo [INFO] Copie du nouveau jar
+                copy /Y "%s" "%s"
+                echo [INFO] Remplacement de l'ancien jar
+                move /Y "%s" "%s"
+                echo [INFO] Lancement de la nouvelle version
+                start "" javaw -jar "%s"
                 """,
-                    currentJar, downloadedJar, currentJar, currentJar);
+                downloadedJar.toAbsolutePath(),
+                tempJar.toAbsolutePath(),
+                tempJar.toAbsolutePath(),
+                currentJar.toAbsolutePath(),
+                currentJar.toAbsolutePath()
+            );
         } else {
             scriptContent = String.format("""
                 #!/bin/bash
                 sleep 5
                 cp "%s" "%s"
                 mv "%s" "%s"
-                cd "%s"
-                nohup java -jar "./%s" &
+                nohup java -jar "%s" &
                 """,
                 downloadedJar.toAbsolutePath(),
-                updateDir.resolve("temp.jar").toAbsolutePath(),
-                updateDir.resolve("temp.jar").toAbsolutePath(),
-                currentJar.getParent().toAbsolutePath(),
-                currentJar.getFileName().toString()
+                tempJar.toAbsolutePath(),
+                tempJar.toAbsolutePath(),
+                currentJar.toAbsolutePath(),
+                currentJar.toAbsolutePath()
             );
         }
         Files.writeString(scriptPath, scriptContent);
