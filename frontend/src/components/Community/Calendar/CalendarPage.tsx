@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import YearCalendar, { YearItem } from "./YearCalendar";
-import { getEvents, EventSummary } from "../../api/eventService";
-import { ChallengeSummary, getChallenges } from "../../api/challengeService";
+import { getEvents, EventSummary } from "../../../api/eventService";
+import { ChallengeSummary, getChallenges } from "../../../api/challengeService";
 
 function CalendarPage() {
     const [year, setYear] = useState<number>(new Date().getFullYear());
