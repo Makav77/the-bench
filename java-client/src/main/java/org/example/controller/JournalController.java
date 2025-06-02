@@ -5,11 +5,16 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import org.example.scraping.Article;
 import org.example.scraping.DayArticles;
 import org.example.scraping.DayArticlesUtils;
 import org.example.scraping.Scraper;
+import org.example.theme.ThemeManager;
 import org.example.scraping.Model.Cinema.*;
 
 import java.util.ArrayList;
@@ -23,6 +28,7 @@ public class JournalController {
     private VBox articleContainer;
     @FXML private Button updateButton;
     @FXML private ProgressIndicator spinner;
+    @FXML private BorderPane journalPane;
     @FXML private MenuItem ResentButton;
     @FXML private MenuItem OldButton;
     @FXML private TextField searchField;
@@ -45,6 +51,7 @@ public class JournalController {
 
     @FXML
     private void initialize() {
+        ThemeManager.applyThemeToRoot(journalPane);
         System.out.println("Vue JournalController chargée !");
         originalNode = itemsButton;
         dataDisplayed = DataDisplayed.ARTICLES;
