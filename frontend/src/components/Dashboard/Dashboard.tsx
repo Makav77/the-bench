@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { restrictUser, RestrictResponse } from "../../api/permissionsService";
+import { getReports, updateReport, ReportDTO } from "../../api/reportService";
 import { DEFAULT_PERMISSIONS } from "../../../../backend/src/modules/Permissions/ListPermissions";
 import { toast } from "react-toastify";
+import { format } from "date-fns";
 
 type Tab = "polls" | "bans" | "reports";
 
@@ -10,6 +12,7 @@ export default function DashboardPage() {
     const { user } = useAuth();
     const [activeTab, setActiveTab] = useState<Tab>("bans");
 
+    //bans
     const [userId, setUserId] = useState<string>("");
     const [reason, setReason] = useState<string>("");
     const [days, setDays] = useState<number>(0);
@@ -20,17 +23,37 @@ export default function DashboardPage() {
     );
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+    //reports
+    const [reports, setReports] = useState<ReportDTO[]>([]);
+    const [loadingReports, setLoadingReports] = useState<boolean>(false);
+    const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+    useEffect(() => {
+        setLoadingReports(true);
+        (async () => {
+            try {
+                const data = await getReports();
+                setReports(data);
+            } catch(error) {
+                console.error("getReports error : " + error);
+                toast.error("Unable to load reports.");
+            } finally {
+                setLoadingReports(false);
+            }
+        })();
+    }, [activeTab]);
+
     if (!user || (user.role !== "admin" && user.role !== "moderator")) {
         return (
             <div className="p-6 text-center">
                 <p className="text-red-500">
-                    Accès refusé : vous n'êtes pas modérateur ni administrateur.
+                    Access denied: You are not a moderator or administrator.
                 </p>
             </div>
         );
     }
 
-    const handleBanSubmit = async (e: React.FormEvent) => {
+    const handleBanSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         if (!userId.trim() || !reason.trim()) {
@@ -60,6 +83,22 @@ export default function DashboardPage() {
             toast.error("Unable to ban user : " + error);
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleStatusChanged = async (reportId: string, newStatus: "VALIDATED" | "REJECTED") => {
+        setUpdatingId(reportId);
+        try {
+            const updated = await updateReport(reportId, { status: newStatus });
+            setReports((prev) =>
+                prev.map((r) => (r.id === reportId ? updated: r))
+            );
+            toast.success(`Report ${newStatus === "VALIDATED" ? "Validated" : "Rejected" }.`);
+        } catch (error) {
+            console.error("Update report error : " + error);
+            toast.error("Unable to update report status.");
+        } finally {
+            setUpdatingId(null);
         }
     };
 
@@ -108,7 +147,87 @@ export default function DashboardPage() {
 
             {activeTab === "reports" && (
                 <div>
-                    <p className="text-gray-600">Reports handling</p>
+                    <h2 className="text-2xl font-semibold mb-4">
+                        Reports handling
+                    </h2>
+
+                    {loadingReports ? (
+                        <p className="text-center">Report loading...</p>
+                    ) : reports.length === 0 ? (
+                        <p className="text-center">No report waiting</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {reports.map((report) => (
+                                <div
+                                    key={report.id}
+                                    className="border rounded-lg p-4 shadow-sm flex flex-col md:flex-row justify-between"
+                                >
+                                    <div className="flex-1 space-y-1">
+                                        <p>
+                                            <span className="font-semibold">Report by :</span>{" "}
+                                            {report.reporter.firstname} {report.reporter.lastname}
+                                        </p>
+
+                                        <p>
+                                            <span className="font-semibold">Reported user :</span>{" "}
+                                            {report.reportedUser.firstname} {report.reportedUser.lastname}
+                                        </p>
+
+                                        <p>
+                                            <span className="font-semibold">Date :</span>{" "}
+                                            {format(new Date(report.createdAt), "dd/MM/yyyy 'at' HH:mm")}
+                                        </p>
+
+                                        <p>
+                                            <span className="font-semibold">Reason :</span>{" "}
+                                            {report.reason}
+                                        </p>
+
+                                        {report.description && (
+                                            <p>
+                                                <span className="font-semibold">Description :</span>{" "}
+                                                {report.description}
+                                            </p>
+                                        )}
+
+                                        <p>
+                                            <span className="font-semibold">Statut :</span>{" "}
+                                            {report.status}
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-4 md:mt-0 md:ml-4 flex-shrink-0 flex flex-col space-y-2">
+                                        {report.status === "PENDING" ? (
+                                            <>
+                                                <button
+                                                    onClick={() => handleStatusChanged(report.id, "VALIDATED")}
+                                                    disabled={updatingId === report.id}
+                                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                                >
+                                                    {updatingId === report.id
+                                                        ? "Validation..."
+                                                        : "Validate"}
+                                                </button>
+
+                                                <button
+                                                    onClick={() => handleStatusChanged(report.id, "REJECTED")}
+                                                    disabled={updatingId === report.id}
+                                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300">
+                                                        {updatingId === report.id
+                                                            ? "Rejection..."
+                                                            : "Reject"}
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <p className="text-gray-600 italic">
+                                                Action performed
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 
