@@ -24,14 +24,14 @@ export class ReportsController {
         return this.reportsService.findOneReport(id);
     }
 
-    @RequiredPermission("SEND_REPORT")
+    @RequiredPermission("send_report")
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @Post()
     async createReport(
         @Body() createReportDTO: CreateReportDTO,
         @Req() req: Request,
     ): Promise<Report> {
-        const reporterId = req.user;
+        const reporterId = (req.user as any).id;
         const report = await this.reportsService.createReport(
             reporterId,
             createReportDTO,
