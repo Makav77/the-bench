@@ -14,7 +14,6 @@ export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState<Tab>("bans");
     const navigate = useNavigate();
 
-
     //bans
     const [userId, setUserId] = useState<string>("");
     const [reason, setReason] = useState<string>("");
@@ -33,6 +32,9 @@ export default function DashboardPage() {
     const [loadingReports, setLoadingReports] = useState<boolean>(false);
     const [updatingId, setUpdatingId] = useState<string | null>(null);
     const [filterStatus, setFilterStatus] = useState<"ALL" | "PENDING" | "VALIDATED" | "REJECTED" >("ALL");
+    const [filterContentType, setFilterContentType] = useState<"ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLLS" | "CHALLENGES">("ALL");
+    const [filterReason, setFilterReason] = useState<"ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INAPPROPRIATE_CONTENT" | "OTHER">("ALL");
+    const [search, setSearch] = useState<string>("");
 
     useEffect(() => {
         setLoadingReports(true);
@@ -60,12 +62,38 @@ export default function DashboardPage() {
         );
     }
 
-    const filteredReports = reports.filter((report) => {
-        if (filterStatus === "ALL") {
-            return true;
-        }
-        return report.status === filterStatus; 
-    })
+    const filteredReports = reports
+        .filter((report) => {
+            if (filterStatus === "ALL") {
+                return true;
+            }
+            return report.status === filterStatus;
+        })
+
+        .filter((report) => {
+            if (filterContentType === "ALL"){
+                return true;
+            }
+            return report.reportedContentType === filterContentType;
+        })
+
+        .filter((report) => {
+            if (filterReason === "ALL") {
+                return true;
+            }
+            return report.reason === filterReason;
+        })
+
+        .filter((report) => {
+            if (!search.trim()) {
+                return true;
+            }
+
+            const term = search.trim().toLowerCase();
+            const first = report.reportedUser.firstname.toLowerCase();
+            const last = report.reportedUser.lastname.toLowerCase();
+            return first.includes(term) || last.includes(term);
+    });
 
     const handleBanSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -195,10 +223,21 @@ export default function DashboardPage() {
                     </h2>
 
                     <div className="mb-4 flex items-center space-x-2">
-                        <span className="font-semibold">Sort :</span>
+                        <span className="font-semibold">Reported user : </span>
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Firstname or lastname of user..."
+                            className="border rounded px-2 py-1 w-full max-w-xs"
+                        />
+                    </div>
+
+                    <div className="mb-4 flex items-center space-x-2">
+                        <span className="font-semibold">Status :</span>
                         <select
                             value={filterStatus}
-                            onChange={(e) => setFilterStatus(e.target.value as "ALL" | "PENDING" | "VALIDATED" | "REJECTED" )}
+                            onChange={(e) => setFilterStatus(e.target.value as "ALL" | "PENDING" | "VALIDATED" | "REJECTED")}
                             className="border rounded px-2 py-1"
                         >
                             <option value="ALL">All</option>
@@ -208,9 +247,42 @@ export default function DashboardPage() {
                         </select>
                     </div>
 
+                    <div className="mb-4 flex items-center space-x-2">
+                        <span className="font-semibold">Content :</span>
+                        <select
+                            value={filterContentType}
+                            onChange={(e) => setFilterContentType(e.target.value as "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLLS" | "CHALLENGES")}
+                            className="border rounded px-2 py-1"
+                        >
+                            <option value="ALL">All</option>
+                            <option value="POST">Post</option>
+                            <option value="FLASHPOST">Flashpost</option>
+                            <option value="EVENT">Event</option>
+                            <option value="GALLERY">Gallery</option>
+                            <option value="POLL">Poll</option>
+                            <option value="CHALLENGE">Challenge</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-4 flex items-center space-x-2">
+                        <span className="font-semibold">Reason :</span>
+                        <select
+                            value={filterReason}
+                            onChange={(e) => setFilterReason(e.target.value as "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INAPPROPRIATE_CONTENT" | "OTHER")}
+                            className="border rounded px-2 py-1"
+                        >
+                            <option value="ALL">All</option>
+                            <option value="OFFENSIVE_LANGUAGE">Offensive language</option>
+                            <option value="HATE_SPEECH">Hate speech</option>
+                            <option value="SPAM">Spam</option>
+                            <option value="INAPPROPRIATE_CONTENT">Inappropriate content</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+
                     {loadingReports ? (
                         <p className="text-center">Report loading...</p>
-                    ) : reports.length === 0 ? (
+                    ) : filteredReports.length === 0 ? (
                         <p className="text-center">No report waiting</p>
                     ) : (
                         <div className="space-y-4">
