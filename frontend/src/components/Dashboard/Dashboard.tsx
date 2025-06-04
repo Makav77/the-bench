@@ -18,10 +18,10 @@ export default function DashboardPage() {
     const [days, setDays] = useState<number>(0);
     const [hours, setHours] = useState<number>(0);
     const [minutes, setMinutes] = useState<number>(0);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [selectedPermission, setSelectedPermission] = useState<string>(
         DEFAULT_PERMISSIONS[0].code
     );
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     //reports
     const [reports, setReports] = useState<ReportDTO[]>([]);
@@ -89,27 +89,28 @@ export default function DashboardPage() {
     const handleStatusChanged = async (reportId: string, newStatus: "VALIDATED" | "REJECTED") => {
         setUpdatingId(reportId);
         try {
-            const updated = await updateReport(reportId, { status: newStatus });
-            setReports((prev) =>
-                prev.map((r) => (r.id === reportId ? updated: r))
-            );
-            toast.success(`Report ${newStatus === "VALIDATED" ? "Validated" : "Rejected" }.`);
+            await updateReport(reportId, { status: newStatus });
+            toast.success(`Report ${newStatus === "VALIDATED" ? "Validate" : "Rejected" }`);
+            setLoadingReports(true);
+            const fresh = await getReports();
+            setReports(fresh);
         } catch (error) {
             console.error("Update report error : " + error);
-            toast.error("Unable to update report status.");
+            toast.error("Unable to update report.");
         } finally {
             setUpdatingId(null);
+            setLoadingReports(false);
         }
     };
 
     return (
-        <div className="p-6 w-[60%] mx-auto">
+        <div className="p-6 w-[30%] mx-auto">
             <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
 
             <div className="flex border-b mb-6">
                 <button
                     onClick={() => setActiveTab("polls")}
-                    className={`px-4 py-2 -mb-px ${
+                    className={`cursor-pointer px-4 py-2 -mb-px ${
                         activeTab === "polls"
                             ? "border-b-2 border-blue-600 font-semibold"
                             : "text-gray-600 hover:text-gray-800"
@@ -119,7 +120,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                     onClick={() => setActiveTab("bans")}
-                    className={`px-4 py-2 -mb-px ${
+                    className={`cursor-pointer px-4 py-2 -mb-px ${
                         activeTab === "bans"
                             ? "border-b-2 border-blue-600 font-semibold"
                             : "text-gray-600 hover:text-gray-800"
@@ -129,7 +130,7 @@ export default function DashboardPage() {
                 </button>
                 <button
                     onClick={() => setActiveTab("reports")}
-                    className={`px-4 py-2 -mb-px ${
+                    className={`cursor-pointer px-4 py-2 -mb-px ${
                         activeTab === "reports"
                             ? "border-b-2 border-blue-600 font-semibold"
                             : "text-gray-600 hover:text-gray-800"
@@ -148,7 +149,7 @@ export default function DashboardPage() {
             {activeTab === "reports" && (
                 <div>
                     <h2 className="text-2xl font-semibold mb-4">
-                        Reports handling
+                        Reports
                     </h2>
 
                     {loadingReports ? (
