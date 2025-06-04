@@ -56,22 +56,22 @@ function DashboardReports() {
 
     const goToReportedContent = (reportedContentId: string, reportedContentType: string) => {
         switch (reportedContentType) {
-            case "posts":
+            case "POST":
                 navigate(`/posts/${reportedContentId}`);
                 break;
-            case "flashposts":
+            case "FLASHPOST":
                 navigate(`/flashposts/${reportedContentId}`);
                 break;
-            case "events":
+            case "EVENT":
                 navigate(`/events/${reportedContentId}`);
                 break;
-            case "gallery":
+            case "GALLERY":
                 navigate(`/gallery/${reportedContentId}`);
                 break;
-            case "polls":
+            case "POLL":
                 navigate(`/polls/${reportedContentId}`);
                 break;
-            case "challenges":
+            case "CHALLENGE":
                 navigate(`/challenges/${reportedContentId}`);
                 break;
             case "report":

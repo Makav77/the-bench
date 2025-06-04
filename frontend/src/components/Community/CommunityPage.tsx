@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 const sections = [
     { label: 'Gallery', path: '/gallery' },
     { label: 'Polls', path: '/polls' },
-    { label: 'Challenge', path: '/challenges' },
+    { label: 'Challenges', path: '/challenges' },
     { label: 'Calendar', path: '/calendar' },
     { label: 'Artisans', path: '/artisans' },
     { label: 'Journal', path: '/journal' },
@@ -29,3 +29,4 @@ export default function CommunityPage() {
         </div>
     );
 }
+ 
