@@ -32,6 +32,7 @@ export default function DashboardPage() {
     const [lastPage, setLastPage] = useState(1);
     const [loadingReports, setLoadingReports] = useState<boolean>(false);
     const [updatingId, setUpdatingId] = useState<string | null>(null);
+    const [filterStatus, setFilterStatus] = useState<"ALL" | "PENDING" | "VALIDATED" | "REJECTED" >("ALL");
 
     useEffect(() => {
         setLoadingReports(true);
@@ -58,6 +59,13 @@ export default function DashboardPage() {
             </div>
         );
     }
+
+    const filteredReports = reports.filter((report) => {
+        if (filterStatus === "ALL") {
+            return true;
+        }
+        return report.status === filterStatus; 
+    })
 
     const handleBanSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -186,13 +194,27 @@ export default function DashboardPage() {
                         Reports
                     </h2>
 
+                    <div className="mb-4 flex items-center space-x-2">
+                        <span className="font-semibold">Sort :</span>
+                        <select
+                            value={filterStatus}
+                            onChange={(e) => setFilterStatus(e.target.value as "ALL" | "PENDING" | "VALIDATED" | "REJECTED" )}
+                            className="border rounded px-2 py-1"
+                        >
+                            <option value="ALL">All</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="VALIDATED">Validated</option>
+                            <option value="REJECTED">Rejected</option>
+                        </select>
+                    </div>
+
                     {loadingReports ? (
                         <p className="text-center">Report loading...</p>
                     ) : reports.length === 0 ? (
                         <p className="text-center">No report waiting</p>
                     ) : (
                         <div className="space-y-4">
-                            {reports.map((report) => (
+                            {filteredReports.map((report) => (
                                 <div
                                     key={report.id}
                                     className="border rounded-lg p-4 shadow-sm flex flex-col md:flex-row justify-between cursor-pointer hover:bg-blue-200"
