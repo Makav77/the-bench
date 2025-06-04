@@ -42,7 +42,7 @@ export class ReportsService{
     }
 
     async createReport(reportedId: string, createReportDTO: CreateReportDTO): Promise<Report> {
-        const { reportedUserId, reason, description } = createReportDTO;
+        const { reportedUserId, reason, description, reportedContentId, reportedContentType } = createReportDTO;
 
         const reporter = await this.userRepo.findOneBy({ id: reportedId });
         if (!reporter) {
@@ -58,6 +58,8 @@ export class ReportsService{
             reporter,
             reportedUser,
             reason,
+            reportedContentId,
+            reportedContentType,
             description: description ?? null,
             status: "PENDING",
         });

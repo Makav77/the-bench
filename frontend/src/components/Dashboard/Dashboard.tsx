@@ -5,12 +5,15 @@ import { getReports, updateReport, ReportDTO } from "../../api/reportService";
 import { DEFAULT_PERMISSIONS } from "../../../../backend/src/modules/Permissions/ListPermissions";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 type Tab = "polls" | "bans" | "reports";
 
 export default function DashboardPage() {
     const { user } = useAuth();
     const [activeTab, setActiveTab] = useState<Tab>("bans");
+    const navigate = useNavigate();
+
 
     //bans
     const [userId, setUserId] = useState<string>("");
@@ -103,6 +106,34 @@ export default function DashboardPage() {
         }
     };
 
+    const goToReportedContent = (reportedContentId: string, reportedContentType: string) => {
+        switch (reportedContentType) {
+            case "posts":
+                navigate(`/posts/${reportedContentId}`);
+                break;
+            case "flashposts":
+                navigate(`/flashposts/${reportedContentId}`);
+                break;
+            case "events":
+                navigate(`/events/${reportedContentId}`);
+                break;
+            case "gallery":
+                navigate(`/gallery/${reportedContentId}`);
+                break;
+            case "polls":
+                navigate(`/polls/${reportedContentId}`);
+                break;
+            case "challenges":
+                navigate(`/challenges/${reportedContentId}`);
+                break;
+            case "report":
+                navigate("/homepage");
+                break;
+            default:
+                toast.error("No report.");
+        }
+    }
+
     return (
         <div className="p-6 w-[30%] mx-auto">
             <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
@@ -161,7 +192,8 @@ export default function DashboardPage() {
                             {reports.map((report) => (
                                 <div
                                     key={report.id}
-                                    className="border rounded-lg p-4 shadow-sm flex flex-col md:flex-row justify-between"
+                                    className="border rounded-lg p-4 shadow-sm flex flex-col md:flex-row justify-between cursor-pointer hover:bg-blue-200"
+                                    onClick={() => goToReportedContent(report.reportedContentId, report.reportedContentType)}
                                 >
                                     <div className="flex-1 space-y-1">
                                         <p>
@@ -201,9 +233,12 @@ export default function DashboardPage() {
                                         {report.status === "PENDING" ? (
                                             <>
                                                 <button
-                                                    onClick={() => handleStatusChanged(report.id, "VALIDATED")}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleStatusChanged(report.id, "VALIDATED");
+                                                    }}
                                                     disabled={updatingId === report.id}
-                                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                                 >
                                                     {updatingId === report.id
                                                         ? "Validation..."
@@ -211,9 +246,12 @@ export default function DashboardPage() {
                                                 </button>
 
                                                 <button
-                                                    onClick={() => handleStatusChanged(report.id, "REJECTED")}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        handleStatusChanged(report.id, "REJECTED");
+                                                    }}
                                                     disabled={updatingId === report.id}
-                                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300">
+                                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer">
                                                         {updatingId === report.id
                                                             ? "Rejection..."
                                                             : "Reject"}

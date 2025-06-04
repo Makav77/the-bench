@@ -11,6 +11,12 @@ export class Report {
     @Column({ type: "text" })
     reason: string;
 
+    @Column({ type: "text" })
+    reportedContentType: string;
+
+    @Column({ type: "text" })
+    reportedContentId: string;
+
     @Column({ type: "text", nullable: true })
     description: string | null;
 

@@ -114,6 +114,8 @@ function PostDetailPage() {
                 {showReportModal && (
                     <ReportModal
                         reportedUserId={post.author.id}
+                        reportedContentId={post.id}
+                        reportedContentType="posts"
                         onClose={() => setShowReportModal(false)}
                     />
                 )}

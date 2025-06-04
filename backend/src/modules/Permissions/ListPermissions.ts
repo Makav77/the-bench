@@ -10,3 +10,13 @@ export const DEFAULT_PERMISSIONS = [
     { code: "register_challenge", description: "Register for a challenge" },
     { code: "send_report", description: "Send a report" },
 ];
+
+/*
+post
+flash_post
+event
+galleryu
+poll
+challenge
+report
+*/

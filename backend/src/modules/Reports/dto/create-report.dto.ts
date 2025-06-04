@@ -10,6 +10,14 @@ export class CreateReportDTO {
     reason: string;
 
     @IsString()
+    @IsNotEmpty()
+    reportedContentId: string;
+
+    @IsString()
+    @IsNotEmpty()
+    reportedContentType: string;
+
+    @IsString()
     @IsOptional()
     description?: string;
 }

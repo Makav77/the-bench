@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 
 interface ReportModalProps {
     reportedUserId: string;
+    reportedContentId: string;
+    reportedContentType: string;
     onClose: () => void;
 }
 
@@ -15,7 +17,7 @@ const REASONS = [
     { value: "OTHER", label: "Other (please specify below)"},
 ];
 
-function ReportModal({ reportedUserId, onClose }: ReportModalProps) {
+function ReportModal({ reportedUserId, reportedContentId, reportedContentType, onClose }: ReportModalProps) {
     const [reason, setReason] = useState<string>(REASONS[0].value);
     const [description, setDescription] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -27,6 +29,8 @@ function ReportModal({ reportedUserId, onClose }: ReportModalProps) {
             await createReport({
                 reportedUserId,
                 reason,
+                reportedContentId,
+                reportedContentType,
                 description: description.trim() === "" ? null : description.trim(),
             });
             toast.success("Report send.");

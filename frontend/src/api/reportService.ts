@@ -4,6 +4,8 @@ export interface ReportDTO {
     id: string;
     reporter: { id: string; firstname: string; lastname: string; };
     reportedUser: { id: string; firstname: string; lastname: string; };
+    reportedContentType: string;
+    reportedContentId: string;
     createdAt: string;
     reason: string;
     description: string | null;
@@ -13,6 +15,8 @@ export interface ReportDTO {
 export interface CreateReportPayload {
     reportedUserId: string;
     reason: string;
+    reportedContentId: string;
+    reportedContentType: string;
     description?: string | null;
 }
 
