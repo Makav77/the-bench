@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import { restrictUser, RestrictResponse } from "../../api/permissionsService";
+import { restrictUser } from "../../api/permissionsService";
 import { DEFAULT_PERMISSIONS } from "../../../../backend/src/modules/Permissions/ListPermissions";
 import { toast } from "react-toastify";
 
@@ -24,7 +24,7 @@ function DashboardRestrictions() {
 
         setIsSubmitting(true);
         try {
-            const response: RestrictResponse = await restrictUser(
+            await restrictUser(
                 selectedPermission,
                 reason,
                 userId,
@@ -50,7 +50,7 @@ function DashboardRestrictions() {
     return (
         <div>
             <h2 className="text-2xl font-semibold mb-4">
-                Ban user
+                Add a restriction to a user
             </h2>
 
             <form

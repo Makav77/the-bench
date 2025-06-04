@@ -44,8 +44,8 @@ function ReportModal({ reportedUserId, reportedContentId, reportedContentType, o
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white rounded-2xl p-6 w-[90%] mawxx-w-md">
+        <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-30">
+            <div className="w-[50%] bg-white rounded-2xl p-6 max-w-md">
                 <h2 className="text-2xl font-semibold mb-4">Report a user</h2>
                 <form onSubmit={handleSubmit}>
 
@@ -93,7 +93,7 @@ function ReportModal({ reportedUserId, reportedContentId, reportedContentType, o
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-500"
+                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-500 cursor-pointer"
                             disabled={loading}
                         >
                             Cancel
@@ -101,7 +101,7 @@ function ReportModal({ reportedUserId, reportedContentId, reportedContentType, o
 
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled;bg-red-300"
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled;bg-red-300 cursor-pointer"
                             disabled={loading}
                         >
                             {loading ? "Sending..." : "Send" }

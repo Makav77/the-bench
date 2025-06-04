@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect } from "react";
 import { getReports, updateReport, ReportDTO } from "../../api/reportService";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
@@ -116,28 +116,30 @@ function DashboardReports() {
     });
 
     return (
-        <div>
+        <div className="bg-white p-6 rounded-2xl">
             <h2 className="text-2xl font-semibold mb-4">
                 Reports
             </h2>
 
+            <div className="border-t-2 h-1 mb-5"></div>
+
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold">Reported user : </span>
+                <span className="font-semibold w-[25%] text-end">Reported user : </span>
                 <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Firstname or lastname of user..."
-                    className="border rounded px-2 py-1 w-full max-w-xs"
+                    className="border rounded px-2 py-1 w-full max-w-xs h-8"
                 />
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold">Status :</span>
+                <span className="font-semibold w-[25%] text-end">Status :</span>
                 <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value as "ALL" | "PENDING" | "VALIDATED" | "REJECTED")}
-                    className="border rounded px-2 py-1"
+                    className="border rounded px-2 py-1 h-8"
                 >
                     <option value="ALL">All</option>
                     <option value="PENDING">Pending</option>
@@ -147,11 +149,11 @@ function DashboardReports() {
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold">Content :</span>
+                <span className="font-semibold w-[25%] text-end">Content :</span>
                 <select
                     value={filterContentType}
                     onChange={(e) => setFilterContentType(e.target.value as "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLLS" | "CHALLENGES")}
-                    className="border rounded px-2 py-1"
+                    className="border rounded px-2 py-1 h-8"
                 >
                     <option value="ALL">All</option>
                     <option value="POST">Post</option>
@@ -164,11 +166,11 @@ function DashboardReports() {
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold">Reason :</span>
+                <span className="font-semibold w-[25%] text-end">Reason :</span>
                 <select
                     value={filterReason}
                     onChange={(e) => setFilterReason(e.target.value as "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INAPPROPRIATE_CONTENT" | "OTHER")}
-                    className="border rounded px-2 py-1"
+                    className="border rounded px-2 py-1 h-8"
                 >
                     <option value="ALL">All</option>
                     <option value="OFFENSIVE_LANGUAGE">Offensive language</option>
@@ -178,6 +180,8 @@ function DashboardReports() {
                     <option value="OTHER">Other</option>
                 </select>
             </div>
+
+            <div className="border-t-2 h-1 mb-5"></div>
 
             {loadingReports ? (
                 <p className="text-center">Report loading...</p>
