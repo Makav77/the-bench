@@ -26,6 +26,8 @@ import { ChallengesModule } from '../Challenges/challenges.module';
 import { ChallengesController } from '../Challenges/challenges.controller';
 import { PermissionsModule } from '../Permissions/permissions.module';
 import { PermissionsController } from '../Permissions/permissions.controller';
+import { ReportsModule } from '../Reports/reports.module';
+import { ReportsController } from '../Reports/reports.controller';
 
 @Module({
     imports: [
@@ -48,6 +50,7 @@ import { PermissionsController } from '../Permissions/permissions.controller';
         PlacesModule,
         ChallengesModule,
         PermissionsModule,
+        ReportsModule,
     ],
     controllers: [
         ChallengesController,
@@ -60,6 +63,7 @@ import { PermissionsController } from '../Permissions/permissions.controller';
         AuthController,
         AppController,
         PermissionsController,
+        ReportsController,
     ],
     providers: [AppService],
 })

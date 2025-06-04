@@ -41,7 +41,7 @@ import CreatePollPage from "./components/Community/Polls/CreatePollPage";
 import ArtisansListPage from "./components/Community/Artisans/ArtisansListPage";
 import ArtisansByTypePage from "./components/Community/Artisans/ArtisansByTypePage";
 
-import CalendarPage from "./components/Calendar/CalendarPage";
+import CalendarPage from "./components/Community/Calendar/CalendarPage";
 
 import EditChallengePage from "./components/Community/Challenges/EditChallengePage";
 import SubmitCompletionPage from "./components/Community/Challenges/SubmitCompletionPage";

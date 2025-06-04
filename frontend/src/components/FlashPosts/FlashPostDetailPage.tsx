@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import CountdownTimer from "./CountdownTimer";
+import ReportModal from "../Utils/ReportModal";
 
 function FlashPostDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -12,6 +13,7 @@ function FlashPostDetailPage() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const { user } = useAuth();
+    const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
     useEffect(() => {
         const load = async () => {
@@ -64,44 +66,65 @@ function FlashPostDetailPage() {
     };
 
     return (
-        <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
-            <button
-                type="button"
-                onClick={() => navigate("/bulletinsboard")}
-                className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
-            >
-                ← Back
-            </button>
+        <div>
+            <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
+                <button
+                    type="button"
+                    onClick={() => navigate("/bulletinsboard")}
+                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
+                >
+                    ← Back
+                </button>
 
-            <h1 className="text-2xl font-bold">{flashPost.title}</h1>
-            <p className="text-sm text-gray-600">
-            Published on {new Date(flashPost.createdAt).toLocaleString()} (update on{' '}
-                {new Date(flashPost.updatedAt).toLocaleString()}) by{' '}
-                {flashPost.author.firstname} {flashPost.author.lastname}
-            </p>
+                <h1 className="text-2xl font-bold">{flashPost.title}</h1>
+                <p className="text-sm text-gray-600">
+                Published on {new Date(flashPost.createdAt).toLocaleString()} (update on{' '}
+                    {new Date(flashPost.updatedAt).toLocaleString()}) by{' '}
+                    {flashPost.author.firstname} {flashPost.author.lastname}
+                </p>
 
-            <CountdownTimer createdAt={flashPost.createdAt} />
+                <CountdownTimer createdAt={flashPost.createdAt} />
 
-            <p className="whitespace-pre-wrap">{flashPost.description}</p>
+                <p className="whitespace-pre-wrap">{flashPost.description}</p>
 
-            {(isOwner || isAdminorModerator) && (
-                <div className="mt-4 flex gap-2 justify-center">
-                    <button
-                        type="button"
-                        onClick={() => navigate(`/flashposts/${id}/edit`)}
-                        className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
-                    >
-                        Edit post
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleDelete}
-                        className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
-                    >
-                        Delete post
-                    </button>
-                </div>
-            )}
+                {(isOwner || isAdminorModerator) && (
+                    <div className="mt-4 flex gap-2 justify-center">
+                        <button
+                            type="button"
+                            onClick={() => navigate(`/flashposts/${id}/edit`)}
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                        >
+                            Edit post
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                        >
+                            Delete post
+                        </button>
+                    </div>
+                )}
+            </div>
+
+
+            <div className="w-[20%] mx-auto flex justify-end">
+                <button
+                    onClick={() => setShowReportModal(true)}
+                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                >
+                    Report flashpost
+                </button>
+
+                {showReportModal && (
+                    <ReportModal
+                        reportedUserId={flashPost.author.id}
+                        reportedContentId={flashPost.id}
+                        reportedContentType="FLASHPOST"
+                        onClose={() => setShowReportModal(false)}
+                    />
+                )}
+            </div>
         </div>
     );
 }

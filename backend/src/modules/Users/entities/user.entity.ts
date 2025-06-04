@@ -12,6 +12,7 @@ import { ChallengeRegistration } from 'src/modules/Challenges/entities/challenge
 import { ChallengeCompletion } from 'src/modules/Challenges/entities/challenge-completion.entity';
 import { Permission } from 'src/modules/Permissions/entities/permission.entity';
 import { UserRestriction } from 'src/modules/Permissions/entities/user-restriction.entity';
+import { Report } from 'src/modules/Reports/entities/report.entity';
 
 export enum Role {
     USER = "user",
@@ -101,4 +102,10 @@ export class User {
 
     @OneToMany(() => UserRestriction, (ur) => ur.user)
     restrictions: UserRestriction[];
+
+    @OneToMany(() => Report, (report) => report.reporter)
+    reportsMade: Report[];
+
+    @OneToMany(() => Report, (report) => report.reportedUser)
+    reportsReceived: Report[];
 }

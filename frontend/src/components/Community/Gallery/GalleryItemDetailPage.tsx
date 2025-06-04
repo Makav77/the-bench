@@ -3,6 +3,7 @@ import { getGalleryItem, GalleryItemSummary, deleteGalleryItem, toggleLikeGaller
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
+import ReportModal from "../../Utils/ReportModal";
 
 export default function GalleryItemDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -11,6 +12,7 @@ export default function GalleryItemDetailPage() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const { user } = useAuth();
+    const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
     useEffect(() => {
         async function load() {
@@ -76,8 +78,8 @@ export default function GalleryItemDetailPage() {
             <div className="bg-white p-6 rounded shadow max-w-lg w-full">
                 <button 
                     onClick={() => navigate("/gallery")}
-                    className="mb-4 text-blue-600 cursor-pointer">
-                        ← Prev
+                    className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline">
+                        X Close
                 </button>
                 <img 
                     src={galleryItem.url} 
@@ -91,19 +93,43 @@ export default function GalleryItemDetailPage() {
                     Published by {galleryItem.author.firstname} {galleryItem.author.lastname} on {new Date(galleryItem.createdAt).toLocaleString()}
                 </p>
 
-                <div className="flex items-center space-x-4">
-                    <button 
-                        onClick={handleToggleLike} 
-                        className="flex items-center"
-                    >
-                        {liked ? '💖' : '🤍'} {galleryItem.likedBy.length}
-                    </button>
-    
-                    {(isOwner || user?.role==='admin') && (
+                <div className="flex justify-between items-center space-x-4">
+                    <div className="flex space-x-4">
                         <button 
-                            onClick={handleDelete} 
-                            className="text-red-600">Delete</button>
-                    )}
+                            onClick={handleToggleLike} 
+                            className="flex items-center"
+                        >
+                            {liked ? '💖' : '🤍'} {galleryItem.likedBy.length}
+                        </button>
+
+
+                        <div>
+                            {(isOwner || user?.role==='admin') && (
+                                <button 
+                                    onClick={handleDelete} 
+                                    className="text-red-600 cursor-pointer hover:underline px-2 py-1">Delete</button>
+                            )}
+                        </div>
+                    </div>
+
+                    <div>
+                        <button
+                            onClick={() => setShowReportModal(true)}
+                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                        >
+                            Report post
+                        </button>
+
+                        {showReportModal && (
+                            <ReportModal
+                                reportedUserId={galleryItem.author.id}
+                                reportedContentId={galleryItem.id}
+                                reportedContentType="GALLERY"
+                                onClose={() => setShowReportModal(false)}
+                            />
+                        )}
+                    </div>
+
                 </div>
             </div>
         </div>
