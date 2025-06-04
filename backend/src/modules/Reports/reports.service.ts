@@ -15,17 +15,17 @@ export class ReportsService{
         private readonly userRepo: Repository<User>,
     ) {}
 
-    async findAllReports(): Promise<Report[]> {
-        const reports = this.reportRepo.find({
-            relations: ["reporter", "reportedUser"],
+    async findAllReports(page = 1, limit = 5): Promise<{ data: Report[]; total: number; page: number; lastPage: number; }> {
+        const offset = (page - 1) * limit;
+        const [data, total] = await this.reportRepo.findAndCount({
             order: { createdAt: "DESC" },
+            skip: offset,
+            take: limit,
+            relations: ["reporter", "reportedUser"],
         });
 
-        if (!reports) {
-            throw new NotFoundException("No reports found.");
-        }
-
-        return reports;
+        const lastPage = Math.ceil(total / limit);
+        return { data, total, page, lastPage };
     }
 
     async findOneReport(reportId: string): Promise<Report> {

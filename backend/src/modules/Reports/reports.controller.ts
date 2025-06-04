@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Param, Body, Req, UseGuards, Delete } from "@nestjs/common";
+import { Controller, Post, Get, Patch, Param, Body, Req, UseGuards, Delete, Query, DefaultValuePipe, ParseIntPipe } from "@nestjs/common";
 import { ReportsService } from "./reports.service";
 import { CreateReportDTO } from "./dto/create-report.dto";
 import { UpdateReportStatusDTO } from "./dto/update-status.dto";
@@ -14,8 +14,11 @@ export class ReportsController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async findAllReports(): Promise<Report[]> {
-        return this.reportsService.findAllReports();
+    async findAllReports(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number
+    ): Promise<{ data: Report[]; total: number; page: number; lastPage: number; }> {
+        return this.reportsService.findAllReports(page, limit);
     }
 
     @UseGuards(JwtAuthGuard)

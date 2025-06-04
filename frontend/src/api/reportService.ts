@@ -24,8 +24,8 @@ export interface UpdateReportStatusPayload {
     status: "PENDING" | "VALIDATED" | "REJECTED";
 }
 
-export const getReports = async(): Promise<ReportDTO[]> => {
-    const response = await apiClient.get("/reports");
+export const getReports = async(page = 1, limit = 10): Promise<{ data: ReportDTO[]; total: number; page: number; lastPage: number; }> => {
+    const response = await apiClient.get("/reports", { params: { page, limit } });
     return response.data;
 }
 

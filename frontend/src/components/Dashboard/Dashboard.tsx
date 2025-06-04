@@ -28,6 +28,8 @@ export default function DashboardPage() {
 
     //reports
     const [reports, setReports] = useState<ReportDTO[]>([]);
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
     const [loadingReports, setLoadingReports] = useState<boolean>(false);
     const [updatingId, setUpdatingId] = useState<string | null>(null);
 
@@ -35,8 +37,9 @@ export default function DashboardPage() {
         setLoadingReports(true);
         (async () => {
             try {
-                const data = await getReports();
+                const { data, lastPage } = await getReports(page, 10);
                 setReports(data);
+                setLastPage(lastPage);
             } catch(error) {
                 console.error("getReports error : " + error);
                 toast.error("Unable to load reports.");
@@ -44,7 +47,7 @@ export default function DashboardPage() {
                 setLoadingReports(false);
             }
         })();
-    }, [activeTab]);
+    }, [activeTab, page]);
 
     if (!user || (user.role !== "admin" && user.role !== "moderator")) {
         return (
@@ -95,8 +98,8 @@ export default function DashboardPage() {
             await updateReport(reportId, { status: newStatus });
             toast.success(`Report ${newStatus === "VALIDATED" ? "Validate" : "Rejected" }`);
             setLoadingReports(true);
-            const fresh = await getReports();
-            setReports(fresh);
+            const { data } = await getReports(page, 10);
+            setReports(data);
         } catch (error) {
             console.error("Update report error : " + error);
             toast.error("Unable to update report.");
@@ -265,6 +268,30 @@ export default function DashboardPage() {
                                     </div>
                                 </div>
                             ))}
+
+                            <div className="flex justify-center items-center mt-6 gap-4">
+                                <button
+                                    type="button"
+                                    disabled={page <= 1}
+                                    onClick={() => setPage((p) => p - 1)}
+                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                                >
+                                    ← Prev
+                                </button>
+
+                                <span>
+                                    Page {page} / {lastPage}
+                                </span>
+
+                                <button
+                                    type="button"
+                                    disabled={page >= lastPage}
+                                    onClick={() => setPage((p) => p + 1)}
+                                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                                >
+                                    Next →
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
