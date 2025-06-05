@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { MoreThan, Not, Repository } from "typeorm";
+import { IsNull, MoreThan, Not, Repository } from "typeorm";
 import { Challenge } from "./entities/challenge.entity";
 import { ChallengeRegistration } from "./entities/challenge-registration.entity";
 import { ChallengeCompletion } from "./entities/challenge-completion.entity";
@@ -54,6 +54,20 @@ export class ChallengesService {
             skip: offset,
             take: limit,
             relations: ["author", "registrations", "completions"],
+        });
+
+        const lastPage = Math.ceil(total / limit);
+        return { data, total, page, lastPage };
+    }
+
+    async findPendingCompletions(page = 1, limit = 5): Promise<{ data: ChallengeCompletion[]; total: number; page: number; lastPage: number }> {
+        const offset = (page - 1) * limit;
+        const [data, total] = await this.completionRepo.findAndCount({
+            where: { validated: false, rejectedReason: IsNull() },
+            order: { createdAt: "DESC" },
+            skip: offset,
+            take: limit,
+            relations: ["user", "challenge"],
         });
 
         const lastPage = Math.ceil(total / limit);
@@ -191,7 +205,15 @@ export class ChallengesService {
             throw new NotFoundException("Completion not found.");
         }
 
-        completion.validated = validateCompletionDTO.validated;
+        if (validateCompletionDTO.validated) {
+            completion.validated = true;
+            completion.rejectedReason = null;
+        } else {
+            completion.validated = false;
+            completion.rejectedReason = validateCompletionDTO.rejectedReason;
+        }
+
+        completion.reviewedAt = new Date();
         return this.completionRepo.save(completion);
     }
 
@@ -217,7 +239,7 @@ export class ChallengesService {
             challenge.rejectedReason = validateChallengeDTO.rejectionReason!;
         }
 
-        challenge.reviewAt = new Date();
+        challenge.reviewedAt = new Date();
         return this.challengeRepo.save(challenge);
     }
 }

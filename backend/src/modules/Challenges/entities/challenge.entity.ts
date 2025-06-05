@@ -22,7 +22,7 @@ export class Challenge {
     rejectedReason: string | null;
 
     @Column({ type: "timestamp", nullable: true })
-    reviewAt: Date | null;
+    reviewedAt: Date | null;
 
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
