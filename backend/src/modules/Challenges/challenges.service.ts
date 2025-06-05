@@ -7,6 +7,7 @@ import { ChallengeCompletion } from "./entities/challenge-completion.entity";
 import { CreateChallengeDTO } from "./dto/create-challenge.dto";
 import { SubmitCompletionDTO } from "./dto/submit-completion.dto";
 import { ValidateCompletionDTO } from "./dto/validate-completion.dto";
+import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
 import { User, Role } from "../Users/entities/user.entity";
 
 @Injectable()
@@ -43,6 +44,20 @@ export class ChallengesService {
             throw new NotFoundException("Challenge not found.");
         }
         return challenge;
+    }
+
+    async findPendingChallenges(page = 1, limit = 5): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
+        const offset = (page - 1) * limit;
+        const [data, total] = await this.challengeRepo.findAndCount({
+            where: { status: "PENDING" },
+            order: { createdAt: "DESC" },
+            skip: offset,
+            take: limit,
+            relations: ["author", "registrations", "completions"],
+        });
+
+        const lastPage = Math.ceil(total / limit);
+        return { data, total, page, lastPage };
     }
 
     async createChallenge(createChallengeDTO: CreateChallengeDTO, author: User): Promise<Challenge> {
