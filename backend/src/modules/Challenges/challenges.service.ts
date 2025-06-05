@@ -194,4 +194,30 @@ export class ChallengesService {
         completion.validated = validateCompletionDTO.validated;
         return this.completionRepo.save(completion);
     }
+
+    async validateChallenge(id: string, validateChallengeDTO: ValidateChallengeDTO, user: User): Promise<Challenge> {
+        const challenge = await this.challengeRepo.findOne({
+            where: { id },
+            relations: ["author"],
+        });
+
+        if (!challenge) {
+            throw new NotFoundException("Challenge not found.");
+        }
+
+        if (challenge.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
+            throw new ForbiddenException("You are not allow to validate this challenge.");
+        }
+
+        if (validateChallengeDTO.validated) {
+            challenge.status = "APPROVED";
+            challenge.rejectedReason = null;
+        } else {
+            challenge.status = "REJECTED";
+            challenge.rejectedReason = validateChallengeDTO.rejectionReason!;
+        }
+
+        challenge.reviewAt = new Date();
+        return this.challengeRepo.save(challenge);
+    }
 }
