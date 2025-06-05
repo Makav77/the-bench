@@ -15,14 +15,14 @@ export class ChallengeSubmission {
     @Column({ type: "text", default: "PENDING" })
     status: SubmissionStatus;
 
-    @Column({ type: "text" })
-    rejectionReason: string;
+    @Column({ type: "text", nullable: true })
+    rejectionReason: string | null;
 
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
-    @Column({ type: "timestamp" })
-    reviewedAt: Date;
+    @Column({ type: "timestamp", nullable: true })
+    reviewedAt: Date | null;
 
     @ManyToOne(() => Challenge, (challenge) => challenge.id, { onDelete: "CASCADE" })
     challenge: Challenge;

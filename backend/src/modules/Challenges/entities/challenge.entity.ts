@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { User } from "../../../modules/Users/entities/user.entity";
 import { ChallengeRegistration } from "./challenge-registration.entity";
 import { ChallengeCompletion } from "./challenge-completion.entity";
+import { ChallengeSubmission } from "./challenge-submission.entity";
 
 @Entity({ name: "challenges" })
 export class Challenge {
@@ -17,11 +18,11 @@ export class Challenge {
     @Column({ type: "text", default: "PENDING" })
     status: "PENDING" | "APPROVED" | "REJECTED";
 
-    @Column({ type: "text" })
-    rejectedReason: string;
+    @Column({ type: "text", nullable: true })
+    rejectedReason: string | null;
 
-    @Column({ type: "timestamp" })
-    reviewAt: Date;
+    @Column({ type: "timestamp", nullable: true })
+    reviewAt: Date | null;
 
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
@@ -46,4 +47,7 @@ export class Challenge {
 
     @OneToMany(() => ChallengeCompletion, (completion) => completion.challenge, { cascade: true })
     completions: ChallengeCompletion[];
+
+    @OneToMany(() => ChallengeSubmission, (submission) => submission.challenge, { onDelete: "CASCADE" })
+    submissions: ChallengeSubmission[];
 }
