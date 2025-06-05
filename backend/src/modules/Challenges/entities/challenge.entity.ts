@@ -14,6 +14,15 @@ export class Challenge {
     @Column({ type: "text" })
     description: string;
 
+    @Column({ type: "text", default: "PENDING" })
+    status: "PENDING" | "APPROVED" | "REJECTED";
+
+    @Column({ type: "text" })
+    rejectedReason: string;
+
+    @Column({ type: "timestamp" })
+    reviewAt: Date;
+
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
