@@ -19,12 +19,29 @@ export class ChallengesService {
         private readonly registrationRepo: Repository<ChallengeRegistration>,
         @InjectRepository(ChallengeCompletion)
         private readonly completionRepo: Repository<ChallengeCompletion>,
-    ) { }
+    ) {}
+
+    async findPendingChallenges(page = 1, limit = 5): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
+        const offset = (page - 1) * limit;
+        const [data, total] = await this.challengeRepo.findAndCount({
+            where: { status: "PENDING" },
+            order: { createdAt: "DESC" },
+            skip: offset,
+            take: limit,
+            relations: ["author", "registrations", "completions"],
+        });
+
+        const lastPage = Math.ceil(total / limit);
+        return { data, total, page, lastPage };
+    }
 
     async findAllChallenges(page = 1, limit = 10): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
         const [data, total] = await this.challengeRepo.findAndCount({
-            where: { endDate: MoreThan(new Date()) },
+            where: { 
+                status: "APPROVED",
+                endDate: MoreThan(new Date())
+            },
             order: { endDate: "DESC" },
             skip: offset,
             take: limit,
@@ -44,20 +61,6 @@ export class ChallengesService {
             throw new NotFoundException("Challenge not found.");
         }
         return challenge;
-    }
-
-    async findPendingChallenges(page = 1, limit = 5): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
-        const offset = (page - 1) * limit;
-        const [data, total] = await this.challengeRepo.findAndCount({
-            where: { status: "PENDING" },
-            order: { createdAt: "DESC" },
-            skip: offset,
-            take: limit,
-            relations: ["author", "registrations", "completions"],
-        });
-
-        const lastPage = Math.ceil(total / limit);
-        return { data, total, page, lastPage };
     }
 
     async findPendingCompletions(page = 1, limit = 5): Promise<{ data: ChallengeCompletion[]; total: number; page: number; lastPage: number }> {
@@ -161,7 +164,7 @@ export class ChallengesService {
     async submitCompletion(id: string, submitCompletionDTO: SubmitCompletionDTO, user: User): Promise<ChallengeCompletion> {
         const challenge = await this.challengeRepo.findOne({
             where: { id },
-            relations: ["author"],
+            relations: ["author", "registrations", "registrations.user"],
         });
 
         if (!challenge) {

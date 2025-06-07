@@ -17,6 +17,15 @@ export class ChallengesController {
     constructor(private readonly challengesService: ChallengesService) {}
 
     @UseGuards(JwtAuthGuard)
+    @Get("pending")
+    async findPendingChallenges(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+    ): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
+        return this.challengesService.findPendingChallenges(page, limit);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAllChallenges(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -29,15 +38,6 @@ export class ChallengesController {
     @Get(":id")
     async findOneChallenge(@Param("id") id: string): Promise<Challenge> {
         return this.challengesService.findOneChallenge(id);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get("pending")
-    async findPendingChallenges(
-        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
-    ): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
-        return this.challengesService.findPendingChallenges(page, limit);
     }
 
     @UseGuards(JwtAuthGuard)

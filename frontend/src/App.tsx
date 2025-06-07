@@ -44,7 +44,6 @@ import ArtisansByTypePage from "./components/Community/Artisans/ArtisansByTypePa
 import CalendarPage from "./components/Community/Calendar/CalendarPage";
 
 import EditChallengePage from "./components/Community/Challenges/EditChallengePage";
-import SubmitCompletionPage from "./components/Community/Challenges/SubmitCompletionPage";
 import ValidateCompletionPage from "./components/Community/Challenges/ValidateCompletion";
 
 import { ToastContainer } from "react-toastify";
@@ -97,7 +96,6 @@ export default function App() {
                             <Route path="challenges/create" element={<CreateChallengePage />} />
                             <Route path="challenges/:id" element={<ChallengeDetailPage />} />
                             <Route path="challenges/:id/edit" element={<EditChallengePage />} />
-                            <Route path="challenges/:id/complete" element={<SubmitCompletionPage />} />
                             <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
                             <Route path="dashboard" element={<DashboardPage />} />
                         </Route>

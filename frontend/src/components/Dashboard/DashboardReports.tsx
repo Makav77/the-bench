@@ -28,7 +28,7 @@ function DashboardReports() {
                 const { data, lastPage } = await getReports(page, 10);
                 setReports(data);
                 setLastPage(lastPage);
-            } catch(error) {
+            } catch (error) {
                 console.error("getReports error : " + error);
                 toast.error("Unable to load reports.");
             } finally {

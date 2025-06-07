@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import usePermission from "../../Utils/usePermission";
 import { format } from "date-fns";
 import ReportModal from "../../Utils/ReportModal";
+import SubmissionModal from "./SubmissionModal";
 
 
 function ChallengeDetailPage() {
@@ -18,6 +19,7 @@ function ChallengeDetailPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
+    const [showSubmissionModal, setShowSubmissionModal] = useState<boolean>(false);
 
     useEffect(() => {
         async function load() {
@@ -51,7 +53,9 @@ function ChallengeDetailPage() {
         return null;
     }
 
-    const isOwner = user && challenge && user.id === challenge.author.id;
+    const isAuthor = user && challenge && user.id === challenge.author.id;
+    const canSubmit = challenge.status === "APPROVED" && user && !isAuthor && challenge.registrations.some((r) => r.user.id === user.id);
+    const hasPendingCompletion = user && challenge.completions.some((c) => c.user.id === user.id && c.validated === false);
     const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isSubscribe = challenge.registrations.some((u) => u.user.id === user?.id);
 
@@ -153,7 +157,7 @@ function ChallengeDetailPage() {
                         </button>
                     )}
 
-                    {(isOwner || isAdminorModerator) &&
+                    {(isAuthor || isAdminorModerator) &&
                         <button
                             onClick={() => navigate(`/challenges/${id}/edit`)}
                             className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
@@ -162,7 +166,7 @@ function ChallengeDetailPage() {
                         </button>
                     }
 
-                    {(isOwner || isAdminorModerator) &&
+                    {(isAuthor || isAdminorModerator) &&
                         <button
                             onClick={handleDelete}
                             className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
@@ -170,6 +174,21 @@ function ChallengeDetailPage() {
                             Delete
                         </button>
                     }
+
+                    {hasPendingCompletion ? (
+                        <p className="mt-4 px-4 py-2 bg-yellow-200 text-yellow-800 rounded text-center">
+                            Waiting validation
+                        </p>
+                    ) : (
+                        canSubmit && (
+                            <button
+                                onClick={() => setShowSubmissionModal(true)}
+                                className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                            >
+                                Validate completion
+                            </button>
+                        )
+                    )}
                 </div>
             </div>
 
@@ -190,6 +209,23 @@ function ChallengeDetailPage() {
                     />
                 )}
             </div>
+
+            {showSubmissionModal && (
+                <SubmissionModal
+                    challengeId={challenge.id}
+                    onClose={() => setShowSubmissionModal(false)}
+                    onSubmitted={async () => {
+                        toast.success("Soumission envoyée, en attente d’approbation ! 😊");
+                        setShowSubmissionModal(false);
+                        try {
+                            const updated = await getChallenge(id!);
+                            setChallenge(updated);
+                        } catch (err) {
+                            console.error("Erreur rechargement challenge :", err);
+                        }
+                    }}
+                />
+            )}
         </div>
     );
 }

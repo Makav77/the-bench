@@ -7,6 +7,9 @@ export interface ChallengeSummary {
     startDate: string;
     endDate: string;
     successCriteria: string;
+    status: string;
+    rejectedReason?: string | null;
+    reviewedAt: string | null;
     author: { id: string; firstname: string; lastname: string; };
     registrations: { user: { id: string } }[];
     completions: { id: string; user: { id: string }; validated: boolean }[];

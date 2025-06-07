@@ -44,7 +44,7 @@ function ItemDetailsPage() {
         return null;
     }
 
-    const isOwner = user && item && user.id === item.author.id;
+    const isAuthor = user && item && user.id === item.author.id;
     const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
 
     const handleDelete = async () => {
@@ -121,7 +121,7 @@ function ItemDetailsPage() {
                     )}
                 </div>
 
-                {(isOwner || isAdminorModerator) && (
+                {(isAuthor || isAdminorModerator) && (
                     <div className="mt-4 flex gap-2 justify-center">
                         <button
                             type="button"
