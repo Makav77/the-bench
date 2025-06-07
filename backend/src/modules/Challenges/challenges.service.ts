@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { MoreThan, Not, Repository } from "typeorm";
+import { IsNull, MoreThan, Not, Repository } from "typeorm";
 import { Challenge } from "./entities/challenge.entity";
 import { ChallengeRegistration } from "./entities/challenge-registration.entity";
 import { ChallengeCompletion } from "./entities/challenge-completion.entity";
 import { CreateChallengeDTO } from "./dto/create-challenge.dto";
 import { SubmitCompletionDTO } from "./dto/submit-completion.dto";
 import { ValidateCompletionDTO } from "./dto/validate-completion.dto";
+import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
 import { User, Role } from "../Users/entities/user.entity";
 
 @Injectable()
@@ -18,12 +19,29 @@ export class ChallengesService {
         private readonly registrationRepo: Repository<ChallengeRegistration>,
         @InjectRepository(ChallengeCompletion)
         private readonly completionRepo: Repository<ChallengeCompletion>,
-    ) { }
+    ) {}
+
+    async findPendingChallenges(page = 1, limit = 5): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
+        const offset = (page - 1) * limit;
+        const [data, total] = await this.challengeRepo.findAndCount({
+            where: { status: "PENDING" },
+            order: { createdAt: "DESC" },
+            skip: offset,
+            take: limit,
+            relations: ["author", "registrations", "completions"],
+        });
+
+        const lastPage = Math.ceil(total / limit);
+        return { data, total, page, lastPage };
+    }
 
     async findAllChallenges(page = 1, limit = 10): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
         const [data, total] = await this.challengeRepo.findAndCount({
-            where: { endDate: MoreThan(new Date()) },
+            where: { 
+                status: "APPROVED",
+                endDate: MoreThan(new Date())
+            },
             order: { endDate: "DESC" },
             skip: offset,
             take: limit,
@@ -43,6 +61,20 @@ export class ChallengesService {
             throw new NotFoundException("Challenge not found.");
         }
         return challenge;
+    }
+
+    async findPendingCompletions(page = 1, limit = 5): Promise<{ data: ChallengeCompletion[]; total: number; page: number; lastPage: number }> {
+        const offset = (page - 1) * limit;
+        const [data, total] = await this.completionRepo.findAndCount({
+            where: { validated: false, rejectedReason: IsNull() },
+            order: { createdAt: "DESC" },
+            skip: offset,
+            take: limit,
+            relations: ["user", "challenge"],
+        });
+
+        const lastPage = Math.ceil(total / limit);
+        return { data, total, page, lastPage };
     }
 
     async createChallenge(createChallengeDTO: CreateChallengeDTO, author: User): Promise<Challenge> {
@@ -132,7 +164,7 @@ export class ChallengesService {
     async submitCompletion(id: string, submitCompletionDTO: SubmitCompletionDTO, user: User): Promise<ChallengeCompletion> {
         const challenge = await this.challengeRepo.findOne({
             where: { id },
-            relations: ["author"],
+            relations: ["author", "registrations", "registrations.user"],
         });
 
         if (!challenge) {
@@ -176,7 +208,41 @@ export class ChallengesService {
             throw new NotFoundException("Completion not found.");
         }
 
-        completion.validated = validateCompletionDTO.validated;
+        if (validateCompletionDTO.validated) {
+            completion.validated = true;
+            completion.rejectedReason = null;
+        } else {
+            completion.validated = false;
+            completion.rejectedReason = validateCompletionDTO.rejectedReason;
+        }
+
+        completion.reviewedAt = new Date();
         return this.completionRepo.save(completion);
+    }
+
+    async validateChallenge(id: string, validateChallengeDTO: ValidateChallengeDTO, user: User): Promise<Challenge> {
+        const challenge = await this.challengeRepo.findOne({
+            where: { id },
+            relations: ["author"],
+        });
+
+        if (!challenge) {
+            throw new NotFoundException("Challenge not found.");
+        }
+
+        if (challenge.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
+            throw new ForbiddenException("You are not allow to validate this challenge.");
+        }
+
+        if (validateChallengeDTO.validated) {
+            challenge.status = "APPROVED";
+            challenge.rejectedReason = null;
+        } else {
+            challenge.status = "REJECTED";
+            challenge.rejectedReason = validateChallengeDTO.rejectionReason!;
+        }
+
+        challenge.reviewedAt = new Date();
+        return this.challengeRepo.save(challenge);
     }
 }

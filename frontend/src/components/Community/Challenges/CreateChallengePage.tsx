@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import usePermission from "../../Utils/usePermission";
 import { format } from "date-fns";
 
-
 function CreateChallengePage() {
     const navigate = useNavigate();
 
@@ -36,9 +35,14 @@ function CreateChallengePage() {
     }
 
     const handleSubmit = async (data: ChallengeFormData) => {
-        const challenge = await createChallenge(data);
-        toast.success("Défi créé !");
-        navigate(`/challenges/${challenge.id}`);
+        try {
+            await createChallenge(data);
+            toast.success("Challenge sent, awaiting validation.");
+            navigate("/challenges");
+        } catch (error) {
+            console.error("Unable to send challenge : " + error);
+            toast.error("Unable to send challenge.");
+        }
     };
 
     return (

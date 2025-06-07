@@ -16,6 +16,12 @@ export class ChallengeCompletion {
     @Column({ default: false })
     validated: boolean;
 
+    @Column({ type: "text", nullable: true })
+    rejectedReason?: string | null;
+
+    @Column({ type: "timestamp", nullable: true })
+    reviewedAt: Date | null;
+
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 

@@ -10,10 +10,20 @@ import { ChallengeCompletion } from "./entities/challenge-completion.entity";
 import { ValidateCompletionDTO } from "./dto/validate-completion.dto";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
+import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
 
 @Controller("challenges")
 export class ChallengesController {
     constructor(private readonly challengesService: ChallengesService) {}
+
+    @UseGuards(JwtAuthGuard)
+    @Get("pending")
+    async findPendingChallenges(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+    ): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
+        return this.challengesService.findPendingChallenges(page, limit);
+    }
 
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -28,6 +38,15 @@ export class ChallengesController {
     @Get(":id")
     async findOneChallenge(@Param("id") id: string): Promise<Challenge> {
         return this.challengesService.findOneChallenge(id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("completions/pending")
+    async findPendingCompletions(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+    ): Promise<{ data: ChallengeCompletion[]; total: number; page: number; lastPage: number }> {
+        return this.challengesService.findPendingCompletions();
     }
 
     @RequiredPermission("create_challenge")
@@ -50,6 +69,17 @@ export class ChallengesController {
     ): Promise<Challenge> {
         const user = req.user as User;
         return this.challengesService.updateChallenge(id, createChallengeDTO, user);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch(":id/validate")
+    async validateChallenge(
+        @Param("id") id: string,
+        @Body() validateChallengeDTO: ValidateChallengeDTO,
+        @Req() req: Request,
+    ): Promise<Challenge> {
+        const user = req.user as User;
+        return this.challengesService.validateChallenge(id, validateChallengeDTO, user);
     }
 
     @UseGuards(JwtAuthGuard)

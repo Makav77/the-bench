@@ -46,7 +46,7 @@ export default function GalleryItemDetailPage() {
         return <p>Loading...</p>;
     }
 
-    const isOwner = user?.id === galleryItem.author.id;
+    const isAuthor = user?.id === galleryItem.author.id;
     const liked = galleryItem.likedBy.some(u => u.id === user?.id);
 
     const handleToggleLike = async () => {
@@ -104,7 +104,7 @@ export default function GalleryItemDetailPage() {
 
 
                         <div>
-                            {(isOwner || user?.role==='admin') && (
+                            {(isAuthor || user?.role==='admin') && (
                                 <button 
                                     onClick={handleDelete} 
                                     className="text-red-600 cursor-pointer hover:underline px-2 py-1">Delete</button>

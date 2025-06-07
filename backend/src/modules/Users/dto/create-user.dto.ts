@@ -24,7 +24,6 @@ export class CreateUserDTO {
     @IsDateString()
     dateOfBirth: Date;
 
-    @IsNotEmpty()
     @IsString()
     profilePicture?: string;
 

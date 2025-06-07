@@ -52,7 +52,7 @@ function PollDetailPage() {
         return null;
     }
 
-    const isOwner = user && poll && user.id === poll.author.id;
+    const isAuthor = user && poll && user.id === poll.author.id;
     const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isClosed = poll.manualClosed || (!!poll.closesAt && new Date(poll.closesAt) < new Date());
     const hasVoted = poll.votes.some(v => v.voter.id === user?.id);
@@ -205,7 +205,7 @@ function PollDetailPage() {
                         )
                     ) : null}
 
-                    {(isOwner || isAdminorModerator) && !isClosed && (
+                    {(isAuthor || isAdminorModerator) && !isClosed && (
                         <button
                             onClick={handleClose}
                             className="w-[25%] bg-yellow-600 text-white px-6 py-1 rounded cursor-pointer"
@@ -214,7 +214,7 @@ function PollDetailPage() {
                         </button>
                     )}
 
-                    {(isOwner || isAdminorModerator) && (
+                    {(isAuthor || isAdminorModerator) && (
                         <button
                             onClick={handleDelete}
                             className="w-[25%] bg-red-600 text-white px-6 py-1 rounded cursor-pointer"
