@@ -28,6 +28,7 @@ import { PermissionsModule } from '../Permissions/permissions.module';
 import { PermissionsController } from '../Permissions/permissions.controller';
 import { ReportsModule } from '../Reports/reports.module';
 import { ReportsController } from '../Reports/reports.controller';
+import { ChatModule } from '../chat/chat.module';
 
 @Module({
     imports: [
@@ -51,6 +52,7 @@ import { ReportsController } from '../Reports/reports.controller';
         ChallengesModule,
         PermissionsModule,
         ReportsModule,
+        ChatModule,
     ],
     controllers: [
         ChallengesController,
