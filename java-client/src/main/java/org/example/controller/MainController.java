@@ -6,6 +6,12 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import org.example.plugin.Plugin;
+import org.example.plugin.PluginLoader;
+import org.example.theme.ThemeManager;
+
+import java.io.File;
+import java.util.List;
 
 public class MainController {
     @FXML private StackPane contentStack;
@@ -16,9 +22,16 @@ public class MainController {
     @FXML private Button pluginsButton;
     @FXML private Button themesButton;
     @FXML private BorderPane contentPane;
+    @FXML private BorderPane mainPane;
 
     @FXML
     private void initialize() {
+        ThemeManager.applyThemeToRoot(mainPane);
+        journalButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                ThemeManager.applyTheme(newScene);
+            }
+        });
         loadView("/ui/journal.fxml");
         journalButton.setOnAction(e -> loadView("/ui/journal.fxml"));
         pluginsButton.setOnAction(e -> loadView("/ui/plugins.fxml"));
@@ -34,6 +47,11 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Pane view = loader.load();
+            view.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    ThemeManager.applyTheme(newScene);
+                }
+            });
             /*contentPane.getChildren().setAll(view);*/
             Parent parent = contentPane.getParent();
             if (parent instanceof Pane paneParent) {
@@ -47,6 +65,23 @@ public class MainController {
             System.out.println("Vue chargée : " + fxmlPath);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    // Charger les plugins existants dans /plugins
+    public void loadPlugins() {
+        File pluginFolder = new File("plugins");
+        if (pluginFolder.exists()) {
+            File[] jars = pluginFolder.listFiles((dir, name) -> name.endsWith(".jar"));
+            if (jars != null) {
+                for (File jar : jars) {
+                    List<Plugin> plugins = PluginLoader.loadPlugins(jar);
+                    for (Plugin plugin : plugins) {
+                        plugin.start();
+                    }
+                }
+                System.out.println("Plugins charges");
+            }
         }
     }
 }

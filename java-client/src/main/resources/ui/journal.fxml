@@ -11,23 +11,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.JournalController" maxWidth="Infinity" maxHeight="Infinity">
+<BorderPane fx:id="journalPane" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.controller.JournalController" maxWidth="Infinity" maxHeight="Infinity">
     <top>
-        <HBox prefHeight="90.0" prefWidth="500.0" style="-fx-background-color: #333F4C;" BorderPane.alignment="CENTER">
+        <HBox prefHeight="90.0" prefWidth="500.0" styleClass="medium-background" BorderPane.alignment="CENTER">
             <children>
                 <ButtonBar buttonMinWidth="65.0" prefHeight="90.0" prefWidth="250.0" style="-fx-padding: 10%;">
                     <buttons>
-                        <Button mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Machin" textFill="#59747b">
-                            <effect>
-                                <Glow level="0.57" />
-                            </effect>
-                            <font>
-                                <Font name="Corbel" size="14.0" />
-                            </font>
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor></Button>
-                        <Button fx:id="cinemaButton" layoutX="30.0" layoutY="43.0" mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="Cinema" textFill="#59747b">
+                        <Button fx:id="cinemaButton" layoutX="30.0" layoutY="43.0" mnemonicParsing="false" styleClass="light-background bordered-button" style="-fx-border-width: 0.5; -fx-border-radius: 5;" text="Cinema">
                             <font>
                                 <Font name="Corbel" size="14.0" />
                             </font>
@@ -38,7 +28,7 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Button>
-                        <Button fx:id="newsButton" mnemonicParsing="false" style="-fx-background-color: #3D4051; -fx-border-color: #59747b; -fx-border-width: 0.5; -fx-border-radius: 5;" text="News" textFill="#59747b">
+                        <Button fx:id="newsButton" mnemonicParsing="false" styleClass="light-background bordered-button" style="-fx-border-width: 0.5; -fx-border-radius: 5;" text="News">
                             <font>
                                 <Font name="Corbel" size="14.0" />
                             </font>
@@ -54,7 +44,7 @@
                     <children>
                         <HBox prefHeight="65.0" prefWidth="800.0">
                             <children>
-                                <Text fill="#59747b" strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
+                                <Text styleClass="text-fill-accent" strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
                                     <font>
                                         <Font name="Corbel" size="17.0" />
                                     </font>
@@ -78,8 +68,8 @@
                                         <Insets left="5.0" right="5.0" top="30.0" />
                                     </HBox.margin>
                                 </TextField>
-                                <Button text="Search" fx:id="searchButton" mnemonicParsing="false"
-                                        style="-fx-background-color: #59747b; -fx-text-fill: white;" prefWidth="200.0">
+                                <Button text="Search" fx:id="searchButton" mnemonicParsing="false" styleClass="accent-color-button"
+                                        style="-fx-text-fill: white;" prefWidth="200.0">
                                     <font>
                                         <Font name="Corbel" size="12.0" />
                                     </font>
@@ -87,8 +77,8 @@
                                         <Insets top="30.0" right="20.0" />
                                     </HBox.margin>
                                 </Button>
-                                <Button text="Update" fx:id="updateButton" mnemonicParsing="false"
-                                        style="-fx-background-color: #59747b; -fx-text-fill: white;" prefWidth="200.0">
+                                <Button text="Update" fx:id="updateButton" mnemonicParsing="false" styleClass="accent-color-button"
+                                        style="-fx-text-fill: white;" prefWidth="200.0">
                                     <font>
                                         <Font name="Corbel" size="12.0" />
                                     </font>
@@ -98,7 +88,7 @@
                                 </Button>
                             </children>
                         </HBox>
-                        <SplitMenuButton fx:id="itemsButton" mnemonicParsing="false" prefHeight="10.0" prefWidth="408.0" style="-fx-background-color: #3D4051;" text="Sort by">
+                        <SplitMenuButton fx:id="itemsButton" mnemonicParsing="false" styleClass="light-background" prefHeight="10.0" prefWidth="408.0" text="Sort by">
                             <items>
                                 <MenuItem fx:id="ResentButton" mnemonicParsing="false" text="Most Recent Date" />
                                 <MenuItem fx:id="OldButton" mnemonicParsing="false" text="Oldest Date" />
@@ -120,9 +110,9 @@
     </top>
     <center>
         <StackPane>
-            <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" style="-fx-background: #3D4051;">
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" styleClass="light-background">
                 <content>
-                    <VBox fx:id="articleContainer" spacing="10" />
+                    <VBox fx:id="articleContainer" spacing="10" styleClass="dark-background"/>
                 </content>
             </ScrollPane>
             <ProgressIndicator fx:id="spinner" visible="false" maxWidth="100" maxHeight="100" />

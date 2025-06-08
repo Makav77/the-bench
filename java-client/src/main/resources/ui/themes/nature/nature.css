@@ -1,0 +1,71 @@
+/*
+darkBackground: #344E41
+accentColor: #DAD7CD
+buttonColor: #588157
+lightBackground: #FEFAE0
+mediumBackground: #3A5A40
+*/
+.nav-button {
+    -fx-background-color: #A3B18A;
+    -fx-text-fill: #DAD7CD;
+}
+
+
+.dark-background {
+    -fx-background-color: #344E41;
+}
+
+.medium-background {
+    -fx-background-color: #3A5A40;
+}
+
+.light-background {
+    -fx-background-color: #A3B18A;
+}
+
+.bordered-button {
+    -fx-border-color: #DAD7CD;
+    -fx-text-fill: #DAD7CD;
+}
+
+.text-fill-accent {
+    -fx-fill: #DAD7CD;
+}
+
+.accent-color-button {
+    -fx-background-color: #DAD7CD;
+}
+
+.button-light-bordered {
+    -fx-background-color: #A3B18A;
+    -fx-border-color: #DAD7CD;
+    -fx-text-fill: #DAD7CD;
+}
+
+.textfill-accent {
+    -fx-text-fill: #DAD7CD;
+}
+
+.textfill-medium {
+    -fx-text-fill: #A3B18A;
+}
+
+.accent-color {
+    -fx-background-color: #DAD7CD;
+}
+
+.accent-border {
+    -fx-border-color: #DAD7CD;
+}
+
+.drag-over-highlight {
+    -fx-effect: dropshadow(gaussian, #DAD7CD, 20, 0.5, 0, 0);
+}
+
+.border-dark {
+    -fx-border-color: #344E41;
+}
+
+.cinema-background {
+    -fx-background-color: #3A5A40;
+}
