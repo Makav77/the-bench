@@ -19,6 +19,8 @@ public class UpdateChecker {
     private static final String DOWNLOAD_DIR = "update";
 
     public static void checkForUpdate() {
+        String os = System.getProperty("os.name").toLowerCase();
+        boolean isWindows = os.contains("win");
         try {
             String localVersion = VersionUtil.getLocalVersion();
             JSONObject release = fetchLatestRelease();
@@ -28,22 +30,42 @@ public class UpdateChecker {
                 JSONArray assets = release.getJSONArray("assets");
                 for (int i = 0; i < assets.length(); i++) {
                     JSONObject asset = assets.getJSONObject(i);
-                    if (asset.getString("name").endsWith(".jar")) {
-                        String downloadUrl = asset.getString("browser_download_url");
-                        UpdateUI.showUpdatePrompt(remoteVersion, () -> {
-                            try {
-                                downloadJarAndReplace(downloadUrl, remoteVersion);
-                                Alert info = new Alert(Alert.AlertType.INFORMATION);
-                                info.setTitle("Téléchargement terminé");
-                                info.setHeaderText(null);
-                                info.setContentText("La nouvelle version a été téléchargée dans le dossier 'update'.");
-                                info.showAndWait();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        });
-                        return;
+                    if(isWindows){
+                        if (asset.getString("name").endsWith("Windows.jar")) {
+                            String downloadUrl = asset.getString("browser_download_url");
+                            UpdateUI.showUpdatePrompt(remoteVersion, () -> {
+                                try {
+                                    downloadJarAndReplace(downloadUrl, remoteVersion);
+                                    Alert info = new Alert(Alert.AlertType.INFORMATION);
+                                    info.setTitle("Téléchargement terminé");
+                                    info.setHeaderText(null);
+                                    info.setContentText("La nouvelle version a été téléchargée dans le dossier 'update'.");
+                                    info.showAndWait();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                            return;
+                        }
+                    }else{
+                        if (asset.getString("name").endsWith("Linux.jar")) {
+                            String downloadUrl = asset.getString("browser_download_url");
+                            UpdateUI.showUpdatePrompt(remoteVersion, () -> {
+                                try {
+                                    downloadJarAndReplace(downloadUrl, remoteVersion);
+                                    Alert info = new Alert(Alert.AlertType.INFORMATION);
+                                    info.setTitle("Téléchargement terminé");
+                                    info.setHeaderText(null);
+                                    info.setContentText("La nouvelle version a été téléchargée dans le dossier 'update'.");
+                                    info.showAndWait();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                            return;
+                        }
                     }
+
                 }
             }
 
@@ -153,11 +175,17 @@ public class UpdateChecker {
             scriptPath.toFile().setExecutable(true);
         }
 
-        new ProcessBuilder("update/Launch_the_bench.exe",
-                currentJar.toAbsolutePath().toString(),
-                downloadedJar.toAbsolutePath().toString())
-                .start();
-
+        if(isWindows){
+            new ProcessBuilder("update/Launch_the_bench_Windows.exe",
+                    currentJar.toAbsolutePath().toString(),
+                    downloadedJar.toAbsolutePath().toString())
+                    .start();
+        }else{
+            new ProcessBuilder("update/Launch_the_bench_Linux.exe",
+                    currentJar.toAbsolutePath().toString(),
+                    downloadedJar.toAbsolutePath().toString())
+                    .start();
+        }
         System.exit(0);
     }
 
