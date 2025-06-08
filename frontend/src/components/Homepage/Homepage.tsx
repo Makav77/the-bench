@@ -3,8 +3,10 @@ import LatestMarketItemCard from "./Cards/LatestMarketItemCard";
 import LatestPostCard from "./Cards/LatestPostCard";
 import LatestFlashPostCard from "./Cards/LatestFlashPostCard";
 import NextEventCard from "./Cards/NextEventCard";
+import { useNavigate } from "react-router-dom";
 
 function Homepage() {
+    const navigate = useNavigate();
     return (
         <div>
             <div className="p-6 w-[70%] mx-auto">
@@ -44,7 +46,10 @@ function Homepage() {
                     </div>
                 </div>
 
-                <div className="fixed right-0 top-[88.2%] w-[10%] bg-blue-500 text-white mr-5 p-2 text-center rounded-lg cursor-pointer hover:bg-white hover:border hover:text-blue-500 hover:font-semibold">
+                <div 
+                    className="fixed right-0 top-[88.2%] w-[10%] bg-blue-500 text-white mr-5 p-2 text-center rounded-lg cursor-pointer hover:bg-white hover:border hover:text-blue-500 hover:font-semibold"
+                    onClick={() => navigate("/chat")}
+                    >
                     Messages
                 </div>
             </div>
