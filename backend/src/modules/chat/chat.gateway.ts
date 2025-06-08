@@ -1,8 +1,27 @@
-import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Socket, Server } from 'socket.io';
+import { UserService } from "../Users/user.service";
 
 @WebSocketGateway({cors: {origin: '*'}})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+    @WebSocketServer()
+    server: Server;
+
+    private clients: Map<string, string> = new Map();
+    constructor(
+        private readonly userService: UserService,
+    ){}
+
+    @SubscribeMessage('auth')
+    handleAuth(
+        @MessageBody() data: { userId: string },
+        @ConnectedSocket() client: Socket
+    ) {
+        this.clients.set(client.id, data.userId);
+        console.log(`Mapped socket ${client.id} to user ${data.userId}`);
+        console.log('Current clients:', Array.from(this.clients.entries()));
+    }
+
     @SubscribeMessage('newMessage')
     handleNewMessage(client: Socket, message: any) {
         console.log('New message received:', message);
@@ -14,6 +33,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         console.log('Client connected:', client.id);
     }
     handleDisconnect(client: Socket) {
+        this.clients.delete(client.id);
         console.log('Client disconnected:', client.id);
+    }
+    
+    @SubscribeMessage('message')
+    async handleMessage(
+        @MessageBody() data: { room: string; content: string; userId: string },
+        @ConnectedSocket() client: Socket,
+    ) {
+        const user = await this.userService.findOne(data.userId);
+        if (!user) {
+            console.error(`User with ID ${data.userId} not found.`);
+            return;
+        }
+        this.server.to(data.room).emit('message', {
+            content: data.content,
+            userId: data.userId,
+            username: user.lastname + ' ' + user.firstname,
+        });
+    }
+
+    @SubscribeMessage('join')
+    handleJoinRoom(@MessageBody() room: string, @ConnectedSocket() client: Socket) {
+        client.join(room);
+        console.log(`Client ${client.id} joined room ${room}`);
     }
 }
