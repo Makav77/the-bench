@@ -80,6 +80,7 @@ public class MainController {
                         plugin.start();
                     }
                 }
+                System.out.println("Plugins charges");
             }
         }
     }

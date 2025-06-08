@@ -127,7 +127,8 @@ public class JournalController {
         int i = 0;
         for (FilmPresentation film : sublist) {
             VBox filmBox = new VBox(5);
-            filmBox.setStyle("-fx-background-color: #2E3440; -fx-padding: 10; -fx-border-color: #59747b; -fx-border-width: 1;");
+            filmBox.setStyle("-fx-padding: 10; -fx-border-width: 1;");
+            filmBox.getStyleClass().addAll("cinema-background", "border-dark");
             filmBox.getChildren().add(styledLabel("🎬 " + film.titre));
             filmBox.getChildren().add(styledLabel("Genres : " + film.genres));
             filmBox.getChildren().add(styledLabel("Sortie : " + film.dateSortie));
@@ -143,9 +144,24 @@ public class JournalController {
                 seanceBox.getChildren().add(styledLabel("🎞️ Version : " + seance.version));
                 filmBox.getChildren().add(seanceBox);
             }
+            for (Node node : filmBox.getChildren()) {
+                if (node instanceof Label label) {
+                    label.getStyleClass().addAll("textfill-accent");
+                } else if (node instanceof HBox hbox) {
+                    for (Node inner : hbox.getChildren()) {
+                        if (inner instanceof Label innerLabel) {
+                            innerLabel.getStyleClass().addAll("textfill-accent");
+                            //innerLabel.setStyle("-fx-text-fill: #D4A373;");
+                        }
+                    }
+                }
+            }
             articleContainer.getChildren().add(filmBox);
+            filmBox.applyCss();
+            filmBox.layout();
         }
 
+        ThemeManager.applyThemeToRoot(journalPane);
     }
     public void replaceSplitMenuButtonWithSpinner(int min, int max, int initialValue) {
         if (originalNode == null) {
@@ -164,7 +180,7 @@ public class JournalController {
         pagesSpinner.setEditable(false);
 
         Label label = new Label("Page :");
-        label.setStyle("-fx-text-fill: white;");
+        label.getStyleClass().add("textfill-accent");
 
         spinnerWithLabel = new HBox(10);
         spinnerWithLabel.getChildren().addAll(label, pagesSpinner);
@@ -172,6 +188,7 @@ public class JournalController {
         VBox.setMargin(spinnerWithLabel, new Insets(0, 0, 5, 20));
 
         parent.getChildren().add(index, spinnerWithLabel);
+        ThemeManager.applyThemeToRoot(journalPane);
         pagesSpinner.valueProperty().addListener((obs, oldVal, newVal) -> {
             articleContainer.getChildren().clear();
             displayMovies(films, newVal);
@@ -190,7 +207,8 @@ public class JournalController {
 
     private Label styledLabel(String text) {
         Label label = new Label(text);
-        label.setStyle("-fx-font-size: 17px; -fx-text-fill: white;");
+        label.setStyle("-fx-font-size: 17px;");
+        label.getStyleClass().add("textfill-accent");
         return label;
     }
 
@@ -293,7 +311,8 @@ public class JournalController {
 
         for (DayArticles day : dayArticlesList) {
             Label dateLabel = new Label(day.day.toString());
-            dateLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 18; -fx-font-weight: bold;");
+            dateLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+            dateLabel.getStyleClass().addAll("textfill-medium");
             articleContainer.getChildren().add(dateLabel);
 
             for (Article article : day.articles) {
@@ -302,7 +321,7 @@ public class JournalController {
                 Label titleLabel = new Label(article.title);
 
                 timeLabel.setStyle("-fx-text-fill: #59747b;");
-                titleLabel.setStyle("-fx-text-fill: #dddddd;");
+                titleLabel.getStyleClass().addAll("textfill-accent");
                 articleRow.getChildren().addAll(timeLabel, titleLabel);
 
                 articleContainer.getChildren().add(articleRow);

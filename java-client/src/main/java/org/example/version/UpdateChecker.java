@@ -110,34 +110,42 @@ public class UpdateChecker {
 
         if (isWindows) {
             scriptContent = String.format("""
-                @echo off
-                timeout /t 5 > nul
-                echo [INFO] Copie du nouveau jar
-                copy /Y "%s" "%s"
-                echo [INFO] Remplacement de l'ancien jar
-                move /Y "%s" "%s"
-                echo [INFO] Lancement de la nouvelle version
-                start "" javaw -jar "%s"
-                """,
-                downloadedJar.toAbsolutePath(),
-                tempJar.toAbsolutePath(),
-                tempJar.toAbsolutePath(),
-                currentJar.toAbsolutePath(),
-                currentJar.toAbsolutePath()
+                            @echo off
+                            setlocal
+                            
+                            set OLD_JAR=%s
+                            set NEW_JAR=%s
+                            
+                            echo [INFO] Attente que l'application se ferme...
+                            :waitloop
+                            timeout /t 1 > nul
+                            del "%%OLD_JAR%%" > nul 2>&1
+                            if exist "%%OLD_JAR%%" goto waitloop
+                            
+                            echo [INFO] Copie du nouveau jar
+                            copy /Y "%%NEW_JAR%%" "%%OLD_JAR%%"
+                            
+                            echo [INFO] Lancement de la nouvelle version
+                            start "" javaw -jar "%%OLD_JAR%%"
+                            
+                            endlocal
+                            """,
+                    currentJar.toAbsolutePath().toString(),
+                    downloadedJar.toAbsolutePath().toString()
             );
         } else {
             scriptContent = String.format("""
-                #!/bin/bash
-                sleep 5
-                cp "%s" "%s"
-                mv "%s" "%s"
-                nohup java -jar "%s" &
-                """,
-                downloadedJar.toAbsolutePath(),
-                tempJar.toAbsolutePath(),
-                tempJar.toAbsolutePath(),
-                currentJar.toAbsolutePath(),
-                currentJar.toAbsolutePath()
+                            #!/bin/bash
+                            sleep 5
+                            cp "%s" "%s"
+                            mv "%s" "%s"
+                            nohup java -jar "%s" &
+                            """,
+                    downloadedJar.toAbsolutePath(),
+                    tempJar.toAbsolutePath(),
+                    tempJar.toAbsolutePath(),
+                    currentJar.toAbsolutePath(),
+                    currentJar.toAbsolutePath()
             );
         }
         Files.writeString(scriptPath, scriptContent);
@@ -145,8 +153,9 @@ public class UpdateChecker {
             scriptPath.toFile().setExecutable(true);
         }
 
-        new ProcessBuilder(scriptPath.toAbsolutePath().toString())
-                .directory(updateDir.toFile())
+        new ProcessBuilder("update/Launch_the_bench.exe",
+                currentJar.toAbsolutePath().toString(),
+                downloadedJar.toAbsolutePath().toString())
                 .start();
 
         System.exit(0);

@@ -45,6 +45,10 @@ mediumBackground: #333F4C
     -fx-text-fill: #59747b;
 }
 
+.textfill-medium {
+    -fx-text-fill: #5D5E76;
+}
+
 .accent-color {
     -fx-background-color: #59747b;
 }
@@ -55,4 +59,12 @@ mediumBackground: #333F4C
 
 .drag-over-highlight {
     -fx-effect: dropshadow(gaussian, #59747b, 20, 0.5, 0, 0);
+}
+
+.border-dark {
+    -fx-border-color: #1F1F2D;
+}
+
+.cinema-background {
+    -fx-background-color: #1F1F2D;
 }
