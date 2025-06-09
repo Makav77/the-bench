@@ -54,6 +54,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         };
         if (data.room === 'general') {
             this.server.to(data.room).emit('general-message', payload);
+        } else if(data.room.startsWith('group')){
+            const groupId = data.room.split("group-")[1];
+            this.server.to(data.room).emit(`group-message-${groupId}`, payload);
         } else {
             this.server.to(data.room).emit(`private-message-${data.room}`, payload);
         }
