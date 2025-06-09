@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ChatSidebar from "./ChatSidebar";
 import GeneralChatPage from "./GeneralChatPage";
+import PrivateChatPage from "./PrivateChatPage";
 import { useAuth } from "../../context/AuthContext";
 
 export default function ChatPage() {
@@ -13,6 +14,10 @@ export default function ChatPage() {
       <ChatSidebar onSelect={setActiveChat} user={user} />
       <div className="flex-1 border-l">
         {activeChat.type === 'general' && <GeneralChatPage user={user} />}
+        {activeChat.type === 'private' && <PrivateChatPage user={user} userId={activeChat.targetId!} />}
+        {/* 
+        
+        {activeChat.type === 'group' && <GroupChatPage groupId={activeChat.targetId!} />} */}
       </div>
     </div>
   );

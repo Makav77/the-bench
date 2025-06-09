@@ -9,16 +9,15 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
 
   useEffect(() => {
     if (user?.id) {
-      socket.emit("auth", { userId: user.id });
       socket.emit("join", "general");
     }
 
-    socket.on("message", (msg: { content: string; userId: string; username: string }) => {
+    socket.on("general-message", (msg: { content: string; userId: string; username: string }) => {
       console.log("Received message:", msg);
       setMessages(prev => [...prev, msg]);
     });
     return () => {
-      socket.off("message");
+      socket.off("general-message");
     };
   }, [user]);
 
