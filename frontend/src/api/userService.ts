@@ -6,7 +6,7 @@ export enum Role {
     MODERATOR = "moderator",
 };
 
-interface UserData {
+export interface UserData {
     id: string;
     firstname: string;
     lastname: string;

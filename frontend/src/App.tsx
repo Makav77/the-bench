@@ -50,7 +50,7 @@ import { ToastContainer } from "react-toastify";
 import ChallengesPage from "./components/Community/Challenges/ChallengesPage";
 import CreateChallengePage from "./components/Community/Challenges/CreateChallengePage";
 import ChallengeDetailPage from "./components/Community/Challenges/ChallengeDetailsPage";
-import GeneralChatPage from "./components/Chat/GeneralChatPage";
+import ChatPage from "./components/Chat/ChatPage";
 
 import DashboardPage from "./components/Dashboard/Dashboard";
 
@@ -99,7 +99,7 @@ export default function App() {
                             <Route path="challenges/:id/edit" element={<EditChallengePage />} />
                             <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
                             <Route path="dashboard" element={<DashboardPage />} />
-                            <Route path="chat" element={<GeneralChatPage />} />
+                            <Route path="chat" element={<ChatPage />} />
                         </Route>
                     </Route>
                 </Routes>
