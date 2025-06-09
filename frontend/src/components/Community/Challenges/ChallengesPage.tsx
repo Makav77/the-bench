@@ -54,6 +54,9 @@ function ChallengesPage() {
                         <p className="text-sm text-gray-600">
                             Start from {new Date(challenge.startDate).toLocaleDateString()} to {new Date(challenge.endDate).toLocaleDateString()}
                         </p>
+                        <p className="text-sm">
+                            Author: {challenge.author.firstname} {challenge.author.lastname}
+                        </p>
                         <p>Registered : {challenge.registrations.length} - Completions : {challenge.completions.length}</p>
                     </li>
                 ))}

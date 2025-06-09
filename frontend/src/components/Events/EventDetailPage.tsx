@@ -16,7 +16,7 @@ function EventDetailPage() {
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [showModal, setShowModal] = useState(false);
+    const [showParticipantModal, setShowParticipantModal] = useState(false);
     const [removingId, setRemovingId] = useState<string | null>(null);
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
@@ -139,7 +139,7 @@ function EventDetailPage() {
 
                         {event.maxNumberOfParticipants != null && (isAuthor || isAdminorModerator) && (
                             <button
-                                onClick={() => setShowModal(true)}
+                                onClick={() => setShowParticipantModal(true)}
                                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 border rounded cursor-pointer"
                             >
                                 Participant list
@@ -201,7 +201,7 @@ function EventDetailPage() {
                     </div>
                 )}
 
-                {showModal && (
+                {showParticipantModal && (
                     <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
                         <div className="bg-white rounded p-6 w-96 max-h-[70vh] overflow-auto">
                             {event.maxNumberOfParticipants && (
@@ -236,7 +236,7 @@ function EventDetailPage() {
                                 ))}
                             </ul>
                             <button
-                                onClick={() => setShowModal(false)}
+                                onClick={() => setShowParticipantModal(false)}
                                 className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
                             >
                                 Close
