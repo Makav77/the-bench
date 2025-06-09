@@ -54,66 +54,70 @@ import ChatPage from "./components/Chat/ChatPage";
 
 import DashboardPage from "./components/Dashboard/Dashboard";
 
+import { SocketProvider } from "./context/SocketContext";
+
 export default function App() {
     return (
         <AuthProvider>
-            <BrowserRouter>
-                <Routes>
-                    <Route element={<Layout />}>
-                        <Route element={<PublicRoute />}>
-                            <Route path="/" element={<Login />} />
-                            <Route path="register" element={<Register />} />
-                            <Route path="resetpassword" element={<ResetPassword />} />
-                        </Route>
+            <SocketProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route element={<Layout />}>
+                            <Route element={<PublicRoute />}>
+                                <Route path="/" element={<Login />} />
+                                <Route path="register" element={<Register />} />
+                                <Route path="resetpassword" element={<ResetPassword />} />
+                            </Route>
 
-                        <Route element={<ProtectedRoute />}>
-                            <Route path="homepage" element={<Homepage />} />
-                            <Route path="events" element={<EventsPage />} />
-                            <Route path="events/:id" element={<EventDetailPage />} />
-                            <Route path="events/create" element={<CreateEventPage />} />
-                            <Route path="events/:id/edit" element={<EditEventPage />} />
-                            <Route path="bulletinsboard" element={<BulletinsBoardPage />} />
-                            <Route path="posts/:id" element={<PostDetailPage />} />
-                            <Route path="posts/create" element={<CreatePostPage />} />
-                            <Route path="posts/:id/edit" element={<EditPostPage />} />
-                            <Route path="flashposts/:id" element={<FlashPostDetailPage />} />
-                            <Route path="flashposts/create" element={<CreateFlashPostForm />} />
-                            <Route path="flashposts/:id/edit" element={<EditFlashPostPage />} />
-                            <Route path="marketplace" element={<MarketPage />} />
-                            <Route path="market/create" element={<CreateItemPage />} />
-                            <Route path="market/:id" element={<ItemDetailsPage />} />
-                            <Route path="market/:id/edit" element={<EditItemPage />} />
-                            <Route path="community" element={<CommunityPage />} />
-                            <Route path="gallery" element={<GalleryPage />} />
-                            <Route path="gallery/create" element={<CreateGalleryItemPage />} />
-                            <Route path="gallery/:id" element={<GalleryItemDetailPage />} />
-                            <Route path="polls" element={<PollsPage />} />
-                            <Route path="polls/create" element={<CreatePollPage />} />
-                            <Route path="polls/:id" element={<PollDetailPage />} />
-                            <Route path="artisans" element={<ArtisansListPage />} />
-                            <Route path="artisans/:job" element={<ArtisansByTypePage />} />
-                            <Route path="calendar" element={<CalendarPage />} />
-                            <Route path="challenges" element={<ChallengesPage />} />
-                            <Route path="challenges/create" element={<CreateChallengePage />} />
-                            <Route path="challenges/:id" element={<ChallengeDetailPage />} />
-                            <Route path="challenges/:id/edit" element={<EditChallengePage />} />
-                            <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
-                            <Route path="dashboard" element={<DashboardPage />} />
-                            <Route path="chat" element={<ChatPage />} />
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="homepage" element={<Homepage />} />
+                                <Route path="events" element={<EventsPage />} />
+                                <Route path="events/:id" element={<EventDetailPage />} />
+                                <Route path="events/create" element={<CreateEventPage />} />
+                                <Route path="events/:id/edit" element={<EditEventPage />} />
+                                <Route path="bulletinsboard" element={<BulletinsBoardPage />} />
+                                <Route path="posts/:id" element={<PostDetailPage />} />
+                                <Route path="posts/create" element={<CreatePostPage />} />
+                                <Route path="posts/:id/edit" element={<EditPostPage />} />
+                                <Route path="flashposts/:id" element={<FlashPostDetailPage />} />
+                                <Route path="flashposts/create" element={<CreateFlashPostForm />} />
+                                <Route path="flashposts/:id/edit" element={<EditFlashPostPage />} />
+                                <Route path="marketplace" element={<MarketPage />} />
+                                <Route path="market/create" element={<CreateItemPage />} />
+                                <Route path="market/:id" element={<ItemDetailsPage />} />
+                                <Route path="market/:id/edit" element={<EditItemPage />} />
+                                <Route path="community" element={<CommunityPage />} />
+                                <Route path="gallery" element={<GalleryPage />} />
+                                <Route path="gallery/create" element={<CreateGalleryItemPage />} />
+                                <Route path="gallery/:id" element={<GalleryItemDetailPage />} />
+                                <Route path="polls" element={<PollsPage />} />
+                                <Route path="polls/create" element={<CreatePollPage />} />
+                                <Route path="polls/:id" element={<PollDetailPage />} />
+                                <Route path="artisans" element={<ArtisansListPage />} />
+                                <Route path="artisans/:job" element={<ArtisansByTypePage />} />
+                                <Route path="calendar" element={<CalendarPage />} />
+                                <Route path="challenges" element={<ChallengesPage />} />
+                                <Route path="challenges/create" element={<CreateChallengePage />} />
+                                <Route path="challenges/:id" element={<ChallengeDetailPage />} />
+                                <Route path="challenges/:id/edit" element={<EditChallengePage />} />
+                                <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
+                                <Route path="dashboard" element={<DashboardPage />} />
+                                <Route path="chat" element={<ChatPage />} />
+                            </Route>
                         </Route>
-                    </Route>
-                </Routes>
+                    </Routes>
 
-                <ToastContainer
-                    position="top-right"
-                    autoClose={3000}
-                    hideProgressBar={false}
-                    newestOnTop
-                    closeOnClick
-                    pauseOnHover
-                    aria-label={undefined}
-                />
-            </BrowserRouter>
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={3000}
+                        hideProgressBar={false}
+                        newestOnTop
+                        closeOnClick
+                        pauseOnHover
+                        aria-label={undefined}
+                    />
+                </BrowserRouter>
+            </SocketProvider>
         </AuthProvider>
     )
 }

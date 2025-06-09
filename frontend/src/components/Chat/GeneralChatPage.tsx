@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
-
-const socket = io("http://localhost:3000");
+import { useSocket } from "../../context/SocketContext";
 
 export default function GeneralChatPage({ user }: { user: User | null }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
+  const socket = useSocket();
 
   useEffect(() => {
     if (user?.id) {
