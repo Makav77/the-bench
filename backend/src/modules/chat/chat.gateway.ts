@@ -39,7 +39,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
     @SubscribeMessage('message')
     async handleMessage(
-        @MessageBody() data: { room: string; content: string; userId: string },
+        @MessageBody() data: { room: string; content: string; userId: string; username?: string },
         @ConnectedSocket() client: Socket,
     ) {
         const user = await this.userService.findOne(data.userId);
@@ -47,11 +47,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             console.error(`User with ID ${data.userId} not found.`);
             return;
         }
-        this.server.to(data.room).emit('message', {
+        const payload = {
             content: data.content,
             userId: data.userId,
-            username: user.lastname + ' ' + user.firstname,
-        });
+            username: data.username || `${user.lastname} ${user.firstname}`,
+        };
+        if (data.room === 'general') {
+            this.server.to(data.room).emit('general-message', payload);
+        } else {
+            this.server.to(data.room).emit(`private-message-${data.room}`, payload);
+        }
     }
 
     @SubscribeMessage('join')
