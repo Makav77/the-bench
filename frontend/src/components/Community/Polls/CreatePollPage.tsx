@@ -4,13 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import usePermission from "../../Utils/usePermission";
 import { format } from "date-fns";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+import 'react-clock/dist/Clock.css';
 
 function CreatePollPage() {
     const [question, setQuestion] = useState("");
     const [options, setOptions] = useState(["", ""]);
     const [type, setType] = useState<"single"|"multiple"|"limited">("single");
     const [maxSelections, setMaxSelections] = useState(0);
-    const [autoClose, setAutoClose] = useState(0);
+    const [autoCloseDate, setAutoCloseDate] = useState<Date | null>(null);
+    const [autoCloseTime, setAutoCloseTime] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const { restricted, expiresAt, reason } = usePermission("create_poll");
@@ -63,9 +69,17 @@ function CreatePollPage() {
             return;
         }
 
+        let autoCloseAt: string | undefined = undefined;
+        if (autoCloseDate && autoCloseTime) {
+            const [hours, minutes] = autoCloseTime.split(':').map(Number);
+            const dateWithTime = new Date(autoCloseDate);
+            dateWithTime.setHours(hours, minutes, 0, 0);
+            autoCloseAt = dateWithTime.toISOString();
+        }
+
         try {
             const cleanOptions = options.filter(o => o.trim());
-            await createPoll({ question, options: cleanOptions, type, maxSelections: type === "limited" ? maxSelections: undefined, autoCloseIn: autoClose || undefined });
+            await createPoll({ question, options: cleanOptions, type, maxSelections: type === "limited" ? maxSelections: undefined, autoCloseAt });
             toast.success("Poll created.");
             navigate("/polls");
         } catch (error) {
@@ -78,7 +92,7 @@ function CreatePollPage() {
             <h1 className="text-2xl font-bold mb-4">Create a poll</h1>
             <form
                 onSubmit={handleSubmit}
-                className="space-y-4 bg-white p-4 rounded-2xl shadow"
+                className="space-y-4 bg-white p-4 rounded-2xl shadow relative z-0"
             >
                 <div>
                     <label className="font-semibold">
@@ -107,15 +121,34 @@ function CreatePollPage() {
                     </select>
                 </div>
 
-                <div className="flex flex-col">
-                    <label className="font-semibold">Auto closing poll (hours) <span className="text-red-500 italic text-sm">optionnal</span></label>
-                    <input
-                        type="number"
-                        min={0}
-                        value={autoClose}
-                        onChange={e => setAutoClose(parseInt(e.target.value))}
-                        className="w-15 border rounded px-2 py-1"
-                    />
+                <div className="flex gap-4 justify-center items-start">
+                    <div className="flex flex-col items-center">
+                        <label className="font-semibold mb-1">
+                            Auto closing Date{" "}
+                            <span className="text-red-500 italic text-sm">optionnal</span>
+                        </label>
+                        <DatePicker
+                            selected={autoCloseDate}
+                            onChange={(date: Date | null) => setAutoCloseDate(date)}
+                            dateFormat="dd/MM/yyyy"
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 bg-white cursor-pointer hover:border-blue-400 transition w-auto max-w-[150px]"
+                            placeholderText="Select date"
+                            isClearable
+                        />
+                    </div>
+                    
+                    <div className="flex flex-col items-center">
+                        <label className="font-semibold mb-1">
+                            Auto closing Time{" "}
+                            <span className="text-red-500 italic text-sm">optionnal</span>
+                        </label>
+                        <input
+                            type="time"
+                            value={autoCloseTime || ""}
+                            onChange={(e) => setAutoCloseTime(e.target.value)}
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 bg-white cursor-pointer hover:border-blue-400 transition w-auto max-w-[100px]"
+                        />
+                    </div>
                 </div>
 
                 <div>

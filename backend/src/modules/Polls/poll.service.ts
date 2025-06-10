@@ -49,7 +49,7 @@ export class PollService {
     }
 
     async createPoll(createPollDTO: CreatePollDTO, author: User): Promise<Poll> {
-        const { question, options, type, maxSelections, autoCloseIn } = createPollDTO;
+        const { question, options, type, maxSelections, autoCloseAt } = createPollDTO;
 
         if (type === PollType.LIMITED && !maxSelections) {
             throw new BadRequestException("maxSelections required for LIMITED type.");
@@ -63,8 +63,8 @@ export class PollService {
 
         const pollData: Partial<Poll> = { question, type, maxSelections, manualClosed: false, author };
 
-        if (autoCloseIn) {
-            pollData.closesAt = new Date(Date.now() + autoCloseIn * 60 * 60 * 1000);
+        if (autoCloseAt) {
+            pollData.closesAt = new Date(autoCloseAt);
         }
 
         const poll = this.pollRepo.create(pollData);
