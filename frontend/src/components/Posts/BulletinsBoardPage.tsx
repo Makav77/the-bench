@@ -80,7 +80,7 @@ function BulletinsBoardPage() {
                     {flashLoading
                         ? <p>Loading flash posts...</p>
                         : flashPosts.length === 0
-                            ? <p className="italic text-gray-500">No flash posts right now.</p>
+                            ? <p className="italic text-gray-500 mb-5">No flash posts right now.</p>
                             : (
                                 <div className="grid grid-cols-1 gap-4 border p-4 mb-4">
                                     {flashPosts.map((flashpost) => {

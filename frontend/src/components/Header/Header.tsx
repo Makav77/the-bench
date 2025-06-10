@@ -23,11 +23,11 @@ function Header() {
         <div data-testid = "header" className="bg-[#4A93C9]">
             <div className="grid grid-cols-3 h-10 mb-8 mx-auto w-[75%]">
                 <div className="flex items-center">
-                    <img src="assets/bench-logo.png" alt="logo" className="h-10"/>
+                    <img src="assets/bench-logo.png" alt="logo" className="h-10 cursor-pointer" onClick={() => navigate("/homepage")}/>
                 </div>
 
                 <div className="flex items-center justify-center">
-                    <p className="text-3xl">The Bench</p>
+                    <p className="text-4xl font-bold">The Bench</p>
                 </div>
 
                 <div className="flex items-center justify-end">
