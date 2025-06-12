@@ -18,7 +18,7 @@ export interface EventDetails extends EventSummary {
     maxNumberOfParticipants?: number;
     description: string;
     author: { id: string; firstname: string; lastname: string };
-    participantsList: { id: string }[];
+    participantsList: { id: string; firstname: string; lastname: string; }[];
 }
 
 export const getEvents = async (page = 1, limit = 5): Promise<{ data: EventSummary[]; total: number; page: number; lastPage: number }> => {

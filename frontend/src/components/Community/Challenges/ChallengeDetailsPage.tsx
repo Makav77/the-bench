@@ -18,6 +18,7 @@ function ChallengeDetailPage() {
     const [challenge, setChallenge] = useState<ChallengeSummary | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showParticipantModal, setShowParticipantModal] = useState<boolean>(false);
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
     const [showSubmissionModal, setShowSubmissionModal] = useState<boolean>(false);
 
@@ -101,13 +102,24 @@ function ChallengeDetailPage() {
     return (
         <div>
             <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
-                <button
-                        type="button"
-                        onClick={() => navigate("/challenges")}
-                        className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
-                    >
-                        ← Back
-                </button>
+                <div className="flex justify-between">
+                    <button
+                            type="button"
+                            onClick={() => navigate("/challenges")}
+                            className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                        >
+                            ← Back
+                    </button>
+
+                    {(isAuthor || isAdminorModerator) &&
+                        <button
+                            onClick={() => setShowParticipantModal(true)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
+                        >
+                            Participant list
+                        </button>
+                    }
+                </div>
 
                 <h1 className="text-2xl font-bold">{challenge.title}</h1>
                 <p>{challenge.description}</p>
@@ -225,6 +237,38 @@ function ChallengeDetailPage() {
                         }
                     }}
                 />
+            )}
+
+            {showParticipantModal && (
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
+                    <div className="bg-white rounded p-6 w-[25%] overflow-auto">
+                        <h2 className="text-xl font-bold mb-4">
+                            Registered ({challenge.registrations.length})
+                        </h2>
+                        <ul className="space-y-2">
+                            {challenge.registrations.map((registration) => (
+                                <>
+                                    <li
+                                        key={registration.user.id}
+                                        className="flex justify-between items-center px-5"
+                                    >
+                                        <span>{registration.user.firstname} {registration.user.lastname}</span>
+                                        <span className="text-sm text-gray-500">
+                                            Registered on {new Date(registration.createdAt).toLocaleDateString()} {"at"} {new Date(registration.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </li>
+                                    <div className="border-t-1 h-1 text-black w-3/4 mx-auto" />
+                                </>
+                            ))}
+                        </ul>
+                        <button
+                            onClick={() => setShowParticipantModal(false)}
+                            className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );
