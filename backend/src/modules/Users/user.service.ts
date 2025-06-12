@@ -25,6 +25,16 @@ export class UserService {
         return user;
     }
 
+    async searchUsers(query: string): Promise<{ id: string; firstname: string; lastname: string; }[]> {
+        return this.userRepository
+            .createQueryBuilder("user")
+            .where('LOWER(user.firstname) LIKE LOWER(:query)', { query: `%${query}%` })
+            .orWhere('LOWER(user.lastname) LIKE LOWER(:query)', { query: `%${query}%` })
+            .select(['user.id', 'user.firstname', 'user.lastname'])
+            .limit(10)
+            .getMany();
+    }
+
     async findByEmail(email: string): Promise<User> {
         const user = await this.userRepository.findOneBy({ email });
         if (!user) {

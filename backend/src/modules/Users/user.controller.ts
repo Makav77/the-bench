@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { User } from "./entities/user.entity";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { CreateUserDTO } from "./dto/create-user.dto";
+import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 
 @Controller('users')
 export class UserController {
@@ -11,6 +12,12 @@ export class UserController {
     @Get()
     async findAll(): Promise<User[]> {
         return this.userService.findAll();
+    }
+
+    @Get("search")
+    @UseGuards(JwtAuthGuard)
+    async searchUsers(@Query("query") query: string): Promise<{ id: string; firstname: string; lastname: string; }[]> {
+        return this.userService.searchUsers(query);
     }
 
     @Get(":id")
