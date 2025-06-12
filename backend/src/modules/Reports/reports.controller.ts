@@ -7,6 +7,7 @@ import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { Report } from "./entities/report.entity";
 import { Request } from "express";
+import { User } from "../Users/entities/user.entity";
 
 @Controller("reports")
 export class ReportsController {
@@ -47,8 +48,10 @@ export class ReportsController {
     async updateReportStatus(
         @Param("id") id: string,
         @Body() updateReportStatus: UpdateReportStatusDTO,
+        @Req() req: Request
     ): Promise<Report> {
-        return this.reportsService.updateReportStatus(id, updateReportStatus);
+        const treatingUser = req.user as User;
+        return this.reportsService.updateReportStatus(id, updateReportStatus, treatingUser);
     }
 
     @UseGuards(JwtAuthGuard)

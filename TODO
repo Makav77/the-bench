@@ -139,8 +139,8 @@ Ajouter un moyen de contacter les modérateurs / administrateurs
 //Ajouter des liens vers le Github des membres du groupes
 
 REPORTS
-Afficher qui a validé ou refusé un signalement
-Ne plus affiché action performed
+//Afficher qui a validé ou refusé un signalement
+//Ne plus affiché action performed
 
 RESTRICTIONS
-Changer User ID to Ban par une fonction de recherche de nom prénom qui va chercher dans la bdd la liste des users //et affiche en temps réel le résultat
+//Changer User ID to Ban par une fonction de recherche de nom prénom qui va chercher dans la bdd la liste des users //et affiche en temps réel le résultat
