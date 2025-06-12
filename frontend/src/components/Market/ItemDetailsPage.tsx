@@ -8,6 +8,8 @@ function ItemDetailsPage() {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<MarketItemDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -94,7 +96,10 @@ function ItemDetailsPage() {
                                 src={url}
                                 alt={`Item image ${index + 1}`}
                                 className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80"
-                                onClick={() => window.open(url, "_blank")}
+                                onClick={() => {
+                                    setSelectedImage(url);
+                                    setShowImageModal(true);
+                                }}
                             />
                         ))}
                     </div>
@@ -140,6 +145,24 @@ function ItemDetailsPage() {
                     </div>
                 )}
             </div>
+            {showImageModal && selectedImage && (
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20 z-50">
+                    <div className="bg-white rounded p-6 max-w-3xl w-[80%] max-h-[80vh] overflow-auto relative">
+                        <button
+                            onClick={() => setShowImageModal(false)}
+                            className="absolute top-2 right-5 text-gray-600 hover:text-black text-2xl cursor-pointer"
+                        >
+                            ✕
+                        </button>
+
+                        <img
+                            src={selectedImage}
+                            alt="Selected item"
+                            className="w-full h-auto rounded-lg object-contain mt-8"
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
