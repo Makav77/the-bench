@@ -25,6 +25,11 @@ export class UserController {
         return this.userService.findOne(id);
     }
 
+    @Get(":id/profile")
+    async getProfileSummary(@Param("id") id: string) {
+        return this.userService.getProfileSummary(id);
+    }
+
     @Post()
     create(@Body() createUserDTO: CreateUserDTO): Promise<User> {
         return this.userService.create(createUserDTO);

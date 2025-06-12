@@ -40,7 +40,7 @@ export class User {
     @Column({ type: "timestamp" })
     dateOfBirth: Date;
 
-    @Column()
+    @Column({ nullable: true })
     profilePicture?: string;
 
     @Column({ type: "int", default: 0 })
