@@ -40,7 +40,7 @@ function Header() {
                                 type="button"
                                 aria-label="profile-button"
                                 className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
-                                onClick={() => navigate("/profile")}
+                                onClick={() => navigate(`/profile/${user.id}`)}
                             >
                                 {t("profile")}
                             </button>
