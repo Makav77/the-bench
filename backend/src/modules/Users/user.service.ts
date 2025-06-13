@@ -81,60 +81,67 @@ export class UserService {
     }
 
     async getProfileSummary(userId: string): Promise<ProfileSummaryDTO> {
-        const user = await this.userRepository.findOne({
-            where: { id: userId },
-        });
+        console.log("getProfileSummary called with userId:", userId);
 
-        if (!user) {
-            console.log("No user found for userId:", userId);
-            throw new NotFoundException("User not found.");
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id: userId },
+            });
+
+            if (!user) {
+                console.log("No user found for userId:", userId);
+                throw new NotFoundException("User not found.");
+            }
+
+            const events = await this.eventRepository
+                .createQueryBuilder("event")
+                .leftJoin("event.participantsList", "participant")
+                .where("participant.id = :userId", { userId })
+                .orderBy("event.startDate", "DESC")
+                .getMany();
+
+            const eventSummaries = events.map(event => ({
+                id: event.id,
+                name: event.name,
+                startDate: event.startDate,
+            }));
+
+            const registrations = await this.challengeRegistrationRepository.find({
+                relations: ["challenge"],
+                where: { user: { id: userId } },
+            });
+
+            const challengeSummaries = registrations.map(r => ({
+                id: r.challenge.id,
+                title: r.challenge.title,
+                startDate: r.challenge.startDate,
+            }));
+
+            const marketItems = await this.marketItemRepository.find({
+                where: { author: { id: userId } },
+                order: { updatedAt: "DESC" }
+            });
+
+            const marketItemSummaries = marketItems.map(item => ({
+                id: item.id,
+                title: item.title,
+                updatedAt: item.updatedAt,
+                images: item.images ?? [],
+            }));
+
+            return {
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                profilePictureUrl: user.profilePicture ?? "/images/default-profile.png",
+                badges: [],
+                events: eventSummaries,
+                challenges: challengeSummaries,
+                marketItems: marketItemSummaries,
+            };
+        } catch (err) {
+            console.error("ERROR in getProfileSummary:", err);
+            throw err; // rethrow pour que ça remonte
         }
-
-        const events = await this.eventRepository
-            .createQueryBuilder("event")
-            .leftJoin("event.participantsList", "participant")
-            .where("participant.id = :userId", { userId })
-            .orderBy("event.startDate", "DESC")
-            .getMany();
-
-        const eventSummaries = events.map(event => ({
-            id: event.id,
-            name: event.name,
-            startDate: event.startDate,
-        }));
-
-        const registrations = await this.challengeRegistrationRepository.find({
-            relations: ["challenge"],
-            where: { user: { id: userId } },
-        });
-
-        const challengeSummaries = registrations.map(r => ({
-            id: r.challenge.id,
-            title: r.challenge.title,
-            startDate: r.challenge.startDate,
-        }));
-
-        const marketItems = await this.marketItemRepository.find({
-            where: { author: { id: userId } },
-            order: { updatedAt: "DESC" }
-        });
-
-        const marketItemSummaries = marketItems.map(item => ({
-            id: item.id,
-            title: item.title,
-            updatedAt: item.updatedAt,
-            images: item.images ?? [],
-        }));
-
-        return {
-            id: user.id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            profilePictureUrl: user.profilePicture ?? "/images/default-profile.png",
-            badges: [],
-            events: eventSummaries,
-            challenges: challengeSummaries,
-            marketItems: marketItemSummaries,
-        };
     }
 }

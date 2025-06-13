@@ -9,6 +9,7 @@ import { ChallengesModule } from "../Challenges/challenges.module";
 import { MarketModule } from "../Market/market.module";
 import { ChallengeRegistration } from "../Challenges/entities/challenge-registration.entity";
 import { MarketItem } from "../Market/entities/market.entity";
+import { Event } from "../Events/entities/event.entity";
 
 @Module({
     imports: [

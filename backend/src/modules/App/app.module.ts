@@ -35,7 +35,11 @@ import { ReportsController } from '../Reports/reports.controller';
             isGlobal: true,
         }),
         ScheduleModule.forRoot(),
-        TypeOrmModule.forRoot(databaseConfig),
+        TypeOrmModule.forRoot({
+            ...databaseConfig,
+            logging: true,
+            logger: "advanced-console",
+        }),
         MulterModule.register({
             dest: "./uploads",
         }),
