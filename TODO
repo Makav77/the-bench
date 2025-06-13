@@ -121,13 +121,13 @@ Ajouter la page de profil
 //Afficher la section active en blanc
 
 MARKETPLACE
-Afficher les images dans un modal et pas dans un nouvel onglet
+//Afficher les images dans un modal et pas dans un nouvel onglet
 
 POLLS
 //Pour la fin du sondage, affiché un calendrier pour proposer une date de fin, pas un compteur en heure
 
 CHALLENGE
-Pour l'auteur, voir la liste des utilisateurs inscrits
+//Pour l'auteur, voir la liste des utilisateurs inscrits
 //Afficher l'auteur
 
 JOURNAL

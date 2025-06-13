@@ -8,6 +8,7 @@ import { UpdateUserDTO } from './dto/update-user.dto';
 import { Event } from '../Events/entities/event.entity';
 import { ChallengeRegistration } from '../Challenges/entities/challenge-registration.entity';
 import { MarketItem } from '../Market/entities/market.entity';
+import { ProfileSummaryDTO } from './dto/profile-summary.dto';
 
 @Injectable()
 export class UserService {
@@ -79,7 +80,7 @@ export class UserService {
         return;
     }
 
-    async getProfileSummary(userId: string): Promise<any> {
+    async getProfileSummary(userId: string): Promise<ProfileSummaryDTO> {
         const user = await this.userRepository.findOne({
             where: { id: userId },
         });
@@ -87,8 +88,6 @@ export class UserService {
         if (!user) {
             throw new NotFoundException("User not found.");
         }
-
-        //events
 
         const events = await this.eventRepository
             .createQueryBuilder("event")
@@ -103,8 +102,6 @@ export class UserService {
             startDate: event.startDate,
         }));
 
-        // challenges
-
         const registrations = await this.challengeRegistrationRepository.find({
             relations: ["challenge"],
             where: { user: { id: userId } },
@@ -116,8 +113,6 @@ export class UserService {
             startDate: r.challenge.startDate,
         }));
 
-        // market
-
         const marketItems = await this.marketItemRepository.find({
             where: { author: { id: userId } },
             order: { updatedAt: "DESC" }
@@ -127,7 +122,7 @@ export class UserService {
             id: item.id,
             title: item.title,
             updatedAt: item.updatedAt,
-            images: item.images,
+            images: item.images ?? [],
         }));
 
         return {

@@ -4,6 +4,7 @@ import { User } from "./entities/user.entity";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
+import { ProfileSummaryDTO } from "./dto/profile-summary.dto";
 
 @Controller('users')
 export class UserController {
@@ -26,7 +27,7 @@ export class UserController {
     }
 
     @Get(":id/profile")
-    async getProfileSummary(@Param("id") id: string) {
+    async getProfileSummary(@Param("id") id: string): Promise<ProfileSummaryDTO> {
         return this.userService.getProfileSummary(id);
     }
 
