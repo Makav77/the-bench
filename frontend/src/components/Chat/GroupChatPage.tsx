@@ -1,11 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
 import { useSocket } from "../../context/SocketContext";
+import { getRoomMessages } from "../../api/chatService";
 
 export default function GroupChatPage({ user, groupId}: { user: User | null, groupId: string }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
     const socket = useSocket();
+
+    useEffect(() => {
+        const fetchHistory = async () => {
+            try {
+                const data = await getRoomMessages(`group-${groupId}`);
+                setMessages(data);
+            } catch (err) {
+                console.error("Erreur lors du chargement des messages :", err);
+            }
+        };
+
+        fetchHistory();
+    }, [groupId]);
 
     useEffect(() => {
         if (user?.id) {
@@ -26,6 +40,19 @@ export default function GroupChatPage({ user, groupId}: { user: User | null, gro
         }
     }, [user, groupId]);;
 
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        scrollContainerRef.current?.scrollTo({
+            top: scrollContainerRef.current.scrollHeight,
+            behavior: 'smooth',
+      });
+    }
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
     const sendMessage = () =>{
         if (message.trim()){
             socket.emit("message", {
@@ -41,7 +68,7 @@ export default function GroupChatPage({ user, groupId}: { user: User | null, gro
     return (
         <div className="p-4">
             <h1 className="text-xl font-bold mb-2">Groupe {groupId}</h1>
-            <div className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
+            <div ref={scrollContainerRef} className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
                 {messages.map((msg, i) => {
                     const isMine = msg.userId === user?.id;
                     return (

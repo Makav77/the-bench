@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
 import { useSocket } from "../../context/SocketContext";
 import { getUserById } from "../../api/userService";
+import { getRoomMessages } from "../../api/chatService";
 
 export default function PrivateChatPage({ user, userId } : { user: User | null, userId: string }) {
     const [message, setMessage] = useState("");
@@ -19,7 +20,19 @@ export default function PrivateChatPage({ user, userId } : { user: User | null, 
           }
         }
         fetchFriend();
-      }, []);
+      }, [userId]);
+
+    useEffect(() => {
+      if (!user?.id) return;
+
+      const room = [user.id, userId].sort().join("_");
+
+      getRoomMessages(`private-${room}`)
+        .then(setMessages)
+        .catch((err) =>
+          console.error("Erreur lors du chargement des messages :", err)
+        );
+    }, [user?.id, userId]);
     
     useEffect(() => {
         if (user?.id) {
@@ -38,6 +51,19 @@ export default function PrivateChatPage({ user, userId } : { user: User | null, 
         }
     }, [user, userId]);
 
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+      scrollContainerRef.current?.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    };
+
+    useEffect(() => {
+      scrollToBottom();
+    }, [messages]);
+
     const sendMessage = () => {
         if (message.trim()) {
             const room = [user?.id, userId].sort().join("_");
@@ -54,7 +80,7 @@ export default function PrivateChatPage({ user, userId } : { user: User | null, 
     return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-2">{friend?.firstname} {friend?.lastname}</h1>
-      <div className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
+      <div ref={scrollContainerRef} className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
         {messages.map((msg, i) => {
           const isMine = msg.userId === user?.id;
           return (

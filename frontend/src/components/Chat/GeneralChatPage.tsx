@@ -1,11 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
 import { useSocket } from "../../context/SocketContext";
+import { getRoomMessages } from "../../api/chatService";
 
 export default function GeneralChatPage({ user }: { user: User | null }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
   const socket = useSocket();
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const data = await getRoomMessages("general");
+        setMessages(data);
+      } catch (err) {
+        console.error("Erreur lors du chargement des messages :", err);
+      }
+    };
+    fetchHistory();
+  }, []);
 
   useEffect(() => {
     if (user?.id) {
@@ -21,6 +34,19 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
     };
   }, [user]);
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+      const scrollToBottom = () => {
+          scrollContainerRef.current?.scrollTo({
+              top: scrollContainerRef.current.scrollHeight,
+              behavior: 'smooth',
+        });
+      }
+  
+      useEffect(() => {
+          scrollToBottom();
+      }, [messages]);
+
 
   const sendMessage = () => {
     if (message.trim()) {
@@ -32,7 +58,7 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-2">Messagerie Générale</h1>
-      <div className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
+      <div ref={scrollContainerRef} className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
         {messages.map((msg, i) => {
           const isMine = msg.userId === user?.id;
           return (
