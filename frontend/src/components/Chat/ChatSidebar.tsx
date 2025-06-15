@@ -5,9 +5,10 @@ import { User } from "../../../../backend/src/modules/Users/entities/user.entity
 interface ChatSidebarProps {
   onSelect: (chat: { type: 'general' | 'private' | 'group', targetId?: string }) => void;
   user: User | null;
+  onlineUsers: string[];
 }
 
-export default function ChatSidebar({ onSelect, user }: ChatSidebarProps) {
+export default function ChatSidebar({ onSelect, user, onlineUsers }: ChatSidebarProps) {
   const [friends, setFriends] = useState<UserData[]>([]);
   useEffect(() => {
     const fetchUsers = async () => {
@@ -41,8 +42,14 @@ export default function ChatSidebar({ onSelect, user }: ChatSidebarProps) {
             <button
               key={friend.id}
               onClick={() => onSelect({ type: 'private', targetId: friend.id })}
-              className="block w-full text-left px-2 py-1 hover:bg-gray-200 rounded"
+              className="flex items-center gap-2 w-full text-left px-2 py-1 hover:bg-gray-200 rounded"
             >
+            <span
+              className={`inline-block w-2 h-2 rounded-full ${
+                onlineUsers.includes(friend.id) ? '	bg-lime-500' : 'bg-gray-400'
+              }`}
+            />
+            {/* {onlineUsers.includes(friend.id) ? '🟢' : '⚪'} */}
             {friend.firstname} {friend.lastname}
           </button>
         ))}
