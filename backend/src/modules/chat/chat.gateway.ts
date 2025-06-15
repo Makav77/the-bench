@@ -1,6 +1,7 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { UserService } from "../Users/user.service";
+import { ChatService } from './chat.service';
 
 @WebSocketGateway({cors: {origin: '*'}})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -10,6 +11,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private clients: Map<string, string> = new Map();
     constructor(
         private readonly userService: UserService,
+        private readonly chatService: ChatService,
     ){}
 
     @SubscribeMessage('auth')
@@ -47,11 +49,29 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             console.error(`User with ID ${data.userId} not found.`);
             return;
         }
+        const type = data.room === 'general'
+            ? 'general'
+            : data.room.startsWith('group') ? 'group' : 'private';
+        
+        let normalizedRoom = data.room;
+        if (type === 'private') {
+            const ids = data.room.replace('private-', '').split('_').sort();
+            normalizedRoom = `private-${ids.join('_')}`;
+        }
+
+        await this.chatService.saveMessage({
+            content: data.content,
+            room: normalizedRoom,
+            type: type,
+            sender: user,
+        });
+        
         const payload = {
             content: data.content,
             userId: data.userId,
             username: data.username || `${user.lastname} ${user.firstname}`,
         };
+        
         if (data.room === 'general') {
             this.server.to(data.room).emit('general-message', payload);
         } else if(data.room.startsWith('group')){
