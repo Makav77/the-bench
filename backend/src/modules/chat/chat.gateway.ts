@@ -22,6 +22,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.clients.set(client.id, data.userId);
         console.log(`Mapped socket ${client.id} to user ${data.userId}`);
         console.log('Current clients:', Array.from(this.clients.entries()));
+        this.broadcastOnlineUsers();
+
+        const allOnlineUserIds = Array.from(new Set(this.clients.values()));
+        client.emit('online-users', allOnlineUserIds);
     }
 
     @SubscribeMessage('newMessage')
@@ -37,6 +41,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     handleDisconnect(client: Socket) {
         this.clients.delete(client.id);
         console.log('Client disconnected:', client.id);
+        this.broadcastOnlineUsers();
+    }
+
+    private broadcastOnlineUsers() {
+        const uniqueUserIds = Array.from(new Set(this.clients.values()));
+        this.server.emit('online-users', uniqueUserIds);
     }
     
     @SubscribeMessage('message')
