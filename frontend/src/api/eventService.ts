@@ -7,7 +7,7 @@ export interface EventSummary {
     startDate: string;
     endDate: string;
     maxNumberOfParticipants?: number;
-    author: { id: string; firstname: string; lastname: string };
+    author: { id: string; firstname: string; lastname: string; role: string };
     participantsList: { id: string }[];
 }
 
@@ -17,8 +17,8 @@ export interface EventDetails extends EventSummary {
     place: string;
     maxNumberOfParticipants?: number;
     description: string;
-    author: { id: string; firstname: string; lastname: string };
-    participantsList: { id: string }[];
+    author: { id: string; firstname: string; lastname: string; role: string };
+    participantsList: { id: string; firstname: string; lastname: string; }[];
 }
 
 export const getEvents = async (page = 1, limit = 5): Promise<{ data: EventSummary[]; total: number; page: number; lastPage: number }> => {

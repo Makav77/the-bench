@@ -65,23 +65,23 @@ function PollsPage() {
                 </div>
 
                 <ul className="grid grid-cols-2 gap-4">
-                    {polls.map(p => {
-                        const isExpired = !!p.closesAt && new Date(p.closesAt) < new Date();
+                    {polls.map(poll => {
+                        const isExpired = !!poll.closesAt && new Date(poll.closesAt) < new Date();
                         return (
                             <li
-                                key={p.id}
+                                key={poll.id}
                                 className="p-4 border-2 rounded hover:shadow cursor-pointer"
-                                onClick={() => navigate(`/polls/${p.id}`)}
+                                onClick={() => navigate(`/polls/${poll.id}`)}
                             >
-                                <strong>{p.question}</strong>
+                                <strong>{poll.question}</strong>
 
                                 <div className="flex justify-between">
-                                    <p>{p.votes.length} votes</p>
+                                    <p>{poll.votes.length} votes</p>
                                     <p>
-                                        {p.manualClosed || isExpired ? (
+                                        {poll.manualClosed || isExpired ? (
                                             <span className="text-gray-500 font-semibold text-sm">Closed</span>
-                                        ) : p.closesAt ? (
-                                            <PollCountdownTimer expiresAt={p.closesAt} />
+                                        ) : poll.closesAt ? (
+                                            <PollCountdownTimer expiresAt={poll.closesAt} />
                                         ) : (
                                             <span className="text-green-600 font-semibold text-sm">Open</span>
                                         )}
@@ -89,7 +89,13 @@ function PollsPage() {
                                 </div>
 
                                 <p className="text-sm text-gray-600">
-                                    Created by {p.author.firstname} {p.author.lastname}
+                                    Created by{" "}
+                                    <span
+                                        onClick={() => navigate(`/profile/${poll.author.id}`)}
+                                        className="text-blue-600 hover:underline cursor-pointer"
+                                    >
+                                        {poll.author.firstname} {poll.author.lastname}
+                                    </span>
                                 </p>
                             </li>
                         );

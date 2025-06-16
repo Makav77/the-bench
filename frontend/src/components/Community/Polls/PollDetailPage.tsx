@@ -133,6 +133,16 @@ function PollDetailPage() {
 
                 <h1 className="text-2xl font-bold">{poll.question}</h1>
 
+                <p className="text-sm text-gray-500 mb-4 -mt-3">
+                    Published by{" "}
+                    <span
+                        onClick={() => navigate(`/profile/${poll.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {poll.author.firstname} {poll.author.lastname}
+                    </span>
+                </p>
+
                 {!isClosed ? (
                     <div>
                         {poll.options.map(o => (
@@ -225,23 +235,25 @@ function PollDetailPage() {
                 </div>
             </div>
             
-            <div className="w-[30%] mx-auto flex justify-end">
-                <button
-                    onClick={() => setShowReportModal(true)}
-                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                >
-                    Report post
-                </button>
+            {!isAuthor && poll.author.role !== "admin" && poll.author.role !== "moderator" && (
+                <div className="w-[30%] mx-auto flex justify-end">
+                    <button
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                    >
+                        Report poll
+                    </button>
 
-                {showReportModal && (
-                    <ReportModal
-                        reportedUserId={poll.author.id}
-                        reportedContentId={poll.id}
-                        reportedContentType="POLL"
-                        onClose={() => setShowReportModal(false)}
-                    />
-                )}
-            </div>
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={poll.author.id}
+                            reportedContentId={poll.id}
+                            reportedContentType="POLL"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
+                </div>
+            )}
         </div>
     );
 }

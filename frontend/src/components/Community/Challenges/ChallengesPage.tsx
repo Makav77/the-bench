@@ -54,6 +54,15 @@ function ChallengesPage() {
                         <p className="text-sm text-gray-600">
                             Start from {new Date(challenge.startDate).toLocaleDateString()} to {new Date(challenge.endDate).toLocaleDateString()}
                         </p>
+                        <p className="text-sm">
+                            Author : {" "}
+                            <span
+                                onClick={() => navigate(`/profile/${challenge.author.id}`)}
+                                className="text-blue-600 hover:underline cursor-pointer"
+                            >
+                                {challenge.author.firstname} {challenge.author.lastname}
+                            </span>
+                        </p>
                         <p>Registered : {challenge.registrations.length} - Completions : {challenge.completions.length}</p>
                     </li>
                 ))}

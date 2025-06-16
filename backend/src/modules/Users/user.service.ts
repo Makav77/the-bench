@@ -5,12 +5,22 @@ import { User } from './entities/user.entity';
 import bcrypt from "bcryptjs";
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { Event } from '../Events/entities/event.entity';
+import { ChallengeRegistration } from '../Challenges/entities/challenge-registration.entity';
+import { MarketItem } from '../Market/entities/market.entity';
+import { ProfileSummaryDTO } from './dto/profile-summary.dto';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(Event)
+        private readonly eventRepository: Repository<Event>,
+        @InjectRepository(ChallengeRegistration)
+        private readonly challengeRegistrationRepository: Repository<ChallengeRegistration>,
+        @InjectRepository(MarketItem)
+        private readonly marketItemRepository: Repository<MarketItem>,
     ) {}
 
     async findAll(): Promise<User[]> {
@@ -25,6 +35,16 @@ export class UserService {
         return user;
     }
 
+    async searchUsers(query: string): Promise<{ id: string; firstname: string; lastname: string; }[]> {
+        return this.userRepository
+            .createQueryBuilder("user")
+            .where('LOWER(user.firstname) LIKE LOWER(:query)', { query: `%${query}%` })
+            .orWhere('LOWER(user.lastname) LIKE LOWER(:query)', { query: `%${query}%` })
+            .select(['user.id', 'user.firstname', 'user.lastname'])
+            .limit(10)
+            .getMany();
+    }
+
     async findByEmail(email: string): Promise<User> {
         const user = await this.userRepository.findOneBy({ email });
         if (!user) {
@@ -36,7 +56,10 @@ export class UserService {
     async create(createUserDTO: CreateUserDTO): Promise<User> {
         try {
             createUserDTO.password = await bcrypt.hash(createUserDTO.password, 10);
-            const user = this.userRepository.create(createUserDTO);
+            const user = this.userRepository.create({
+                ...createUserDTO,
+                profilePicture: "/uploads/profile/default.png",
+            });
             return await this.userRepository.save(user);
         } catch (error) {
             if (error.code === "23505") {
@@ -58,5 +81,75 @@ export class UserService {
             throw new NotFoundException(`User with ID ${id} not found.`);
         }
         return;
+    }
+
+    async getProfileSummary(userId: string): Promise<ProfileSummaryDTO> {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id: userId },
+            });
+
+            if (!user) {
+                console.log("No user found for userId:", userId);
+                throw new NotFoundException("User not found.");
+            }
+
+            const events = await this.eventRepository
+                .createQueryBuilder("event")
+                .leftJoin("event.participantsList", "participant")
+                .where("participant.id = :userId", { userId })
+                .orderBy("event.startDate", "DESC")
+                .getMany();
+
+            const eventSummaries = events.map(event => ({
+                id: event.id,
+                name: event.name,
+                startDate: event.startDate,
+            }));
+
+            const registrations = await this.challengeRegistrationRepository.find({
+                relations: ["challenge"],
+                where: { user: { id: userId } },
+            });
+
+            const challengeSummaries = registrations.map(r => ({
+                id: r.challenge.id,
+                title: r.challenge.title,
+                startDate: r.challenge.startDate,
+            }));
+
+            const marketItems = await this.marketItemRepository.find({
+                where: { author: { id: userId } },
+                order: { updatedAt: "DESC" }
+            });
+
+            const marketItemSummaries = marketItems.map(item => ({
+                id: item.id,
+                title: item.title,
+                updatedAt: item.updatedAt,
+                images: item.images ?? [],
+            }));
+
+            return {
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                profilePictureUrl: user.profilePicture || "/uploads/profile/default.png",
+                badges: [],
+                points: user.points,
+                events: eventSummaries,
+                challenges: challengeSummaries,
+                marketItems: marketItemSummaries,
+            };
+        } catch (err) {
+            console.error("Error in getProfileSummary:", err);
+            throw err;
+        }
+    }
+
+    async setProfilePicture(userId: string, path: string): Promise<User> {
+        const user = await this.findOne(userId);
+        user.profilePicture = path;
+        return this.userRepository.save(user);
     }
 }

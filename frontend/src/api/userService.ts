@@ -1,4 +1,5 @@
 import axios from "axios";
+import apiClient from "./apiClient";
 
 export enum Role {
     ADMIN = "admin",
@@ -15,6 +16,31 @@ interface UserData {
     dateOfBirth: string;
     role: Role;
 };
+
+export interface ProfileSummaryDTO {
+    id: string;
+    firstname: string;
+    lastname: string;
+    profilePictureUrl: string;
+    badges: string[];
+    points: number;
+    events: {
+        id: string;
+        name: string;
+        startDate: string;
+    }[];
+    challenges: {
+        id: string;
+        title: string;
+        startDate: string;
+    }[];
+    marketItems: {
+        id: string;
+        title: string;
+        updatedAt: string;
+        images: string[];
+    }[];
+}
 
 const API_URL = "http://localhost:3000/users";
 
@@ -60,5 +86,14 @@ export const deleteUser = async(id: string) => {
         return response.data;
     } catch (error) {
         console.error("deleteUser error : " + error);
+    }
+}
+
+export const getProfileSummary = async(userId: string) => {
+    try {
+        const response = await apiClient.get(`/users/${userId}/profile`);
+        return response.data; 
+    } catch (error) {
+        console.error("getProfileSummary error : " + error);
     }
 }

@@ -10,6 +10,7 @@ export interface ReportDTO {
     reason: string;
     description: string | null;
     status: "PENDING" | "VALIDATED" | "REJECTED";
+    treatedBy?: { id: string; firstname: string; lastname: string; };
 }
 
 export interface CreateReportPayload {

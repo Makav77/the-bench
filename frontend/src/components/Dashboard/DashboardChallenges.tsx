@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getPendingChallenges, getPendingCompletions, validateCompletion, PendingCompletion, validateChallenge, ChallengeSummary } from "../../api/challengeService";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 function DashboardChallenges() {
     const [pageChallenge, setPageChallenge] = useState(1);
@@ -14,6 +15,7 @@ function DashboardChallenges() {
     const [pendingCompletions, setPendingCompletions] = useState<PendingCompletion[]>([]);
     const [loadingCompletions, setLoadingCompletions] = useState<boolean>(false);
     const [updatingCompletionId, setUpdatingCompletionId] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function loadPendings() {
@@ -139,7 +141,12 @@ function DashboardChallenges() {
                                 </p>
                                 <p>
                                     <span className="font-semibold">Author :</span>{" "}
-                                    {challenge.author.firstname} {challenge.author.lastname}
+                                    <span
+                                        onClick={() => navigate(`/profile/${challenge.author.id}`)}
+                                        className="text-blue-600 hover:underline cursor-pointer"
+                                    >
+                                        {challenge.author.firstname} {challenge.author.lastname}
+                                    </span>
                                 </p>
                                 <p>
                                 <span className="font-semibold">Dates :</span>{" "}

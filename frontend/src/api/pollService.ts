@@ -14,7 +14,7 @@ export interface PollSummary {
     closesAt?: string;
     manualClosed: boolean;
     createdAt: string;
-    author: { id: string; firstname: string; lastname: string };
+    author: { id: string; firstname: string; lastname: string; role: string; };
     votes: { voter: { id: string } }[];
 }
 
@@ -37,7 +37,7 @@ export const createPoll = async (form: {
     options: string[];
     type: "single" | "multiple" | "limited";
     maxSelections?: number;
-    autoCloseIn?: number;
+    autoCloseAt?: string;
 }): Promise<PollDetails> => {
     const response = await apiClient.post("/polls", form);
     return response.data;

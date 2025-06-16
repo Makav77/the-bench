@@ -21,7 +21,7 @@ export class ReportsService{
             order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
-            relations: ["reporter", "reportedUser"],
+            relations: ["reporter", "reportedUser", "treatedBy"],
         });
 
         const lastPage = Math.ceil(total / limit);
@@ -66,13 +66,17 @@ export class ReportsService{
         return this.reportRepo.save(newReport);
     }
 
-    async updateReportStatus(reportId: string, updateReportStatusDTO: UpdateReportStatusDTO): Promise<Report> {
-        const report = await this.reportRepo.findOneBy({ id: reportId });
+    async updateReportStatus(reportId: string, updateReportStatusDTO: UpdateReportStatusDTO, treatingUser: User): Promise<Report> {
+        const report = await this.reportRepo.findOne({
+            where: { id: reportId },
+            relations: ["treatedBy"],
+        });
         if (!report) {
             throw new NotFoundException("Report not found.");
         }
 
         report.status = updateReportStatusDTO.status;
+        report.treatedBy = treatingUser;
         return this.reportRepo.save(report);
     }
 

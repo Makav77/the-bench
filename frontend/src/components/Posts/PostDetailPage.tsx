@@ -78,8 +78,13 @@ function PostDetailPage() {
                 <h1 className="text-2xl font-bold">{post.title}</h1>
                 <p className="text-sm text-gray-600">
                 Published on {new Date(post.createdAt).toLocaleString()} (update on{' '}
-                    {new Date(post.updatedAt).toLocaleString()}) by{' '}
-                    {post.author.firstname} {post.author.lastname}
+                    {new Date(post.updatedAt).toLocaleString()}) by{" "}
+                    <span
+                        onClick={() => navigate(`/profile/${post.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {post.author.firstname} {post.author.lastname}
+                    </span>
                 </p>
                 <p className="whitespace-pre-wrap">{post.description}</p>
 
@@ -103,23 +108,25 @@ function PostDetailPage() {
                 )}
             </div>
 
-            <div className="w-[20%] mx-auto flex justify-end">
-                <button
-                    onClick={() => setShowReportModal(true)}
-                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                >
-                    Report post
-                </button>
+            {!isAuthor && post.author.role !== "admin" && post.author.role !== "moderator" && (
+                <div className="w-[20%] mx-auto flex justify-end">
+                    <button
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                    >
+                        Report post
+                    </button>
 
-                {showReportModal && (
-                    <ReportModal
-                        reportedUserId={post.author.id}
-                        reportedContentId={post.id}
-                        reportedContentType="POST"
-                        onClose={() => setShowReportModal(false)}
-                    />
-                )}
-            </div>
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={post.author.id}
+                            reportedContentId={post.id}
+                            reportedContentType="POST"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
+                </div>
+            )}
         </>
     );
 }

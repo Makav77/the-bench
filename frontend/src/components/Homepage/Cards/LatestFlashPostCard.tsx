@@ -52,7 +52,17 @@ function LatestFlashPostCard() {
             </div>
 
             <div>
-                <p>Author : {flashPost.author.firstname} {flashPost.author.lastname}</p>
+                <p>Author :{" "}
+                    <span
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/profile/${flashPost.author.id}`);
+                        }}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {flashPost.author.firstname} {flashPost.author.lastname}
+                    </span>
+                </p>
                 <div className="text-center">
                     <CountdownTimer createdAt={flashPost.updatedAt} />
                 </div>

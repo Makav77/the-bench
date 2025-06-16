@@ -20,14 +20,19 @@ function Header() {
     };
 
     return (
-        <div data-testid = "header" className="bg-[#4A93C9]">
+        <div data-testid = "header" className="bg-gradient-to-r from-[#0575E6] to-[#deeae4]">
             <div className="grid grid-cols-3 h-10 mb-8 mx-auto w-[75%]">
                 <div className="flex items-center">
-                    <img src="assets/bench-logo.png" alt="logo" className="h-10"/>
+                    <img
+                        src="assets/bench-logo.png"
+                        alt="logo"
+                        className="h-10 cursor-pointer"
+                        onClick={() => navigate("/homepage")}
+                    />
                 </div>
 
                 <div className="flex items-center justify-center">
-                    <p className="text-3xl">The Bench</p>
+                    <p className="text-4xl font-bold">The Bench</p>
                 </div>
 
                 <div className="flex items-center justify-end">
@@ -40,7 +45,7 @@ function Header() {
                                 type="button"
                                 aria-label="profile-button"
                                 className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
-                                onClick={() => navigate("/profile")}
+                                onClick={() => navigate(`/profile/${user.id}`)}
                             >
                                 {t("profile")}
                             </button>

@@ -10,8 +10,16 @@ export interface ChallengeSummary {
     status: string;
     rejectedReason?: string | null;
     reviewedAt: string | null;
-    author: { id: string; firstname: string; lastname: string; };
-    registrations: { user: { id: string } }[];
+    author: { id: string; firstname: string; lastname: string; role: string; };
+    registrations: {
+        id: string;
+        createdAt: string;
+        user: {
+            id: string;
+            firstname: string;
+            lastname: string;
+        };
+    }[];
     completions: { id: string; user: { id: string }; validated: boolean }[];
 }
 

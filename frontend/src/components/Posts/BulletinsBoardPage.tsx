@@ -80,7 +80,7 @@ function BulletinsBoardPage() {
                     {flashLoading
                         ? <p>Loading flash posts...</p>
                         : flashPosts.length === 0
-                            ? <p className="italic text-gray-500">No flash posts right now.</p>
+                            ? <p className="italic text-gray-500 mb-5">No flash posts right now.</p>
                             : (
                                 <div className="grid grid-cols-1 gap-4 border p-4 mb-4">
                                     {flashPosts.map((flashpost) => {
@@ -99,7 +99,17 @@ function BulletinsBoardPage() {
                                                         </p>
                                                         <CountdownTimer createdAt={flashpost.updatedAt} />
                                                     </div>
-                                                    <p className="text-sm text-gray-600">Author : {flashpost.author.firstname} {flashpost.author.lastname}</p>
+                                                    <p className="text-sm text-gray-600">Author :{" "}
+                                                        <span
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                navigate(`/profile/${flashpost.author.id}`);
+                                                            }}
+                                                            className="text-blue-600 hover:underline cursor-pointer"
+                                                        >
+                                                            {flashpost.author.firstname} {flashpost.author.lastname}
+                                                        </span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         );
@@ -149,7 +159,16 @@ function BulletinsBoardPage() {
                                             <div className="flex flex-col">
                                                 <h2 className="text-lg font-semibold">{post.title}</h2>
                                                 <p className="text-sm text-gray-600">
-                                                    Last update at {new Date(post.updatedAt).toLocaleString()} by {" "} {post.author.firstname} {post.author.lastname}
+                                                    Last update at {new Date(post.updatedAt).toLocaleString()} by{" "}
+                                                    <span
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            navigate(`/profile/${post.author.id}`);
+                                                        }}
+                                                        className="text-blue-600 hover:underline cursor-pointer"
+                                                    >
+                                                        {post.author.firstname} {post.author.lastname}
+                                                    </span>
                                                 </p>
                                             </div>
                                         </div>

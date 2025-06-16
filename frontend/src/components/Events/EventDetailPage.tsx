@@ -16,7 +16,7 @@ function EventDetailPage() {
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [showModal, setShowModal] = useState(false);
+    const [showParticipantModal, setShowParticipantModal] = useState(false);
     const [removingId, setRemovingId] = useState<string | null>(null);
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
@@ -139,7 +139,7 @@ function EventDetailPage() {
 
                         {event.maxNumberOfParticipants != null && (isAuthor || isAdminorModerator) && (
                             <button
-                                onClick={() => setShowModal(true)}
+                                onClick={() => setShowParticipantModal(true)}
                                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 border rounded cursor-pointer"
                             >
                                 Participant list
@@ -148,19 +148,32 @@ function EventDetailPage() {
                     </div>
                 </div>
 
-                <h1 className="text-2xl font-bold">{event.name}</h1>
+                <h1 className="text-3xl font-bold">{event.name}</h1>
+
+                <p className="-mt-4">
+                    <strong>Author : </strong>
+                    <span
+                        onClick={() => navigate(`/profile/${event.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {event.author.firstname} {event.author.lastname}
+                    </span>
+                </p>
+
+                <strong>Description</strong>
+                <p className="whitespace-pre-wrap">{event.description}</p>
+
+                <strong>Place</strong> 
+                <p className="whitespace-pre-wrap">{event.place}</p>
+
                 <p>
-                    <strong>Start :</strong>{" "}
+                    <strong>Start : </strong>
                     {new Date(event.startDate).toLocaleString()}
                 </p>
 
-                <p>
-                    <strong>End :</strong>{" "}
+                <p className="-mt-4">
+                    <strong className="mr-2">End :</strong>{" "}
                     {new Date(event.endDate).toLocaleString()}
-                </p>
-
-                <p>
-                    <strong>Place :</strong> {event.place}
                 </p>
 
                 {event.maxNumberOfParticipants && (
@@ -169,19 +182,11 @@ function EventDetailPage() {
                     </p>
                 )}
 
-                <p>
-                    <strong>Description :</strong>
-                </p>
-                <p className="whitespace-pre-wrap">{event.description}</p>
-
-                <p>
-                    <strong>Author :</strong> {event.author.firstname}{" "}
-                    {event.author.lastname}
-                </p>
-
-                <p>
-                    <strong>Participants :</strong> {event.participantsList.length}
-                </p>
+                {event.maxNumberOfParticipants === null || event.maxNumberOfParticipants === undefined && (
+                    <p className="-mt-4">
+                        <strong>Participants :</strong> {event.participantsList.length}
+                    </p>
+                )}
 
                 {(isAuthor || isAdminorModerator) && (
                     <div className="mt-4 flex gap-2 justify-center">
@@ -201,7 +206,7 @@ function EventDetailPage() {
                     </div>
                 )}
 
-                {showModal && (
+                {showParticipantModal && (
                     <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
                         <div className="bg-white rounded p-6 w-96 max-h-[70vh] overflow-auto">
                             {event.maxNumberOfParticipants && (
@@ -236,7 +241,7 @@ function EventDetailPage() {
                                 ))}
                             </ul>
                             <button
-                                onClick={() => setShowModal(false)}
+                                onClick={() => setShowParticipantModal(false)}
                                 className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
                             >
                                 Close
@@ -246,23 +251,25 @@ function EventDetailPage() {
                 )}
             </div>
 
-            <div className="w-[20%] mx-auto flex justify-end">
-                <button
-                    onClick={() => setShowReportModal(true)}
-                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                >
-                    Report event
-                </button>
+            {!isAuthor && event.author.role !== "admin" && event.author.role !== "moderator" && (
+                <div className="w-[20%] mx-auto flex justify-end">
+                    <button
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                    >
+                        Report event
+                    </button>
 
-                {showReportModal && (
-                    <ReportModal
-                        reportedUserId={event.author.id}
-                        reportedContentId={event.id}
-                        reportedContentType="EVENT"
-                        onClose={() => setShowReportModal(false)}
-                    />
-                )}
-            </div>
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={event.author.id}
+                            reportedContentId={event.id}
+                            reportedContentType="EVENT"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
+                </div>
+            )}
         </div>
     );
 }

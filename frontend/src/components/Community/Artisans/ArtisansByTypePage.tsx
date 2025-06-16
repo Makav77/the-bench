@@ -63,6 +63,12 @@ export default function ArtisansByTypePage() {
 
     return (
         <div className="w-[25%] mx-auto my-10">
+            <button
+                onClick={() => navigate("/artisans")}
+                className="bg-gray-300 font-bold px-4 py-2 rounded-2xl cursor-pointer hover:bg-gray-200 mb-5"
+            >
+                ← Back to artisans list
+            </button>
             <h2 className="text-2xl font-bold mb-4"><span className="capitalize">{job}</span> arounde me</h2>
             {artisans.length > 0 ? (
                 <ul className="space-y-6">

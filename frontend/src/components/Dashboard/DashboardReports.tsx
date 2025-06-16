@@ -229,7 +229,7 @@ function DashboardReports() {
                                 </p>
                             </div>
 
-                            <div className="mt-4 md:mt-0 md:ml-4 flex-shrink-0 flex flex-col space-y-2">
+                            <div className="mt-4 md:mt-0 md:ml-4 flex-shrink-0 flex flex-col space-y-2 justify-center">
                                 {report.status === "PENDING" ? (
                                     <>
                                         <button
@@ -258,8 +258,11 @@ function DashboardReports() {
                                         </button>
                                     </>
                                 ) : (
-                                    <p className="text-gray-600 italic">
-                                        Action performed
+                                    <p className="text-gray-600 italic text-center border-l-1 pl-4">
+                                        Action performed by<br />
+                                        {report.treatedBy
+                                            ? `${report.treatedBy.firstname} ${report.treatedBy.lastname}`
+                                            : "Unknown"}
                                     </p>
                                 )}
                             </div>
