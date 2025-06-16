@@ -56,7 +56,10 @@ export class UserService {
     async create(createUserDTO: CreateUserDTO): Promise<User> {
         try {
             createUserDTO.password = await bcrypt.hash(createUserDTO.password, 10);
-            const user = this.userRepository.create(createUserDTO);
+            const user = this.userRepository.create({
+                ...createUserDTO,
+                profilePicture: "/uploads/profile/default.png",
+            });
             return await this.userRepository.save(user);
         } catch (error) {
             if (error.code === "23505") {
@@ -133,7 +136,7 @@ export class UserService {
                 id: user.id,
                 firstname: user.firstname,
                 lastname: user.lastname,
-                profilePictureUrl: user.profilePicture ?? "/images/default-profile.png",
+                profilePictureUrl: user.profilePicture || "/uploads/profile/default.png",
                 badges: [],
                 events: eventSummaries,
                 challenges: challengeSummaries,
@@ -141,7 +144,13 @@ export class UserService {
             };
         } catch (err) {
             console.error("ERROR in getProfileSummary:", err);
-            throw err; // rethrow pour que ça remonte
+            throw err;
         }
+    }
+
+    async setProfilePicture(userId: string, path: string): Promise<User> {
+        const user = await this.findOne(userId);
+        user.profilePicture = path;
+        return this.userRepository.save(user);
     }
 }

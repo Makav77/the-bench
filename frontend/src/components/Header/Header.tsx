@@ -23,7 +23,12 @@ function Header() {
         <div data-testid = "header" className="bg-gradient-to-r from-[#0575E6] to-[#deeae4]">
             <div className="grid grid-cols-3 h-10 mb-8 mx-auto w-[75%]">
                 <div className="flex items-center">
-                    <img src="assets/bench-logo.png" alt="logo" className="h-10 cursor-pointer" onClick={() => navigate("/homepage")}/>
+                    <img
+                        src="assets/bench-logo.png"
+                        alt="logo"
+                        className="h-10 cursor-pointer"
+                        onClick={() => navigate("/homepage")}
+                    />
                 </div>
 
                 <div className="flex items-center justify-center">
