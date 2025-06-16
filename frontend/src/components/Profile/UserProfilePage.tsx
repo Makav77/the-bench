@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProfileSummary, ProfileSummaryDTO } from "../../api/userService";
+import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { useRef } from "react";
 import apiClient from "../../api/apiClient";
@@ -8,6 +9,8 @@ import apiClient from "../../api/apiClient";
 export default function UserProfilePage() {
     const { id } = useParams<{ id: string }>();
     const [profile, setProfile] = useState<ProfileSummaryDTO | null>(null);
+    const { user } = useAuth();
+    const isOwnProfile = user && user.id === id;
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const navigate = useNavigate();
@@ -98,17 +101,25 @@ export default function UserProfilePage() {
                     )}
                 <h1 className="text-2xl font-bold">{profile.firstname} {profile.lastname}</h1>
 
-                <div className="flex flex-col items-center space-y-2">
-                    <button
-                        onClick={() => setShowModal(true)}
-                        className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
-                    >
-                        Change my profile picture
-                    </button>
-                </div>
+                {isOwnProfile && (
+                    <div className="flex flex-col items-center space-y-2">
+                        <button
+                            onClick={() => setShowModal(true)}
+                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                            Change my profile picture
+                        </button>
+                    </div>
+                )}
             </div>
 
             <div>
+                {isOwnProfile && (
+                    <div className="text-xl font-semibold text-blue-700">
+                        Points: {profile.points}
+                    </div>
+                )}
+
                 <h2 className="text-xl font-semibold mb-2">Badges</h2>
                 {profile.badges.length === 0 ? (
                     <p className="text-gray-600 italic">No badges yet.</p>

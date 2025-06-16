@@ -84,8 +84,6 @@ export class UserService {
     }
 
     async getProfileSummary(userId: string): Promise<ProfileSummaryDTO> {
-        console.log("getProfileSummary called with userId:", userId);
-
         try {
             const user = await this.userRepository.findOne({
                 where: { id: userId },
@@ -138,12 +136,13 @@ export class UserService {
                 lastname: user.lastname,
                 profilePictureUrl: user.profilePicture || "/uploads/profile/default.png",
                 badges: [],
+                points: user.points,
                 events: eventSummaries,
                 challenges: challengeSummaries,
                 marketItems: marketItemSummaries,
             };
         } catch (err) {
-            console.error("ERROR in getProfileSummary:", err);
+            console.error("Error in getProfileSummary:", err);
             throw err;
         }
     }

@@ -23,6 +23,7 @@ export interface ProfileSummaryDTO {
     lastname: string;
     profilePictureUrl: string;
     badges: string[];
+    points: number;
     events: {
         id: string;
         name: string;
