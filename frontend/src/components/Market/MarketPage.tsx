@@ -69,7 +69,16 @@ function MarketPage() {
                                 </p>
 
                                 <p className="text-gray-600">
-                                    Item by <span className="italic">{item.author.firstname} {item.author.lastname}</span>
+                                    Sell by {" "}
+                                    <span
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/profile/${item.author.id}`);
+                                        }}
+                                        className="text-blue-600 hover:underline cursor-pointer"
+                                    >
+                                        {item.author.firstname} {item.author.lastname}
+                                    </span>
                                 </p>
                             </div>
                             

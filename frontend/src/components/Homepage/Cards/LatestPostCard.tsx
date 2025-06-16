@@ -51,7 +51,17 @@ function LatestPostCard() {
             </div>
 
             <div>
-                <p>Author : {post.author.firstname} {post.author.lastname}</p>
+                <p>Author :{" "}
+                    <span
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/profile/${post.author.id}`);
+                        }}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {post.author.firstname} {post.author.lastname}
+                    </span>
+                </p>
             </div>
         </div>
     );

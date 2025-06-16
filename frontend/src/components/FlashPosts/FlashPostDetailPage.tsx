@@ -80,7 +80,12 @@ function FlashPostDetailPage() {
                 <p className="text-sm text-gray-600">
                 Published on {new Date(flashPost.createdAt).toLocaleString()} (update on{' '}
                     {new Date(flashPost.updatedAt).toLocaleString()}) by{' '}
-                    {flashPost.author.firstname} {flashPost.author.lastname}
+                    <span
+                        onClick={() => navigate(`/profile/${flashPost.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {flashPost.author.firstname} {flashPost.author.lastname}
+                    </span>
                 </p>
 
                 <CountdownTimer createdAt={flashPost.createdAt} />

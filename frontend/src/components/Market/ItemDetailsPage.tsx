@@ -107,9 +107,12 @@ function ItemDetailsPage() {
 
                 <p className="text-gray-700 mt-5">
                     Sell by{" "}
-                    <strong>
+                    <span
+                        onClick={() => navigate(`/profile/${item.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
                         {item.author.firstname} {item.author.lastname}
-                    </strong>
+                    </span>
                 </p>
 
                 <div className="mt-3">

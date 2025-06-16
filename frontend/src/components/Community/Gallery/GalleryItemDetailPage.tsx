@@ -90,7 +90,14 @@ export default function GalleryItemDetailPage() {
                 {galleryItem.description && <p className="mb-4">{galleryItem.description}</p>}
 
                 <p className="text-sm text-gray-500 mb-4">
-                    Published by {galleryItem.author.firstname} {galleryItem.author.lastname} on {new Date(galleryItem.createdAt).toLocaleString()}
+                    Published by{" "}
+                    <span
+                        onClick={() => navigate(`/profile/${galleryItem.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {galleryItem.author.firstname} {galleryItem.author.lastname}
+                    </span>{" "}
+                    on {new Date(galleryItem.createdAt).toLocaleString()}
                 </p>
 
                 <div className="flex justify-between items-center space-x-4">

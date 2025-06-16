@@ -78,8 +78,13 @@ function PostDetailPage() {
                 <h1 className="text-2xl font-bold">{post.title}</h1>
                 <p className="text-sm text-gray-600">
                 Published on {new Date(post.createdAt).toLocaleString()} (update on{' '}
-                    {new Date(post.updatedAt).toLocaleString()}) by{' '}
-                    {post.author.firstname} {post.author.lastname}
+                    {new Date(post.updatedAt).toLocaleString()}) by{" "}
+                    <span
+                        onClick={() => navigate(`/profile/${post.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {post.author.firstname} {post.author.lastname}
+                    </span>
                 </p>
                 <p className="whitespace-pre-wrap">{post.description}</p>
 

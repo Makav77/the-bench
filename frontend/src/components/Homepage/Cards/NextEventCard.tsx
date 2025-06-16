@@ -55,12 +55,19 @@ function NextEventCard() {
             </div>
 
             <div>
-                Organized by {event.author.firstname} {event.author.lastname}
+                Organized by{" "}
+                <span
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/profile/${event.author.id}`);
+                    }}
+                    className="text-blue-600 hover:underline cursor-pointer"
+                >
+                    {event.author.firstname} {event.author.lastname}
+                </span>
             </div>
         </div>
     )
-
-
 }
 
 export default NextEventCard;

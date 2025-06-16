@@ -148,19 +148,32 @@ function EventDetailPage() {
                     </div>
                 </div>
 
-                <h1 className="text-2xl font-bold">{event.name}</h1>
+                <h1 className="text-3xl font-bold">{event.name}</h1>
+
+                <p className="-mt-4">
+                    <strong>Author : </strong>
+                    <span
+                        onClick={() => navigate(`/profile/${event.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {event.author.firstname} {event.author.lastname}
+                    </span>
+                </p>
+
+                <strong>Description</strong>
+                <p className="whitespace-pre-wrap">{event.description}</p>
+
+                <strong>Place</strong> 
+                <p className="whitespace-pre-wrap">{event.place}</p>
+
                 <p>
-                    <strong>Start :</strong>{" "}
+                    <strong>Start : </strong>
                     {new Date(event.startDate).toLocaleString()}
                 </p>
 
-                <p>
-                    <strong>End :</strong>{" "}
+                <p className="-mt-4">
+                    <strong className="mr-2">End :</strong>{" "}
                     {new Date(event.endDate).toLocaleString()}
-                </p>
-
-                <p>
-                    <strong>Place :</strong> {event.place}
                 </p>
 
                 {event.maxNumberOfParticipants && (
@@ -169,19 +182,11 @@ function EventDetailPage() {
                     </p>
                 )}
 
-                <p>
-                    <strong>Description :</strong>
-                </p>
-                <p className="whitespace-pre-wrap">{event.description}</p>
-
-                <p>
-                    <strong>Author :</strong> {event.author.firstname}{" "}
-                    {event.author.lastname}
-                </p>
-
-                <p>
-                    <strong>Participants :</strong> {event.participantsList.length}
-                </p>
+                {event.maxNumberOfParticipants === null || event.maxNumberOfParticipants === undefined && (
+                    <p className="-mt-4">
+                        <strong>Participants :</strong> {event.participantsList.length}
+                    </p>
+                )}
 
                 {(isAuthor || isAdminorModerator) && (
                     <div className="mt-4 flex gap-2 justify-center">
