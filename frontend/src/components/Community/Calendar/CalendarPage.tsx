@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import YearCalendar, { YearItem } from "./YearCalendar";
 import { getEvents, EventSummary } from "../../../api/eventService";
 import { ChallengeSummary, getChallenges } from "../../../api/challengeService";
+import { useNavigate } from "react-router-dom";
 
 function CalendarPage() {
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [items, setItems] = useState<YearItem[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         (async () => {
@@ -56,6 +58,13 @@ function CalendarPage() {
 
     return (
         <div className="p-6 w-[80%] mx-auto">
+            <button
+                onClick={() => navigate("/community")}
+                className="bg-gray-300 font-bold px-4 py-2 rounded-2xl cursor-pointer hover:bg-gray-200 mb-5"
+            >
+                ← Back to Community
+            </button>
+
             <div className="flex justify-between items-center mb-4">
                 <button
                     className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-gray-300"
