@@ -108,4 +108,15 @@ export class User {
 
     @OneToMany(() => Report, (report) => report.reportedUser)
     reportsReceived: Report[];
+
+    @ManyToMany(() => User, (user) => user.friends)
+    @JoinTable({ name: "user_friends" })
+    friends: User[];
+
+    @ManyToMany(() => User, (user) => user.friendRequestsReceived)
+    @JoinTable({ name: "friend_requests_sent" })
+    friendRequestsSent: User[];
+
+    @ManyToMany(() => User, (user) => user.friendRequestsSent)
+    friendRequestsReceived: User[];
 }
