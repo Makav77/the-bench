@@ -10,7 +10,7 @@ export interface ChallengeSummary {
     status: string;
     rejectedReason?: string | null;
     reviewedAt: string | null;
-    author: { id: string; firstname: string; lastname: string; };
+    author: { id: string; firstname: string; lastname: string; role: string; };
     registrations: {
         id: string;
         createdAt: string;

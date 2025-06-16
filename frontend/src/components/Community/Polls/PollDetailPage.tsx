@@ -225,23 +225,25 @@ function PollDetailPage() {
                 </div>
             </div>
             
-            <div className="w-[30%] mx-auto flex justify-end">
-                <button
-                    onClick={() => setShowReportModal(true)}
-                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                >
-                    Report poll
-                </button>
+            {!isAuthor && poll.author.role !== "admin" && poll.author.role !== "moderator" && (
+                <div className="w-[30%] mx-auto flex justify-end">
+                    <button
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                    >
+                        Report poll
+                    </button>
 
-                {showReportModal && (
-                    <ReportModal
-                        reportedUserId={poll.author.id}
-                        reportedContentId={poll.id}
-                        reportedContentType="POLL"
-                        onClose={() => setShowReportModal(false)}
-                    />
-                )}
-            </div>
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={poll.author.id}
+                            reportedContentId={poll.id}
+                            reportedContentType="POLL"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
+                </div>
+            )}
         </div>
     );
 }

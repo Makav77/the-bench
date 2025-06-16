@@ -103,23 +103,25 @@ function PostDetailPage() {
                 )}
             </div>
 
-            <div className="w-[20%] mx-auto flex justify-end">
-                <button
-                    onClick={() => setShowReportModal(true)}
-                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                >
-                    Report post
-                </button>
+            {!isAuthor && post.author.role !== "admin" && post.author.role !== "moderator" && (
+                <div className="w-[20%] mx-auto flex justify-end">
+                    <button
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                    >
+                        Report post
+                    </button>
 
-                {showReportModal && (
-                    <ReportModal
-                        reportedUserId={post.author.id}
-                        reportedContentId={post.id}
-                        reportedContentType="POST"
-                        onClose={() => setShowReportModal(false)}
-                    />
-                )}
-            </div>
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={post.author.id}
+                            reportedContentId={post.id}
+                            reportedContentType="POST"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
+                </div>
+            )}
         </>
     );
 }

@@ -112,24 +112,25 @@ export default function GalleryItemDetailPage() {
                         </div>
                     </div>
 
-                    <div>
-                        <button
-                            onClick={() => setShowReportModal(true)}
-                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                        >
-                            Report image
-                        </button>
+                    {!isAuthor && galleryItem.author.role !== "admin" && galleryItem.author.role !== "moderator" && (
+                        <div>
+                            <button
+                                onClick={() => setShowReportModal(true)}
+                                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                            >
+                                Report image
+                            </button>
 
-                        {showReportModal && (
-                            <ReportModal
-                                reportedUserId={galleryItem.author.id}
-                                reportedContentId={galleryItem.id}
-                                reportedContentType="GALLERY"
-                                onClose={() => setShowReportModal(false)}
-                            />
-                        )}
-                    </div>
-
+                            {showReportModal && (
+                                <ReportModal
+                                    reportedUserId={galleryItem.author.id}
+                                    reportedContentId={galleryItem.id}
+                                    reportedContentType="GALLERY"
+                                    onClose={() => setShowReportModal(false)}
+                                />
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

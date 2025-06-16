@@ -163,7 +163,7 @@ function ChallengeDetailPage() {
                         )
                     ) : ( <button
                             onClick={handleUnsubscribe}
-                            className="bg-yellow-600 text-white px-4 py-2 rounded cursor-pointer"
+                            className="bg-yellow-600 text-white px-4 py-2 rounded cursor-pointer mx-auto"
                         >
                             Unsubscribe
                         </button>
@@ -204,23 +204,25 @@ function ChallengeDetailPage() {
                 </div>
             </div>
 
-            <div className="w-[30%] mx-auto flex justify-end">
-                <button
-                    onClick={() => setShowReportModal(true)}
-                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                >
-                    Report challenge
-                </button>
+            {!isAuthor && challenge.author.role !== "admin" && challenge.author.role !== "moderator" && (
+                <div className="w-[30%] mx-auto flex justify-end">
+                    <button
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                    >
+                        Report challenge
+                    </button>
 
-                {showReportModal && (
-                    <ReportModal
-                        reportedUserId={challenge.author.id}
-                        reportedContentId={challenge.id}
-                        reportedContentType="POST"
-                        onClose={() => setShowReportModal(false)}
-                    />
-                )}
-            </div>
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={challenge.author.id}
+                            reportedContentId={challenge.id}
+                            reportedContentType="POST"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
+                </div>
+            )}
 
             {showSubmissionModal && (
                 <SubmissionModal

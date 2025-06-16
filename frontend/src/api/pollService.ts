@@ -14,7 +14,7 @@ export interface PollSummary {
     closesAt?: string;
     manualClosed: boolean;
     createdAt: string;
-    author: { id: string; firstname: string; lastname: string };
+    author: { id: string; firstname: string; lastname: string; role: string; };
     votes: { voter: { id: string } }[];
 }
 

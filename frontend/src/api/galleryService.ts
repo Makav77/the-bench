@@ -4,7 +4,7 @@ export interface GalleryItemSummary {
     id: string;
     url: string;
     description?: string;
-    author: { id: string; firstname: string; lastname: string; };
+    author: { id: string; firstname: string; lastname: string; role: string; };
     likedBy: { id: string }[];
     createdAt: string;
 }

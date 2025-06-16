@@ -246,23 +246,25 @@ function EventDetailPage() {
                 )}
             </div>
 
-            <div className="w-[20%] mx-auto flex justify-end">
-                <button
-                    onClick={() => setShowReportModal(true)}
-                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                >
-                    Report event
-                </button>
+            {!isAuthor && event.author.role !== "admin" && event.author.role !== "moderator" && (
+                <div className="w-[20%] mx-auto flex justify-end">
+                    <button
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                    >
+                        Report event
+                    </button>
 
-                {showReportModal && (
-                    <ReportModal
-                        reportedUserId={event.author.id}
-                        reportedContentId={event.id}
-                        reportedContentType="EVENT"
-                        onClose={() => setShowReportModal(false)}
-                    />
-                )}
-            </div>
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={event.author.id}
+                            reportedContentId={event.id}
+                            reportedContentType="EVENT"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
+                </div>
+            )}
         </div>
     );
 }

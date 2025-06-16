@@ -7,7 +7,7 @@ export interface EventSummary {
     startDate: string;
     endDate: string;
     maxNumberOfParticipants?: number;
-    author: { id: string; firstname: string; lastname: string };
+    author: { id: string; firstname: string; lastname: string; role: string };
     participantsList: { id: string }[];
 }
 
@@ -17,7 +17,7 @@ export interface EventDetails extends EventSummary {
     place: string;
     maxNumberOfParticipants?: number;
     description: string;
-    author: { id: string; firstname: string; lastname: string };
+    author: { id: string; firstname: string; lastname: string; role: string };
     participantsList: { id: string; firstname: string; lastname: string; }[];
 }
 
