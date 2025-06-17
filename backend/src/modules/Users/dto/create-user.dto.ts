@@ -25,7 +25,7 @@ export class CreateUserDTO {
     dateOfBirth: Date;
 
     @IsString()
-    profilePicture?: string;
+    profilePicture: string;
 
     @IsEnum(Role)
     role: Role;

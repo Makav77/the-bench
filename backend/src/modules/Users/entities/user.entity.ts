@@ -40,8 +40,8 @@ export class User {
     @Column({ type: "timestamp" })
     dateOfBirth: Date;
 
-    @Column({ nullable: true })
-    profilePicture?: string;
+    @Column()
+    profilePicture: string;
 
     @Column({ type: "int", default: 0 })
     points: number;

@@ -153,6 +153,24 @@ export class UserService {
         return this.userRepository.save(user);
     }
 
+    async getFriends(userId: string): Promise<{ id: string; firstname: string; lastname: string; profilePicture: string }[]> {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ["friends"],
+        });
+
+        if (!user) {
+            throw new NotFoundException("User not found");
+        }
+
+        return user.friends.map(friend => ({
+            id: friend.id,
+            firstname: friend.firstname,
+            lastname: friend.lastname,
+            profilePicture: friend.profilePicture,
+        }));
+    }
+
     async sendFriendRequest(fromId: string, toId: string): Promise<void> {
         if (fromId === toId) {
             throw new ConflictException("You cannot add yourself as a friend.");
