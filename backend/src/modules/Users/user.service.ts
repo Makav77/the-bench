@@ -152,4 +152,63 @@ export class UserService {
         user.profilePicture = path;
         return this.userRepository.save(user);
     }
+
+    async sendFriendRequest(fromId: string, toId: string): Promise<void> {
+        if (fromId === toId) {
+            throw new ConflictException("You cannot add yourself as a friend.");
+        }
+
+        const fromUser = await this.findOne(fromId);
+        const toUser = await this.findOne(toId);
+
+        if (fromUser.friends.some(f => f.id === toId)) {
+            throw new ConflictException("Already friends.");
+        }
+
+        if (fromUser.friendRequestsSent.some(r => r.id === toId)) {
+            throw new ConflictException("Friend request already sent.");
+        }
+
+        fromUser.friendRequestsSent.push(toUser);
+        await this.userRepository.save(fromUser);
+    }
+
+    async acceptFriendRequest(userId: string, requesterId: string): Promise<void> {
+        const user = await this.findOne(userId);
+        const requester = await this.findOne(requesterId);
+
+        if (!user.friendRequestsReceived.some(r => r.id === requesterId)) {
+            throw new ConflictException("No pending request from this user.");
+        }
+
+        user.friendRequestsReceived = user.friendRequestsReceived.filter(r => r.id !== requesterId);
+        requester.friendRequestsSent = requester.friendRequestsSent.filter(r => r.id !== userId);
+
+        user.friends.push(requester);
+        requester.friends.push(user);
+
+        await this.userRepository.save(user);
+        await this.userRepository.save(requester);
+    }
+
+    async rejectFriendRequest(currentUserId: string, senderId: string): Promise<void> {
+        const currentUser = await this.findOne(currentUserId);
+        const sender = await this.findOne(senderId);
+
+        currentUser.friendRequestsReceived = currentUser.friendRequestsReceived.filter((u) => u.id !== senderId);
+        sender.friendRequestsSent = sender.friendRequestsSent.filter((u) => u.id !== currentUserId);
+
+        await this.userRepository.save([currentUser, sender]);
+    }
+
+    async removeFriend(userId: string, friendId: string): Promise<void> {
+        const user = await this.findOne(userId);
+        const friend = await this.findOne(friendId);
+
+        user.friends = user.friends.filter(f => f.id !== friendId);
+        friend.friends = friend.friends.filter(f => f.id !== userId);
+
+        await this.userRepository.save(user);
+        await this.userRepository.save(friend);
+    }
 }
