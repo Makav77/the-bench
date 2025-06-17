@@ -136,4 +136,14 @@ export class UserController {
         const currentUserId = req.user.id;
         return this.userService.removeFriend(currentUserId, friendId);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(":id/friend-status")
+    async getFriendStatus(
+        @Param("id") targetUserId: string,
+        @Req() req: RequestWithUser
+    ): Promise<{ areFriends: boolean; requestSent: boolean; requestReceived: boolean; }> {
+        const currentUserId = req.user.id;
+        return this.userService.getFriendStatus(currentUserId, targetUserId);
+    }
 }

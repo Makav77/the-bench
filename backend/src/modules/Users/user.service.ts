@@ -229,4 +229,22 @@ export class UserService {
         await this.userRepository.save(user);
         await this.userRepository.save(friend);
     }
+
+    async getFriendStatus(currentUserId: string, targetUserId: string): Promise<{ areFriends: boolean; requestSent: boolean; requestReceived: boolean; }> {
+        const currentUser = await this.userRepository.findOne({
+            where: { id: currentUserId },
+            relations: ["friends", "friendRequestsSent", "friendRequestsReceived"],
+        });
+
+        if (!currentUser) {
+            throw new NotFoundException("Current user not found");
+        }
+
+        return {
+            areFriends: currentUser.friends.some((u) => u.id === targetUserId),
+            requestSent: currentUser.friendRequestsSent.some((u) => u.id === targetUserId),
+            requestReceived: currentUser.friendRequestsReceived.some((u) => u.id === targetUserId),
+        };
+    }
+
 }
