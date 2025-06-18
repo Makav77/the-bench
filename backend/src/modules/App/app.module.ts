@@ -30,6 +30,8 @@ import { ReportsModule } from '../Reports/reports.module';
 import { ReportsController } from '../Reports/reports.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MONGO_URI } from 'src/database/mongo-database-config';
+import { NewsModule } from '../News/news.module';
+import { NewsController } from '../News/news.controller';
 
 @Module({
     imports: [
@@ -58,6 +60,7 @@ import { MONGO_URI } from 'src/database/mongo-database-config';
         ChallengesModule,
         PermissionsModule,
         ReportsModule,
+        NewsModule,
     ],
     controllers: [
         ChallengesController,
@@ -71,6 +74,7 @@ import { MONGO_URI } from 'src/database/mongo-database-config';
         AppController,
         PermissionsController,
         ReportsController,
+        NewsController,
     ],
     providers: [AppService],
 })
