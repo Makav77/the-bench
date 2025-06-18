@@ -7,6 +7,7 @@ import { useRef } from "react";
 import { getFriends, FriendDTO, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, removeFriend } from "../../api/friendService";
 import apiClient from "../../api/apiClient";
 import { Link } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 
 export default function UserProfilePage() {
     const { id } = useParams<{ id: string }>();
@@ -23,6 +24,7 @@ export default function UserProfilePage() {
     const [fileName, setFileName] = useState<string>("");
     const [friends, setFriends] = useState<FriendDTO[]>([]);
     const [showFriendsModal, setShowFriendsModal] = useState<boolean>(false);
+    const [removingFriendId, setRemovingFriendId] = useState<string | null>(null);
 
     const loadProfile = async() => {
         if (!id) {
@@ -58,35 +60,22 @@ export default function UserProfilePage() {
         refreshFriends();
     }, [id, isOwnProfile]);
 
-    useEffect(() => {
-        async function load() {
-            setLoading(true);
-            try {
-                if (id) {
-                    const data = await getProfileSummary(id);
-                    setProfile(data);
-                }
-            } catch (error) {
-                toast.error("Unable to load user profile : " + error);
-            } finally {
-                setLoading(false);
-            }
+    const handleRemoveFriend = async (friendId: string) => {
+        if (!window.confirm("Are you sure you want to remove this user from your friend list ?")) {
+            return;
         }
-        load();
-    }, [id]);
-
-    useEffect(() => {
-        if (isOwnProfile && id) {
-            (async () => {
-                try {
-                    const data = await getFriends(id);
-                    setFriends(data);
-                } catch (error) {
-                    toast.error("Unable to load friends list: " + error);
-                }
-            })();
+        setRemovingFriendId(friendId);
+        try {
+            await removeFriend(friendId);
+            toast.success("Friend removed");
+            await refreshFriends();
+            await loadProfile();
+        } catch (error) {
+            toast.error("Unable to remove this user : " + error);
+        } finally {
+            setRemovingFriendId(null);
         }
-    }, [id, isOwnProfile]);
+    }
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
@@ -416,6 +405,7 @@ export default function UserProfilePage() {
                                             alt={`${friend.firstname} ${friend.lastname}`}
                                             className="w-10 h-10 rounded-full object-cover border"
                                         />
+
                                         <Link
                                             to={`/profile/${friend.id}`}
                                             className="font-medium cursor-pointer hover:text-gray-800"
@@ -423,6 +413,17 @@ export default function UserProfilePage() {
                                         >
                                             {friend.firstname} {friend.lastname}
                                         </Link>
+
+                                        <button
+                                            onClick={() => handleRemoveFriend(friend.id)}
+                                            disabled={removingFriendId === friend.id}
+                                            className="ml-auto p-1 rounded hover:bg-red-100"
+                                        >
+                                            <Trash2
+                                                size={18}
+                                                className="text-red-400 hover:text-red-600 cursor-pointer"
+                                            />
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
