@@ -310,7 +310,14 @@ export default function UserProfilePage() {
                 ) : (
                     <ul className="space-y-2">
                         {profile.marketItems.map(item => (
-                            <li key={item.id} className="border p-2 rounded">
+                            <li 
+                                key={item.id}
+                                className="border p-2 rounded cursor-pointer"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/market/${item.id}`)
+                                }}
+                            >
                                 <p className="font-semibold">{item.title}</p>
                                 <p className="text-sm text-gray-500">
                                     Last update: {new Date(item.updatedAt).toLocaleDateString()}
