@@ -6,7 +6,7 @@ const sections = [
     { label: 'Challenges', path: '/challenges' },
     { label: 'Calendar', path: '/calendar' },
     { label: 'Artisans', path: '/artisans' },
-    { label: 'Journal', path: '/journal' },
+    { label: 'News', path: '/news' },
 ];
 
 export default function CommunityPage() {
