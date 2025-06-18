@@ -4,7 +4,10 @@ import { getProfileSummary, ProfileSummaryDTO } from "../../api/userService";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { useRef } from "react";
+import { getFriends, FriendDTO, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, removeFriend } from "../../api/friendService";
 import apiClient from "../../api/apiClient";
+import { Link } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 
 export default function UserProfilePage() {
     const { id } = useParams<{ id: string }>();
@@ -16,25 +19,63 @@ export default function UserProfilePage() {
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState<boolean>(false);
     const [preview, setPreview] = useState<string | null>(null);
+    const [friendActionLoading, setFriendActionLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [fileName, setFileName] = useState<string>("");
+    const [friends, setFriends] = useState<FriendDTO[]>([]);
+    const [showFriendsModal, setShowFriendsModal] = useState<boolean>(false);
+    const [removingFriendId, setRemovingFriendId] = useState<string | null>(null);
+
+    const loadProfile = async() => {
+        if (!id) {
+            return;
+        }
+        setLoading(true);
+        try {
+            const data = await getProfileSummary(id);
+            setProfile(data);
+        } catch (error) {
+            toast.error("Unable to load user profile : " + error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        async function load() {
-            setLoading(true);
+        loadProfile();
+    }, [id]);
+
+    const refreshFriends = async() => {
+        if (id && isOwnProfile) {
             try {
-                if (id) {
-                    const data = await getProfileSummary(id);
-                    setProfile(data);
-                }
+                const data = await getFriends(id);
+                setFriends(data);
             } catch (error) {
-                toast.error("Unable to load user profile : " + error);
-            } finally {
-                setLoading(false);
+                toast.error("Unable to load friends list : " + error);
             }
         }
-        load();
-    }, [id]);
+    };
+
+    useEffect(() => {
+        refreshFriends();
+    }, [id, isOwnProfile]);
+
+    const handleRemoveFriend = async (friendId: string) => {
+        if (!window.confirm("Are you sure you want to remove this user from your friend list ?")) {
+            return;
+        }
+        setRemovingFriendId(friendId);
+        try {
+            await removeFriend(friendId);
+            toast.success("Friend removed");
+            await refreshFriends();
+            await loadProfile();
+        } catch (error) {
+            toast.error("Unable to remove this user : " + error);
+        } finally {
+            setRemovingFriendId(null);
+        }
+    }
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
@@ -101,13 +142,111 @@ export default function UserProfilePage() {
                     )}
                 <h1 className="text-2xl font-bold">{profile.firstname} {profile.lastname}</h1>
 
+                {!isOwnProfile && (
+                    <div className="mt-2">
+                        {profile.isFriend ? (
+                            <button
+                                onClick={async () => {
+                                    setFriendActionLoading(true);
+                                    try {
+                                        await removeFriend(profile.id);
+                                        toast.success("Friend removed");
+                                        await loadProfile();
+                                    } catch (error) {
+                                        toast.error("Unable to remove friend : " + error);
+                                    } finally {
+                                        setFriendActionLoading(false);
+                                    }
+                                }}
+                                disabled={friendActionLoading}
+                                className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 cursor-pointer"
+                            >
+                                {friendActionLoading ? "Removing..." : "Removed from friend"}
+                            </button>
+                        ) : profile.requestSent ? (
+                            <button
+                                disabled
+                                className="px-3 py-1 bg-gray-400 text-white rounded cursor-not-allowed"
+                            >
+                                Request sent
+                            </button>
+                        ) : profile.requestReceived ? (
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={async () => {
+                                        setFriendActionLoading(true);
+                                        try {
+                                            await acceptFriendRequest(profile.id);
+                                            toast.success("Request accepted");
+                                            await loadProfile();
+                                            await refreshFriends();
+                                        } catch (error) {
+                                            toast.error("Unable to accept friend request : " + error);
+                                        } finally {
+                                            setFriendActionLoading(false);
+                                        }
+                                    }}
+                                    disabled={friendActionLoading}
+                                    className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 cursor-pointer"
+                                >
+                                    {friendActionLoading ? "Acceptation..." : "Accepted"}
+                                </button>
+                                <button
+                                    onClick={async () => {
+                                        setFriendActionLoading(true);
+                                        try {
+                                            await rejectFriendRequest(profile.id);
+                                            toast.success("Request rejected");
+                                            await loadProfile();
+                                        } catch (error) {
+                                            toast.error("Unable to reject friend request : " + error);
+                                        } finally {
+                                            setFriendActionLoading(false);
+                                        }
+                                    }}
+                                    disabled={friendActionLoading}
+                                    className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:opacity-50 cursor-pointer"
+                                >
+                                    {friendActionLoading ? "Reject..." : "Rejected"}
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={async () => {
+                                    setFriendActionLoading(true);
+                                    try {
+                                        await sendFriendRequest(profile.id);
+                                        toast.success("Request send");
+                                        await loadProfile();
+                                    } catch (error) {
+                                        toast.error("Unable to send friend request " + error);
+                                    } finally {
+                                        setFriendActionLoading(false);
+                                    }
+                                }}
+                                disabled={friendActionLoading}
+                                className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 cursor-pointer"
+                            >
+                                {friendActionLoading ? "Sending..." : "Add friend"}
+                            </button>
+                        )}
+                    </div>
+                )}
+
                 {isOwnProfile && (
-                    <div className="flex flex-col items-center space-y-2">
+                    <div className="flex align-center items-center gap-4">
                         <button
                             onClick={() => setShowModal(true)}
-                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
                         >
                             Change my profile picture
+                        </button>
+
+                        <button
+                            onClick={() => setShowFriendsModal(true)}
+                            className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
+                        >
+                            Show friends
                         </button>
                     </div>
                 )}
@@ -239,6 +378,63 @@ export default function UserProfilePage() {
                                 className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
                             >
                                 Upload
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showFriendsModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+                        <h2 className="text-lg font-bold mb-4 text-center">
+                            Friends list
+                            <span className="ml-2 text-sm text-gray-500">
+                                ({friends.length})
+                            </span>
+                        </h2>
+
+                        {friends.length === 0 ? (
+                            <p className="text-center text-gray-600 italic">No friends right now</p>
+                        ) : (
+                            <ul className="space-y-3 max-h-96 overflow-y-auto">
+                                {friends.map(friend => (
+                                    <li key={friend.id} className="flex items-center space-x-3">
+                                        <img
+                                            src={friend.profilePicture}
+                                            alt={`${friend.firstname} ${friend.lastname}`}
+                                            className="w-10 h-10 rounded-full object-cover border"
+                                        />
+
+                                        <Link
+                                            to={`/profile/${friend.id}`}
+                                            className="font-medium cursor-pointer hover:text-gray-800"
+                                            onClick={() => setShowFriendsModal(false)}
+                                        >
+                                            {friend.firstname} {friend.lastname}
+                                        </Link>
+
+                                        <button
+                                            onClick={() => handleRemoveFriend(friend.id)}
+                                            disabled={removingFriendId === friend.id}
+                                            className="ml-auto p-1 rounded hover:bg-red-100"
+                                        >
+                                            <Trash2
+                                                size={18}
+                                                className="text-red-400 hover:text-red-600 cursor-pointer"
+                                            />
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+
+                        <div className="flex justify-end mt-4">
+                            <button
+                                onClick={() => setShowFriendsModal(false)}
+                                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
+                            >
+                                Close
                             </button>
                         </div>
                     </div>

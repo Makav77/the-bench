@@ -23,4 +23,8 @@ export interface ProfileSummaryDTO {
         updatedAt: Date;
         images: string[];
     }[];
+
+    isFriend?: boolean;
+    requestSent?: boolean;
+    requestReceived?: boolean; 
 }

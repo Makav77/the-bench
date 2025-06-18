@@ -83,7 +83,7 @@ export class UserService {
         return;
     }
 
-    async getProfileSummary(userId: string): Promise<ProfileSummaryDTO> {
+    async getProfileSummary(userId: string, currentUserId?: string): Promise<ProfileSummaryDTO> {
         try {
             const user = await this.userRepository.findOne({
                 where: { id: userId },
@@ -130,7 +130,7 @@ export class UserService {
                 images: item.images ?? [],
             }));
 
-            return {
+            const profileSummary: ProfileSummaryDTO = {
                 id: user.id,
                 firstname: user.firstname,
                 lastname: user.lastname,
@@ -141,6 +141,16 @@ export class UserService {
                 challenges: challengeSummaries,
                 marketItems: marketItemSummaries,
             };
+
+            if (currentUserId && currentUserId !== userId) {
+                const status = await this.getFriendStatus(currentUserId, userId);
+                profileSummary.isFriend = status.areFriends;
+                profileSummary.requestSent = status.requestSent;
+                profileSummary.requestReceived = status.requestReceived;
+                return { ...profileSummary, ...status };
+            }
+
+            return profileSummary;
         } catch (err) {
             console.error("Error in getProfileSummary:", err);
             throw err;
@@ -152,4 +162,136 @@ export class UserService {
         user.profilePicture = path;
         return this.userRepository.save(user);
     }
+
+    async getFriends(userId: string): Promise<{ id: string; firstname: string; lastname: string; profilePicture: string }[]> {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ["friends"],
+        });
+
+        if (!user) {
+            throw new NotFoundException("User not found");
+        }
+
+        return user.friends.map(friend => ({
+            id: friend.id,
+            firstname: friend.firstname,
+            lastname: friend.lastname,
+            profilePicture: friend.profilePicture,
+        }));
+    }
+
+    async sendFriendRequest(fromId: string, toId: string): Promise<void> {
+        if (fromId === toId) {
+            throw new ConflictException("You cannot add yourself as a friend.");
+        }
+
+        const fromUser = await this.userRepository.findOne({
+            where: { id: fromId },
+            relations: ["friends", "friendRequestsSent"],
+        });
+        const toUser = await this.userRepository.findOneBy({ id: toId });
+
+        if (!fromUser || !toUser) {
+            throw new NotFoundException("User not found.");
+        }
+
+        if (fromUser.friends.some(f => f.id === toId)) {
+            throw new ConflictException("Already friends.");
+        }
+
+        if (fromUser.friendRequestsSent.some(r => r.id === toId)) {
+            throw new ConflictException("Friend request already sent.");
+        }
+
+        fromUser.friendRequestsSent.push(toUser);
+        await this.userRepository.save(fromUser);
+    }
+
+    async acceptFriendRequest(userId: string, requesterId: string): Promise<void> {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ["friendRequestsReceived", "friends"],
+        })
+        const requester = await this.userRepository.findOne({
+            where: { id: requesterId },
+            relations: ["friendRequestsSent", "friends"],
+        });
+
+        if (!user || !requester) {
+            throw new NotFoundException("User not found");
+        }
+
+        if (!user.friendRequestsReceived.some(r => r.id === requesterId)) {
+            throw new ConflictException("No pending request from this user.");
+        }
+
+        user.friendRequestsReceived = user.friendRequestsReceived.filter(r => r.id !== requesterId);
+        requester.friendRequestsSent = requester.friendRequestsSent.filter(r => r.id !== userId);
+
+        user.friends.push(requester);
+        requester.friends.push(user);
+
+        await this.userRepository.save(user);
+        await this.userRepository.save(requester);
+    }
+
+    async rejectFriendRequest(currentUserId: string, senderId: string): Promise<void> {
+        const currentUser = await this.userRepository.findOne({
+            where: { id: currentUserId },
+            relations: ["friendRequestsReceived"],
+        })
+        const sender = await this.userRepository.findOne({
+            where: { id: senderId },
+            relations: ["friendRequestsSent"],
+        });
+
+        if (!currentUser || !sender) {
+            throw new NotFoundException("User not found");
+        }
+
+        currentUser.friendRequestsReceived = currentUser.friendRequestsReceived.filter((u) => u.id !== senderId);
+        sender.friendRequestsSent = sender.friendRequestsSent.filter((u) => u.id !== currentUserId);
+
+        await this.userRepository.save([currentUser, sender]);
+    }
+
+    async removeFriend(userId: string, friendId: string): Promise<void> {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ["friends"],
+        });
+        const friend = await this.userRepository.findOne({
+            where: { id: friendId },
+            relations: ["friends"],
+        });
+
+        if (!user || !friend) {
+            throw new NotFoundException("User not found");
+        }
+
+        user.friends = user.friends.filter(f => f.id !== friendId);
+        friend.friends = friend.friends.filter(f => f.id !== userId);
+
+        await this.userRepository.save(user);
+        await this.userRepository.save(friend);
+    }
+
+    async getFriendStatus(currentUserId: string, targetUserId: string): Promise<{ areFriends: boolean; requestSent: boolean; requestReceived: boolean; }> {
+        const currentUser = await this.userRepository.findOne({
+            where: { id: currentUserId },
+            relations: ["friends", "friendRequestsSent", "friendRequestsReceived"],
+        });
+
+        if (!currentUser) {
+            throw new NotFoundException("Current user not found");
+        }
+
+        return {
+            areFriends: currentUser.friends.some((u) => u.id === targetUserId),
+            requestSent: currentUser.friendRequestsSent.some((u) => u.id === targetUserId),
+            requestReceived: currentUser.friendRequestsReceived.some((u) => u.id === targetUserId),
+        };
+    }
+
 }
