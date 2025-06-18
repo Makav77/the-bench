@@ -40,6 +40,9 @@ export interface ProfileSummaryDTO {
         updatedAt: string;
         images: string[];
     }[];
+    isFriend?: boolean;
+    requestSent?: boolean;
+    requestReceived?: boolean;
 }
 
 const API_URL = "http://localhost:3000/users";

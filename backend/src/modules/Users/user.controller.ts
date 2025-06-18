@@ -19,25 +19,32 @@ interface RequestWithUser extends Request {
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAll(): Promise<User[]> {
         return this.userService.findAll();
     }
 
-    @Get("search")
     @UseGuards(JwtAuthGuard)
+    @Get("search")
     async searchUsers(@Query("query") query: string): Promise<{ id: string; firstname: string; lastname: string; }[]> {
         return this.userService.searchUsers(query);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     async findOne(@Param("id") id: string): Promise<User> {
         return this.userService.findOne(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id/profile")
-    async getProfileSummary(@Param("id") id: string): Promise<ProfileSummaryDTO> {
-        return this.userService.getProfileSummary(id);
+    async getProfileSummary(
+        @Param("id") id: string,
+        @Req() req: RequestWithUser
+    ): Promise<ProfileSummaryDTO> {
+        const currentUserId = req.user?.id;
+        return this.userService.getProfileSummary(id, currentUserId);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -51,8 +58,8 @@ export class UserController {
         return this.userService.create(createUserDTO);
     }
 
-    @Post("upload-profile")
     @UseGuards(JwtAuthGuard)
+    @Post("upload-profile")
     @UseInterceptors(FileInterceptor("file", {
         storage: diskStorage({
             destination: "./uploads/profile",
@@ -107,11 +114,13 @@ export class UserController {
         return this.userService.acceptFriendRequest(currentUserId, requesterId);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Patch(":id")
     update(@Param("id") id: string, @Body() updateUserDTO: UpdateUserDTO): Promise <User> {
         return this.userService.update(id, updateUserDTO);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(":id")
     remove(@Param("id") id: string): Promise<void> {
         return this.userService.remove(id);
