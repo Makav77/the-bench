@@ -34,6 +34,21 @@ export const createNews = async (news: { title: string; content: string; images:
     return response.data;
 }
 
+export const updateNews = async (id: string, news: { title: string; content: string; images: string[]; tags?: string[]; published?: boolean }): Promise<NewsDTO> => {
+    const response = await apiClient.patch(`news/${id}`, news);
+    return response.data;
+}
+
 export const deleteNews = async (id: string): Promise<void> => {
     await apiClient.delete(`/news/${id}`);
+}
+
+export const uploadNewsImages = async (files: File[]): Promise<string[]> => {
+    const formData = new FormData();
+    files.forEach((file) => formData.append("images", file));
+    const response = await apiClient.post("/news/upload-images", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+    });
+    return response.data.urls;
 }
