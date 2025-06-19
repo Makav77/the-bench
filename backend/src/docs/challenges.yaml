@@ -1,0 +1,563 @@
+paths:
+  /challenges:
+    get:
+      summary: Get all challenges
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Paginated list of challenges
+          content:
+            application/json:
+              example:
+                data:
+                  - id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                    title: "Updated Challenge"
+                    description: "Updated description"
+                    status: "APPROVED"
+                    rejectedReason: null
+                    reviewedAt: "2025-06-18T11:11:28.276Z"
+                    createdAt: "2025-06-18T09:02:02.122Z"
+                    updatedAt: "2025-06-18T09:11:28.279Z"
+                    startDate: "2025-07-05T00:00:00.000Z"
+                    endDate: "2025-08-01T23:59:59.000Z"
+                    successCriteria: "Provide before and after photos of the cleaned area"
+                    author:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+                    registrations:
+                      - id: "c481e30a-50a1-4344-87ab-f31ba8877b54"
+                        createdAt: "2025-06-18T09:15:43.401Z"
+                    completions:
+                      - id: "28c5e3c3-4d71-45d8-9ae8-9e3b779fb9f2"
+                        text: "I cleaned the park and collected two bags of trash. It was a great experience!"
+                        imageUrl: null
+                        validated: false
+                        rejectedReason: "The submitted text is not sufficient evidence of completion."
+                        reviewedAt: "2025-06-18T11:19:23.178Z"
+                        createdAt: "2025-06-18T09:15:49.033Z"
+                total: 1
+                page: 1
+                lastPage: 1
+
+    post:
+      summary: Create a new challenge
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/CreateChallengeDTO'
+      responses:
+        '201':
+          description: Challenge created successfully
+          content:
+            application/json:
+              example:
+                id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                title: "Park cleaning Challenge"
+                description: "Clean up the park"
+                status: "PENDING"
+                rejectedReason: null
+                reviewedAt: null
+                createdAt: "2025-06-18T09:02:02.122Z"
+                updatedAt: "2025-06-18T09:02:02.122Z"
+                startDate: "2025-07-01T00:00:00.000Z"
+                endDate: "2025-07-30T23:59:59.000Z"
+                successCriteria: "Send a photo of a bag of trash you collected"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+  /challenges/pending:
+    get:
+      summary: Get pending challenges
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of pending challenges
+          content:
+            application/json:
+              example:
+                data:
+                  - id: "a2719337-feb3-4ab2-b379-4341c63bde11"
+                    title: "Park cleaning Challenge"
+                    description: "Clean up the park"
+                    status: "PENDING"
+                    rejectedReason: null
+                    reviewedAt: null
+                    createdAt: "2025-06-18T09:04:32.926Z"
+                    updatedAt: "2025-06-18T09:04:32.926Z"
+                    startDate: "2025-07-01T00:00:00.000Z"
+                    endDate: "2025-07-30T23:59:59.000Z"
+                    successCriteria: "Send a photo of a bag of trash you collected"
+                    author:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+                    registrations: []
+                    completions: []
+                total: 1
+                page: 1
+                lastPage: 1
+
+  /challenges/{id}:
+    get:
+      summary: Get one challenge by ID
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Challenge found
+          content:
+            application/json:
+              example:
+                id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                title: "Park cleaning Challenge"
+                description: "Clean up the park"
+                status: "PENDING"
+                rejectedReason: null
+                reviewedAt: null
+                createdAt: "2025-06-18T09:02:02.122Z"
+                updatedAt: "2025-06-18T09:02:02.122Z"
+                startDate: "2025-07-01T00:00:00.000Z"
+                endDate: "2025-07-30T23:59:59.000Z"
+                successCriteria: "Send a photo of a bag of trash you collected"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+                registrations: []
+                completions: []
+
+    patch:
+      summary: Update a challenge
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/CreateChallengeDTO'
+      responses:
+        '200':
+          description: Challenge updated successfully
+          content:
+            application/json:
+              example:
+                id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                title: "Updated Challenge"
+                description: "Updated description"
+                status: "PENDING"
+                rejectedReason: null
+                reviewedAt: null
+                createdAt: "2025-06-18T09:02:02.122Z"
+                updatedAt: "2025-06-18T09:10:11.689Z"
+                startDate: "2025-07-05T00:00:00.000Z"
+                endDate: "2025-08-01T23:59:59.000Z"
+                successCriteria: "Provide before and after photos of the cleaned area"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+    delete:
+      summary: Delete a challenge
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Challenge deleted
+
+  /challenges/{id}/validate:
+    patch:
+      summary: Validate a challenge
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/ValidateChallengeDTO'
+      responses:
+        '200':
+          description: Challenge validated or rejected
+          content:
+            application/json:
+              example:
+                id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                title: "Updated Challenge"
+                description: "Updated description"
+                status: "APPROVED"
+                rejectedReason: null
+                reviewedAt: "2025-06-18T11:11:28.276Z"
+                createdAt: "2025-06-18T09:02:02.122Z"
+                updatedAt: "2025-06-18T09:11:28.279Z"
+                startDate: "2025-07-05T00:00:00.000Z"
+                endDate: "2025-08-01T23:59:59.000Z"
+                successCriteria: "Provide before and after photos of the cleaned area"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+  /challenges/completions/pending:
+    get:
+      summary: Get all pending challenge completions
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pending completions
+
+  /challenges/{id}/subscribe:
+    post:
+      summary: Subscribe to a challenge
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully subscribed to the challenge
+          content:
+            application/json:
+              example:
+                id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                title: "Updated Challenge"
+                description: "Updated description"
+                status: "APPROVED"
+                rejectedReason: null
+                reviewedAt: "2025-06-18T11:11:28.276Z"
+                createdAt: "2025-06-18T09:02:02.122Z"
+                updatedAt: "2025-06-18T09:11:28.279Z"
+                startDate: "2025-07-05T00:00:00.000Z"
+                endDate: "2025-08-01T23:59:59.000Z"
+                successCriteria: "Provide before and after photos of the cleaned area"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+                registrations:
+                  - id: "050b63f1-da1f-4404-a80c-1393ab483ca7"
+                    createdAt: "2025-06-18T09:13:13.501Z"
+                    user:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+                completions: []
+
+    delete:
+      summary: Unsubscribe from a challenge
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully unsubscribed from the challenge
+          content:
+            application/json:
+              example:
+                id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                title: "Updated Challenge"
+                description: "Updated description"
+                status: "APPROVED"
+                rejectedReason: null
+                reviewedAt: "2025-06-18T11:11:28.276Z"
+                createdAt: "2025-06-18T09:02:02.122Z"
+                updatedAt: "2025-06-18T09:11:28.279Z"
+                startDate: "2025-07-05T00:00:00.000Z"
+                endDate: "2025-08-01T23:59:59.000Z"
+                successCriteria: "Provide before and after photos of the cleaned area"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+                registrations: []
+                completions: []
+
+  /challenges/{id}/complete:
+    post:
+      summary: Submit a challenge completion
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/SubmitCompletionDTO'
+      responses:
+        '201':
+          description: Completion submitted successfully
+          content:
+            application/json:
+              example:
+                id: "28c5e3c3-4d71-45d8-9ae8-9e3b779fb9f2"
+                text: "I cleaned the park and collected two bags of trash. It was a great experience!"
+                imageUrl: null
+                validated: false
+                rejectedReason: null
+                reviewedAt: null
+                createdAt: "2025-06-18T09:15:49.033Z"
+                user:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$..."
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+                challenge:
+                  id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                  title: "Updated Challenge"
+                  description: "Updated description"
+                  status: "APPROVED"
+                  rejectedReason: null
+                  reviewedAt: "2025-06-18T11:11:28.276Z"
+                  createdAt: "2025-06-18T09:02:02.122Z"
+                  updatedAt: "2025-06-18T09:11:28.279Z"
+                  startDate: "2025-07-05T00:00:00.000Z"
+                  endDate: "2025-08-01T23:59:59.000Z"
+                  successCriteria: "Provide before and after photos of the cleaned area"
+                  author:
+                    id: "1"
+                    firstname: "Johnny"
+                    lastname: "Doe"
+                    email: "user@example.com"
+                    password: "$2b$10$..."
+                    dateOfBirth: "2000-12-09T23:00:00.000Z"
+                    profilePicture: ""
+                    points: 0
+                    role: "admin"
+                    permissions: []
+                  registrations:
+                    - id: "c481e30a-50a1-4344-87ab-f31ba8877b54"
+                      createdAt: "2025-06-18T09:15:43.401Z"
+                      user:
+                        id: "1"
+                        firstname: "Johnny"
+                        lastname: "Doe"
+                        email: "user@example.com"
+                        password: "$2b$10$..."
+                        dateOfBirth: "2000-12-09T23:00:00.000Z"
+                        profilePicture: ""
+                        points: 0
+                        role: "admin"
+                        permissions: []
+
+  /challenges/{id}/complete/{completionId}:
+    patch:
+      summary: Validate a challenge completion
+      tags: [Challenges]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: completionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/ValidateCompletionDTO'
+      responses:
+        '200':
+          description: Completion review result
+          content:
+            application/json:
+              example:
+                id: "28c5e3c3-4d71-45d8-9ae8-9e3b779fb9f2"
+                text: "I cleaned the park and collected two bags of trash. It was a great experience!"
+                imageUrl: null
+                validated: false
+                rejectedReason: "The submitted text is not sufficient evidence of completion."
+                reviewedAt: "2025-06-18T11:19:23.178Z"
+                createdAt: "2025-06-18T09:15:49.033Z"
+                user:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+                challenge:
+                  id: "869da343-3899-4983-b15b-62fe0b048b9e"
+                  title: "Updated Challenge"
+                  description: "Updated description"
+                  status: "APPROVED"
+                  rejectedReason: null
+                  reviewedAt: "2025-06-18T11:11:28.276Z"
+                  createdAt: "2025-06-18T09:02:02.122Z"
+                  updatedAt: "2025-06-18T09:11:28.279Z"
+                  startDate: "2025-07-05T00:00:00.000Z"
+                  endDate: "2025-08-01T23:59:59.000Z"
+                  successCriteria: "Provide before and after photos of the cleaned area"

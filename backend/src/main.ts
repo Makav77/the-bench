@@ -4,6 +4,8 @@ import { AppModule } from './modules/App/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from "cookie-parser";
 import { join } from 'path';
+import * as swaggerUi from 'swagger-ui-express';
+import * as fs from 'fs';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: ["error", "warn", "log", "debug", "verbose"] });
@@ -27,6 +29,15 @@ async function bootstrap() {
     app.useStaticAssets(join(__dirname, "..", "uploads"), {
         prefix: "/uploads/",
     });
+
+    const swaggerPath = join(__dirname, 'docs', 'openapi.json');
+    if (fs.existsSync(swaggerPath)) {
+        const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf8'));
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        console.log("API docs available at /api-docs");
+    } else {
+        console.warn("Swagger docs not found. Did you run npm run build:docs?");
+    }
 
     await app.listen(port, () => {
         console.log(`Server running on http://localhost:${port}`);

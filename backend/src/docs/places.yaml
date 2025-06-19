@@ -1,0 +1,88 @@
+paths:
+  /places/search:
+    get:
+      tags:
+        - Places
+      summary: Search for places
+      description: Search for places based on a query string, latitude, longitude, and radius.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search keyword
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Latitude coordinate
+        - name: lng
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Longitude coordinate
+        - name: radius
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search radius in meters
+      responses:
+        '200':
+          description: A list of matching places
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    lat:
+                      type: number
+                    lng:
+                      type: number
+
+  /places/details/{placeId}:
+    get:
+      tags:
+        - Places
+      summary: Get place details
+      description: Returns detailed information about a place.
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the place
+      responses:
+        '200':
+          description: Detailed information about the place
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  address:
+                    type: string
+                  phoneNumber:
+                    type: string
+                  website:
+                    type: string
+                  lat:
+                    type: number
+                  lng:
+                    type: number

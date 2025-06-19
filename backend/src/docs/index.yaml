@@ -1,0 +1,154 @@
+openapi: 3.0.0
+info:
+  title: The Bench
+  version: 1.0.0
+  description: API docs
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /auth/login:
+    $ref: './auth.yaml#/paths/~1auth~1login'
+  /auth/refresh:
+    $ref: './auth.yaml#/paths/~1auth~1refresh'
+  /auth/logout:
+    $ref: './auth.yaml#/paths/~1auth~1logout'
+  /auth/me:
+    $ref: './auth.yaml#/paths/~1auth~1me'
+  
+  /challenges:
+    $ref: './challenges.yaml#/paths/~1challenges'
+  /challenges/pending:
+    $ref: './challenges.yaml#/paths/~1challenges~1pending'
+  /challenges/{id}:
+    $ref: './challenges.yaml#/paths/~1challenges~1{id}'
+  /challenges/{id}/validate:
+    $ref: './challenges.yaml#/paths/~1challenges~1{id}~1validate'
+  /challenges/completions/pending:
+    $ref: './challenges.yaml#/paths/~1challenges~1completions~1pending'
+  /challenges/{id}/subscribe:
+    $ref: './challenges.yaml#/paths/~1challenges~1{id}~1subscribe'
+  /challenges/{id}/complete:
+    $ref: './challenges.yaml#/paths/~1challenges~1{id}~1complete'
+  /challenges/{id}/complete/{completionId}:
+    $ref: './challenges.yaml#/paths/~1challenges~1{id}~1complete~1{completionId}'
+  
+  /events:
+    $ref: './events.yaml#/paths/~1events'
+  /events/{id}:
+    $ref: './events.yaml#/paths/~1events~1{id}'
+  /events/{id}/subscribe:
+    $ref: './events.yaml#/paths/~1events~1{id}~1subscribe'
+  /events/{id}/participants/{userId}:
+    $ref: './events.yaml#/paths/~1events~1{id}~1participants~1{userId}'
+  
+  /flashposts:
+    $ref: './flashposts.yaml#/paths/~1flashposts'
+  /flashposts/{id}:
+    $ref: './flashposts.yaml#/paths/~1flashposts~1{id}'
+
+  /gallery:
+    $ref: './gallery.yaml#/paths/~1gallery'
+  /gallery/{id}:
+    $ref: './gallery.yaml#/paths/~1gallery~1{id}'
+  /gallery/{id}/like:
+    $ref: './gallery.yaml#/paths/~1gallery~1{id}~1like'
+  
+  /market:
+    $ref: './market.yaml#/paths/~1market'
+  /market/{id}:
+    $ref: './market.yaml#/paths/~1market~1{id}'
+
+  /permissions/{code}/restrict:
+    $ref: './permissions.yaml#/paths/~1permissions~1{code}~1restrict'
+  /permissions/{code}/isRestricted:
+    $ref: './permissions.yaml#/paths/~1permissions~1{code}~1isRestricted'
+
+  /places/search:
+    $ref: './places.yaml#/paths/~1places~1search'
+  /places/details/{placeId}:
+    $ref: './places.yaml#/paths/~1places~1details~1{placeId}'
+
+  /polls:
+    $ref: './polls.yaml#/paths/~1polls'
+  /polls/{id}:
+    $ref: './polls.yaml#/paths/~1polls~1{id}'
+  /polls/{id}/vote:
+    $ref: './polls.yaml#/paths/~1polls~1{id}~1vote'
+  /polls/{id}/close:
+    $ref: './polls.yaml#/paths/~1polls~1{id}~1close'
+
+  /posts:
+    $ref: './posts.yaml#/paths/~1posts'
+  /posts/{id}:
+    $ref: './posts.yaml#/paths/~1posts~1{id}'
+  
+  /reports:
+    $ref: './reports.yaml#/paths/~1reports'
+  /reports/{id}:
+    $ref: './reports.yaml#/paths/~1reports~1{id}'
+  /reports/{id}/status:
+    $ref: './reports.yaml#/paths/~1reports~1{id}~1status'
+  
+  /users:
+    $ref: './users.yaml#/paths/~1users'
+  /users/search:
+    $ref: './users.yaml#/paths/~1users~1search'
+  /users/{id}:
+    $ref: './users.yaml#/paths/~1users~1{id}'
+  /users/{id}/profile:
+    $ref: './users.yaml#/paths/~1users~1{id}~1profile'
+  /users/upload-profile:
+    $ref: './users.yaml#/paths/~1users~1upload-profile'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: './components.yaml#/components/securitySchemes/bearerAuth'
+
+  schemas:
+    LoginUserDTO:
+      $ref: './components.yaml#/components/schemas/LoginUserDTO'
+    CreateChallengeDTO:
+      $ref: './components.yaml#/components/schemas/CreateChallengeDTO'
+    SubmitCompletionDTO:
+      $ref: './components.yaml#/components/schemas/SubmitCompletionDTO'
+    ValidateChallengeDTO:
+      $ref: './components.yaml#/components/schemas/ValidateChallengeDTO'
+    ValidateCompletionDTO:
+      $ref: './components.yaml#/components/schemas/ValidateCompletionDTO'
+    CreateEventDTO:
+      $ref: './components.yaml#/components/schemas/CreateEventDTO'
+    UpdateEventDTO:
+      $ref: './components.yaml#/components/schemas/UpdateEventDTO'
+    CreateFlashPostDTO:
+      $ref: './components.yaml#/components/schemas/CreateFlashPostDTO'
+    UpdateFlashPostDTO:
+      $ref: './components.yaml#/components/schemas/UpdateFlashPostDTO'
+    CreateGalleryItemDTO:
+      $ref: './components.yaml#/components/schemas/CreateGalleryItemDTO'
+    CreateMarketItemDTO:
+      $ref: './components.yaml#/components/schemas/CreateMarketItemDTO'
+    UpdateMarketItemDTO:
+      $ref: './components.yaml#/components/schemas/UpdateMarketItemDTO'
+    RestrictUserDTO:
+      $ref: './components.yaml#/components/schemas/RestrictUserDTO'
+    CreatePollDTO:
+      $ref: './components.yaml#/components/schemas/CreatePollDTO'
+    VotePollDTO:
+      $ref: './components.yaml#/components/schemas/VotePollDTO'
+    CreatePostDTO:
+      $ref: './components.yaml#/components/schemas/CreatePostDTO'
+    UpdatePostDTO:
+      $ref: './components.yaml#/components/schemas/UpdatePostDTO'
+    CreateReportDTO:
+      $ref: './components.yaml#/components/schemas/CreateReportDTO'
+    UpdateReportStatusDTO:
+      $ref: './components.yaml#/components/schemas/UpdateReportStatusDTO'
+    CreateUserDTO:
+      $ref: './components.yaml#/components/schemas/CreateUserDTO'
+    UpdateUserDTO:
+      $ref: './components.yaml#/components/schemas/UpdateUserDTO'
+    ProfileSummaryDTO:
+      $ref: './components.yaml#/components/schemas/ProfileSummaryDTO'

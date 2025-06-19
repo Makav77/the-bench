@@ -1,0 +1,169 @@
+paths:
+  /auth/login:
+    post:
+      summary: Login user
+      tags:
+        - Auth
+      description: User authentication. Returns an access token and sets a refresh token cookie.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/LoginUserDTO'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+              examples:
+                success:
+                  summary: Example access token response
+                  value:
+                    accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzUwMjQzMzU0LCJleHAiOjE3NTAyNDQyNTR9.bVmSRkVwVKGwehd-M-MY8pr342rUo3AJysI8qFz2Y2c
+        '401':
+          description: Incorrect password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: string
+                  statusCode:
+                    type: integer
+              examples:
+                wrongPassword:
+                  summary: Incorrect password error
+                  value:
+                    message: Incorrect password
+                    error: Unauthorized
+                    statusCode: 401
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: string
+                  statusCode:
+                    type: integer
+              examples:
+                userNotFound:
+                  summary: User not found
+                  value:
+                    message: User with email ser@example.com not found.
+                    error: Not Found
+                    statusCode: 404
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags:
+        - Auth
+      description: Returns a new access token using the refresh token from the cookie.
+      responses:
+        '200':
+          description: New access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+              examples:
+                successfulRefresh:
+                  summary: New JWT token
+                  value:
+                    accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzUwMjQzNTc4LCJleHAiOjE3NTAyNDQ0Nzh9.C2OnnXuw8YGTV_bVm-6Aa1ZCEFwDmIx_bRXLOS9Bhys
+
+  /auth/logout:
+    post:
+      summary: Logout user
+      tags:
+        - Auth
+      description: Clears refresh token cookie.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                logoutSuccess:
+                  summary: Successful logout
+                  value:
+                    message: "Logout successfull."
+
+  /auth/me:
+    get:
+      summary: Get current user
+      tags:
+        - Auth
+      description: Returns user info from JWT.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  firstname:
+                    type: string
+                  lastname:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+                  password:
+                    type: string
+                  dateOfBirth:
+                    type: string
+                    format: date-time
+                  profilePicture:
+                    type: string
+                  points:
+                    type: integer
+                  role:
+                    type: string
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                userInfo:
+                  summary: Logged-in user info
+                  value:
+                    id: "1"
+                    firstname: "Johnny"
+                    lastname: "Doe"
+                    email: "user@example.com"
+                    password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                    dateOfBirth: "2000-12-09T23:00:00.000Z"
+                    profilePicture: ""
+                    points: 0
+                    role: "admin"
+                    permissions: []

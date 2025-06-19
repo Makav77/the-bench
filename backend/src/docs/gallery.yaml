@@ -1,0 +1,200 @@
+paths:
+  /gallery:
+    get:
+      summary: Get all gallery items
+      tags:
+        - Gallery
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 30
+      responses:
+        '200':
+          description: A list of gallery items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  lastPage:
+                    type: integer
+              examples:
+                default:
+                  value:
+                    data:
+                      - id: "5ffe643b-378e-4809-bcb6-62029f9308c5"
+                        url: "/uploads/gallery/url-1750260549259-599689210.png"
+                        description: "my image"
+                        createdAt: "2025-06-18T13:29:09.265Z"
+                        author:
+                          id: "1"
+                          firstname: "Johnny"
+                          lastname: "Doe"
+                          email: "user@example.com"
+                          password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                          dateOfBirth: "2000-12-09T23:00:00.000Z"
+                          profilePicture: ""
+                          points: 0
+                          role: "admin"
+                          permissions: []
+                        likedBy: []
+                    total: 1
+                    page: 1
+                    lastPage: 1
+
+    post:
+      summary: Create a new gallery item
+      tags:
+        - Gallery
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: binary
+                description:
+                  $ref: './components.yaml#/components/schemas/CreateGalleryItemDTO'
+      responses:
+        '201':
+          description: Successfully uploaded gallery image
+          content:
+            application/json:
+              examples:
+                default:
+                  value:
+                    id: "5ffe643b-378e-4809-bcb6-62029f9308c5"
+                    url: "/uploads/gallery/url-1750260549259-599689210.png"
+                    description: "my image"
+                    createdAt: "2025-06-18T13:29:09.265Z"
+                    author:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+
+  /gallery/{id}:
+    get:
+      summary: Get a single gallery item
+      tags:
+        - Gallery
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Gallery item details
+          content:
+            application/json:
+              examples:
+                default:
+                  value:
+                    id: "5ffe643b-378e-4809-bcb6-62029f9308c5"
+                    url: "/uploads/gallery/url-1750260549259-599689210.png"
+                    description: "my image"
+                    createdAt: "2025-06-18T13:29:09.265Z"
+                    author:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+                    likedBy: []
+
+    delete:
+      summary: Delete a gallery item
+      tags:
+        - Gallery
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully deleted
+
+  /gallery/{id}/like:
+    post:
+      summary: Toggle like for a gallery item
+      tags:
+        - Gallery
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully "liked" gallery item
+          content:
+            application/json:
+              examples:
+                default:
+                  value:
+                    id: "5ffe643b-378e-4809-bcb6-62029f9308c5"
+                    url: "/uploads/gallery/url-1750260549259-599689210.png"
+                    description: "my image"
+                    createdAt: "2025-06-18T13:29:09.265Z"
+                    author:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+                    likedBy:
+                      - id: "1"
+                        firstname: "Johnny"
+                        lastname: "Doe"
+                        email: "user@example.com"
+                        password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                        dateOfBirth: "2000-12-09T23:00:00.000Z"
+                        profilePicture: ""
+                        points: 0
+                        role: "admin"
+                        permissions: []

@@ -1,0 +1,344 @@
+paths:
+  /polls:
+    get:
+      tags:
+      - Polls
+      summary: Get all polls
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+      responses:
+        '200':
+          description: List of polls with pagination
+          content:
+            application/json:
+              example:
+                data:
+                  - id: "b577a4fd-3175-45ee-9b22-796153168915"
+                    question: "Poll title"
+                    type: "multiple"
+                    maxSelections: 2
+                    closesAt: "2025-06-25T18:00:00.000Z"
+                    manualClosed: false
+                    createdAt: "2025-06-19T07:43:26.108Z"
+                    updatedAt: "2025-06-19T07:43:26.108Z"
+                    author:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+                    votes: []
+                total: 1
+                page: 1
+                lastPage: 1
+
+    post:
+      tags:
+      - Polls
+      summary: Create a new poll
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/CreatePollDTO'
+      responses:
+        '201':
+          description: Poll successfully created
+          content:
+            application/json:
+              example:
+                id: "b577a4fd-3175-45ee-9b22-796153168915"
+                question: "Poll title"
+                type: "multiple"
+                maxSelections: 2
+                closesAt: "2025-06-25T18:00:00.000Z"
+                manualClosed: false
+                createdAt: "2025-06-19T07:43:26.108Z"
+                updatedAt: "2025-06-19T07:43:26.108Z"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+                options:
+                  - id: "9a460c6d-ed34-4d7f-828c-487f89a1421e"
+                    label: "Option 3"
+                    votes: []
+                    votesCount: 0
+                  - id: "1bfc1e5b-b1aa-4129-aa17-2cfaaf20770c"
+                    label: "Option 2"
+                    votes: []
+                    votesCount: 0
+                  - id: "5599a61e-1fe0-49dc-9808-2a1e4b605425"
+                    label: "Option 1"
+                    votes: []
+                    votesCount: 0
+                votes: []
+
+  /polls/{id}:
+    get:
+      tags:
+      - Polls
+      summary: Get a single poll
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Poll details
+          content:
+            application/json:
+              example:
+                id: "b577a4fd-3175-45ee-9b22-796153168915"
+                question: "Poll title"
+                type: "multiple"
+                maxSelections: 2
+                closesAt: "2025-06-25T18:00:00.000Z"
+                manualClosed: false
+                createdAt: "2025-06-19T07:43:26.108Z"
+                updatedAt: "2025-06-19T07:43:26.108Z"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+                options:
+                  - id: "9a460c6d-ed34-4d7f-828c-487f89a1421e"
+                    label: "Option 3"
+                    votes: []
+                    votesCount: 0
+                  - id: "1bfc1e5b-b1aa-4129-aa17-2cfaaf20770c"
+                    label: "Option 2"
+                    votes: []
+                    votesCount: 0
+                  - id: "5599a61e-1fe0-49dc-9808-2a1e4b605425"
+                    label: "Option 1"
+                    votes: []
+                    votesCount: 0
+                votes: []
+
+    delete:
+      tags:
+      - Polls
+      summary: Delete a poll
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Poll deleted
+
+  /polls/{id}/vote:
+    post:
+      tags:
+      - Polls
+      summary: Vote on a poll
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/VotePollDTO'
+      responses:
+        '200':
+          description: Successfully voted on poll
+          content:
+            application/json:
+              example:
+                id: b577a4fd-3175-45ee-9b22-796153168915
+                question: Poll title
+                type: multiple
+                maxSelections: 2
+                closesAt: "2025-06-25T18:00:00.000Z"
+                manualClosed: false
+                createdAt: "2025-06-19T07:43:26.108Z"
+                updatedAt: "2025-06-19T07:43:26.108Z"
+                author:
+                  id: "1"
+                  firstname: Johnny
+                  lastname: Doe
+                  email: user@example.com
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: admin
+                  permissions: []
+                options:
+                  - id: 5599a61e-1fe0-49dc-9808-2a1e4b605425
+                    label: Option 1
+                    votes:
+                      - id: 3e4cd121-410d-4542-b3b5-d57926817a53
+                        createdAt: "2025-06-19T07:54:48.860Z"
+                    votesCount: 1
+                  - id: 9a460c6d-ed34-4d7f-828c-487f89a1421e
+                    label: Option 3
+                    votes:
+                      - id: cec4135b-0377-4e5f-837a-b4d692509ff0
+                        createdAt: "2025-06-19T07:54:48.864Z"
+                    votesCount: 1
+                  - id: 1bfc1e5b-b1aa-4129-aa17-2cfaaf20770c
+                    label: Option 2
+                    votes: []
+                    votesCount: 0
+                votes:
+                  - id: 3e4cd121-410d-4542-b3b5-d57926817a53
+                    createdAt: "2025-06-19T07:54:48.860Z"
+                    voter:
+                      id: "3"
+                      firstname: first
+                      lastname: last
+                      email: user_user@example.com
+                      password: "$2b$10$EXARrDa3IhJ1isYOKTWAKe41H2wZloZmN4aMwqZCb/1o./9/zXawO"
+                      dateOfBirth: "2000-10-12T00:00:00.000Z"
+                      profilePicture: "/uploads/profile/default.png"
+                      points: 0
+                      role: user
+                      permissions: []
+                  - id: cec4135b-0377-4e5f-837a-b4d692509ff0
+                    createdAt: "2025-06-19T07:54:48.864Z"
+                    voter:
+                      id: "3"
+                      firstname: first
+                      lastname: last
+                      email: user_user@example.com
+                      password: "$2b$10$EXARrDa3IhJ1isYOKTWAKe41H2wZloZmN4aMwqZCb/1o./9/zXawO"
+                      dateOfBirth: "2000-10-12T00:00:00.000Z"
+                      profilePicture: "/uploads/profile/default.png"
+                      points: 0
+                      role: user
+                      permissions: []
+
+  /polls/{id}/close:
+    post:
+      tags:
+      - Polls
+      summary: Close a poll
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully closed poll
+          content:
+            application/json:
+              example:
+                id: b577a4fd-3175-45ee-9b22-796153168915
+                question: Poll title
+                type: multiple
+                maxSelections: 2
+                closesAt: "2025-06-25T18:00:00.000Z"
+                manualClosed: true
+                createdAt: "2025-06-19T07:43:26.108Z"
+                updatedAt: "2025-06-19T07:57:06.409Z"
+                author:
+                  id: "1"
+                  firstname: Johnny
+                  lastname: Doe
+                  email: user@example.com
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: admin
+                  permissions: []
+                options:
+                  - id: 5599a61e-1fe0-49dc-9808-2a1e4b605425
+                    label: Option 1
+                    votes:
+                      - id: 3e4cd121-410d-4542-b3b5-d57926817a53
+                        createdAt: "2025-06-19T07:54:48.860Z"
+                    votesCount: 1
+                  - id: 9a460c6d-ed34-4d7f-828c-487f89a1421e
+                    label: Option 3
+                    votes:
+                      - id: cec4135b-0377-4e5f-837a-b4d692509ff0
+                        createdAt: "2025-06-19T07:54:48.864Z"
+                    votesCount: 1
+                  - id: 1bfc1e5b-b1aa-4129-aa17-2cfaaf20770c
+                    label: Option 2
+                    votes: []
+                    votesCount: 0
+                votes:
+                  - id: 3e4cd121-410d-4542-b3b5-d57926817a53
+                    createdAt: "2025-06-19T07:54:48.860Z"
+                    voter:
+                      id: "3"
+                      firstname: first
+                      lastname: last
+                      email: user_user@example.com
+                      password: "$2b$10$EXARrDa3IhJ1isYOKTWAKe41H2wZloZmN4aMwqZCb/1o./9/zXawO"
+                      dateOfBirth: "2000-10-12T00:00:00.000Z"
+                      profilePicture: "/uploads/profile/default.png"
+                      points: 0
+                      role: user
+                      permissions: []
+                  - id: cec4135b-0377-4e5f-837a-b4d692509ff0
+                    createdAt: "2025-06-19T07:54:48.864Z"
+                    voter:
+                      id: "3"
+                      firstname: first
+                      lastname: last
+                      email: user_user@example.com
+                      password: "$2b$10$EXARrDa3IhJ1isYOKTWAKe41H2wZloZmN4aMwqZCb/1o./9/zXawO"
+                      dateOfBirth: "2000-10-12T00:00:00.000Z"
+                      profilePicture: "/uploads/profile/default.png"
+                      points: 0
+                      role: user
+                      permissions: []

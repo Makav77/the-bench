@@ -1,0 +1,421 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginUserDTO:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: Password!@1
+        rememberMe:
+          type: boolean
+          example: true
+      required:
+        - email
+        - password
+
+    CreateChallengeDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 100
+          example: "Clean Up the Park"
+        description:
+          type: string
+          maxLength: 10000
+          example: "Join us in cleaning the local park. Bring gloves and bags."
+        startDate:
+          type: string
+          format: date-time
+          example: "2025-07-01T08:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2025-07-02T18:00:00Z"
+        successCriteria:
+          type: string
+          maxLength: 500
+          example: "Submit photos of 3 cleaned-up areas in the park."
+      required:
+        - title
+        - description
+        - startDate
+        - endDate
+        - successCriteria
+    SubmitCompletionDTO:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://example.com/uploads/cleaned-area.jpg"
+          nullable: true
+        text:
+          type: string
+          maxLength: 2000
+          example: "We cleaned the west side of the park and collected 3 full bags of trash."
+          nullable: true
+      description: |
+        One of `imageUrl` or `text` must be provided.
+    ValidateChallengeDTO:
+      type: object
+      properties:
+        validated:
+          type: boolean
+          example: false
+        rejectionReason:
+          type: string
+          maxLength: 1000
+          nullable: true
+          example: "The proof submitted is not sufficient to confirm challenge completion."
+      required:
+        - validated
+      description: |
+        If `validated` is `false`, `rejectionReason` should be provided.
+    ValidateCompletionDTO:
+      type: object
+      properties:
+        validated:
+          type: boolean
+          example: false
+        rejectedReason:
+          type: string
+          maxLength: 1000
+          nullable: true
+          example: "The completion submission was invalid or insufficient."
+      required:
+        - validated
+      description: |
+        If `validated` is `false`, `rejectedReason` should be provided.
+
+    CreateEventDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          example: "Community Cleanup"
+        startDate:
+          type: string
+          format: date-time
+          example: "2025-07-01T10:00:00.000Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2025-07-01T14:00:00.000Z"
+        place:
+          type: string
+          maxLength: 200
+          example: "123 Main Street, Springfield"
+        maxNumberOfParticipants:
+          type: integer
+          minimum: 1
+          example: 25
+        description:
+          type: string
+          maxLength: 5000
+          example: "Join us for a community cleanup event."
+      required:
+        - name
+        - startDate
+        - endDate
+        - place
+        - description
+    UpdateEventDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          example: "Updated Event Name"
+        startDate:
+          type: string
+          format: date-time
+          example: "2025-07-05T10:00:00.000Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "2025-07-05T14:00:00.000Z"
+        place:
+          type: string
+          maxLength: 200
+          example: "New address"
+        maxNumberOfParticipants:
+          type: integer
+          minimum: 1
+          example: 30
+        description:
+          type: string
+          maxLength: 5000
+          example: "Updated description of the event."
+    CreateFlashPostDTO:
+      type: object
+      required:
+        - title
+        - description
+      properties:
+        title:
+          type: string
+          example: "Walking my dog"
+        description:
+          type: string
+          example: "I need someone to walk my dog on Saturday"
+    UpdateFlashPostDTO:
+      allOf:
+        - $ref: '#/components/schemas/CreateFlashPostDTO'
+        - type: object
+          required: []
+    CreateGalleryItemDTO:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 200
+      required: []
+    CreateMarketItemDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        price:
+          type: number
+        images:
+          type: array
+          items:
+            type: string
+          description: Optional array of image URLs
+        contactEmail:
+          type: string
+          format: email
+        contactPhone:
+          type: string
+          description: Phone number in international format
+      required:
+        - title
+        - description
+    UpdateMarketItemDTO:
+      allOf:
+        - $ref: '#/components/schemas/CreateMarketItemDTO'
+    RestrictUserDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          example: "4f5b1d4e-7e67-4ad5-ae0d-8754d4e0f9e2"
+        reason:
+          type: string
+          example: "Violation of community rules"
+        days:
+          type: integer
+          minimum: 0
+          example: 1
+        hours:
+          type: integer
+          minimum: 0
+          maximum: 23
+          example: 5
+        minutes:
+          type: integer
+          minimum: 0
+          maximum: 59
+          example: 30
+      required:
+        - userId
+        - reason
+    CreatePollDTO:
+      type: object
+      required:
+        - question
+        - options
+        - type
+      properties:
+        question:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+          minItems: 2
+          maxItems: 10
+          uniqueItems: true
+        type:
+          type: string
+          enum: [single, multiple, limited]
+        maxSelections:
+          type: integer
+          minimum: 1
+        autoCloseAt:
+          type: string
+          format: date-time
+    VotePollDTO:
+      type: object
+      required:
+        - selectedOptionsIds
+      properties:
+        selectedOptionsIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          maxItems: 10
+    CreatePostDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          example: My first post
+        description:
+          type: string
+          example: This is a description of the post.
+      required:
+        - title
+        - description
+    UpdatePostDTO:
+      allOf:
+        - $ref: '#/components/schemas/CreatePostDTO'
+      description: Partial update of a post.
+    CreateReportDTO:
+      type: object
+      properties:
+        reportedUserId:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        reportedContentId:
+          type: string
+        reportedContentType:
+          type: string
+        description:
+          type: string
+      required:
+        - reportedUserId
+        - reason
+        - reportedContentId
+        - reportedContentType
+    UpdateReportStatusDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [PENDING, VALIDATED, REJECTED]
+      required:
+        - status
+    CreateUserDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date-time
+        profilePicture:
+          type: string
+        role:
+          type: string
+          enum:
+            - admin
+            - user
+      required:
+        - id
+        - firstname
+        - lastname
+        - email
+        - password
+        - dateOfBirth
+        - role
+    UpdateUserDTO:
+      allOf:
+        - $ref: '#/components/schemas/CreateUserDTO'
+    ProfileSummaryDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        profilePictureUrl:
+          type: string
+        badges:
+          type: array
+          items:
+            type: string
+        points:
+          type: integer
+        events:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              startDate:
+                type: string
+                format: date-time
+        challenges:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              startDate:
+                type: string
+                format: date-time
+        marketItems:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              updatedAt:
+                type: string
+                format: date-time
+              images:
+                type: array
+                items:
+                  type: string
+      required:
+        - id
+        - firstname
+        - lastname
+        - profilePictureUrl
+        - badges
+        - points
+        - events
+        - challenges
+        - marketItems

@@ -1,0 +1,182 @@
+paths:
+  /flashposts:
+    get:
+      summary: Get all flash posts
+      tags:
+        - FlashPosts
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 5
+      responses:
+        '200':
+          description: A list of flash posts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  lastPage:
+                    type: integer
+              example:
+                data:
+                  - id: "ca69895e-68a2-47cd-9ceb-f45056a674d1"
+                    title: "Found dog in the neighborhood"
+                    description: "A small brown dog was found near the park around 5 PM. Please contact me if you are the owner or know who is."
+                    createdAt: "2025-06-18T15:10:41.119Z"
+                    updatedAt: "2025-06-18T15:10:41.119Z"
+                    author:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+                total: 1
+                page: 1
+                lastPage: 1
+
+    post:
+      summary: Create a new flash post
+      tags:
+        - FlashPosts
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/CreateFlashPostDTO'
+      responses:
+        '201':
+          description: Flash post created successfully
+          content:
+            application/json:
+              example:
+                id: "ca69895e-68a2-47cd-9ceb-f45056a674d1"
+                title: "Found dog in the neighborhood"
+                description: "A small brown dog was found near the park around 5 PM. Please contact me if you are the owner or know who is."
+                createdAt: "2025-06-18T15:10:41.119Z"
+                updatedAt: "2025-06-18T15:10:41.119Z"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+  /flashposts/{id}:
+    get:
+      summary: Get a single flash post by ID
+      tags:
+        - FlashPosts
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The requested flash post
+          content:
+            application/json:
+              example:
+                id: "ca69895e-68a2-47cd-9ceb-f45056a674d1"
+                title: "Found dog in the neighborhood"
+                description: "A small brown dog was found near the park around 5 PM. Please contact me if you are the owner or know who is."
+                createdAt: "2025-06-18T15:10:41.119Z"
+                updatedAt: "2025-06-18T15:10:41.119Z"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+    patch:
+      summary: Update an existing flash post
+      tags:
+        - FlashPosts
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/UpdateFlashPostDTO'
+      responses:
+        '200':
+          description: Flash post updated successfully
+          content:
+            application/json:
+              example:
+                id: "ca69895e-68a2-47cd-9ceb-f45056a674d1"
+                title: "New title"
+                description: "New description"
+                createdAt: "2025-06-18T15:10:41.119Z"
+                updatedAt: "2025-06-18T15:13:56.224Z"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+    delete:
+      summary: Delete a flash post
+      tags:
+        - FlashPosts
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Flash post deleted successfully

@@ -1,0 +1,173 @@
+paths:
+  /posts:
+    get:
+      summary: Get all posts
+      tags:
+        - Posts
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              example:
+                data:
+                  - id: "7fad58fa-4c60-4388-9fd3-0a9ba81aaa0f"
+                    title: "Post title"
+                    description: "Post description"
+                    createdAt: "2025-06-19T08:05:39.579Z"
+                    updatedAt: "2025-06-19T08:05:39.579Z"
+                    author:
+                      id: "1"
+                      firstname: "Johnny"
+                      lastname: "Doe"
+                      email: "user@example.com"
+                      password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                      dateOfBirth: "2000-12-09T23:00:00.000Z"
+                      profilePicture: ""
+                      points: 0
+                      role: "admin"
+                      permissions: []
+                total: 1
+                page: 1
+                lastPage: 1
+
+    post:
+      summary: Create a new post
+      tags:
+        - Posts
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/CreatePostDTO'
+      responses:
+        '201':
+          description: Successfully created post
+          content:
+            application/json:
+              example:
+                id: "7fad58fa-4c60-4388-9fd3-0a9ba81aaa0f"
+                title: "Post title"
+                description: "Post description"
+                createdAt: "2025-06-19T08:05:39.579Z"
+                updatedAt: "2025-06-19T08:05:39.579Z"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+  /posts/{id}:
+    get:
+      summary: Get a post by ID
+      tags:
+        - Posts
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Single post
+          content:
+            application/json:
+              example:
+                id: "7fad58fa-4c60-4388-9fd3-0a9ba81aaa0f"
+                title: "Post title"
+                description: "Post description"
+                createdAt: "2025-06-19T08:05:39.579Z"
+                updatedAt: "2025-06-19T08:05:39.579Z"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+    patch:
+      summary: Update a post
+      tags:
+        - Posts
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/UpdatePostDTO'
+      responses:
+        '200':
+          description: Post updated successfully
+          content:
+            application/json:
+              example:
+                id: "7fad58fa-4c60-4388-9fd3-0a9ba81aaa0f"
+                title: "Updated Post title"
+                description: "Updated Post description"
+                createdAt: "2025-06-19T08:05:39.579Z"
+                updatedAt: "2025-06-19T08:09:14.719Z"
+                author:
+                  id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                  email: "user@example.com"
+                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
+                  dateOfBirth: "2000-12-09T23:00:00.000Z"
+                  profilePicture: ""
+                  points: 0
+                  role: "admin"
+                  permissions: []
+
+    delete:
+      summary: Delete a post
+      tags:
+        - Posts
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post deleted successfully
