@@ -2,7 +2,7 @@ import { ChangeEvent, useRef, useState, KeyboardEvent, FormEvent } from "react";
 import { createNews, uploadImages } from "../../api/newsService";
 import { toast } from "react-toastify";
 
-export default function NewsForm() {
+function NewsForm() {
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
     const [tags, setTags] = useState<string[]>([]);
@@ -173,3 +173,5 @@ export default function NewsForm() {
         </form>
     );
 }
+
+export default NewsForm;
