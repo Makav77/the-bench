@@ -10,7 +10,7 @@ function EditPostPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetch = async() => {
+        const fetch = async () => {
             if (id) {
                 const defaults = await getPost(id);
                 setDefaults(defaults);
@@ -19,7 +19,7 @@ function EditPostPage() {
         fetch();
     }, [id]);
 
-    const handleSubmit = async(data: { title: string; description: string; }) => {
+    const handleSubmit = async (data: { title: string; description: string; }) => {
         if (!id) return;
         const updated = await updatePost(id!, data);
         toast.success("Post updated !");

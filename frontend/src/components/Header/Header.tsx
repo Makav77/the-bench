@@ -9,7 +9,7 @@ function Header() {
     const navigate = useNavigate();
     const { isAuthenticated, user, logout } = useAuth();
 
-    const handleLogout = async() => {
+    const handleLogout = async () => {
         try {
             await logoutUser();
             logout();

@@ -26,7 +26,7 @@ export default function UserProfilePage() {
     const [showFriendsModal, setShowFriendsModal] = useState<boolean>(false);
     const [removingFriendId, setRemovingFriendId] = useState<string | null>(null);
 
-    const loadProfile = async() => {
+    const loadProfile = async () => {
         if (!id) {
             return;
         }
@@ -45,7 +45,7 @@ export default function UserProfilePage() {
         loadProfile();
     }, [id]);
 
-    const refreshFriends = async() => {
+    const refreshFriends = async () => {
         if (id && isOwnProfile) {
             try {
                 const data = await getFriends(id);
