@@ -37,8 +37,8 @@ export class NewsController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post("upload-image")
-    @UseInterceptors(FilesInterceptor("images", 30, {
+    @Post("upload-images")
+    @UseInterceptors(FilesInterceptor("images", 10, {
         storage: diskStorage({
             destination: (_req, _file, cb) => {
                 const uploadPath = "./uploads/news";
@@ -62,7 +62,7 @@ export class NewsController {
         limits: { fileSize: 5*1024*1024 }
     }))
     async uploadImages(@UploadedFiles() files: Express.Multer.File[]): Promise<{ urls: string[] }> {
-        const urls = files.map(file => `/uplaods/news/${file.filename}`);
+        const urls = files.map(file => `/uploads/news/${file.filename}`);
         return { urls };
     }
 

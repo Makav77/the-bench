@@ -39,8 +39,8 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
             return;
         }
         const files = Array.from(e.target.files);
-        if (existingImages.length + images.length + files.length > 30) {
-            setError("30 images max");
+        if (existingImages.length + images.length + files.length > 10) {
+            setError("10 images max");
             return;
         }
         setImages(prev => [...prev, ...files]);
@@ -137,14 +137,14 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
 
             <div>
                 <label className="font-semibold">
-                    Images (max 30)
+                    Images (max 10)
                 </label>
                 <div className="flex items-center gap-3 mb-2">
                     <button
                         type="button"
                         className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
                         onClick={() => fileInputRef.current?.click()}
-                        disabled={existingImages.length + images.length >= 30}
+                        disabled={existingImages.length + images.length >= 10}
                     >
                         Add image
                     </button>
@@ -155,7 +155,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                         multiple
                         hidden
                         onChange={handleFileChange}
-                        disabled={existingImages.length + images.length >= 30}
+                        disabled={existingImages.length + images.length >= 10}
                     />
                 </div>
                 <div className="flex gap-3 flex-wrap">
