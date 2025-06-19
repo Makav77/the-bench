@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import NewsForm from "../../components/News/NewsForm";
-import { getOneNews, updateNews, uploadNewsImages } from "../../api/newsService";
+import NewsForm from "./NewsForm";
+import { getOneNews, updateNews, uploadNewsImages } from "../../../api/newsService";
 import { toast } from "react-toastify";
 
 function EditNews() {

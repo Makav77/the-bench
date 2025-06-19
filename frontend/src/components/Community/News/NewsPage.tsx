@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllNews, NewsDTO } from "../../api/newsService";
+import { getAllNews, NewsDTO } from "../../../api/newsService";
 import { useNavigate } from "react-router-dom";
 
 function NewsPage() {

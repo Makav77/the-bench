@@ -22,6 +22,9 @@ export class News {
 
     @Prop({ type: [String], default: [] })
     images: string[];
+
+    @Prop({ type: [String], default: [] })
+    likedBy: string[]; 
 }
 
 export const NewsSchema = SchemaFactory.createForClass(News);

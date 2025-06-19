@@ -55,8 +55,8 @@ import UserProfilePage from "./components/Profile/UserProfilePage";
 
 import DashboardPage from "./components/Dashboard/Dashboard";
 
-import NewsPage from "./components/News/NewsPage";
-import NewsDetailPage from "./components/News/NewsDetailPage";
+import NewsPage from "./components/Community/News/NewsPage";
+import NewsDetailPage from "./components/Community/News/NewsDetailPage";
 
 export default function App() {
     return (

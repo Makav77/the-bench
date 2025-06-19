@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, DefaultValuePipe, ParseIntPipe } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, DefaultValuePipe, ParseIntPipe, Req } from "@nestjs/common";
 import { NewsService } from "./news.service";
 import { CreateNewsDTO } from "./dto/create-news.dto"; 
 import { UpdateNewsDTO } from "./dto/update-news.dto";
@@ -79,5 +79,25 @@ export class NewsController {
     @Delete(":id")
     async removeNews(@Param("id") id: string): Promise<void> {
         await this.newsService.removeNews(id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post(":id/like")
+    async toggleLike(
+        @Param("id") newsId: string,
+        @Req() req: Request & { user: { id: string } }
+    ): Promise<{ liked: boolean; totalLikes: number }> {
+        const userId = req.user.id;
+        return this.newsService.toggleLike(newsId, userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(":id/likes")
+    async getLikes(
+        @Param("id") newsId: string,
+        @Req() req: Request & { user: { id: string } }
+    ): Promise<{ totalLikes: number; liked: boolean }> {
+        const userId = req.user.id;
+        return this.newsService.getLikes(newsId, userId);
     }
 }

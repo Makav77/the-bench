@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import NewsForm from "../../components/News/NewsForm";
-import { createNews, uploadNewsImages } from "../../api/newsService";
+import NewsForm from "./NewsForm";
+import { createNews, uploadNewsImages } from "../../../api/newsService";
 import { toast } from "react-toastify";
 
 function CreateNews() {

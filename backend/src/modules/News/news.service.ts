@@ -50,4 +50,33 @@ export class NewsService {
             throw new NotFoundException("News not found for removing")
         }
     }
+
+    async toggleLike(newsId: string, userId: string): Promise<{ liked: boolean; totalLikes: number }> {
+        const news = await this.newsModel.findById(newsId);
+        if (!news) {
+            throw new NotFoundException("News not found");
+        }
+
+        const index = news.likedBy.indexOf(userId);
+        let liked: boolean;
+        if (index > -1) {
+            news.likedBy.splice(index, 1);
+            liked = false;
+        } else {
+            news.likedBy.push(userId);
+            liked = true;
+        }
+
+        await news.save();
+        return { liked, totalLikes: news.likedBy.length };
+    }
+
+    async getLikes(newsId: string, userId: string): Promise<{ totalLikes: number; liked: boolean }> {
+        const news = await this.newsModel.findById(newsId).lean();
+        if (!news) {
+            throw new NotFoundException("News not found");
+        }
+
+        return { totalLikes: news.likedBy.length, liked: news.likedBy.includes(userId) };
+    }
 }

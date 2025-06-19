@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { deleteNews, getOneNews, NewsDTO } from "../../api/newsService";
-import { useAuth } from "../../context/AuthContext";
+import { deleteNews, getOneNews, NewsDTO, getNewsLikes, toggleNewsLike, NewsLikesDTO } from "../../../api/newsService"; // //commentaire: Ajout des likes ici
+import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 
 function NewsDetailPage() {
@@ -11,6 +11,7 @@ function NewsDetailPage() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
     const { user } = useAuth();
+    const [likes, setLikes] = useState<NewsLikesDTO>({ totalLikes: 0, liked: false });
 
     useEffect(() => {
         async function load() {
@@ -22,6 +23,8 @@ function NewsDetailPage() {
             try {
                 const data = await getOneNews(id);
                 setNews(data);
+                const likesData = await getNewsLikes(id);
+                setLikes(likesData);
             } catch (error) {
                 setError("Unable to load article : " + error);
             } finally {
@@ -30,6 +33,18 @@ function NewsDetailPage() {
         }
         load();
     }, [id]);
+
+    const handleLike = async () => {
+        if (!id) {
+            return;
+        }
+        try {
+            const res = await toggleNewsLike(id);
+            setLikes(res);
+        } catch (error) {
+            toast.error("Error while liking the article : " + error);
+        }
+    };
 
     if (isLoading) {
         return <div className="text-center p-6">Loading...</div>;
@@ -109,6 +124,17 @@ function NewsDetailPage() {
 
             <div className="text-lg text-gray-800 whitespace-pre-line">
                 {news.content}
+            </div>
+
+            <div className="flex items-center gap-3 mb-2">
+                <button
+                    onClick={handleLike}
+                    className={`px-3 py-1 rounded ${likes.liked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"} hover:bg-blue-600`}
+                    disabled={!user}
+                >
+                    {likes.liked ? "Unlike" : "Like"} 👍
+                </button>
+                <span>{likes.totalLikes} like{likes.totalLikes !== 1 ? "s" : ""}</span>
             </div>
 
             {canEditOrDelete && (

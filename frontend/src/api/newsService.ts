@@ -19,6 +19,11 @@ export interface NewsPaginationDTO {
     lastPage: number;
 }
 
+export interface NewsLikesDTO {
+    totalLikes: number;
+    liked: boolean;
+}
+
 export const getAllNews = async (page = 1, limit = 5): Promise<NewsPaginationDTO> => {
     const response = await apiClient.get("/news", { params: { page, limit } });
     return response.data;
@@ -52,3 +57,13 @@ export const uploadNewsImages = async (files: File[]): Promise<string[]> => {
     });
     return response.data.urls;
 }
+
+export const toggleNewsLike = async (id: string): Promise<NewsLikesDTO> => {
+    const response = await apiClient.post(`/news/${id}/like`);
+    return response.data;
+};
+
+export const getNewsLikes = async (id: string): Promise<NewsLikesDTO> => {
+    const response = await apiClient.get(`/news/${id}/likes`);
+    return response.data;
+};
