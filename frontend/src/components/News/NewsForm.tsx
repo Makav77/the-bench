@@ -1,36 +1,28 @@
-import { ChangeEvent, useRef, useState, KeyboardEvent, FormEvent } from "react";
-import { createNews, uploadImages } from "../../api/newsService";
-import { toast } from "react-toastify";
+import { useState, useRef, ChangeEvent, FormEvent, KeyboardEvent } from "react";
 
-function NewsForm() {
-    const [title, setTitle] = useState<string>("");
-    const [content, setContent] = useState<string>("");
-    const [tags, setTags] = useState<string[]>([]);
-    const [tagInput, setTagInput] = useState<string>("");
+interface NewsFormProps {
+    defaultValues?: {
+        title: string;
+        content: string;
+        tags?: string[];
+        images?: string[];
+    };
+    onSubmit: (data: { title: string; content: string; tags: string[]; images: File[]; removeImages?: string[] }) => Promise<void>;
+    isLoading?: boolean;
+    buttonLabel?: string;
+}
+
+function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormProps) {
+    const [title, setTitle] = useState(defaultValues?.title ?? "");
+    const [content, setContent] = useState(defaultValues?.content ?? "");
+    const [tags, setTags] = useState<string[]>(defaultValues?.tags ?? []);
+    const [tagInput, setTagInput] = useState("");
+    const [existingImages, setExistingImages] = useState<string[]>(defaultValues?.images ?? []);
+    const [removeImages, setRemoveImages] = useState<string[]>([]);
     const [images, setImages] = useState<File[]>([]);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) {
-            return
-        }
-        const files = Array.from(e.target.files);
-
-        if (images.length + files.length > 30) {
-            toast.error("30 images max");
-            return;
-        }
-
-        setImages(prev => [...prev, ...files]);
-        setImagePreviews(prev => [...prev, ...files.map(file => URL.createObjectURL(file))]);
-    };
-
-    const handleRemoveImage = (index: number) => {
-        setImages(prev => prev.filter((_, i) => i !== index));
-        setImagePreviews(prev => prev.filter((_, i) => i !== index));
-    };
 
     const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && tagInput.trim()) {
@@ -42,64 +34,87 @@ function NewsForm() {
         }
     };
 
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) {
+            return;
+        }
+        const files = Array.from(e.target.files);
+        if (existingImages.length + images.length + files.length > 30) {
+            setError("30 images max");
+            return;
+        }
+        setImages(prev => [...prev, ...files]);
+        setImagePreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+    };
+
+    const handleRemoveImage = (index: number, isExisting: boolean) => {
+        if (isExisting) {
+            setRemoveImages(prev => [...prev, existingImages[index]]);
+            setExistingImages(prev => prev.filter((_, i) => i !== index));
+        } else {
+            setImages(prev => prev.filter((_, i) => i !== index));
+            setImagePreviews(prev => prev.filter((_, i) => i !== index));
+        }
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-
+        setError(null);
+        if (!title || !content) {
+            setError("All field must be completed");
+            return;
+        }
         try {
-            let imagesUrls: string[] = [];
-            if (images.length > 0) {
-                imagesUrls = await uploadImages(images);
-            }
-
-            await createNews({ title, content, images: imagesUrls, tags });
-            toast.success("News in waiting for validation by a admin");
+            await onSubmit({ title, content, tags, images, removeImages });
         } catch (error) {
-            toast.error("Unable to publish news : " + error);
-        } finally {
-            setIsLoading(false);
+            setError("Error : " + error);
         }
     };
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="w-full max-w-xl mx-auto p-6 bg-white rounded-2xl shadow space-y-5"
+            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
         >
-            <h2 className="text-2xl font-bold mb-4">Write an article for neighborhood</h2>
+            {error && <p className="text-red-500">{error}</p>}
 
             <div>
-                <label className="font-semibold">Title</label>
+                <label className="font-semibold">
+                    Title<span className="text-red-500">*</span>
+                </label>
                 <input
                     type="text"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    className="w-full border px-3 py-2 rounded mt-1"
-                    placeholder="Article title"
+                    className="w-full border rounded px-2 py-1"
                     required
                 />
             </div>
 
             <div>
-                <label className="font-semibold">Content</label>
+                <label className="font-semibold">
+                    Content<span className="text-red-500">*</span>
+                </label>
                 <textarea
+                    rows={10}
                     value={content}
                     onChange={e => setContent(e.target.value)}
-                    className="w-full border px-3 py-2 rounded mt-1 min-h-[120px]"
-                    placeholder="Article content"
+                    className="w-full border rounded px-2 py-1"
                     required
                 />
             </div>
 
             <div>
-                <label className="font-semibold">Tags</label>
+                <label className="font-semibold">
+                    Tags
+                </label>
                 <input
                     type="text"
                     value={tagInput}
                     onChange={e => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
                     className="w-full border px-3 py-2 rounded mt-1"
-                    placeholder="Press Enter to add a tag"
+                    placeholder="Press Enter to add tag"
                 />
                 <div className="flex flex-wrap mt-2 gap-2">
                     {tags.map((tag, i) => (
@@ -121,14 +136,17 @@ function NewsForm() {
             </div>
 
             <div>
-                <label className="font-semibold">Images</label>
+                <label className="font-semibold">
+                    Images (max 30)
+                </label>
                 <div className="flex items-center gap-3 mb-2">
                     <button
                         type="button"
                         className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                        disabled={images.length >= 30}
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={existingImages.length + images.length >= 30}
                     >
-                        Add image {images.length >= 30 ? "(max 30)" : ""}
+                        Add image
                     </button>
                     <input
                         ref={fileInputRef}
@@ -137,24 +155,43 @@ function NewsForm() {
                         multiple
                         hidden
                         onChange={handleFileChange}
-                        disabled={images.length >= 30}
+                        disabled={existingImages.length + images.length >= 30}
                     />
                 </div>
                 <div className="flex gap-3 flex-wrap">
-                    {imagePreviews.map((src, i) => (
+                    {existingImages.map((src, i) => (
                         <div
                             key={i}
                             className="relative"
                         >
                             <img
                                 src={src}
-                                alt={`Preview ${i + 1}`}
-                                className="w-2' h-24 object-cover rounded border"
+                                alt={`Image existante ${i + 1}`}
+                                className="w-24 h-24 object-cover rounded border"
                             />
                             <button
                                 type="button"
                                 className="absolute top-1 right-1 bg-white rounded-full text-red-500 px-2"
-                                onClick={() => handleRemoveImage(i)}
+                                onClick={() => handleRemoveImage(i, true)}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    ))}
+                    {imagePreviews.map((src, i) => (
+                        <div
+                            key={`preview-${i}`}
+                            className="relative"
+                        >
+                            <img
+                                src={src}
+                                alt={`Preview ${i + 1}`}
+                                className="w-24 h-24 object-cover rounded border"
+                            />
+                            <button
+                                type="button"
+                                className="absolute top-1 right-1 bg-white rounded-full text-red-500 px-2"
+                                onClick={() => handleRemoveImage(i, false)}
                             >
                                 ×
                             </button>
@@ -163,13 +200,15 @@ function NewsForm() {
                 </div>
             </div>
 
-            <button
-                type="submit"
-                className="w-full py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700"
-                disabled={isLoading}
-            >
-                {isLoading ? "Publication..." : "Publish"}
-            </button>
+            <div className="flex justify-end">
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
+                >
+                    {isLoading ? "Loading..." : buttonLabel ?? "Validate"}
+                </button>
+            </div>
         </form>
     );
 }
