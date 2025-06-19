@@ -55,6 +55,9 @@ import UserProfilePage from "./components/Profile/UserProfilePage";
 
 import DashboardPage from "./components/Dashboard/Dashboard";
 
+import NewsPage from "./components/News/NewsPage";
+import NewsDetailPage from "./components/News/NewsDetailPage";
+
 export default function App() {
     return (
         <AuthProvider>
@@ -101,6 +104,8 @@ export default function App() {
                             <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
                             <Route path="dashboard" element={<DashboardPage />} />
                             <Route path="/profile/:id" element={<UserProfilePage />} />
+                            <Route path="/news" element={<NewsPage />} />
+                            <Route path="/news/:id" element={<NewsDetailPage />} />
                         </Route>
                     </Route>
                 </Routes>
