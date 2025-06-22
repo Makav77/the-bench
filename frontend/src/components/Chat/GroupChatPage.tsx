@@ -3,7 +3,7 @@ import { User } from "../../../../backend/src/modules/Users/entities/user.entity
 import { useSocket } from "../../context/SocketContext";
 import { getRoomMessages } from "../../api/chatService";
 
-export default function GroupChatPage({ user, groupId}: { user: User | null, groupId: string }) {
+export default function GroupChatPage({ user, groupId, groupName}: { user: User | null, groupId: string, groupName: string }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
     const socket = useSocket();
@@ -67,7 +67,15 @@ export default function GroupChatPage({ user, groupId}: { user: User | null, gro
 
     return (
         <div className="p-4">
-            <h1 className="text-xl font-bold mb-2">Groupe {groupId}</h1>
+            <div className="flex items-center justify-between mb-2">
+                <h1 className="text-xl font-bold">Groupe {groupName}</h1>
+                <button
+                    type="button"
+                    className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
+                >
+                    Quitter le groupe
+                </button>
+            </div>
             <div ref={scrollContainerRef} className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
                 {messages.map((msg, i) => {
                     const isMine = msg.userId === user?.id;
