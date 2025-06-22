@@ -89,6 +89,12 @@ function NewsPage() {
                                     ))}
                                 </div>
                             )}
+
+                            {/* Ajout du compteur de likes */}
+                            <div className="flex items-center gap-2 mt-2 text-gray-500 text-sm">
+                                <span role="img" aria-label="like">👍</span>
+                                {article.totalLikes ?? 0} Like{article.totalLikes === 1 ? "" : "s"}
+                            </div>
                         </div>
                     </li>
                 ))}

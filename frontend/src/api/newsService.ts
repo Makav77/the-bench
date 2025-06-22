@@ -10,6 +10,7 @@ export interface NewsDTO {
     authorId: string;
     createdAt: string;
     updatedAt: string;
+    totalLikes: number;
 }
 
 export interface NewsPaginationDTO {

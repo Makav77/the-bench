@@ -57,6 +57,8 @@ import DashboardPage from "./components/Dashboard/Dashboard";
 
 import NewsPage from "./components/Community/News/NewsPage";
 import NewsDetailPage from "./components/Community/News/NewsDetailPage";
+import CreateNews from "./components/Community/News/CreateNews";
+import EditNews from "./components/Community/News/EditNewsForm";
 
 export default function App() {
     return (
@@ -106,6 +108,8 @@ export default function App() {
                             <Route path="/profile/:id" element={<UserProfilePage />} />
                             <Route path="/news" element={<NewsPage />} />
                             <Route path="/news/:id" element={<NewsDetailPage />} />
+                            <Route path="/news/create" element={<CreateNews />} />
+                            <Route path="/news/:id/edit" element={<EditNews />} />
                         </Route>
                     </Route>
                 </Routes>

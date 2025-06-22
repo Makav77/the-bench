@@ -19,9 +19,9 @@ export class NewsController {
     @Get()
     async findAllNews(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe)limit: number
-    ): Promise<{ data: News[]; total: number; page: number; lastPage: number; }> {
-        return this.newsService.findAllNews(Number(page), Number(limit));
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+    ): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number; }> {
+        return this.newsService.findAllNews(page, limit);
     }
 
     @UseGuards(JwtAuthGuard)

@@ -1,3 +1,5 @@
+// backend/src/modules/News/news.service.ts
+
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -9,15 +11,22 @@ import { UpdateNewsDTO } from "./dto/update-news.dto";
 export class NewsService {
     constructor(@InjectModel(News.name) private newsModel: Model<NewsDocument>) {}
 
-    async findAllNews(page = 1, limit = 5): Promise<{ data: News[]; total: number; page: number; lastPage: number; }> {
+    async findAllNews(page = 1, limit = 5): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number }> {
         const skip = (page - 1) * limit;
-        const total = await this.newsModel.countDocuments();
-        const data = await this.newsModel
-            .find()
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit)
-            .exec();
+        const [newsList, total] = await Promise.all([
+            this.newsModel
+                .find()
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec(),
+            this.newsModel.countDocuments().exec(),
+        ]);
+
+        const data = newsList.map(item => ({
+            ...item.toObject(),
+            totalLikes: item.likedBy.length,
+        }));
 
         const lastPage = Math.ceil(total / limit);
         return { data, total, page, lastPage };
@@ -37,7 +46,9 @@ export class NewsService {
     }
 
     async updateNews(id: string, updateNewsDTO: UpdateNewsDTO): Promise<News> {
-        const updatedNews = await this.newsModel.findByIdAndUpdate(id, updateNewsDTO, { new: true }).exec();
+        const updatedNews = await this.newsModel
+            .findByIdAndUpdate(id, updateNewsDTO, { new: true })
+            .exec();
         if (!updatedNews) {
             throw new NotFoundException("News not found for updating");
         }
@@ -47,7 +58,7 @@ export class NewsService {
     async removeNews(id: string): Promise<void> {
         const removed = await this.newsModel.findByIdAndDelete(id).exec();
         if (!removed) {
-            throw new NotFoundException("News not found for removing")
+            throw new NotFoundException("News not found for removing");
         }
     }
 
@@ -58,13 +69,11 @@ export class NewsService {
         }
 
         const index = news.likedBy.indexOf(userId);
-        let liked: boolean;
-        if (index > -1) {
-            news.likedBy.splice(index, 1);
-            liked = false;
-        } else {
+        const liked = index === -1;
+        if (liked) {
             news.likedBy.push(userId);
-            liked = true;
+        } else {
+            news.likedBy.splice(index, 1);
         }
 
         await news.save();
@@ -76,7 +85,9 @@ export class NewsService {
         if (!news) {
             throw new NotFoundException("News not found");
         }
-
-        return { totalLikes: news.likedBy.length, liked: news.likedBy.includes(userId) };
+        return {
+            totalLikes: news.likedBy.length,
+            liked: news.likedBy.includes(userId),
+        };
     }
 }
