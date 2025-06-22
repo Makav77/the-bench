@@ -33,3 +33,8 @@ export const getGroups = async (userId: string | undefined): Promise<{ id: strin
     name: group.name,
   }));
 };
+
+export const leaveGroup = async (groupId: string): Promise<{ deleted: boolean }> => {
+  const response = await apiClient.delete(`/chat/groups/${groupId}/leave`);
+  return response.data;
+};

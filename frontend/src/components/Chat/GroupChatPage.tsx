@@ -1,12 +1,24 @@
 import { useEffect, useState, useRef } from "react";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
 import { useSocket } from "../../context/SocketContext";
-import { getRoomMessages } from "../../api/chatService";
+import { getRoomMessages, leaveGroup } from "../../api/chatService";
 
-export default function GroupChatPage({ user, groupId, groupName}: { user: User | null, groupId: string, groupName: string }) {
+export default function GroupChatPage({ user, groupId, groupName, onLeave}: { user: User | null, groupId: string, groupName: string, onLeave: () => void }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
     const socket = useSocket();
+
+    const handleLeaveGroup = async () => {
+        try {
+            const res = await leaveGroup(groupId);
+            alert("Vous avez quitté le groupe.");
+
+            onLeave();
+        } catch (err) {
+            console.error("Erreur lors de la sortie du groupe :", err);
+            alert("Impossible de quitter le groupe.");
+        }
+    };
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -62,7 +74,7 @@ export default function GroupChatPage({ user, groupId, groupName}: { user: User 
                 username: `${user?.firstname} ${user?.lastname}`,
             });
             setMessage("");
-        }
+        } 
     }
 
     return (
@@ -71,6 +83,7 @@ export default function GroupChatPage({ user, groupId, groupName}: { user: User 
                 <h1 className="text-xl font-bold">Groupe {groupName}</h1>
                 <button
                     type="button"
+                    onClick={handleLeaveGroup}
                     className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
                 >
                     Quitter le groupe

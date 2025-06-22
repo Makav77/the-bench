@@ -24,7 +24,7 @@ export default function ChatPage() {
       <div className="flex-1 border-l">
         {activeChat.type === 'general' && <GeneralChatPage key="general" user={user} />}
         {activeChat.type === 'private' && <PrivateChatPage key={`private-${activeChat.targetId}`} user={user} userId={activeChat.targetId!} />}
-        {activeChat.type === 'group' && <GroupChatPage key={`group-${activeChat.targetId}`} user={user} groupId={activeChat.targetId!} groupName={activeChat.groupName?activeChat.groupName:""} />}
+        {activeChat.type === 'group' && <GroupChatPage onLeave={() => { setActiveChat({ type: 'general' }); handleGroupCreated()}} key={`group-${activeChat.targetId}`} user={user} groupId={activeChat.targetId!} groupName={activeChat.groupName?activeChat.groupName:""} />}
         {activeChat.type === 'create-group' && <CreateGroupPage user={user} handleGroupCreated={handleGroupCreated} />}
       </div>
     </div>
