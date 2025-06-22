@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Post, Body } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Body, Delete, Request } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
 
@@ -22,5 +22,12 @@ export class ChatController {
   @Get('groups/:userId')
   getUserGroups(@Param('userId') userId: string) {
     return this.chatService.getGroupsForUser(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('groups/:id/leave')
+  async leaveGroup(@Param('id') groupId: string, @Request() req) {
+    const user = req.user;
+    return this.chatService.leaveGroup(groupId, user);
   }
 }
