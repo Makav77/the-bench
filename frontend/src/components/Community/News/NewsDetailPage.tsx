@@ -12,6 +12,7 @@ function NewsDetailPage() {
     const navigate = useNavigate();
     const { user } = useAuth();
     const [likes, setLikes] = useState<NewsLikesDTO>({ totalLikes: 0, liked: false });
+    const [modalImage, setModalImage] = useState<string | null>(null);
 
     useEffect(() => {
         async function load() {
@@ -33,6 +34,8 @@ function NewsDetailPage() {
         }
         load();
     }, [id]);
+
+    const handleCloseModal = () => setModalImage(null);
 
     const handleLike = async () => {
         if (!id) {
@@ -100,6 +103,7 @@ function NewsDetailPage() {
                         alt="Main article"
                         className="rounded-lg object-cover max-h-72"
                         style={{ maxWidth: "90%", margin: "0 auto" }}
+                        onClick={() => setModalImage(news.images[0])}
                     />
                 </div>
             )}
@@ -116,6 +120,7 @@ function NewsDetailPage() {
                             src={src}
                             alt={`Image additionnelle ${i + 2}`}
                             className="w-32 h-32 object-cover rounded-lg cursor-pointer hover:scale-105 transition"
+                            onClick={() => setModalImage(src)}
                         />
                     ))}
                 </div>
@@ -146,6 +151,32 @@ function NewsDetailPage() {
                     >
                         Delete
                     </button>
+                </div>
+            )}
+
+            {modalImage && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+                    onClick={handleCloseModal}
+                    style={{ cursor: "zoom-out" }}
+                >
+                    <div
+                        className="relative"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <img
+                            src={modalImage}
+                            alt="zoomed image"
+                            className="max-w-[90vw] max-h-[90vh] rounded shadow-lg"
+                        />
+                        <button
+                            className="absolute top-2 right-2 text-white bg-black bg-opacity-60 rounded-full p-2 text-2xl hover:bg-opacity-80"
+                            onClick={handleCloseModal}
+                            type="button"
+                        >
+                            ×
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

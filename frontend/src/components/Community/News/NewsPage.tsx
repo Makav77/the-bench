@@ -53,7 +53,7 @@ function NewsPage() {
                 {!loading && !error && news.map(article => (
                     <li
                         key={article.id}
-                        className="bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4"
+                        className="bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4 cursor-pointer"
                     >
                         {article.images && article.images.length > 0 && (
                             <img
