@@ -14,12 +14,12 @@ export class CommentService {
         return comments;
     }
 
-    async create(createCommentDTO: CreateCommentDTO): Promise<Comment> {
+    async createComment(createCommentDTO: CreateCommentDTO): Promise<Comment> {
         const created = new this.commentModel(createCommentDTO);
         return created.save();
     }
 
-    async update(commentId: string, userId: string, updateDTO: UpdateCommentDTO): Promise<Comment> {
+    async updateComment(commentId: string, userId: string, updateDTO: UpdateCommentDTO): Promise<Comment> {
         const comment = await this.commentModel.findById(commentId);
 
         if (!comment) {
@@ -36,7 +36,7 @@ export class CommentService {
         return comment;
     }
 
-    async remove(commentId: string, userId: string, isAdminOrModerator: boolean): Promise<void> {
+    async removeComment(commentId: string, userId: string, isAdminOrModerator: boolean): Promise<void> {
         const comment = await this.commentModel.findById(commentId);
 
         if (!comment) {
