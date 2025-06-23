@@ -35,7 +35,7 @@ export const getOneNews = async (id: string): Promise<NewsDTO> => {
     return response.data;
 }
 
-export const createNews = async (news: { title: string; content: string; images: string[]; tags?: string[]; published?: boolean; }): Promise<NewsDTO> => {
+export const createNews = async (news: { title: string; content: string; images: string[]; tags?: string[]; published?: boolean; authorId: string; }): Promise<NewsDTO> => {
     const response = await apiClient.post("/news", news);
     return response.data;
 }

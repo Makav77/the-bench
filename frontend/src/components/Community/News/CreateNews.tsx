@@ -2,11 +2,16 @@ import { useNavigate } from "react-router-dom";
 import NewsForm from "./NewsForm";
 import { createNews, uploadNewsImages } from "../../../api/newsService";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../context/AuthContext";
 
 function CreateNews() {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const handleSubmit = async (data: { title: string; content: string; tags: string[]; images: File[] }) => {
+        if (!user) {
+            return;
+        }
         let imagesUrls: string[] = [];
         if (data.images.length) {
             imagesUrls = await uploadNewsImages(data.images);
@@ -16,6 +21,7 @@ function CreateNews() {
             content: data.content,
             images: imagesUrls,
             tags: data.tags,
+            authorId: user.id,
         });
         toast.success("Article published");
         navigate(`/news/${news.id}`);

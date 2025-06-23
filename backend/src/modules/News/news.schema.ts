@@ -24,7 +24,14 @@ export class News {
     images: string[];
 
     @Prop({ type: [String], default: [] })
-    likedBy: string[]; 
+    likedBy: string[];
 }
 
 export const NewsSchema = SchemaFactory.createForClass(News);
+
+NewsSchema.virtual("id").get(function () {
+    return this._id.toString();
+});
+
+NewsSchema.set("toJSON", { virtuals: true, versionKey: false });
+NewsSchema.set("toObject", { virtuals: true });
