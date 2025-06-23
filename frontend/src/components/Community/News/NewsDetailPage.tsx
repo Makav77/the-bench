@@ -83,53 +83,48 @@ function NewsDetailPage() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto py-10 px-4">
+        <div className="max-w-xl mx-auto py-5 px-10 bg-white rounded-xl shadow-lg mt-10">
             <button
                 onClick={() => navigate(-1)}
-                className="mb-6 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+                className="mb-6 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
             >
                 ← Back
             </button>
 
+            <h1 className="text-3xl font-bold mb-4 text-center">{news.title}</h1>
+
             {news.images && news.images.length > 0 && (
-                <div className="flex flex-wrap gap-4 mb-4">
-                    {news.images.map((src, i) => (
+                <div className="flex justify-center mb-6">
+                    <img
+                        src={news.images[0]}
+                        alt="Main article"
+                        className="rounded-lg object-cover max-h-72"
+                        style={{ maxWidth: "90%", margin: "0 auto" }}
+                    />
+                </div>
+            )}
+
+            <div className="text-lg text-gray-800 whitespace-pre-line mb-6 px-2 text-justify">
+                {news.content}
+            </div>
+
+            {news.images && news.images.length > 1 && (
+                <div className="flex flex-wrap gap-4 justify-center mb-6">
+                    {news.images.slice(1).map((src, i) => (
                         <img
                             key={i}
                             src={src}
-                            alt={`Image ${i + 1}`}
-                            className="w-44 h-44 object-cover rounded border"
+                            alt={`Image additionnelle ${i + 2}`}
+                            className="w-32 h-32 object-cover rounded-lg cursor-pointer hover:scale-105 transition"
                         />
                     ))}
                 </div>
             )}
 
-            <h1 className="text-3xl font-bold mb-2">{news.title}</h1>
-            <div className="text-gray-500 text-sm mb-4">
-                Published on {new Date(news.createdAt).toLocaleDateString()}
-            </div>
-
-            {news.tags && news.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                    {news.tags.map((tag, i) => (
-                        <span
-                            key={i}
-                            className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-xs"
-                        >
-                            #{tag}
-                        </span>
-                    ))}
-                </div>
-            )}
-
-            <div className="text-lg text-gray-800 whitespace-pre-line">
-                {news.content}
-            </div>
-
             <div className="flex items-center gap-3 mb-2">
                 <button
                     onClick={handleLike}
-                    className={`px-3 py-1 rounded ${likes.liked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"} hover:bg-blue-600`}
+                    className={`px-3 py-1 rounded cursor-pointer ${likes.liked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"} hover:bg-blue-600`}
                     disabled={!user}
                 >
                     {likes.liked ? "Unlike" : "Like"} 👍
@@ -138,16 +133,16 @@ function NewsDetailPage() {
             </div>
 
             {canEditOrDelete && (
-                <div className="flex gap-3 mb-6">
+                <div className="flex gap-3 mt-10 justify-center">
                     <button
                         onClick={() => navigate(`/news/${news.id}/edit`)}
-                        className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500"
+                        className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500  cursor-pointer"
                     >
                         Edit
                     </button>
                     <button
                         onClick={handleDelete}
-                        className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
+                        className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600  cursor-pointer"
                     >
                         Delete
                     </button>
