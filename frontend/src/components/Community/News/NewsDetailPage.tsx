@@ -334,20 +334,24 @@ function NewsDetailPage() {
                             alt={user.firstname}
                             className="w-10 h-10 rounded-full object-cover"
                         />
-                        <textarea
-                            className="flex-1 border rounded px-2 py-1"
-                            value={commentInput}
-                            onChange={e => setCommentInput(e.target.value)}
-                            rows={2}
-                            placeholder="Add comment ..."
-                        />
-                        <button
-                            onClick={handleCommentSend}
-                            disabled={commentLoading || !commentInput.trim()}
-                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-80 cursor-pointer"
-                        >
-                            Publish
-                        </button>
+                        <div className="flex-1 flex flex-col gap-2">
+                            <textarea
+                                className="border rounded px-2 py-1 w-full"
+                                value={commentInput}
+                                onChange={e => setCommentInput(e.target.value)}
+                                rows={3}
+                                placeholder="Add comment ..."
+                            />
+                            <div className="flex justify-end">
+                                <button
+                                    onClick={handleCommentSend}
+                                    disabled={commentLoading || !commentInput.trim()}
+                                    className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 disabled:opacity-80 cursor-pointer"
+                                >
+                                    Publish
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
