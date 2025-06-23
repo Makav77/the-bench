@@ -2,13 +2,17 @@ import { Controller, Post, Body, Param, Delete, Patch, Get, UseGuards, Request, 
 import { CommentService } from "./comment.service";
 import { CreateCommentDTO } from "./dto/create-comment.dto";
 import { UpdateCommentDTO } from "./dto/update-comment.dto";
+import { UserService } from "../Users/user.service";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { Comment } from "./comment.schema";
 
 @Controller("news/:newsId/comments")
 export class CommentController {
 
-    constructor(private readonly commentService: CommentService) {}
+    constructor(
+        private readonly commentService: CommentService,
+        private readonly userService: UserService
+    ) {}
 
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -18,16 +22,22 @@ export class CommentController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    async createComment(
+    async create(
         @Param("newsId") newsId: string,
-        @Body() createCommentDTO: CreateCommentDTO,
-        @Request() req: { user: { id: string } }
+        @Body("content") content: string,
+        @Request() req: { user: { id: string; firstname: string; lastname: string; avatar: string } }
     ): Promise<Comment> {
-        return this.commentService.createComment({
-            ...createCommentDTO,
+        const user = req.user;
+        const userPicture = await this.userService.findOne(user.id);
+        const avatar = userPicture.profilePicture;
+        const dto: CreateCommentDTO = {
+            content,
             newsId,
-            authorId: req.user.id
-        });
+            authorId: user.id,
+            authorName: `${user.firstname} ${user.lastname}`,
+            authorAvatar: avatar,
+        };
+        return this.commentService.createComment(dto);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -58,6 +68,7 @@ export class CommentController {
         @Param("commentId") commentId: string,
         @Request() req: { user: { id: string } }
     ): Promise<{ liked: boolean; totalLikes: number }> {
+        console.log('-------------------------------------------------------------------------------------------------toggleLike', { newsId, commentId });
         return this.commentService.toggleLike(commentId, req.user.id);
     }
 }

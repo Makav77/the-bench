@@ -32,6 +32,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MONGO_URI } from 'src/database/mongo-database-config';
 import { NewsModule } from '../News/news.module';
 import { NewsController } from '../News/news.controller';
+import { CommentController } from '../Comments/comment.controller';
+import { CommentModule } from '../Comments/comment.module';
 
 @Module({
     imports: [
@@ -61,6 +63,7 @@ import { NewsController } from '../News/news.controller';
         PermissionsModule,
         ReportsModule,
         NewsModule,
+        CommentModule,
     ],
     controllers: [
         ChallengesController,
@@ -75,6 +78,7 @@ import { NewsController } from '../News/news.controller';
         PermissionsController,
         ReportsController,
         NewsController,
+        CommentController,
     ],
     providers: [AppService],
 })

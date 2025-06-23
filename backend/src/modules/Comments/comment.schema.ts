@@ -30,3 +30,4 @@ CommentSchema.virtual("id").get(function () {
     return this._id.toString();
 });
 CommentSchema.set("toJSON", { virtuals: true, versionKey: false });
+CommentSchema.set("toObject", { virtuals: true });

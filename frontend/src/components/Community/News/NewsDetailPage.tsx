@@ -51,8 +51,8 @@ function NewsDetailPage() {
             return;
         }
         try {
-            const res = await toggleNewsLike(id);
-            setLikes(res);
+            const response = await toggleNewsLike(id);
+            setLikes(response);
         } catch (error) {
             toast.error("Error while liking the article : " + error);
         }
@@ -241,14 +241,6 @@ function NewsDetailPage() {
                 </div>
             )}
 
-
-
-
-
-
-
-
-
             <div className="mt-10 border-t pt-6">
                 <h2 className="text-xl font-bold mb-3">Comments</h2>
                 {commentError && <p className="text-red-500">{commentError}</p>}
@@ -256,12 +248,16 @@ function NewsDetailPage() {
                 <div className="space-y-4 mb-4">
                     {comments.length === 0 && <p className="text-gray-500">No comments yet.</p>}
                     {comments.map((c) => (
-                        <div key={c.id} className="bg-gray-50 p-3 rounded shadow-sm flex gap-3">
+                        <div
+                            key={c.id}
+                            className="bg-gray-50 p-3 rounded shadow-sm flex gap-3"
+                        >
                             <img
-                                src={c.authorAvatar ?? "/default-avatar.png"}
+                                src={c.authorAvatar ?? "/backend/uploads/profile/default.png"}
                                 alt={c.authorName}
                                 className="w-10 h-10 rounded-full object-cover"
                             />
+
                             <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                     <span className="font-semibold">{c.authorName}</span>
@@ -269,6 +265,7 @@ function NewsDetailPage() {
                                         {new Date(c.createdAt).toLocaleString()}
                                     </span>
                                 </div>
+
                                 {editingComment === c.id ? (
                                     <div className="flex flex-col gap-1">
                                         <textarea
@@ -276,9 +273,20 @@ function NewsDetailPage() {
                                             onChange={e => setEditContent(e.target.value)}
                                             className="w-full border rounded px-2 py-1"
                                         />
-                                        <div className="flex gap-2 mt-1">
-                                            <button className="text-green-700" onClick={() => handleUpdateComment(c.id)}>Valider</button>
-                                            <button className="text-gray-600" onClick={() => setEditingComment(null)}>Annuler</button>
+                                        <div className="flex gap-2 mt-1 justify-center">
+                                            <button
+                                                className="bg-green-500 text-white font-semibold border cursor-pointer hover:bg-green-600 px-3 py-1 rounded-2xl"
+                                                onClick={() => handleUpdateComment(c.id)}
+                                            >
+                                                Validate
+                                            </button>
+
+                                            <button
+                                                className="bg-red-500 text-white font-semibold border cursor-pointer hover:bg-red-600 px-3 py-1 rounded-2xl"
+                                                onClick={() => setEditingComment(null)}
+                                            >
+                                                Cancel
+                                            </button>
                                         </div>
                                     </div>
                                 ) : (
@@ -286,16 +294,31 @@ function NewsDetailPage() {
                                 )}
                                 <div className="flex items-center gap-2 mt-1">
                                     <button
-                                        className={`text-sm ${c.likedBy.includes(user?.id ?? "") ? "text-blue-500" : "text-gray-500"}`}
+                                        className={`text-sm ${c.likedBy.includes(user?.id ?? "") ? "text-blue-500" : "text-gray-500"} border px-3 py-1 rounded-3xl cursor-pointer`}
                                         onClick={() => handleToggleCommentLike(c.id)}
                                         disabled={!user}
                                     >
-                                        👍 {c.totalLikes}
+                                        Like
                                     </button>
+                                    <span className="flex items-center gap-1 text-gray-700 text-sm">
+                                        👍 {c.likedBy.length}
+                                    </span>
+
                                     {(user?.id === c.authorId || user?.role === "admin" || user?.role === "moderator") && (
                                         <>
-                                            <button className="text-xs text-yellow-600 ml-2" onClick={() => handleEditComment(c.id, c.content)}>Editer</button>
-                                            <button className="text-xs text-red-500 ml-2" onClick={() => handleDeleteComment(c.id)}>Suppr.</button>
+                                            <button
+                                                className="text-xs text-yellow-600 ml-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+                                                onClick={() => handleEditComment(c.id, c.content)}
+                                            >
+                                                Edit
+                                            </button>
+
+                                            <button
+                                                className="text-xs text-red-500 ml-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+                                                onClick={() => handleDeleteComment(c.id)}
+                                            >
+                                                Delete
+                                            </button>
                                         </>
                                     )}
                                 </div>
@@ -305,7 +328,7 @@ function NewsDetailPage() {
                 </div>
 
                 {user && (
-                    <div className="flex items-start gap-2">
+                    <div className="flex items-start gap-2 pt-10">
                         <img
                             src={user.profilePicture ?? "backend/uploads/profile/default.png"}
                             alt={user.firstname}
@@ -316,22 +339,18 @@ function NewsDetailPage() {
                             value={commentInput}
                             onChange={e => setCommentInput(e.target.value)}
                             rows={2}
-                            placeholder="Ajouter un commentaire..."
+                            placeholder="Add comment ..."
                         />
                         <button
                             onClick={handleCommentSend}
                             disabled={commentLoading || !commentInput.trim()}
-                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-60"
+                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-80 cursor-pointer"
                         >
-                            Envoyer
+                            Publish
                         </button>
                     </div>
                 )}
             </div>
-
-
-
-
 
             {modalImage && (
                 <div
