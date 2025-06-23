@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { deleteNews, getOneNews, NewsDTO, getNewsLikes, toggleNewsLike, NewsLikesDTO } from "../../../api/newsService"; // //commentaire: Ajout des likes ici
+import { getComments, createComment, updateComment, deleteComment, toggleCommentLike, CommentDTO } from "../../../api/commentService";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 
@@ -13,6 +14,12 @@ function NewsDetailPage() {
     const { user } = useAuth();
     const [likes, setLikes] = useState<NewsLikesDTO>({ totalLikes: 0, liked: false });
     const [modalImage, setModalImage] = useState<string | null>(null);
+    const [comments, setComments] = useState<CommentDTO[]>([]);
+    const [commentInput, setCommentInput] = useState("");
+    const [commentError, setCommentError] = useState<string | null>(null);
+    const [commentLoading, setCommentLoading] = useState(false);
+    const [editingComment, setEditingComment] = useState<string | null>(null);
+    const [editContent, setEditContent] = useState("");
 
     useEffect(() => {
         async function load() {
@@ -26,6 +33,8 @@ function NewsDetailPage() {
                 setNews(data);
                 const likesData = await getNewsLikes(id);
                 setLikes(likesData);
+                const comms = await getComments(id);
+                setComments(comms);
             } catch (error) {
                 setError("Unable to load article : " + error);
             } finally {
@@ -82,6 +91,84 @@ function NewsDetailPage() {
             navigate("/news");
         } catch (error) {
             toast.error("Unable to delete this article : " + error);
+        }
+    };
+
+    const handleCommentSend = async () => {
+        if (!id || !commentInput.trim()) {
+            return;
+        }
+
+        setCommentLoading(true);
+        try {
+            const comment = await createComment(id, commentInput);
+            setComments((prev) => [...prev, comment]);
+            setCommentInput("");
+        } catch (error) {
+            setCommentError("Unable to send comment : " + error);
+        } finally {
+            setCommentLoading(false);
+        }
+    };
+
+    const handleEditComment = (commentId: string, currentContent: string) => {
+        setEditingComment(commentId);
+        setEditContent(currentContent);
+    };
+
+    const handleUpdateComment = async (commentId: string) => {
+        if (!id) {
+            return;
+        }
+
+        setCommentLoading(true);
+        try {
+            const updated = await updateComment(id, commentId, editContent);
+            setComments((prev) => prev.map((c) => (c.id === commentId ? updated : c)));
+            setEditingComment(null);
+        } catch (error) {
+            setCommentError("Unable to edit comment : " + error);
+        } finally {
+            setCommentLoading(false);
+        }
+    };
+
+    const handleDeleteComment = async (commentId: string) => {
+        if (!id) {
+            return;
+        }
+
+        if (!window.confirm("You are about to delete this comment. Would you like to confirm ?")) {
+            return;
+        }
+
+        setCommentLoading(true);
+        try {
+            await deleteComment(id, commentId);
+            setComments((prev) => prev.filter((c) => c.id !== commentId));
+        } catch (error) {
+            setCommentError("Unable to delete comment : " + error);
+        } finally {
+            setCommentLoading(false);
+        }
+    };
+
+    const handleToggleCommentLike = async (commentId: string) => {
+        if (!id) {
+            return;
+        }
+
+        try {
+            const res = await toggleCommentLike(id, commentId);
+            setComments((prev) =>
+                prev.map((c) =>
+                    c.id === commentId
+                        ? { ...c, totalLikes: res.totalLikes, likedBy: res.liked ? [...c.likedBy, user?.id ?? ""] : c.likedBy.filter(uid => uid !== user?.id) }
+                        : c
+                )
+            );
+        } catch (error) {
+            setCommentError("Unable to like this comment : " + error);
         }
     };
 
@@ -153,6 +240,98 @@ function NewsDetailPage() {
                     </button>
                 </div>
             )}
+
+
+
+
+
+
+
+
+
+            <div className="mt-10 border-t pt-6">
+                <h2 className="text-xl font-bold mb-3">Comments</h2>
+                {commentError && <p className="text-red-500">{commentError}</p>}
+
+                <div className="space-y-4 mb-4">
+                    {comments.length === 0 && <p className="text-gray-500">No comments yet.</p>}
+                    {comments.map((c) => (
+                        <div key={c.id} className="bg-gray-50 p-3 rounded shadow-sm flex gap-3">
+                            <img
+                                src={c.authorAvatar ?? "/default-avatar.png"}
+                                alt={c.authorName}
+                                className="w-10 h-10 rounded-full object-cover"
+                            />
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="font-semibold">{c.authorName}</span>
+                                    <span className="text-xs text-gray-400">
+                                        {new Date(c.createdAt).toLocaleString()}
+                                    </span>
+                                </div>
+                                {editingComment === c.id ? (
+                                    <div className="flex flex-col gap-1">
+                                        <textarea
+                                            value={editContent}
+                                            onChange={e => setEditContent(e.target.value)}
+                                            className="w-full border rounded px-2 py-1"
+                                        />
+                                        <div className="flex gap-2 mt-1">
+                                            <button className="text-green-700" onClick={() => handleUpdateComment(c.id)}>Valider</button>
+                                            <button className="text-gray-600" onClick={() => setEditingComment(null)}>Annuler</button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-800">{c.content}</p>
+                                )}
+                                <div className="flex items-center gap-2 mt-1">
+                                    <button
+                                        className={`text-sm ${c.likedBy.includes(user?.id ?? "") ? "text-blue-500" : "text-gray-500"}`}
+                                        onClick={() => handleToggleCommentLike(c.id)}
+                                        disabled={!user}
+                                    >
+                                        👍 {c.totalLikes}
+                                    </button>
+                                    {(user?.id === c.authorId || user?.role === "admin" || user?.role === "moderator") && (
+                                        <>
+                                            <button className="text-xs text-yellow-600 ml-2" onClick={() => handleEditComment(c.id, c.content)}>Editer</button>
+                                            <button className="text-xs text-red-500 ml-2" onClick={() => handleDeleteComment(c.id)}>Suppr.</button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {user && (
+                    <div className="flex items-start gap-2">
+                        <img
+                            src={user.profilePicture ?? "backend/uploads/profile/default.png"}
+                            alt={user.firstname}
+                            className="w-10 h-10 rounded-full object-cover"
+                        />
+                        <textarea
+                            className="flex-1 border rounded px-2 py-1"
+                            value={commentInput}
+                            onChange={e => setCommentInput(e.target.value)}
+                            rows={2}
+                            placeholder="Ajouter un commentaire..."
+                        />
+                        <button
+                            onClick={handleCommentSend}
+                            disabled={commentLoading || !commentInput.trim()}
+                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-60"
+                        >
+                            Envoyer
+                        </button>
+                    </div>
+                )}
+            </div>
+
+
+
+
 
             {modalImage && (
                 <div
