@@ -47,7 +47,7 @@ export interface ProfileSummaryDTO {
 
 const API_URL = "http://localhost:3000/users";
 
-export const getUsers = async() => {
+export const getUsers = async () => {
     try {
         const response = await axios.get(API_URL);
         return response.data;
@@ -56,7 +56,7 @@ export const getUsers = async() => {
     }
 }
 
-export const getUserById = async(id: string) => {
+export const getUserById = async (id: string) => {
     try {
         const response = await axios.get(`${API_URL}/${id}`);
         return response.data;
@@ -65,7 +65,7 @@ export const getUserById = async(id: string) => {
     }
 }
 
-export const createUser = async(userData: UserData) => {
+export const createUser = async (userData: UserData) => {
     try {
         const response = await axios.post(API_URL, userData);
         return response.data;
@@ -74,7 +74,7 @@ export const createUser = async(userData: UserData) => {
     }
 }
 
-export const updateUser = async(id: string, userData: UserData) => {
+export const updateUser = async (id: string, userData: UserData) => {
     try {
         const response = await axios.patch(`${API_URL}/${id}`, userData);
         return response.data;
@@ -83,7 +83,7 @@ export const updateUser = async(id: string, userData: UserData) => {
     }
 }
 
-export const deleteUser = async(id: string) => {
+export const deleteUser = async (id: string) => {
     try {
         const response = await axios.delete(`${API_URL}/${id}`);
         return response.data;
@@ -92,10 +92,10 @@ export const deleteUser = async(id: string) => {
     }
 }
 
-export const getProfileSummary = async(userId: string) => {
+export const getProfileSummary = async (userId: string) => {
     try {
         const response = await apiClient.get(`/users/${userId}/profile`);
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error("getProfileSummary error : " + error);
     }

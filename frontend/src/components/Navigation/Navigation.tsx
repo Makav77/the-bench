@@ -58,7 +58,7 @@ function Navigation() {
                     location.pathname.startsWith("/challenges") ||
                     location.pathname.startsWith("/calendar") ||
                     location.pathname.startsWith("/artisans") ||
-                    location.pathname.startsWith("/journal")
+                    location.pathname.startsWith("/news")
                         ? "text-white" : "hover:underline"}`}
                 onClick={() => navigate("/community")}
             >

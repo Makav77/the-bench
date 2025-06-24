@@ -11,7 +11,7 @@ import { AuthController } from "./../Auth/auth.controller";
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { databaseConfig } from "../../database/database-config";
+import { postgresDatabaseConfig } from "../../database/postgres-database-config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "../Users/user.module";
 import { ScheduleModule } from "@nestjs/schedule";
@@ -28,6 +28,12 @@ import { PermissionsModule } from '../Permissions/permissions.module';
 import { PermissionsController } from '../Permissions/permissions.controller';
 import { ReportsModule } from '../Reports/reports.module';
 import { ReportsController } from '../Reports/reports.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { MONGO_URI } from 'src/database/mongo-database-config';
+import { NewsModule } from '../News/news.module';
+import { NewsController } from '../News/news.controller';
+import { CommentController } from '../Comments/comment.controller';
+import { CommentModule } from '../Comments/comment.module';
 
 @Module({
     imports: [
@@ -36,10 +42,11 @@ import { ReportsController } from '../Reports/reports.controller';
         }),
         ScheduleModule.forRoot(),
         TypeOrmModule.forRoot({
-            ...databaseConfig,
+            ...postgresDatabaseConfig,
             logging: true,
             logger: "advanced-console",
         }),
+        MongooseModule.forRoot(MONGO_URI, {}),
         MulterModule.register({
             dest: "./uploads",
         }),
@@ -55,6 +62,8 @@ import { ReportsController } from '../Reports/reports.controller';
         ChallengesModule,
         PermissionsModule,
         ReportsModule,
+        NewsModule,
+        CommentModule,
     ],
     controllers: [
         ChallengesController,
@@ -68,6 +77,8 @@ import { ReportsController } from '../Reports/reports.controller';
         AppController,
         PermissionsController,
         ReportsController,
+        NewsController,
+        CommentController,
     ],
     providers: [AppService],
 })

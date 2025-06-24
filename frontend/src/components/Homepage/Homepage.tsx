@@ -43,10 +43,6 @@ function Homepage() {
                         <LatestFlashPostCard />
                     </div>
                 </div>
-
-                <div className="fixed right-0 top-[88.2%] w-[10%] bg-blue-500 text-white mr-5 p-2 text-center rounded-lg cursor-pointer hover:bg-white hover:border hover:text-blue-500 hover:font-semibold">
-                    Messages
-                </div>
             </div>
         </div>
     );

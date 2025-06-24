@@ -42,8 +42,7 @@ export const updateEvent = async (id: string, data: EventFormData): Promise<Even
 }
 
 export const deleteEvent = async (id: string): Promise<void> => {
-    const response = await apiClient.delete(`/events/${id}`);
-    return response.data;
+    await apiClient.delete(`/events/${id}`);
 }
 
 export const subscribeEvent = async (id: string): Promise<EventDetails> => {

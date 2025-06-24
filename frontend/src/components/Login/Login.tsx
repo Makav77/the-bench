@@ -77,7 +77,6 @@ function Login() {
         }
         setCurrentLoginState(loginState.noError);
         setIsLoading(true);
-        console.log("Credentials : " + JSON.stringify(loginCredentials));
         try {
             const data = await loginUser(loginCredentials);
 

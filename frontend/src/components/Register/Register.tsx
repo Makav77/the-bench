@@ -73,8 +73,7 @@ function Signup() {
         registerCredentials.id = uuidv4();
 
         try {
-            const created = await createUser(registerCredentials);
-            console.log("Utilisateur créé :", created);
+            await createUser(registerCredentials);
             navigate("/");
         } catch (error) {
             console.error(error);
