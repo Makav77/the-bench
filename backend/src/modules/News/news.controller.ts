@@ -12,6 +12,8 @@ import { extname } from "path";
 import { v4 as uuidv4 } from "uuid"
 import fs from "fs";
 import { ValidateNewsDTO } from "./dto/validate-news.dto";
+import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
+import { PermissionGuard } from "../Permissions/guards/permission.guard";
 
 interface RequestWithUser extends Request {
     user: { id: string };
@@ -45,7 +47,8 @@ export class NewsController {
         return this.newsService.findOneNews(id);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission("create_news")
     @Post()
     async createNews(
         @Body() createNewsDTO: CreateNewsDTO,

@@ -74,6 +74,9 @@ function DashboardReports() {
             case "CHALLENGE":
                 navigate(`/challenges/${reportedContentId}`);
                 break;
+            case "NEWS":
+                navigate(`/news/${reportedContentId}`);
+                break;
             case "report":
                 navigate("/homepage");
                 break;
