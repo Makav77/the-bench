@@ -3,6 +3,7 @@ import { NewsService } from "./news.service";
 import { CreateNewsDTO } from "./dto/create-news.dto"; 
 import { UpdateNewsDTO } from "./dto/update-news.dto";
 import { News } from "./news.schema";
+import { User } from "../Users/entities/user.entity";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { UseInterceptors, UploadedFiles } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
@@ -10,6 +11,11 @@ import { diskStorage } from "multer";
 import { extname } from "path";
 import { v4 as uuidv4 } from "uuid"
 import fs from "fs";
+import { ValidateNewsDTO } from "./dto/validate-news.dto";
+
+interface RequestWithUser extends Request {
+    user: { id: string };
+}
 
 @Controller("news")
 export class NewsController {
@@ -25,6 +31,15 @@ export class NewsController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get("pending")
+    async findPendingNews(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+    ) {
+        return this.newsService.findPendingNews(page, limit);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     async findOneNews(@Param("id") id: string): Promise<News> {
         return this.newsService.findOneNews(id);
@@ -32,8 +47,12 @@ export class NewsController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    async createNews(@Body() createNewsDTO: CreateNewsDTO): Promise<News> {
-        return this.newsService.createNews(createNewsDTO);
+    async createNews(
+        @Body() createNewsDTO: CreateNewsDTO,
+        @Req() req: RequestWithUser,
+    ) {
+        const user = req.user as User;
+        return this.newsService.createNews(createNewsDTO, user);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -99,5 +118,16 @@ export class NewsController {
     ): Promise<{ totalLikes: number; liked: boolean }> {
         const userId = req.user.id;
         return this.newsService.getLikes(newsId, userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch(":id/validate")
+    async validateNews(
+        @Param("id") id: string,
+        @Body() validateNewsDTO: ValidateNewsDTO,
+        @Req() req: RequestWithUser
+    ) {
+        const user = req.user as User;
+        return this.newsService.validateNews(id, validateNewsDTO, user);
     }
 }

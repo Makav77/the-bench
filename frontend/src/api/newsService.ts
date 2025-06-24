@@ -25,6 +25,22 @@ export interface NewsLikesDTO {
     liked: boolean;
 }
 
+export interface ValidateNewsDTO {
+    validated: boolean;
+    rejectionReason?: string;
+}
+
+export interface NewsSummary {
+    id: string;
+    title: string;
+    content: string;
+    createdAt: string;
+    authorId: string;
+    authorFirstname: string;
+    authorLastname: string;
+    authorProfilePicture?: string;
+}
+
 export const getAllNews = async (page = 1, limit = 5): Promise<NewsPaginationDTO> => {
     const response = await apiClient.get("/news", { params: { page, limit } });
     return response.data;
@@ -67,4 +83,14 @@ export const toggleNewsLike = async (id: string): Promise<NewsLikesDTO> => {
 export const getNewsLikes = async (id: string): Promise<NewsLikesDTO> => {
     const response = await apiClient.get(`/news/${id}/likes`);
     return response.data;
+};
+
+export const getPendingNews = async (page = 1, limit = 5): Promise<{ data: NewsSummary[]; lastPage: number }> => {
+    const res = await apiClient.get(`/news/pending?page=${page}&limit=${limit}`);
+    return res.data;
+};
+
+export const validateNews = async (id: string, dto: ValidateNewsDTO): Promise<NewsSummary> => {
+    const res = await apiClient.patch(`/news/${id}/validate`, dto);
+    return res.data;
 };

@@ -14,6 +14,15 @@ export class News {
     @Prop({ required: true })
     authorId: string;
 
+    @Prop({ required: true })
+    authorFirstname: string;
+
+    @Prop({ required: true })
+    authorLastname: string;
+
+    @Prop({ required: true })
+    authorProfilePicture: string; 
+
     @Prop({ type: [String], default: [] })
     tags: string[];
 
@@ -25,6 +34,12 @@ export class News {
 
     @Prop({ type: [String], default: [] })
     likedBy: string[];
+
+    @Prop({ type: String, default: "PENDING" })
+    status: string;
+
+    @Prop({ type: String, required: false })
+    rejectionReason?: string;
 }
 
 export const NewsSchema = SchemaFactory.createForClass(News);

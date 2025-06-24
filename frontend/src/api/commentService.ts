@@ -47,7 +47,6 @@ export const deleteComment = async (newsId: string, commentId: string): Promise<
 };
 
 export const toggleCommentLike = async (newsId: string, commentId: string): Promise<CommentLikeDTO> => {
-    console.log("-------------------------------------------------------------------------------------------------------------------------------like POST", newsId, commentId);
     const response = await apiClient.post(`/news/${newsId}/comments/${commentId}/like`);
     return response.data;
 };

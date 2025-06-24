@@ -2,8 +2,9 @@ import { useState } from "react";
 import DashboardChallenges from "./DashboardChallenges";
 import DashboardReports from "./DashboardReports";
 import DashboardRestrictions from "./DashboardRestrictions";
+import DashboardNews from "./DashboardNews";
 
-type Tab = "challenges" | "restrictions" | "reports";
+type Tab = "challenges" | "restrictions" | "reports" | "news";
 
 function DashboardPage() {
     const [activeTab, setActiveTab] = useState<Tab>("restrictions");
@@ -43,11 +44,22 @@ function DashboardPage() {
                 >
                     Reports
                 </button>
+                <button
+                    onClick={() => setActiveTab("news")}
+                    className={`cursor-pointer px-4 py-2 -mb-px ${
+                        activeTab === "news"
+                            ? "border-b-2 border-blue-600 font-semibold"
+                            : "text-gray-600 hover:text-gray-800"
+                    }`}
+                >
+                    News
+                </button>
             </div>
 
             {activeTab === "challenges" && <DashboardChallenges />}
             {activeTab === "restrictions" && <DashboardRestrictions />}
             {activeTab === "reports" && <DashboardReports />}
+            {activeTab === "news" && <DashboardNews />}
         </div>
     );
 }

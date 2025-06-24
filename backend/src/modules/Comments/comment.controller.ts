@@ -68,7 +68,6 @@ export class CommentController {
         @Param("commentId") commentId: string,
         @Request() req: { user: { id: string } }
     ): Promise<{ liked: boolean; totalLikes: number }> {
-        console.log('-------------------------------------------------------------------------------------------------toggleLike', { newsId, commentId });
         return this.commentService.toggleLike(commentId, req.user.id);
     }
 }

@@ -23,8 +23,8 @@ function CreateNews() {
             tags: data.tags,
             authorId: user.id,
         });
-        toast.success("Article published");
-        navigate(`/news/${news.id}`);
+        toast.success("Article sent, waiting validation.");
+        navigate("/news");
     };
 
     return (

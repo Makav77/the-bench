@@ -25,7 +25,6 @@ export default function ValidateCompletionsPage() {
 
     if (!challenge) return <p>Loading…</p>;
 
-    // on ne montre que les non validées
     const pending = challenge.completions.filter((c: any) => !c.validated);
 
     return (
