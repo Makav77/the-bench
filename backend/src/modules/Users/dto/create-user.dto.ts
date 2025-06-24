@@ -14,6 +14,14 @@ export class CreateUserDTO {
     @IsString()
     lastname: string
 
+    @IsNotEmpty()
+    @IsString()
+    address: string;
+
+    @IsNotEmpty()
+    @IsString()
+    iris?: string;
+
     @IsEmail()
     email: string;
 

@@ -9,6 +9,7 @@ import { Event } from '../Events/entities/event.entity';
 import { ChallengeRegistration } from '../Challenges/entities/challenge-registration.entity';
 import { MarketItem } from '../Market/entities/market.entity';
 import { ProfileSummaryDTO } from './dto/profile-summary.dto';
+import axios from 'axios';
 
 @Injectable()
 export class UserService {
@@ -56,8 +57,14 @@ export class UserService {
     async create(createUserDTO: CreateUserDTO): Promise<User> {
         try {
             createUserDTO.password = await bcrypt.hash(createUserDTO.password, 10);
+            const iris = await this.getIrisFromAddress(createUserDTO.address);
+            if (!iris) {
+                throw new ConflictException("Unable to link the address to a Paris neighborhood (IRIS). Please verify the address.")
+            }
+
             const user = this.userRepository.create({
                 ...createUserDTO,
+                iris,
                 profilePicture: "/uploads/profile/default.png",
             });
             return await this.userRepository.save(user);
@@ -71,6 +78,14 @@ export class UserService {
 
     async update(id: string, updateUserDTO: UpdateUserDTO): Promise<User> {
         const user = await this.findOne(id);
+        if (updateUserDTO.address && updateUserDTO.address != user.address) {
+            const iris = await this.getIrisFromAddress(updateUserDTO.address);
+            if (!iris) {
+                throw new ConflictException("Unable to link the new address to a Paris neighborhood (IRIS). Please verify the address.")
+            }
+            updateUserDTO.iris = iris;
+        }
+
         const updated = this.userRepository.merge(user, updateUserDTO);
         return this.userRepository.save(updated);
     }
@@ -294,4 +309,20 @@ export class UserService {
         };
     }
 
+    async getIrisFromAddress(address: string): Promise<string | null> {
+        try {
+            const url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=1`;
+            const response = await axios.get(url);
+            const features = response.data.features;
+            if (features && features.length > 0 && features[0].properties.iris) {
+                return features[0].properties.iris;
+            }
+            return null;
+        } catch (error) {
+            console.error("Error while get IRIS : " + error);
+            return null;
+        }
+    }
+
+    
 }
