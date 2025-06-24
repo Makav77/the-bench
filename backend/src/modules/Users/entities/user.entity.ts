@@ -31,6 +31,12 @@ export class User {
     @Column()
     lastname: string;
 
+    @Column()
+    address: string;
+
+    @Column({ nullable: true })
+    iris: string;
+
     @Column({ unique: true })
     email: string;
 
