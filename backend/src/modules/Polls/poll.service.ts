@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThan } from "typeorm";
+import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { Poll } from "./entities/poll.entity";
 import { PollOption } from "./entities/poll-option.entity";
 import { PollVote } from "./entities/poll-vote.entity";
@@ -19,8 +19,19 @@ export class PollService {
         private readonly voteRepo: Repository<PollVote>,
     ) { }
 
-    async findAllPolls(page = 1, limit = 10): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
+    async findAllPolls(page = 1, limit = 10, user: User): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
+        const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<Poll> = {};
+        if (user.role !== Role.ADMIN) {
+            whereCondition = {
+                ...whereCondition,
+                irisCode: user.irisCode,
+            };
+        }
+        
         const [data, total] = await this.pollRepo.findAndCount({
+            where: whereCondition,
             order: { createdAt: "DESC" },
             relations: ["author", "votes"],
             skip: (page - 1) * limit,
@@ -61,7 +72,15 @@ export class PollService {
             }
         }
 
-        const pollData: Partial<Poll> = { question, type, maxSelections, manualClosed: false, author };
+        const pollData: Partial<Poll> = {
+            question,
+            type,
+            maxSelections,
+            manualClosed: false,
+            author,
+            irisCode: author.irisCode,
+            irisName: author.irisName,
+        };
 
         if (autoCloseAt) {
             pollData.closesAt = new Date(autoCloseAt);

@@ -17,10 +17,6 @@ import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";
 import { RequestWithResource } from "../Auth/guards/iris.guard";
 
-interface RequestWithUser extends Request {
-    user: { id: string };
-}
-
 @Controller("news")
 export class NewsController {
     constructor(private readonly newsService: NewsService) {}
@@ -58,7 +54,7 @@ export class NewsController {
     @Post()
     async createNews(
         @Body() createNewsDTO: CreateNewsDTO,
-        @Req() req: RequestWithUser,
+        @Req() req: RequestWithResource<News>
     ) {
         const user = req.user as User;
         return this.newsService.createNews(createNewsDTO, user);
@@ -134,7 +130,7 @@ export class NewsController {
     async validateNews(
         @Param("id") id: string,
         @Body() validateNewsDTO: ValidateNewsDTO,
-        @Req() req: RequestWithUser
+        @Req() req: RequestWithResource<News>
     ) {
         const user = req.user as User;
         return this.newsService.validateNews(id, validateNewsDTO, user);
