@@ -12,18 +12,18 @@ import { RequiredPermission } from "../Permissions/decorator/require-permission.
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
 import { IrisGuard } from "../Auth/guards/iris.guard";
-import { RequestWithresource } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Auth/guards/iris.guard";
 
 @Controller("challenges")
 export class ChallengesController {
-    constructor(private readonly challengesService: ChallengesService) {}
+    constructor(private readonly challengesService: ChallengesService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get("pending")
     async findPendingChallenges(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const user = req.user as User;
         return this.challengesService.findPendingChallenges(page, limit, user);
@@ -34,7 +34,7 @@ export class ChallengesController {
     async findAllChallenges(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number; }> {
         const user = req.user as User;
         return this.challengesService.findAllChallenges(page, limit, user);
@@ -44,14 +44,14 @@ export class ChallengesController {
     @Get(":id")
     async findOneChallenge(
         @Param("id") id: string,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const challenge = await this.challengesService.findOneChallenge(id);
-        
+
         if (!challenge) {
             throw new NotFoundException("Challenge not found.");
         }
-        
+
         req.resource = challenge;
         return challenge;
     }
@@ -61,7 +61,7 @@ export class ChallengesController {
     async findPendingCompletions(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<{ data: ChallengeCompletion[]; total: number; page: number; lastPage: number }> {
         const user = req.user as User;
         return this.challengesService.findPendingCompletions(page, limit, user);
@@ -72,7 +72,7 @@ export class ChallengesController {
     @Post()
     async createChallenge(
         @Body() createChallengeDTO: CreateChallengeDTO,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const user = req.user as User;
         return this.challengesService.createChallenge(createChallengeDTO, user);
@@ -83,7 +83,7 @@ export class ChallengesController {
     async updateChallenge(
         @Param("id") id: string,
         @Body() createChallengeDTO: CreateChallengeDTO,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const challenge = await this.challengesService.findOneChallenge(id);
 
@@ -101,7 +101,7 @@ export class ChallengesController {
     async validateChallenge(
         @Param("id") id: string,
         @Body() validateChallengeDTO: ValidateChallengeDTO,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const challenge = await this.challengesService.findOneChallenge(id);
 
@@ -118,7 +118,7 @@ export class ChallengesController {
     @Delete(":id")
     async removeChallenge(
         @Param("id") id: string,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<void> {
         const challenge = await this.challengesService.findOneChallenge(id);
 
@@ -136,7 +136,7 @@ export class ChallengesController {
     @Post(":id/subscribe")
     async subscribe(
         @Param("id") id: string,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const challenge = await this.challengesService.findOneChallenge(id);
 
@@ -153,7 +153,7 @@ export class ChallengesController {
     @Delete(":id/subscribe")
     async unsubscribe(
         @Param("id") id: string,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const challenge = await this.challengesService.findOneChallenge(id);
 
@@ -171,7 +171,7 @@ export class ChallengesController {
     async submitCompletion(
         @Param("id") id: string,
         @Body() submitCompletionDTO: SubmitCompletionDTO,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<ChallengeCompletion> {
         const challenge = await this.challengesService.findOneChallenge(id);
 
@@ -190,7 +190,7 @@ export class ChallengesController {
         @Param("id") id: string,
         @Param("completionId") completionId: string,
         @Body() validateCompletionDTO: ValidateCompletionDTO,
-        @Req() req: RequestWithresource<Challenge>
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<ChallengeCompletion> {
         const challenge = await this.challengesService.findOneChallenge(id);
 

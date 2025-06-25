@@ -3,16 +3,16 @@ import { Request } from "express";
 import { Reflector } from "@nestjs/core";
 import { User } from "src/modules/Users/entities/user.entity";
 
-export interface RequestWithresource<T> extends Request {
+export interface RequestWithResource<T> extends Request {
     resource: T;
 }
 
 @Injectable()
 export class IrisGuard implements CanActivate {
-    constructor(private reflector: Reflector) {}
+    constructor(private reflector: Reflector) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const request = context.switchToHttp().getRequest<RequestWithresource<{ iris: string }>>();
+        const request = context.switchToHttp().getRequest<RequestWithResource<{ iris: string }>>();
         const user = request.user as User;
 
         if (user.role === "admin") {

@@ -7,7 +7,10 @@ export class Event {
     id: string;
 
     @Column()
-    iris: string;
+    irisCode: string;
+
+    @Column()
+    irisName: string;
 
     @Column()
     name: string;

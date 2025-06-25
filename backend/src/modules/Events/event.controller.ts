@@ -9,18 +9,18 @@ import { User } from "../Users/entities/user.entity";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";
-import { RequestWithresource } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Auth/guards/iris.guard";
 
 @Controller("events")
 export class EventController {
-    constructor(private readonly eventService: EventService) {}
+    constructor(private readonly eventService: EventService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()
     async findAllEvents(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
-        @Req() req: RequestWithresource<Event>
+        @Req() req: RequestWithResource<Event>
     ): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
         const user = req.user as User;
         return this.eventService.findAllEvents(page, limit, user);
@@ -30,10 +30,10 @@ export class EventController {
     @Get(":id")
     async findOneEvent(
         @Param("id") id: string,
-        @Req() req: RequestWithresource<Event>
+        @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
         const event = await this.eventService.findOneEvent(id);
-    
+
         if (!event) {
             throw new NotFoundException("Event not found");
         }
@@ -47,7 +47,7 @@ export class EventController {
     @Post()
     async createEvent(
         @Body() createEventDTO: CreateEventDTO,
-        @Req() req: RequestWithresource<Event>
+        @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
         const user = req.user as User;
         return this.eventService.createEvent(createEventDTO, user);
@@ -58,10 +58,10 @@ export class EventController {
     async updateEvent(
         @Param("id") id: string,
         @Body() updateEventDTO: UpdateEventDTO,
-        @Req() req: RequestWithresource<Event>
+        @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
         const event = await this.eventService.findOneEvent(id);
-    
+
         if (!event) {
             throw new NotFoundException("Event not found");
         }
@@ -75,10 +75,10 @@ export class EventController {
     @Delete(":id")
     async removeEvent(
         @Param("id") id: string,
-        @Req() req: RequestWithresource<Event>
+        @Req() req: RequestWithResource<Event>
     ): Promise<void> {
         const event = await this.eventService.findOneEvent(id);
-    
+
         if (!event) {
             throw new NotFoundException("Event not found");
         }
@@ -92,11 +92,11 @@ export class EventController {
     @UseGuards(JwtAuthGuard, IrisGuard, PermissionGuard)
     @Post(":id/subscribe")
     async subscribe(
-        @Param("id") id:string,
-        @Req() req: RequestWithresource<Event>
+        @Param("id") id: string,
+        @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
         const event = await this.eventService.findOneEvent(id);
-    
+
         if (!event) {
             throw new NotFoundException("Event not found");
         }
@@ -109,11 +109,11 @@ export class EventController {
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id/subscribe")
     async unsubscribe(
-        @Param("id") id:string,
-        @Req() req: RequestWithresource<Event>
+        @Param("id") id: string,
+        @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
         const event = await this.eventService.findOneEvent(id);
-    
+
         if (!event) {
             throw new NotFoundException("Event not found");
         }
@@ -128,10 +128,10 @@ export class EventController {
     async removeParticipant(
         @Param("id") eventId: string,
         @Param("userId") userId: string,
-        @Req() req: RequestWithresource<Event>
+        @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
         const event = await this.eventService.findOneEvent(eventId);
-    
+
         if (!event) {
             throw new NotFoundException("Event not found");
         }

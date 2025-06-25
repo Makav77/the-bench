@@ -21,7 +21,7 @@ export class EventService {
         if (user.role !== Role.ADMIN) {
             whereCondition = {
                 ...whereCondition,
-                iris: user.iris,
+                irisCode: user.irisCode,
             };
         }
     
@@ -54,6 +54,8 @@ export class EventService {
             ...createEventDTO,
             author,
             participantsList: [],
+            irisCode: author.irisCode,
+            irisName: author.irisName,
         });
         return this.eventRepo.save(event);
     }
