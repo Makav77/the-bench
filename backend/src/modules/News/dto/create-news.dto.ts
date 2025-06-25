@@ -24,4 +24,12 @@ export class CreateNewsDTO {
     @IsArray()
     @IsOptional()
     images?: string[];
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }

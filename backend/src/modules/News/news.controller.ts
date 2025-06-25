@@ -14,6 +14,8 @@ import fs from "fs";
 import { ValidateNewsDTO } from "./dto/validate-news.dto";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
+import { IrisGuard } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Auth/guards/iris.guard";
 
 interface RequestWithUser extends Request {
     user: { id: string };
@@ -27,18 +29,22 @@ export class NewsController {
     @Get()
     async findAllNews(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<News>
     ): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number; }> {
-        return this.newsService.findAllNews(page, limit);
+        const user = req.user as User;
+        return this.newsService.findAllNews(page, limit, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get("pending")
     async findPendingNews(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<News>
     ) {
-        return this.newsService.findPendingNews(page, limit);
+        const user = req.user as User;
+        return this.newsService.findPendingNews(page, limit, user);
     }
 
     @UseGuards(JwtAuthGuard)

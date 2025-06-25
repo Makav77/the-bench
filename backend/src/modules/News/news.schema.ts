@@ -40,6 +40,12 @@ export class News {
 
     @Prop({ type: String, required: false })
     rejectionReason?: string;
+
+    @Prop({ required: true })
+    irisCode: string;
+
+    @Prop({ required: true })
+    irisName: string;
 }
 
 export const NewsSchema = SchemaFactory.createForClass(News);

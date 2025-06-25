@@ -11,16 +11,25 @@ import { User } from "../Users/entities/user.entity";
 export class NewsService {
     constructor(@InjectModel(News.name) private newsModel: Model<NewsDocument>) {}
 
-    async findAllNews(page = 1, limit = 5): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number }> {
+    async findAllNews(page = 1, limit = 5, user: User): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number }> {
         const skip = (page - 1) * limit;
+
+        const filter: Partial<News> = {
+            status: "APPROVED",
+            published: true,
+        };
+        if (user.role !== "admin") {
+            filter.irisCode = user.irisCode;
+        }
+
         const [newsList, total] = await Promise.all([
             this.newsModel
-                .find({ status: "APPROVED", published: true })
+                .find(filter)
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .lean({ virtuals: true }),
-            this.newsModel.countDocuments({ status: "APPROVED", published: true }),
+            this.newsModel.countDocuments(filter),
         ]);
 
         const data = newsList.map(item => ({
@@ -50,6 +59,8 @@ export class NewsService {
             authorProfilePicture: author.profilePicture,
             status: "PENDING",
             published: false,
+            irisCode: author.irisCode,
+            irisName: author.irisName,
         });
         return news.save();
     }
@@ -100,16 +111,22 @@ export class NewsService {
         };
     }
 
-    async findPendingNews(page = 1, limit = 5): Promise<{ data: News[]; total: number; page: number; lastPage: number }> {
+    async findPendingNews(page = 1, limit = 5, user: User): Promise<{ data: News[]; total: number; page: number; lastPage: number }> {
         const skip = (page - 1) * limit;
+
+        const filter: Partial<News> = { status: "PENDING" };
+        if (user.role !== "admin") {
+            filter.irisCode = user.irisCode;
+        }
+
         const [data, total] = await Promise.all([
             this.newsModel
-                .find({ status: "PENDING" })
+                .find(filter)
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .lean({ virtuals: true }),
-            this.newsModel.countDocuments({ status: "PENDING" }),
+            this.newsModel.countDocuments(filter),
         ]);
         const dataWithId = data.map((item: any) => ({
             ...item,
