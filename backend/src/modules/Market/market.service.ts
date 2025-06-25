@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThan } from 'typeorm';
+import { Repository, MoreThan, FindOptionsWhere } from 'typeorm';
 import { MarketItem } from './entities/market.entity';
 import { CreateMarketItemDTO } from './dto/create-market-item.dto';
 import { UpdateMarketItemDTO } from './dto/update-market-item.dto';
 import { User, Role } from '../Users/entities/user.entity';
+import { GalleryItem } from '../Gallery/entities/gallery-item.entity';
 
 @Injectable()
 export class MarketService {
@@ -13,9 +14,19 @@ export class MarketService {
         private readonly marketRepo: Repository<MarketItem>,
     ) { }
 
-    async findAllItems(page = 1, limit = 10): Promise<{ data: MarketItem[]; total: number; page: number; lastPage: number; }> {
+    async findAllItems(page = 1, limit = 10, user: User): Promise<{ data: MarketItem[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<MarketItem> = {};
+        if(user.role !== Role.ADMIN) {
+            whereCondition = {
+                ...whereCondition,
+                irisCode: user.irisCode,
+            };
+        }
+
         const [data, total] = await this.marketRepo.findAndCount({
+            where: whereCondition,
             order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
@@ -41,7 +52,9 @@ export class MarketService {
     async createItem(createItemDTO: CreateMarketItemDTO, user: User & { images?: string[] }): Promise<MarketItem> {
         const item = this.marketRepo.create({
             ...createItemDTO,
-            author: user
+            author: user,
+            irisCode: user.irisCode,
+            irisName: user.irisName,
         });
         return this.marketRepo.save(item);
     }

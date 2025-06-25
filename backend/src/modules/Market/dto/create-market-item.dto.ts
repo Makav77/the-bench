@@ -28,4 +28,12 @@ export class CreateMarketItemDTO {
     @IsOptional()
     @IsPhoneNumber(undefined)
     contactPhone?: string;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }
