@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
+import { FindOptionsWhere, Not, Repository } from 'typeorm';
 import { Posts } from './entities/post.entity';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
@@ -13,10 +13,19 @@ export class PostsService {
         private readonly postRepo: Repository<Posts>,
     ) { }
 
-    async findAllPosts(page = 1, limit = 10): Promise<{ data: Posts[]; total: number; page: number; lastPage: number }> {
+    async findAllPosts(page = 1, limit = 10, user: User): Promise<{ data: Posts[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
 
+        let whereCondition: FindOptionsWhere<Posts> = {};
+        if (user.role !== Role.ADMIN) {
+            whereCondition = {
+                ...whereCondition,
+                irisCode: user.irisCode,
+            };
+        }
+
         const [data, total] = await this.postRepo.findAndCount({
+            where: whereCondition,
             relations: ["author"],
             order: { createdAt: "DESC" },
             skip: offset,
@@ -43,6 +52,8 @@ export class PostsService {
         const post = this.postRepo.create({
             ...createPostDTO,
             author,
+            irisCode: author.irisCode,
+            irisName: author.irisName,
         });
         return this.postRepo.save(post);
     }
