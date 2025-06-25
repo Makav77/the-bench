@@ -22,7 +22,8 @@ export class EventController {
         @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
         @Req() req: RequestWithresource<Event>
     ): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
-        return this.eventService.findAllEvents(page, limit, req.user as User);
+        const user = req.user as User;
+        return this.eventService.findAllEvents(page, limit, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)

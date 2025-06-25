@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { IsNull, MoreThan, Not, Repository } from "typeorm";
+import { FindOptionsWhere, IsNull, MoreThan, Not, Repository } from "typeorm";
 import { Challenge } from "./entities/challenge.entity";
 import { ChallengeRegistration } from "./entities/challenge-registration.entity";
 import { ChallengeCompletion } from "./entities/challenge-completion.entity";
@@ -21,10 +21,19 @@ export class ChallengesService {
         private readonly completionRepo: Repository<ChallengeCompletion>,
     ) {}
 
-    async findPendingChallenges(page = 1, limit = 5): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
+    async findPendingChallenges(page = 1, limit = 5, user: User): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<Challenge> = { status: "PENDING" };
+        if (user.role !== Role.ADMIN) {
+            whereCondition = { 
+                ...whereCondition,
+                iris: user.iris,
+            };
+        }
+
         const [data, total] = await this.challengeRepo.findAndCount({
-            where: { status: "PENDING" },
+            where: whereCondition,
             order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
@@ -35,13 +44,22 @@ export class ChallengesService {
         return { data, total, page, lastPage };
     }
 
-    async findAllChallenges(page = 1, limit = 10): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
+    async findAllChallenges(page = 1, limit = 10, user: User): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<Challenge> = {
+            status: "APPROVED",
+            endDate: MoreThan(new Date()),
+        };
+        if (user.role !== Role.ADMIN) {
+            whereCondition = {
+                ...whereCondition,
+                iris: user.iris,
+            }
+        }
+
         const [data, total] = await this.challengeRepo.findAndCount({
-            where: { 
-                status: "APPROVED",
-                endDate: MoreThan(new Date())
-            },
+            where: whereCondition,
             order: { endDate: "DESC" },
             skip: offset,
             take: limit,
@@ -63,15 +81,24 @@ export class ChallengesService {
         return challenge;
     }
 
-    async findPendingCompletions(page = 1, limit = 5): Promise<{ data: ChallengeCompletion[]; total: number; page: number; lastPage: number }> {
+    async findPendingCompletions(page = 1, limit = 5, user: User): Promise<{ data: ChallengeCompletion[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
-        const [data, total] = await this.completionRepo.findAndCount({
-            where: { validated: false, rejectedReason: IsNull() },
-            order: { createdAt: "DESC" },
-            skip: offset,
-            take: limit,
-            relations: ["user", "challenge"],
-        });
+
+        const queryBuilder = this.completionRepo.createQueryBuilder("completion")
+            .leftJoinAndSelect("completion.user", "user")
+            .leftJoinAndSelect("completion.challenge", "challenge")
+            .where("completion.validated = :validated", { validated: false })
+            .andWhere("completion.rejectedReason IS NULL");
+
+        if (user.role != Role.ADMIN) {
+            queryBuilder.andWhere("challenge.iris = :iris", { iris: user.iris });
+        }
+
+        queryBuilder.orderBy("completion.createdAt", "DESC")
+            .skip(offset)
+            .take(limit);
+
+        const [data, total] = await queryBuilder.getManyAndCount();
 
         const lastPage = Math.ceil(total / limit);
         return { data, total, page, lastPage };
@@ -86,10 +113,10 @@ export class ChallengesService {
             endDate: new Date(endDate),
             successCriteria,
             author,
+            iris: author.iris,
         });
         return this.challengeRepo.save(challenge);
     }
-
 
     async updateChallenge(id: string, updatedChallengeDTO: CreateChallengeDTO, user: User): Promise<Challenge> {
         const challenge = await this.challengeRepo.findOne({
