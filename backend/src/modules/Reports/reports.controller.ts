@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Param, Body, Req, UseGuards, Delete, Query, DefaultValuePipe, ParseIntPipe } from "@nestjs/common";
+import { Controller, Post, Get, Patch, Param, Body, Req, UseGuards, Delete, Query, DefaultValuePipe, ParseIntPipe, NotFoundException } from "@nestjs/common";
 import { ReportsService } from "./reports.service";
 import { CreateReportDTO } from "./dto/create-report.dto";
 import { UpdateReportStatusDTO } from "./dto/update-status.dto";
@@ -6,8 +6,9 @@ import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { Report } from "./entities/report.entity";
-import { Request } from "express";
 import { User } from "../Users/entities/user.entity";
+import { IrisGuard } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Auth/guards/iris.guard";
 
 @Controller("reports")
 export class ReportsController {
@@ -17,15 +18,27 @@ export class ReportsController {
     @Get()
     async findAllReports(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<Report>
     ): Promise<{ data: Report[]; total: number; page: number; lastPage: number; }> {
-        return this.reportsService.findAllReports(page, limit);
+        const user = req.user as User;
+        return this.reportsService.findAllReports(page, limit, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneReport(@Param("id") id: string): Promise<Report> {
-        return this.reportsService.findOneReport(id);
+    async findOneReport(
+        @Param("id") id: string,
+        @Req() req: RequestWithResource<Report>
+    ): Promise<Report> {
+        const report = await this.reportsService.findOneReport(id);
+
+        if (!report) {
+            throw new NotFoundException("Report not found.");
+        }
+
+        req.resource = report;
+        return report;
     }
 
     @RequiredPermission("send_report")
@@ -33,14 +46,10 @@ export class ReportsController {
     @Post()
     async createReport(
         @Body() createReportDTO: CreateReportDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<Report>
     ): Promise<Report> {
-        const reporterId = (req.user as any).id;
-        const report = await this.reportsService.createReport(
-            reporterId,
-            createReportDTO,
-        );
-        return report;
+        const user = req.user as User;
+        return this.reportsService.createReport(user, createReportDTO);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -48,17 +57,33 @@ export class ReportsController {
     async updateReportStatus(
         @Param("id") id: string,
         @Body() updateReportStatus: UpdateReportStatusDTO,
-        @Req() req: Request
+        @Req() req: RequestWithResource<Report>
     ): Promise<Report> {
-        const treatingUser = req.user as User;
-        return this.reportsService.updateReportStatus(id, updateReportStatus, treatingUser);
+        const report = await this.reportsService.findOneReport(id);
+
+        if (!report) {
+            throw new NotFoundException("Report not found.");
+        }
+
+        req.resource = report;
+        const user = req.user as User;
+        return this.reportsService.updateReportStatus(id, updateReportStatus, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(":id")
     async removeReport(
-        @Param("id") id: string
+        @Param("id") id: string,
+        @Req() req: RequestWithResource<Report>
     ): Promise<void> {
-        await this.reportsService.removeReport(id);
+        const report = await this.reportsService.findOneReport(id);
+
+        if (!report) {
+            throw new NotFoundException("Report not found.");
+        }
+
+        req.resource = report;
+        const user = req.user as User;
+        await this.reportsService.removeReport(id, user);
     }
 }

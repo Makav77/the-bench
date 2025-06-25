@@ -20,4 +20,12 @@ export class CreateReportDTO {
     @IsString()
     @IsOptional()
     description?: string;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }

@@ -34,4 +34,10 @@ export class Report {
 
     @ManyToOne(() => User, { nullable: true })
     treatedBy: User;
+
+    @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
 }
