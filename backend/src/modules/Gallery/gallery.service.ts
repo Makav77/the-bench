@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThan } from "typeorm";
+import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { GalleryItem } from "./entities/gallery-item.entity";
 import { CreateGalleryItemDTO } from "./dto/create-gallery-item.dto";
 import { User, Role } from "../Users/entities/user.entity";
@@ -14,9 +14,19 @@ export class GalleryService {
         private readonly galleryRepo: Repository<GalleryItem>,
     ) { }
 
-    async findAllGalleryItems(page = 1, limit = 30): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
+    async findAllGalleryItems(page = 1, limit = 30, user: User): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<GalleryItem> = {};
+        if (user.role !== Role.ADMIN) {
+            whereCondition = {
+                ...whereCondition,
+                irisCode: user.irisCode,
+            };
+        }
+
         const [data, total] = await this.galleryRepo.findAndCount({
+            where: whereCondition,
             order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
@@ -48,6 +58,8 @@ export class GalleryService {
             url,
             description,
             author: user,
+            irisCode: user.irisCode,
+            irisName: user.irisName,
         });
         return this.galleryRepo.save(galleryItem);
     }

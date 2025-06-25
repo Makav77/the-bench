@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Param, Query, UseGuards, Req, DefaultValuePipe, ParseIntPipe, UploadedFile, UseInterceptors, Body, BadRequestException } from "@nestjs/common";
+import { Controller, Get, Post, Delete, Param, Query, UseGuards, Req, DefaultValuePipe, ParseIntPipe, UploadedFile, UseInterceptors, Body, BadRequestException, NotFoundException } from "@nestjs/common";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname } from "path";
@@ -10,6 +10,8 @@ import { GalleryItem } from "./entities/gallery-item.entity";
 import { User } from "../Users/entities/user.entity";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
+import { IrisGuard } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Auth/guards/iris.guard";
 
 const multerOptions = {
     storage: diskStorage({
@@ -39,14 +41,26 @@ export class GalleryController {
     async findAllGalleryItems(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query("limit", new DefaultValuePipe(30), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<GalleryItem>
     ): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number; }> {
-        return this.galleryService.findAllGalleryItems(page, limit);
+        const user = req.user as User;
+        return this.galleryService.findAllGalleryItems(page, limit, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneGalleryItem(@Param("id") id: string): Promise<GalleryItem> {
-        return this.galleryService.findOneGalleryItem(id);
+    async findOneGalleryItem(
+        @Param("id") id: string,
+        @Req() req: RequestWithResource<GalleryItem>
+    ): Promise<GalleryItem> {
+        const image = await this.galleryService.findOneGalleryItem(id);
+
+        if (!image) {
+            throw new NotFoundException("Image not found.");
+        }
+
+        req.resource = image;
+        return image;
     }
 
     @RequiredPermission("publish_gallery")
@@ -56,12 +70,14 @@ export class GalleryController {
     async createGalleryItem(
         @UploadedFile() file: Express.Multer.File,
         @Body() createGalleryItemDTO: CreateGalleryItemDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<GalleryItem>
     ): Promise<GalleryItem> {
         const user = req.user as User;
+
         if (!file) {
             throw new BadRequestException("You must upload one image.");
         }
+
         const url = `/uploads/gallery/${file.filename}`;
         return this.galleryService.createGalleryItem(
           createGalleryItemDTO.description,
@@ -70,22 +86,36 @@ export class GalleryController {
         );
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Post(":id/like")
     async toggleLike(
         @Param("id") id: string,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<GalleryItem>
     ): Promise<GalleryItem> {
+        const image = await this.galleryService.findOneGalleryItem(id);
+
+        if (!image) {
+            throw new NotFoundException("image not found");
+        }
+
+        req.resource = image;
         const user = req.user as User;
         return this.galleryService.toggleLike(id, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removeGalleryItem(
         @Param("id") id: string,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<GalleryItem>
     ): Promise<void> {
+                const image = await this.galleryService.findOneGalleryItem(id);
+
+        if (!image) {
+            throw new NotFoundException("image not found");
+        }
+
+        req.resource = image;
         const user = req.user as User;
         return this.galleryService.removeGalleryItem(id, user);
     }
