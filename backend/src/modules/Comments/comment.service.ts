@@ -4,67 +4,103 @@ import { Model } from "mongoose";
 import { Comment, CommentDocument } from "./comment.schema";
 import { CreateCommentDTO } from "./dto/create-comment.dto";
 import { UpdateCommentDTO } from "./dto/update-comment.dto";
+import { User } from "../Users/entities/user.entity";
 
 @Injectable()
 export class CommentService {
     constructor(@InjectModel(Comment.name) private commentModel: Model<CommentDocument>) {}
 
-    async findAllComments(newsId: string): Promise<Comment[]> {
-        const comments = await this.commentModel.find({ newsId }).sort({ createdAt: 1 }).lean();
+    async findAllComments(newsId: string, user: User): Promise<Comment[]> {
+        let filter: Partial<Comment> = { newsId };
+
+        if (user.role !== "admin") {
+            filter.irisCode = user.irisCode;
+        }
+
+        const comments = await this.commentModel.find(filter).sort({ createdAt: 1 }).lean();
         return comments;
     }
 
-    async createComment(createCommentDTO: CreateCommentDTO): Promise<Comment> {
-        const created = new this.commentModel(createCommentDTO);
+    async findOneComment(commentId: string): Promise<Comment> {
+        const comment = await this.commentModel.findById(commentId);
+
+        if (!comment) {
+            throw new NotFoundException("Comment not found.");
+        }
+
+        return comment;
+    }
+
+    async createComment(createCommentDTO: CreateCommentDTO, user: User): Promise<Comment> {
+        const commentData = {
+            ...createCommentDTO,
+            irisCode: user.irisCode,
+            irisName: user.irisName,
+        };
+        const created = new this.commentModel(commentData);
         return created.save();
     }
 
-    async updateComment(commentId: string, userId: string, updateDTO: UpdateCommentDTO): Promise<Comment> {
+    async updateComment(commentId: string, user: User, updateDTO: UpdateCommentDTO): Promise<Comment> {
         const comment = await this.commentModel.findById(commentId);
 
         if (!comment) {
             throw new NotFoundException("Comment not found");
         }
-        if (comment.authorId !== userId) {
-            throw new ForbiddenException("You can't edit this comment");
+
+        if (user.role !== "admin" && comment.irisCode !== user.irisCode) {
+            throw new ForbiddenException("You are not allowed to edit comment from another iris.");
+        }
+
+        if (comment.authorId !== user.id && user.role !== "admin" && user.role !== "moderator") {
+            throw new ForbiddenException("You are not allowed to edit this comment");
         }
 
         if (typeof updateDTO.content === "string") {
             comment.content = updateDTO.content;
         }
+
         await comment.save();
         return comment;
     }
 
-    async removeComment(commentId: string, userId: string, isAdminOrModerator: boolean): Promise<void> {
+    async removeComment(commentId: string, user: User, isAdminOrModerator: boolean): Promise<void> {
         const comment = await this.commentModel.findById(commentId);
 
         if (!comment) {
             throw new NotFoundException("Comment not found");
         }
 
-        if (!isAdminOrModerator && comment.authorId !== userId) {
+        if (user.role !== "admin" && comment.irisCode !== user.irisCode) {
+            throw new ForbiddenException("Not allowed to remove comment from another iris.");
+        }
+
+        if (!isAdminOrModerator && comment.authorId !== user.id) {
             throw new ForbiddenException("You are not allowed to remove this comment.");
         }
 
         await comment.deleteOne();
     }
 
-    async toggleLike(commentId: string, userId: string): Promise<{ liked: boolean; totalLikes: number }> {
+    async toggleLike(commentId: string, user: User): Promise<{ liked: boolean; totalLikes: number }> {
         const comment = await this.commentModel.findById(commentId);
 
         if (!comment) {
             throw new NotFoundException("Comment not found");
         }
 
-        const idx = comment.likedBy.indexOf(userId);
+        if (user.role !== "admin" && comment.irisCode !== user.irisCode) {
+            throw new ForbiddenException("Not allowed to like comment from another iris.");
+        }
+
+        const idx = comment.likedBy.indexOf(user.id);
         let liked: boolean;
 
         if (idx > -1) {
             comment.likedBy.splice(idx, 1);
             liked = false;
         } else {
-            comment.likedBy.push(userId);
+            comment.likedBy.push(user.id);
             liked = true;
         }
 

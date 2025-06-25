@@ -22,6 +22,12 @@ export class Comment {
 
     @Prop({ type: [String], default: [] })
     likedBy: string[];
+
+    @Prop({ required: true })
+    irisCode: string;
+
+    @Prop({ required: true })
+    irisName: string; 
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

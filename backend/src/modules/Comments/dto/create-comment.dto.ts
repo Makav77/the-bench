@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateCommentDTO {
     @IsString()
@@ -20,4 +20,12 @@ export class CreateCommentDTO {
     @IsString()
     @IsNotEmpty()
     content: string;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }
