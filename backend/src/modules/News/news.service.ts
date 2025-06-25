@@ -65,33 +65,56 @@ export class NewsService {
         return news.save();
     }
 
-    async updateNews(id: string, updateNewsDTO: UpdateNewsDTO): Promise<News> {
-        const updatedNews = await this.newsModel
-            .findByIdAndUpdate(id, updateNewsDTO, { new: true })
-            .exec();
-        if (!updatedNews) {
-            throw new NotFoundException("News not found for updating");
+    async updateNews(id: string, updateNewsDTO: UpdateNewsDTO, user: User): Promise<News> {
+        const news = await this.newsModel.findById(id);
+        if (!news) {
+            throw new NotFoundException("News not found.");
         }
-        return updatedNews;
+
+        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+            throw new ForbiddenException("You are not allowed to edit news from another iris.");
+        }
+
+        if (news.authorId !== user.id && user.role !== "admin" && user.role !== "moderator") {
+            throw new ForbiddenException("You are not allowed to edit this news.");
+        }
+
+        Object.assign(news, updateNewsDTO);
+        await news.save();
+        return news;
     }
 
-    async removeNews(id: string): Promise<void> {
-        const removed = await this.newsModel.findByIdAndDelete(id).exec();
-        if (!removed) {
+    async removeNews(id: string, user: User): Promise<void> {
+        const news = await this.newsModel.findById(id);
+        if (!news) {
             throw new NotFoundException("News not found for removing");
         }
+
+        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+            throw new ForbiddenException("Not allowed to remove news from another iris.");
+        }
+
+        if (news.authorId !== user.id && user.role !== "admin" && user.role !== "moderator") {
+            throw new ForbiddenException("You are not allowed to remove this news.");
+        }
+
+        await news.deleteOne();
     }
 
-    async toggleLike(newsId: string, userId: string): Promise<{ liked: boolean; totalLikes: number }> {
+    async toggleLike(newsId: string, user: User): Promise<{ liked: boolean; totalLikes: number }> {
         const news = await this.newsModel.findById(newsId);
         if (!news) {
             throw new NotFoundException("News not found");
         }
 
-        const index = news.likedBy.indexOf(userId);
+        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+            throw new ForbiddenException("Not allowed to like news from another iris.");
+        }
+
+        const index = news.likedBy.indexOf(user.id);
         const liked = index === -1;
         if (liked) {
-            news.likedBy.push(userId);
+            news.likedBy.push(user.id);
         } else {
             news.likedBy.splice(index, 1);
         }
@@ -100,14 +123,19 @@ export class NewsService {
         return { liked, totalLikes: news.likedBy.length };
     }
 
-    async getLikes(newsId: string, userId: string): Promise<{ totalLikes: number; liked: boolean }> {
+    async getLikes(newsId: string, user: User): Promise<{ totalLikes: number; liked: boolean }> {
         const news = await this.newsModel.findById(newsId).lean();
         if (!news) {
             throw new NotFoundException("News not found");
         }
+
+        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+            throw new ForbiddenException("Not allowed to access likes from another iris.");
+        }
+
         return {
             totalLikes: news.likedBy.length,
-            liked: news.likedBy.includes(userId),
+            liked: news.likedBy.includes(user.id),
         };
     }
 
@@ -140,6 +168,10 @@ export class NewsService {
         const news = await this.newsModel.findById(id);
         if (!news) {
             throw new NotFoundException("News not found.");
+        }
+
+        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+            throw new ForbiddenException("Not allowed to validate news from another iris.");
         }
 
         if (news.authorId !== user.id && user.role !== "admin" && user.role !== "moderator") {
