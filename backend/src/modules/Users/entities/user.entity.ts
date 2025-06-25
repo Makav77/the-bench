@@ -35,7 +35,10 @@ export class User {
     address: string;
 
     @Column({ nullable: true })
-    iris: string;
+    irisCode: string;
+
+    @Column({ nullable: true })
+    irisName: string;
 
     @Column({ unique: true })
     email: string;

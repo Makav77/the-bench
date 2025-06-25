@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, IsDateString } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString, IsDateString, IsOptional } from "class-validator";
 import { Role } from "../entities/user.entity";
 
 export class CreateUserDTO {
@@ -18,9 +18,13 @@ export class CreateUserDTO {
     @IsString()
     address: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    iris?: string;
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 
     @IsEmail()
     email: string;

@@ -11,6 +11,8 @@ import { MarketItem } from '../Market/entities/market.entity';
 import { ProfileSummaryDTO } from './dto/profile-summary.dto';
 import axios from 'axios';
 
+type IrisInfo = { irisCode: string; irisName: string; };
+
 @Injectable()
 export class UserService {
     constructor(
@@ -57,14 +59,15 @@ export class UserService {
     async create(createUserDTO: CreateUserDTO): Promise<User> {
         try {
             createUserDTO.password = await bcrypt.hash(createUserDTO.password, 10);
-            const iris = await this.getIrisFromAddress(createUserDTO.address);
-            if (!iris) {
+            const irisInfo = await this.getIrisFromAddress(createUserDTO.address);
+            if (!irisInfo) {
                 throw new ConflictException("Unable to link the address to a Paris neighborhood (IRIS). Please verify the address.")
             }
 
             const user = this.userRepository.create({
                 ...createUserDTO,
-                iris,
+                irisCode: irisInfo.irisCode,
+                irisName: irisInfo.irisName,
                 profilePicture: "/uploads/profile/default.png",
             });
             return await this.userRepository.save(user);
@@ -79,11 +82,12 @@ export class UserService {
     async update(id: string, updateUserDTO: UpdateUserDTO): Promise<User> {
         const user = await this.findOne(id);
         if (updateUserDTO.address && updateUserDTO.address != user.address) {
-            const iris = await this.getIrisFromAddress(updateUserDTO.address);
-            if (!iris) {
+            const irisInfo = await this.getIrisFromAddress(updateUserDTO.address);
+            if (!irisInfo) {
                 throw new ConflictException("Unable to link the new address to a Paris neighborhood (IRIS). Please verify the address.")
             }
-            updateUserDTO.iris = iris;
+            updateUserDTO.irisCode = irisInfo.irisCode;
+            updateUserDTO.irisName = irisInfo.irisName;
         }
 
         const updated = this.userRepository.merge(user, updateUserDTO);
@@ -309,13 +313,17 @@ export class UserService {
         };
     }
 
-    async getIrisFromAddress(address: string): Promise<string | null> {
+    async getIrisFromAddress(address: string): Promise<IrisInfo | null> {
         try {
             const url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=1`;
             const response = await axios.get(url);
             const features = response.data.features;
-            if (features && features.length > 0 && features[0].properties.iris) {
-                return features[0].properties.iris;
+
+            if (features && features.length > 0 && features[0].properties && features[0].properties.iris && features[0].properties.iris_name) {
+                return {
+                    irisCode: features[0].properties.iris,
+                    irisName: features[0].properties.iris_name
+                };
             }
             return null;
         } catch (error) {
