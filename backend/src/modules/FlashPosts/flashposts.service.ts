@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThan, MoreThan } from 'typeorm';
+import { Repository, LessThan, MoreThan, FindOptionsWhere } from 'typeorm';
 import { FlashPost } from './entities/flash-post.entity';
 import { CreateFlashPostDTO } from './dto/create-flash-post.dto';
 import { UpdateFlashPostDTO } from './dto/update-flash-post.dto';
@@ -15,13 +15,21 @@ export class FlashPostsService {
         private readonly flashRepo: Repository<FlashPost>,
     ) { }
 
-    async findAllFlashPosts(page = 1, limit = 5): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
+    async findAllFlashPosts(page = 1, limit = 5, user: User): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
         const lessThanADay = subHours(new Date(), 24);
 
+        let whereCondition: FindOptionsWhere<FlashPost> = { createdAt: MoreThan(lessThanADay) };
+
+        if (user.role !== Role.ADMIN) {
+            whereCondition = {
+                ...whereCondition,
+                irisCode: user.irisCode,
+            }
+        }
 
         const [data, total] = await this.flashRepo.findAndCount({
-            where: { createdAt: MoreThan(lessThanADay) },
+            where: whereCondition,
             relations: ["author"],
             order: { createdAt: "DESC" },
             skip: offset,
@@ -56,7 +64,12 @@ export class FlashPostsService {
             throw new BadRequestException("You already have an active flash post.");
         }
 
-        const post = this.flashRepo.create({ ...createFlashPostDTO, author: author });
+        const post = this.flashRepo.create({
+            ...createFlashPostDTO,
+            author: author,
+            irisCode: author.irisCode,
+            irisName: author.irisName,
+        });
         return this.flashRepo.save(post);
     }
 

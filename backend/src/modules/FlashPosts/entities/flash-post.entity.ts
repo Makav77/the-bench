@@ -12,6 +12,12 @@ export class FlashPost {
     @Column("text")
     description: string;
 
+    @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
+
     @CreateDateColumn({ type: "timestamptz" })
     createdAt: Date;
 

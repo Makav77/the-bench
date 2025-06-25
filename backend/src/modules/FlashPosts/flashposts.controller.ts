@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Query, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { FlashPostsService } from './flashposts.service';
 import { CreateFlashPostDTO } from './dto/create-flash-post.dto';
 import { UpdateFlashPostDTO } from './dto/update-flash-post.dto';
@@ -8,6 +8,8 @@ import { Request } from 'express';
 import { User } from '../Users/entities/user.entity';
 import { RequiredPermission } from '../Permissions/decorator/require-permission.decorator';
 import { PermissionGuard } from '../Permissions/guards/permission.guard';
+import { IrisGuard } from '../Auth/guards/iris.guard';
+import { RequestWithResource } from '../Auth/guards/iris.guard';
 
 @Controller("flashposts")
 export class FlashPostsController {
@@ -17,15 +19,26 @@ export class FlashPostsController {
     @Get()
     async findAllFlashPosts(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<FlashPost>
     ): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
-        return this.flashpostsService.findAllFlashPosts(page, limit);
+        const user = req.user as User;
+        return this.flashpostsService.findAllFlashPosts(page, limit, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneFlashPost(@Param("id") id: string): Promise<FlashPost> {
-        return this.flashpostsService.findOneFlashPost(id);
+    async findOneFlashPost(
+        @Param("id") id: string,
+        @Req() req: RequestWithResource<FlashPost>
+    ): Promise<FlashPost> {
+        const flashPost = await this.flashpostsService.findOneFlashPost(id);
+        if (!flashPost) {
+            throw new NotFoundException("Flashpost not found.");
+        }
+
+        req.resource = flashPost;
+        return flashPost;
     }
 
     @RequiredPermission("publish_flash_post")
@@ -33,29 +46,41 @@ export class FlashPostsController {
     @Post()
     async createFlashPost(
         @Body() createFlashPostDTO: CreateFlashPostDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<FlashPost>
     ): Promise<FlashPost> {
         const user = req.user as User;
         return this.flashpostsService.createFlashPost(createFlashPostDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     async updateFlashPost(
         @Param("id") id: string,
         @Body() updateFlashPostDTO: UpdateFlashPostDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<FlashPost>
     ): Promise<FlashPost> {
+        const flashPost = await this.flashpostsService.findOneFlashPost(id);
+        if (!flashPost) {
+            throw new NotFoundException("FlashPost not found.");
+        }
+
+        req.resource = flashPost;
         const user = req.user as User;
         return this.flashpostsService.updateFlashPost(id, updateFlashPostDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removeFlashPost(
         @Param("id") id: string,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<FlashPost>
     ): Promise<void> {
+        const flashPost = await this.flashpostsService.findOneFlashPost(id);
+        if (!flashPost) {
+            throw new NotFoundException("FlashPost not found.");
+        }
+
+        req.resource = flashPost;
         const user = req.user as User;
         return this.flashpostsService.removeFlashPost(id, user);
     }
