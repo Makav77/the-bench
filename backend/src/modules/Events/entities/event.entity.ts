@@ -7,6 +7,9 @@ export class Event {
     id: string;
 
     @Column()
+    iris: string;
+
+    @Column()
     name: string;
 
     @Column({ type: "timestamp" })

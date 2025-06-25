@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, DefaultValuePipe, ParseIntPipe, Post, Body, Patch, Delete, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Query, DefaultValuePipe, ParseIntPipe, Post, Body, Patch, Delete, Req, UseGuards, ForbiddenException, NotFoundException } from "@nestjs/common";
 import { EventService } from "./event.service";
 import { Event } from "./entities/event.entity";
 import { Request } from "express";
@@ -8,6 +8,8 @@ import { UpdateEventDTO } from "./dto/update-event.dto";
 import { User } from "../Users/entities/user.entity";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
+import { IrisGuard } from "../Auth/guards/iris.guard";
+import { RequestWithresource } from "../Auth/guards/iris.guard";
 
 @Controller("events")
 export class EventController {
@@ -17,15 +19,26 @@ export class EventController {
     @Get()
     async findAllEvents(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithresource<Event>
     ): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
-        return this.eventService.findAllEvents(page, limit);
+        return this.eventService.findAllEvents(page, limit, req.user as User);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneEvent(@Param("id") id: string): Promise<Event> {
-        return this.eventService.findOneEvent(id);
+    async findOneEvent(
+        @Param("id") id: string,
+        @Req() req: RequestWithresource<Event>
+    ): Promise<Event> {
+        const event = await this.eventService.findOneEvent(id);
+    
+        if (!event) {
+            throw new NotFoundException("Event not found");
+        }
+
+        req.resource = event;
+        return event;
     }
 
     @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -33,61 +46,96 @@ export class EventController {
     @Post()
     async createEvent(
         @Body() createEventDTO: CreateEventDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithresource<Event>
     ): Promise<Event> {
         const user = req.user as User;
         return this.eventService.createEvent(createEventDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     async updateEvent(
         @Param("id") id: string,
         @Body() updateEventDTO: UpdateEventDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithresource<Event>
     ): Promise<Event> {
+        const event = await this.eventService.findOneEvent(id);
+    
+        if (!event) {
+            throw new NotFoundException("Event not found");
+        }
+
+        req.resource = event;
         const user = req.user as User;
         return this.eventService.updateEvent(id, updateEventDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removeEvent(
         @Param("id") id: string,
-        @Req() req: Request,
+        @Req() req: RequestWithresource<Event>
     ): Promise<void> {
+        const event = await this.eventService.findOneEvent(id);
+    
+        if (!event) {
+            throw new NotFoundException("Event not found");
+        }
+
+        req.resource = event;
         const user = req.user as User;
         return this.eventService.removeEvent(id, user);
     }
 
     @RequiredPermission("register_event")
-    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard, PermissionGuard)
     @Post(":id/subscribe")
     async subscribe(
         @Param("id") id:string,
-        @Req() req: Request
+        @Req() req: RequestWithresource<Event>
     ): Promise<Event> {
+        const event = await this.eventService.findOneEvent(id);
+    
+        if (!event) {
+            throw new NotFoundException("Event not found");
+        }
+
+        req.resource = event;
         const user = req.user as User;
         return this.eventService.subscribe(id, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id/subscribe")
     async unsubscribe(
         @Param("id") id:string,
-        @Req() req: Request,
+        @Req() req: RequestWithresource<Event>
     ): Promise<Event> {
+        const event = await this.eventService.findOneEvent(id);
+    
+        if (!event) {
+            throw new NotFoundException("Event not found");
+        }
+
+        req.resource = event;
         const user = req.user as User;
         return this.eventService.unsubscribe(id, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id/participants/:userId")
     async removeParticipant(
         @Param("id") eventId: string,
         @Param("userId") userId: string,
-        @Req() req: Request,
+        @Req() req: RequestWithresource<Event>
     ): Promise<Event> {
+        const event = await this.eventService.findOneEvent(eventId);
+    
+        if (!event) {
+            throw new NotFoundException("Event not found");
+        }
+
+        req.resource = event;
         const user = req.user as User;
         return this.eventService.removeParticipant(eventId, userId, user);
     }

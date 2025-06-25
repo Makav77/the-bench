@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThan } from "typeorm";
+import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { Event } from "./entities/event.entity";
 import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
@@ -13,10 +13,20 @@ export class EventService {
         private readonly eventRepo: Repository<Event>
     ) { }
 
-    async findAllEvents(page = 1, limit = 5): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
+    async findAllEvents(page = 1, limit = 5, user: User): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<Event> = { startDate: MoreThan(new Date()) };
+
+        if (user.role !== Role.ADMIN) {
+            whereCondition = {
+                ...whereCondition,
+                iris: user.iris,
+            };
+        }
+    
         const [data, total] = await this.eventRepo.findAndCount({
-            where: { startDate: MoreThan(new Date()) },
+            where: whereCondition,
             order: { startDate: "ASC" },
             skip: offset,
             take: limit,
