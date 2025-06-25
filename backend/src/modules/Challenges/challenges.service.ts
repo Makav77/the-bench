@@ -28,7 +28,7 @@ export class ChallengesService {
         if (user.role !== Role.ADMIN) {
             whereCondition = { 
                 ...whereCondition,
-                iris: user.iris,
+                irisCode: user.irisCode,
             };
         }
 
@@ -54,7 +54,7 @@ export class ChallengesService {
         if (user.role !== Role.ADMIN) {
             whereCondition = {
                 ...whereCondition,
-                iris: user.iris,
+                irisCode: user.irisCode,
             }
         }
 
@@ -91,7 +91,7 @@ export class ChallengesService {
             .andWhere("completion.rejectedReason IS NULL");
 
         if (user.role != Role.ADMIN) {
-            queryBuilder.andWhere("challenge.iris = :iris", { iris: user.iris });
+            queryBuilder.andWhere("challenge.irisCode = :irisCode", { irisCode: user.irisCode });
         }
 
         queryBuilder.orderBy("completion.createdAt", "DESC")
@@ -113,7 +113,8 @@ export class ChallengesService {
             endDate: new Date(endDate),
             successCriteria,
             author,
-            iris: author.iris,
+            irisCode: author.irisCode,
+            irisName: author.irisName,
         });
         return this.challengeRepo.save(challenge);
     }
