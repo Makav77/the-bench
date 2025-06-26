@@ -19,7 +19,9 @@ reserved = {
     'order': 'ORDER',
     'by': 'BY',
     'desc': 'DESC',
-    'asc': 'ASC'
+    'asc': 'ASC',
+    'and': 'AND',
+    'or': 'OR'
 }
 
 tokens = [
@@ -27,6 +29,11 @@ tokens = [
     'LBRACE', 'RBRACE', 'COMMA', 'EQUALS',
     'COLON', 'STAR', 'LESST', 'GREATERT', 'LESSEQUALS', 'GREATEREQUALS', 'NOTEQUALS', 
 ] + list(reserved.values())
+
+precedence = (
+    ('left', 'OR'),
+    ('left', 'AND'),
+)
 
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
@@ -74,8 +81,8 @@ def p_statement_select(p):
     p[0] = ('select', p[2], p[4], None, None)
 
 def p_statement_select_where(p):
-    'statement : SELECT field_list FROM IDENTIFIER WHERE IDENTIFIER comparison_op value'
-    p[0] = ('select', p[2], p[4], (p[6], p[7], p[8]), None)
+    'statement : SELECT field_list FROM IDENTIFIER WHERE condition'
+    p[0] = ('select', p[2], p[4], p[6], None)
 
 def p_statement_select_order(p):
     '''statement : SELECT field_list FROM IDENTIFIER ORDER BY IDENTIFIER
@@ -88,14 +95,14 @@ def p_statement_select_order(p):
     p[0] = ('select', p[2], p[4], None, order)
 
 def p_statement_select_where_order(p):
-    '''statement : SELECT field_list FROM IDENTIFIER WHERE IDENTIFIER comparison_op value ORDER BY IDENTIFIER
-                 | SELECT field_list FROM IDENTIFIER WHERE IDENTIFIER comparison_op value ORDER BY IDENTIFIER ASC
-                 | SELECT field_list FROM IDENTIFIER WHERE IDENTIFIER comparison_op value ORDER BY IDENTIFIER DESC'''
+    '''statement : SELECT field_list FROM IDENTIFIER WHERE condition ORDER BY IDENTIFIER
+                 | SELECT field_list FROM IDENTIFIER WHERE condition ORDER BY IDENTIFIER ASC
+                 | SELECT field_list FROM IDENTIFIER WHERE condition ORDER BY IDENTIFIER DESC'''
     if len(p) == 13:
         order = (p[11], p[12].upper())
     else:
         order = (p[11], 'ASC')
-    p[0] = ('select', p[2], p[4], (p[6], p[7], p[8]), order)
+    p[0] = ('select', p[2], p[4], p[6], order)
 
 def p_statement_insert(p):
     'statement : INSERT INTO IDENTIFIER VALUES json_object'
@@ -137,6 +144,15 @@ def p_comparison_op(p):
         'NOTEQUALS': '!='
     }
     p[0] = token_to_operator[p.slice[1].type]
+
+def p_condition_binary(p):
+    '''condition : condition AND condition
+                 | condition OR condition'''
+    p[0] = ('binop', p[2].upper(), p[1], p[3])
+
+def p_condition_comparison(p):
+    'condition : IDENTIFIER comparison_op value'
+    p[0] = ('cmp', p[1], p[2], p[3])
 
 def p_field_list(p):
     '''field_list : IDENTIFIER
@@ -198,6 +214,21 @@ def compare(left, op, right):
     else:
         raise ValueError(f"Unknown operator {op}")
 
+def eval_condition(row, condition):
+    if condition is None:
+        return True
+    if condition[0] == 'cmp':
+        _, key, op, value = condition
+        return compare(row.get(key), op, value)
+    elif condition[0] == 'binop':
+        _, operator, left, right = condition
+        if operator == 'AND':
+            return eval_condition(row, left) and eval_condition(row, right)
+        elif operator == 'OR':
+            return eval_condition(row, left) or eval_condition(row, right)
+        else:
+            raise ValueError(f"Unknown logical operator {operator}")
+
 def get_sort_key(value):
     if isinstance(value, str):
         return value.lower()
@@ -209,11 +240,8 @@ def parse_query(query, data):
         _, fields, table, condition, order = ast
         result = []
         for row in data.get(table, []):
-            if condition:
-                key, op, value = condition
-                row_value = row.get(key)
-                if not compare(row_value, op, value):
-                    continue
+            if not eval_condition(row, condition):
+                continue
             if fields == ['*']:
                 result.append(row)
             else:
