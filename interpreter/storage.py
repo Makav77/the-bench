@@ -5,9 +5,9 @@ def load_data(filepath):
         with open(filepath, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
-        return []
+        return {}
     except json.JSONDecodeError:
-        return []
+        return {}
 
 def save_data(filepath, data):
     with open(filepath, 'w') as f:
