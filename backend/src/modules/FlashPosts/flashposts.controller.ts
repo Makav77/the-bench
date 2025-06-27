@@ -10,6 +10,7 @@ import { RequiredPermission } from '../Permissions/decorator/require-permission.
 import { PermissionGuard } from '../Permissions/guards/permission.guard';
 import { IrisGuard } from '../Auth/guards/iris.guard';
 import { RequestWithResource } from '../Auth/guards/iris.guard';
+import { Resource } from '../Utils/resource.decorator';
 
 @Controller("flashposts")
 export class FlashPostsController {
@@ -28,16 +29,7 @@ export class FlashPostsController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneFlashPost(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<FlashPost>
-    ): Promise<FlashPost> {
-        const flashPost = await this.flashpostsService.findOneFlashPost(id);
-        if (!flashPost) {
-            throw new NotFoundException("Flashpost not found.");
-        }
-
-        req.resource = flashPost;
+    async findOneFlashPost(@Resource() flashPost: FlashPost): Promise<FlashPost> {
         return flashPost;
     }
 
@@ -55,33 +47,21 @@ export class FlashPostsController {
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     async updateFlashPost(
-        @Param("id") id: string,
+        @Resource() flashPost: FlashPost,
         @Body() updateFlashPostDTO: UpdateFlashPostDTO,
         @Req() req: RequestWithResource<FlashPost>
     ): Promise<FlashPost> {
-        const flashPost = await this.flashpostsService.findOneFlashPost(id);
-        if (!flashPost) {
-            throw new NotFoundException("FlashPost not found.");
-        }
-
-        req.resource = flashPost;
         const user = req.user as User;
-        return this.flashpostsService.updateFlashPost(id, updateFlashPostDTO, user);
+        return this.flashpostsService.updateFlashPost(flashPost.id, updateFlashPostDTO, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removeFlashPost(
-        @Param("id") id: string,
+        @Resource() flashPost: FlashPost,
         @Req() req: RequestWithResource<FlashPost>
     ): Promise<void> {
-        const flashPost = await this.flashpostsService.findOneFlashPost(id);
-        if (!flashPost) {
-            throw new NotFoundException("FlashPost not found.");
-        }
-
-        req.resource = flashPost;
         const user = req.user as User;
-        return this.flashpostsService.removeFlashPost(id, user);
+        return this.flashpostsService.removeFlashPost(flashPost.id, user);
     }
 }
