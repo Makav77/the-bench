@@ -13,6 +13,7 @@ import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
 import { IrisGuard } from "../Auth/guards/iris.guard";
 import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { Resource } from "../Utils/resource.decorator";
 
 @Controller("challenges")
 export class ChallengesController {
@@ -42,17 +43,7 @@ export class ChallengesController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneChallenge(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<Challenge>
-    ): Promise<Challenge> {
-        const challenge = await this.challengesService.findOneChallenge(id);
-
-        if (!challenge) {
-            throw new NotFoundException("Challenge not found.");
-        }
-
-        req.resource = challenge;
+    async findOneChallenge(@Resource() challenge: Challenge): Promise<Challenge> {
         return challenge;
     }
 
@@ -81,125 +72,76 @@ export class ChallengesController {
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     async updateChallenge(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Body() createChallengeDTO: CreateChallengeDTO,
         @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
-        const challenge = await this.challengesService.findOneChallenge(id);
-
-        if (!challenge) {
-            throw new NotFoundException("Challenge not found.");
-        }
-
-        req.resource = challenge;
         const user = req.user as User;
-        return this.challengesService.updateChallenge(id, createChallengeDTO, user);
+        return this.challengesService.updateChallenge(challenge.id, createChallengeDTO, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id/validate")
     async validateChallenge(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Body() validateChallengeDTO: ValidateChallengeDTO,
         @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
-        const challenge = await this.challengesService.findOneChallenge(id);
-
-        if (!challenge) {
-            throw new NotFoundException("Challenge not found.");
-        }
-
-        req.resource = challenge;
         const user = req.user as User;
-        return this.challengesService.validateChallenge(id, validateChallengeDTO, user);
+        return this.challengesService.validateChallenge(challenge.id, validateChallengeDTO, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removeChallenge(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Req() req: RequestWithResource<Challenge>
     ): Promise<void> {
-        const challenge = await this.challengesService.findOneChallenge(id);
-
-        if (!challenge) {
-            throw new NotFoundException("Challenge not found.");
-        }
-
-        req.resource = challenge;
         const user = req.user as User;
-        return this.challengesService.removeChallenge(id, user);
+        return this.challengesService.removeChallenge(challenge.id, user);
     }
 
     @RequiredPermission("register_challenge")
     @UseGuards(JwtAuthGuard, IrisGuard, PermissionGuard)
     @Post(":id/subscribe")
     async subscribe(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
-        const challenge = await this.challengesService.findOneChallenge(id);
-
-        if (!challenge) {
-            throw new NotFoundException("Challenge not found.");
-        }
-
-        req.resource = challenge;
         const user = req.user as User;
-        return this.challengesService.subscribe(id, user);
+        return this.challengesService.subscribe(challenge.id, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id/subscribe")
     async unsubscribe(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
-        const challenge = await this.challengesService.findOneChallenge(id);
-
-        if (!challenge) {
-            throw new NotFoundException("Challenge not found.");
-        }
-
-        req.resource = challenge;
         const user = req.user as User;
-        return this.challengesService.unsubscribe(id, user);
+        return this.challengesService.unsubscribe(challenge.id, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Post(":id/complete")
     async submitCompletion(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Body() submitCompletionDTO: SubmitCompletionDTO,
         @Req() req: RequestWithResource<Challenge>
     ): Promise<ChallengeCompletion> {
-        const challenge = await this.challengesService.findOneChallenge(id);
-
-        if (!challenge) {
-            throw new NotFoundException("Challenge not found.");
-        }
-
-        req.resource = challenge;
         const user = req.user as User;
-        return this.challengesService.submitCompletion(id, submitCompletionDTO, user);
+        return this.challengesService.submitCompletion(challenge.id, submitCompletionDTO, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id/complete/:completionId")
     async validateCompletion(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Param("completionId") completionId: string,
         @Body() validateCompletionDTO: ValidateCompletionDTO,
         @Req() req: RequestWithResource<Challenge>
     ): Promise<ChallengeCompletion> {
-        const challenge = await this.challengesService.findOneChallenge(id);
-
-        if (!challenge) {
-            throw new NotFoundException("Challenge not found.");
-        }
-
-        req.resource = challenge;
         const user = req.user as User;
-        return this.challengesService.validateCompletion(id, completionId, validateCompletionDTO, user);
+        return this.challengesService.validateCompletion(challenge.id, completionId, validateCompletionDTO, user);
     }
 }
