@@ -1,18 +1,18 @@
-import { Injectable, NestMiddleware, NotFoundException } from "@nestjs/common";
-import { PostsService } from "../posts.service";
+import { Injectable, NestMiddleware, NotFoundException } from '@nestjs/common';
+import { PostsService } from '../posts.service';
 
 @Injectable()
 export class LoadPostResourceMiddleware implements NestMiddleware {
     constructor(private readonly postsService: PostsService) {}
 
-    async use(request: any, response: any, next: () => void) {
-        const postId = request.params.id;
-        if (postId) {
-            const post = await this.postsService.findOnePost(postId);
+    async use(req: any, res: any, next: () => void) {
+        const id = req.params.id;
+        if (id) {
+            const post = await this.postsService.findOnePost(id);
             if (!post) {
-                throw new NotFoundException("Post not found");
+                throw new NotFoundException('Post not found');
             }
-            request.resource = post;
+            req.resource = post;
         }
         next();
     }

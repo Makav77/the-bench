@@ -29,7 +29,7 @@ export class PostsController {
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
     async findOnePost(@Resource() post: Posts) {
-        return post; // Le décorateur doit injecter ici
+        return post;
     }
 
     @RequiredPermission("publish_post")
@@ -46,35 +46,21 @@ export class PostsController {
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     async updatePost(
-        @Param("id") id: string,
+        @Resource() post: Posts,
         @Body() updatePostDTO: UpdatePostDTO,
         @Req() req: RequestWithResource<Posts>
     ): Promise<Posts> {
-        const post = await this.postsService.findOnePost(id);
-
-        if (!post) {
-            throw new NotFoundException("Post not found.");
-        }
-
-        req.resource = post;
         const user = req.user as User;
-        return this.postsService.updatePost(id, updatePostDTO, user);
+        return this.postsService.updatePost(post.id, updatePostDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removePost(
-        @Param("id") id: string,
+        @Resource() post: Posts,
         @Req() req: RequestWithResource<Posts>
     ): Promise<void> {
-        const post = await this.postsService.findOnePost(id);
-
-        if (!post) {
-            throw new NotFoundException("Post not found.");
-        }
-
-        req.resource = post;
         const user = req.user as User;
-        return this.postsService.removePost(id, user);
+        return this.postsService.removePost(post.id, user);
     }
 }

@@ -4,8 +4,10 @@ import { Posts } from './entities/post.entity';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { PermissionsModule } from '../Permissions/permissions.module';
-import { InjectPostsServiceMiddleware } from './middlewares/inject-posts-service.middleware';
+import { createInjectServiceMiddleware } from '../Utils/inject-resource-service.middleware';
 import { LoadPostResourceMiddleware } from './middlewares/load-post-resource.middleware';
+
+const InjectPostsServiceMiddleware = createInjectServiceMiddleware('postsService', PostsService);
 
 @Module({
     imports: [
