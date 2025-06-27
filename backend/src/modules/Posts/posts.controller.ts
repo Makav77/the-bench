@@ -1,15 +1,15 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, Query, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Body, Param, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, Query, NotFoundException, Post } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
-import { Request } from 'express';
 import { Posts } from './entities/post.entity';
 import { User } from '../Users/entities/user.entity';
 import { RequiredPermission } from '../Permissions/decorator/require-permission.decorator';
 import { PermissionGuard } from '../Permissions/guards/permission.guard';
 import { IrisGuard } from '../Auth/guards/iris.guard';
 import { RequestWithResource } from '../Auth/guards/iris.guard';
+import { Resource } from 'src/modules/Utils/resource.decorator';
 
 @Controller("posts")
 export class PostsController {
@@ -28,18 +28,8 @@ export class PostsController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOnePost(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<Posts>
-    ): Promise<Posts> {
-        const post = await this.postsService.findOnePost(id);
-
-        if (!post) {
-            throw new NotFoundException("Post not found.");
-        }
-
-        req.resource = post;
-        return post;
+    async findOnePost(@Resource() post: Posts) {
+        return post; // Le décorateur doit injecter ici
     }
 
     @RequiredPermission("publish_post")
