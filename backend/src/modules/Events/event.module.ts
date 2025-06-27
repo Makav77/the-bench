@@ -1,9 +1,13 @@
-import { Module } from "@nestjs/common";
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Event } from "./entities/event.entity";
 import { EventService } from "./event.service";
 import { EventController } from "./event.controller";
 import { PermissionsModule } from "../Permissions/permissions.module";
+import { createInjectServiceMiddleware } from "../Utils/inject-resource-service.middleware";
+import { LoadEventResourceMiddleware } from "./middlewares/load-event-resource.middleware";
+
+const InjectEventServiceMiddleware = createInjectServiceMiddleware("eventService", EventService);
 
 @Module({
     imports: [
@@ -15,4 +19,10 @@ import { PermissionsModule } from "../Permissions/permissions.module";
     exports: [EventService],
 })
 
-export class EventModule {}
+export class EventModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(InjectEventServiceMiddleware, LoadEventResourceMiddleware)
+            .forRoutes({ path: "events/:id", method: RequestMethod.ALL });
+    }
+}

@@ -10,6 +10,7 @@ import { RequiredPermission } from "../Permissions/decorator/require-permission.
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";
 import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { Resource } from "../Utils/resource.decorator";
 
 @Controller("events")
 export class EventController {
@@ -28,17 +29,7 @@ export class EventController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneEvent(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<Event>
-    ): Promise<Event> {
-        const event = await this.eventService.findOneEvent(id);
-
-        if (!event) {
-            throw new NotFoundException("Event not found");
-        }
-
-        req.resource = event;
+    async findOneEvent(@Resource() event: Event): Promise<Event> {
         return event;
     }
 
@@ -56,88 +47,53 @@ export class EventController {
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     async updateEvent(
-        @Param("id") id: string,
+        @Resource() event: Event,
         @Body() updateEventDTO: UpdateEventDTO,
         @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
-        const event = await this.eventService.findOneEvent(id);
-
-        if (!event) {
-            throw new NotFoundException("Event not found");
-        }
-
-        req.resource = event;
         const user = req.user as User;
-        return this.eventService.updateEvent(id, updateEventDTO, user);
+        return this.eventService.updateEvent(event.id, updateEventDTO, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removeEvent(
-        @Param("id") id: string,
+        @Resource() event: Event,
         @Req() req: RequestWithResource<Event>
     ): Promise<void> {
-        const event = await this.eventService.findOneEvent(id);
-
-        if (!event) {
-            throw new NotFoundException("Event not found");
-        }
-
-        req.resource = event;
         const user = req.user as User;
-        return this.eventService.removeEvent(id, user);
+        return this.eventService.removeEvent(event.id, user);
     }
 
     @RequiredPermission("register_event")
     @UseGuards(JwtAuthGuard, IrisGuard, PermissionGuard)
     @Post(":id/subscribe")
     async subscribe(
-        @Param("id") id: string,
+        @Resource() event: Event,
         @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
-        const event = await this.eventService.findOneEvent(id);
-
-        if (!event) {
-            throw new NotFoundException("Event not found");
-        }
-
-        req.resource = event;
         const user = req.user as User;
-        return this.eventService.subscribe(id, user);
+        return this.eventService.subscribe(event.id, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id/subscribe")
     async unsubscribe(
-        @Param("id") id: string,
+        @Resource() event: Event,
         @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
-        const event = await this.eventService.findOneEvent(id);
-
-        if (!event) {
-            throw new NotFoundException("Event not found");
-        }
-
-        req.resource = event;
         const user = req.user as User;
-        return this.eventService.unsubscribe(id, user);
+        return this.eventService.unsubscribe(event.id, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id/participants/:userId")
     async removeParticipant(
-        @Param("id") eventId: string,
+        @Resource() event: Event,
         @Param("userId") userId: string,
         @Req() req: RequestWithResource<Event>
     ): Promise<Event> {
-        const event = await this.eventService.findOneEvent(eventId);
-
-        if (!event) {
-            throw new NotFoundException("Event not found");
-        }
-
-        req.resource = event;
         const user = req.user as User;
-        return this.eventService.removeParticipant(eventId, userId, user);
+        return this.eventService.removeParticipant(event.id, userId, user);
     }
 }
