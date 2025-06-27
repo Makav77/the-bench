@@ -1,9 +1,10 @@
 import type { ChangeEvent, FormEvent } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { createUser, Role } from "../../api/userService";
+import { getCitiesByPostalCode, resolveIris } from "../../api/irisService";
 
 interface registerCredentials {
     id: string,
@@ -13,7 +14,12 @@ interface registerCredentials {
     password: string,
     dateOfBirth: string,
     profilePicture: string,
-    role: Role
+    role: Role,
+    street: string,
+    postalCode: string,
+    city: string,
+    irisCode: string,
+    irisName: string,
 };
 
 enum registerState {
@@ -34,10 +40,16 @@ function Signup() {
         dateOfBirth: "",
         profilePicture: "",
         role: Role.USER,
+        street: "",
+        postalCode: "",
+        city: "",
+        irisCode: "",
+        irisName: "",
     });
-    const [currentRegisterState, setCurrentRegisterState] = useState<registerState>(
-        registerState.noError
-    );
+    const [currentRegisterState, setCurrentRegisterState] = useState<registerState>(registerState.noError);
+    const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
+    const [showCitySuggestions, setShowCitySuggestions] = useState(false);
+    const [irisError, setIrisError] = useState<string>("");
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible((prev) => !prev);
@@ -59,21 +71,135 @@ function Signup() {
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
         const { name, value } = e.target;
-        setRegisterCredentials((prev) => ({ ...prev, [name]: value }));
+        setRegisterCredentials((prev) => ({ 
+            ...prev,
+            [name]: value
+        }));
         setCurrentRegisterState(registerState.noError);
     }
 
+    async function handleStreetChange(e: ChangeEvent<HTMLInputElement>) {
+        const addressValue = e.target.value;
+        setRegisterCredentials(prev => ({
+            ...prev,
+            street: addressValue,
+        }));
+        setCurrentRegisterState(registerState.noError);
+    }
+
+    async function handlePostalCodeChange(e: ChangeEvent<HTMLInputElement>) {
+        const value = e.target.value.replace(/\D/g, "");
+        setRegisterCredentials(prev => ({
+            ...prev,
+            postalCode: value,
+            city: "",
+            irisCode: "",
+            irisName: "",
+        }));
+        setIrisError("");
+
+        if (value.length === 5) {
+            try {
+                const cities = await getCitiesByPostalCode(value);
+                setCitySuggestions(cities);
+                setShowCitySuggestions(true);
+            } catch {
+                setCitySuggestions([]);
+                setShowCitySuggestions(false);
+            }
+        } else {
+            setCitySuggestions([]);
+            setShowCitySuggestions(false);
+        }
+    }
+
+    function handleCityChange(e: ChangeEvent<HTMLInputElement>) {
+        const value = e.target.value;
+        setRegisterCredentials(prev => ({
+            ...prev,
+            city: value,
+        }));
+        setIrisError("");
+    }
+
+    function handleSelectCity(city: string) {
+        setRegisterCredentials(prev => ({
+            ...prev,
+            city: city,
+        }));
+        setShowCitySuggestions(false);
+        setIrisError("");
+    }
+
+    // Correction ici : dépendances réduites pour éviter la boucle infinie 😅
+    useEffect(() => {
+        const { street, postalCode, city } = registerCredentials;
+        if (street && postalCode.length === 5 && city) {
+            resolveIris(street, postalCode, city)
+                .then(({ irisCode, irisName }) => {
+                    setRegisterCredentials(prev => ({
+                        ...prev,
+                        irisCode,
+                        irisName,
+                    }));
+                    setIrisError("");
+                })
+                .catch(() => {
+                    setRegisterCredentials(prev => ({
+                        ...prev,
+                        irisCode: "",
+                        irisName: "",
+                    }));
+                    setIrisError("Impossible de trouver le quartier pour cette adresse.");
+                });
+        } else {
+            setRegisterCredentials(prev => ({
+                ...prev,
+                irisCode: "",
+                irisName: "",
+            }));
+            setIrisError("");
+        }
+    }, [registerCredentials.street, registerCredentials.postalCode, registerCredentials.city]); // // Correction dépendances 😊
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!registerCredentials.firstname || !registerCredentials.lastname || !registerCredentials.email || !registerCredentials.password || !registerCredentials.dateOfBirth) {
+        if (
+            !registerCredentials.firstname ||
+            !registerCredentials.lastname ||
+            !registerCredentials.email ||
+            !registerCredentials.password ||
+            !registerCredentials.dateOfBirth ||
+            !registerCredentials.street ||
+            !registerCredentials.postalCode ||
+            !registerCredentials.city ||
+            !registerCredentials.irisCode ||
+            !registerCredentials.irisName
+        ) {
             setCurrentRegisterState(registerState.missingCredentials);
             return;
         }
         setCurrentRegisterState(registerState.noError);
         registerCredentials.id = uuidv4();
 
+        const address = `${registerCredentials.street}, ${registerCredentials.postalCode} ${registerCredentials.city}`.trim();
+
+        const userToSend = {
+            id: registerCredentials.id,
+            firstname: registerCredentials.firstname,
+            lastname: registerCredentials.lastname,
+            email: registerCredentials.email,
+            password: registerCredentials.password,
+            dateOfBirth: registerCredentials.dateOfBirth,
+            profilePicture: registerCredentials.profilePicture,
+            role: registerCredentials.role,
+            address: address,
+            irisCode: registerCredentials.irisCode,
+            irisName: registerCredentials.irisName,
+        };
+
         try {
-            await createUser(registerCredentials);
+            await createUser(userToSend);
             navigate("/");
         } catch (error) {
             console.error(error);
@@ -96,7 +222,6 @@ function Signup() {
                 <input
                     name="firstname"
                     type="text"
-                    autoComplete="off"
                     aria-label="firstname-field"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.firstname || ""}
@@ -107,7 +232,6 @@ function Signup() {
                 <input
                     name="lastname"
                     type="text"
-                    autoComplete="off"
                     aria-label="lastname-field"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.lastname || ""}
@@ -118,7 +242,6 @@ function Signup() {
                 <input
                     name="email"
                     type="email"
-                    autoComplete="off"
                     aria-label="email-field"
                     className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
                     value={registerCredentials.email || ""}
@@ -166,6 +289,63 @@ function Signup() {
                     onChange={handleChange}
                     placeholder={t("dateOfBirth")}
                 />
+
+                <input
+                    name="street"
+                    type="text"
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.street ? "border-red-500 shake" : "border-gray-500"}`}
+                    value={registerCredentials.street}
+                    onChange={handleStreetChange}
+                    placeholder="12 rue Rivoli"
+                />
+
+                <input
+                    name="postalCode"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={5}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.postalCode ? "border-red-500 shake" : "border-gray-500"}`}
+                    value={registerCredentials.postalCode}
+                    onChange={handlePostalCodeChange}
+                    placeholder="75010"
+                />
+
+                <div className="relative">
+                    <input
+                        name="city"
+                        type="text"
+                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.city ? "border-red-500 shake" : "border-gray-500"}`}
+                        value={registerCredentials.city}
+                        onChange={handleCityChange}
+                        placeholder="Paris"
+                        onFocus={() => setShowCitySuggestions(citySuggestions.length > 0)}
+                    />
+
+                    {showCitySuggestions && citySuggestions.length > 0 && (
+                        <ul className="absolute z-10 bg-white border-gray-300 w-full rounded shadow max-h-48 overflow-y-auto mt-1">
+                            {citySuggestions.map((city, index) => (
+                                <li
+                                    key={index}
+                                    className="px-4 py-2 hover:bg-amber-100 cursor-pointer"
+                                    onClick={() => handleSelectCity(city)}
+                                >
+                                    {city}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+
+                {registerCredentials.irisName && (
+                    <div className="text-sm text-amber-700 italic text-left pl-1">
+                        Neighborhood selected : <span className="font-bold">{registerCredentials.irisName}</span>
+                    </div>
+                )}
+
+                {irisError && (
+                    <div className="text-sm text-red-500 italic text-left pl-1">{irisError}</div>
+                )}
 
                 <div>
                     {getErrorMessage() && (

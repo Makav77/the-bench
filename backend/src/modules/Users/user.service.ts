@@ -59,17 +59,16 @@ export class UserService {
     async create(createUserDTO: CreateUserDTO): Promise<User> {
         try {
             createUserDTO.password = await bcrypt.hash(createUserDTO.password, 10);
-            const irisInfo = await this.getIrisFromAddress(createUserDTO.address);
-            if (!irisInfo) {
-                throw new ConflictException("Unable to link the address to a Paris neighborhood (IRIS). Please verify the address.")
+
+            if (!createUserDTO.irisCode || !createUserDTO.irisName) {
+                throw new ConflictException("Missing IRIS neighborhood info. Please verify the address.")
             }
 
             const user = this.userRepository.create({
                 ...createUserDTO,
-                irisCode: irisInfo.irisCode,
-                irisName: irisInfo.irisName,
                 profilePicture: "/uploads/profile/default.png",
             });
+
             return await this.userRepository.save(user);
         } catch (error) {
             if (error.code === "23505") {

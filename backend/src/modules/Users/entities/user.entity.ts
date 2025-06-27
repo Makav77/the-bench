@@ -46,7 +46,7 @@ export class User {
     @Column()
     password: string;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: "date" })
     dateOfBirth: Date;
 
     @Column()
