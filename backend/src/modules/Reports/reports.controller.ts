@@ -9,6 +9,7 @@ import { Report } from "./entities/report.entity";
 import { User } from "../Users/entities/user.entity";
 import { IrisGuard } from "../Auth/guards/iris.guard";
 import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { Resource } from "../Utils/resource.decorator";
 
 @Controller("reports")
 export class ReportsController {
@@ -27,17 +28,7 @@ export class ReportsController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneReport(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<Report>
-    ): Promise<Report> {
-        const report = await this.reportsService.findOneReport(id);
-
-        if (!report) {
-            throw new NotFoundException("Report not found.");
-        }
-
-        req.resource = report;
+    async findOneReport(@Resource() report: Report): Promise<Report> {
         return report;
     }
 
@@ -55,35 +46,21 @@ export class ReportsController {
     @UseGuards(JwtAuthGuard)
     @Patch(":id/status")
     async updateReportStatus(
-        @Param("id") id: string,
+        @Resource() report: Report,
         @Body() updateReportStatus: UpdateReportStatusDTO,
         @Req() req: RequestWithResource<Report>
     ): Promise<Report> {
-        const report = await this.reportsService.findOneReport(id);
-
-        if (!report) {
-            throw new NotFoundException("Report not found.");
-        }
-
-        req.resource = report;
         const user = req.user as User;
-        return this.reportsService.updateReportStatus(id, updateReportStatus, user);
+        return this.reportsService.updateReportStatus(report.id, updateReportStatus, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(":id")
     async removeReport(
-        @Param("id") id: string,
+        @Resource() report: Report,
         @Req() req: RequestWithResource<Report>
     ): Promise<void> {
-        const report = await this.reportsService.findOneReport(id);
-
-        if (!report) {
-            throw new NotFoundException("Report not found.");
-        }
-
-        req.resource = report;
         const user = req.user as User;
-        await this.reportsService.removeReport(id, user);
+        await this.reportsService.removeReport(report.id, user);
     }
 }
