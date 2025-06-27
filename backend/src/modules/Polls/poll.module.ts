@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Poll } from "./entities/poll.entity";
 import { PollOption } from "./entities/poll-option.entity";
@@ -6,6 +6,10 @@ import { PollVote } from "./entities/poll-vote.entity";
 import { PollService } from "./poll.service";
 import { PollController } from "./poll.controller";
 import { PermissionsModule } from "../Permissions/permissions.module";
+import { createInjectServiceMiddleware } from "../Utils/inject-resource-service.middleware";
+import { LoadPollResourceMiddleware } from "./middlewares/load-poll-resource.middleware";
+
+const InjectPollServiceMiddleware = createInjectServiceMiddleware("pollService", PollService);
 
 @Module({
     imports: [
@@ -17,4 +21,10 @@ import { PermissionsModule } from "../Permissions/permissions.module";
     exports: [PollService],
 })
 
-export class PollModule {}
+export class PollModule implements NestModule {
+    configure (consumer: MiddlewareConsumer) {
+        consumer
+            .apply(InjectPollServiceMiddleware, LoadPollResourceMiddleware)
+            .forRoutes({ path: "polls/:id", method: RequestMethod.ALL });
+    }
+}

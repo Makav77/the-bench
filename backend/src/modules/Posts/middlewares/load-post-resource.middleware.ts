@@ -17,7 +17,7 @@ export class LoadPostResourceMiddleware implements NestMiddleware {
         if (id) {
             const post = await this.postsService.findOnePost(id);
             if (!post) {
-                throw new NotFoundException('Post not found');
+                throw new NotFoundException("Post not found");
             }
             req.resource = post;
         }

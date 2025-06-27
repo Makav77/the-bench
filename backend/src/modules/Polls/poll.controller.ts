@@ -10,6 +10,7 @@ import { RequiredPermission } from "../Permissions/decorator/require-permission.
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";
 import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { Resource } from "../Utils/resource.decorator";
 
 @Controller("polls")
 @UseGuards(JwtAuthGuard)
@@ -29,17 +30,7 @@ export class PollController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOnePoll(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<Poll>
-    ): Promise<Poll> {
-        const poll = await this.pollService.findOnePoll(id);
-
-        if (!poll) {
-            throw new NotFoundException("Poll not found.");
-        }
-
-        req.resource = poll;
+    async findOnePoll(@Resource() poll: Poll): Promise<Poll> {
         return poll;
     }
 

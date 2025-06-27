@@ -28,7 +28,7 @@ export class PostsController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOnePost(@Resource() post: Posts) {
+    async findOnePost(@Resource() post: Posts): Promise<Posts> {
         return post;
     }
 

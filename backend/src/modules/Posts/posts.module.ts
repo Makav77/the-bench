@@ -7,7 +7,7 @@ import { PermissionsModule } from '../Permissions/permissions.module';
 import { createInjectServiceMiddleware } from '../Utils/inject-resource-service.middleware';
 import { LoadPostResourceMiddleware } from './middlewares/load-post-resource.middleware';
 
-const InjectPostsServiceMiddleware = createInjectServiceMiddleware('postsService', PostsService);
+const InjectPostsServiceMiddleware = createInjectServiceMiddleware("postsService", PostsService);
 
 @Module({
     imports: [
@@ -23,6 +23,6 @@ export class PostsModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(InjectPostsServiceMiddleware, LoadPostResourceMiddleware)
-            .forRoutes({ path: 'posts/:id', method: RequestMethod.ALL });
+            .forRoutes({ path: "posts/:id", method: RequestMethod.ALL });
     }
 }
