@@ -12,6 +12,7 @@ import { RequiredPermission } from "../Permissions/decorator/require-permission.
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";
 import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { Resource } from "../Utils/resource.decorator";
 
 const multerOptions = {
     storage: diskStorage({
@@ -49,18 +50,8 @@ export class GalleryController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneGalleryItem(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<GalleryItem>
-    ): Promise<GalleryItem> {
-        const image = await this.galleryService.findOneGalleryItem(id);
-
-        if (!image) {
-            throw new NotFoundException("Image not found.");
-        }
-
-        req.resource = image;
-        return image;
+    async findOneGalleryItem(@Resource() galleryItem: GalleryItem): Promise<GalleryItem> {
+        return galleryItem;
     }
 
     @RequiredPermission("publish_gallery")
@@ -89,34 +80,20 @@ export class GalleryController {
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Post(":id/like")
     async toggleLike(
-        @Param("id") id: string,
+        @Resource() galleryItem: GalleryItem,
         @Req() req: RequestWithResource<GalleryItem>
     ): Promise<GalleryItem> {
-        const image = await this.galleryService.findOneGalleryItem(id);
-
-        if (!image) {
-            throw new NotFoundException("image not found");
-        }
-
-        req.resource = image;
         const user = req.user as User;
-        return this.galleryService.toggleLike(id, user);
+        return this.galleryService.toggleLike(galleryItem.id, user);
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removeGalleryItem(
-        @Param("id") id: string,
+        @Resource() galleryItem: GalleryItem,
         @Req() req: RequestWithResource<GalleryItem>
     ): Promise<void> {
-                const image = await this.galleryService.findOneGalleryItem(id);
-
-        if (!image) {
-            throw new NotFoundException("image not found");
-        }
-
-        req.resource = image;
         const user = req.user as User;
-        return this.galleryService.removeGalleryItem(id, user);
+        return this.galleryService.removeGalleryItem(galleryItem.id, user);
     }
 }
