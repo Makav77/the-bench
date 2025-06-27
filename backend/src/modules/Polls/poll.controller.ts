@@ -67,34 +67,20 @@ export class PollController {
     @UseGuards(JwtAuthGuard)
     @Post(":id/close")
     async closePoll(
-        @Param("id") id: string,
+        @Resource() poll: Poll,
         @Req() req: RequestWithResource<Poll>
     ): Promise<Poll> {
-        const poll = await this.pollService.findOnePoll(id);
-
-        if (!poll) {
-            throw new NotFoundException("Poll not found.");
-        }
-
-        req.resource = poll;
-        const user = req.user as User;
-        return this.pollService.closePoll(id, user);
+    const user = req.user as User;
+        return this.pollService.closePoll(poll.id, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(":id")
     async removePoll(
-        @Param("id") id: string,
+        @Resource() poll: Poll,
         @Req() req: RequestWithResource<Poll>
     ): Promise<void> {
-        const poll = await this.pollService.findOnePoll(id);
-
-        if (!poll) {
-            throw new NotFoundException("Poll not found.");
-        }
-
-        req.resource = poll;
         const user = req.user as User;
-        return this.pollService.removePoll(id, user);
+        return this.pollService.removePoll(poll.id, user);
     }
 }
