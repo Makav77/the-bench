@@ -12,6 +12,7 @@ import { MarketItem } from './entities/market.entity';
 import { User } from '../Users/entities/user.entity';
 import { IrisGuard } from '../Auth/guards/iris.guard';
 import { RequestWithResource } from '../Auth/guards/iris.guard';
+import { Resource } from '../Utils/resource.decorator';
 
 const multerOptions = {
     storage: diskStorage({
@@ -50,18 +51,8 @@ export class MarketController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneItem(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<MarketItem>
-    ): Promise<MarketItem> {
-        const item = await this.marketService.findOneItem(id);
-
-        if (!item) {
-            throw new NotFoundException("Item not found.");
-        }
-
-        req.resource = item;
-        return item;
+    async findOneItem(@Resource() marketItem: MarketItem): Promise<MarketItem> {
+        return marketItem;
     }
 
     @UseGuards(JwtAuthGuard)
@@ -82,7 +73,7 @@ export class MarketController {
     @Patch(":id")
     @UseInterceptors(FilesInterceptor("images", 5, multerOptions))
     async updateItem(
-        @Param("id") id: string,
+        @Resource() marketItem: MarketItem,
         @UploadedFiles() files: Express.Multer.File[],
         @Body() updateMarketItemDTO: UpdateMarketItemDTO,
         @Req() req: RequestWithResource<MarketItem>
@@ -90,27 +81,18 @@ export class MarketController {
         const user = req.user as User;
         const safeFiles = files ?? [];
         const urls = safeFiles.map(file => `/uploads/market/${file.filename}`);
-        const existing = await this.marketService.findOneItem(id);
-        const allImages = existing.images ? [...existing.images, ...urls] : urls;
+        const allImages = marketItem.images ? [...marketItem.images, ...urls] : urls;
 
-        req.resource = existing;
-        return this.marketService.updateItem(id, { ...updateMarketItemDTO, images: allImages }, user);
+        return this.marketService.updateItem(marketItem.id, { ...updateMarketItemDTO, images: allImages }, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(":id")
     async removeItem (
-        @Param("id") id: string,
+        @Resource() marketItem: MarketItem,
         @Req() req: RequestWithResource<MarketItem>
     ): Promise<void> {
-        const item = await this.marketService.findOneItem(id);
-
-        if (!item) {
-            throw new NotFoundException("Item not found.");
-        }
-
-        req.resource = item;
         const user = req.user as User;
-        return this.marketService.removeItem(id, user);
+        return this.marketService.removeItem(marketItem.id, user);
     }
 }
