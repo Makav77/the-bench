@@ -24,6 +24,9 @@ export class ReportsModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(InjectReportsServiceMiddleware, LoadReportResourceMiddleware)
-            .forRoutes({ path: "reports/:id", method: RequestMethod.ALL });
+            .forRoutes(
+                { path: "reports/:id", method: RequestMethod.ALL },
+                { path: "reports/:id/status", method: RequestMethod.ALL }
+            );
     }
 }

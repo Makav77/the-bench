@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 type StatusFilter = "ALL" | "PENDING" | "VALIDATED" | "REJECTED";
-type ContentFilter = "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLLS" | "CHALLENGES";
+type ContentFilter = "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLL" | "CHALLENGE";
 type ReasonFilter = "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INAPPROPRIATE_CONTENT" | "OTHER";
 
 function DashboardReports() {
@@ -36,6 +36,27 @@ function DashboardReports() {
             }
         })();
     }, [page]);
+
+    const contentTypeLabel = (type: string) => {
+        switch (type) {
+            case "POST":
+                return "Post";
+            case "FLASHPOST":
+                return "Flashpost";
+            case "EVENT":
+                return "Event";
+            case "GALLERY":
+                return "Gallery";
+            case "POLL":
+                return "Poll";
+            case "CHALLENGE":
+                return "Challenge";
+            case "NEWS":
+                return "News";
+            default:
+                return type;
+        }
+    }
 
     const handleStatusChanged = async (reportId: string, newStatus: "VALIDATED" | "REJECTED") => {
         setUpdatingId(reportId);
@@ -155,7 +176,7 @@ function DashboardReports() {
                 <span className="font-semibold w-[25%] text-end">Content :</span>
                 <select
                     value={filterContentType}
-                    onChange={(e) => setFilterContentType(e.target.value as "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLLS" | "CHALLENGES")}
+                    onChange={(e) => setFilterContentType(e.target.value as "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLL" | "CHALLENGE")}
                     className="border rounded px-2 py-1 h-8"
                 >
                     <option value="ALL">All</option>
@@ -201,12 +222,33 @@ function DashboardReports() {
                             <div className="flex-1 space-y-1">
                                 <p>
                                     <span className="font-semibold">Report by :</span>{" "}
-                                    {report.reporter.firstname} {report.reporter.lastname}
+                                    <span
+                                        className="text-blue-600 hover:underline cursor-pointer"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/profile/${report.reporter.id}`);
+                                        }}
+                                    >
+                                        {report.reporter.firstname} {report.reporter.lastname}
+                                    </span>
                                 </p>
 
                                 <p>
                                     <span className="font-semibold">Reported user :</span>{" "}
-                                    {report.reportedUser.firstname} {report.reportedUser.lastname}
+                                    <span
+                                        className="text-blue-600 hover:underline cursor-pointer"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/profile/${report.reportedUser.id}`);
+                                        }}
+                                    >
+                                        {report.reportedUser.firstname} {report.reportedUser.lastname}
+                                    </span>
+                                </p>
+
+                                <p>
+                                    <span className="font-semibold">Content :</span>{" "}
+                                    <span>{contentTypeLabel(report.reportedContentType)}</span>
                                 </p>
 
                                 <p>
@@ -228,7 +270,13 @@ function DashboardReports() {
 
                                 <p>
                                     <span className="font-semibold">Statut :</span>{" "}
-                                    {report.status}
+                                    <span className={
+                                        report.status === "PENDING" ? "bg-yellow-400 px-2 rounded" :
+                                        report.status === "VALIDATED" ? "bg-green-400 px-2 rounded" :
+                                        "bg-red-400 px-2 rounded"
+                                    }>
+                                        {report.status}
+                                    </span>
                                 </p>
                             </div>
 
