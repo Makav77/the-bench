@@ -4,10 +4,8 @@ import { News, NewsSchema } from "./news.schema";
 import { NewsService } from "./news.service";
 import { NewsController } from "./news.controller";
 import { PermissionsModule } from "../Permissions/permissions.module";
-import { createInjectServiceMiddleware } from "../Utils/inject-resource-service.middleware";
 import { LoadNewsResourceMiddleware } from "./middlewares/load-news-resource.middleware";
 
-const InjectNewsServiceMiddleware = createInjectServiceMiddleware("newsService", NewsService);
 
 @Module({
     imports: [
@@ -24,7 +22,7 @@ const InjectNewsServiceMiddleware = createInjectServiceMiddleware("newsService",
 export class NewsModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
-            .apply(InjectNewsServiceMiddleware, LoadNewsResourceMiddleware)
+            .apply(LoadNewsResourceMiddleware)
             .forRoutes(
                 { path: "news/:id", method: RequestMethod.ALL },
                 { path: "news/:id/like", method: RequestMethod.ALL },

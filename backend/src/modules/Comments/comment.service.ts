@@ -10,7 +10,7 @@ import { User } from "../Users/entities/user.entity";
 export class CommentService {
     constructor(@InjectModel(Comment.name) private commentModel: Model<CommentDocument>) {}
 
-    async findAllComments(newsId: string, user: User): Promise<Comment[]> {
+    async findAllComments(newsId: string, user: User): Promise<CommentDocument[]> {
         let filter: Partial<Comment> = { newsId };
 
         if (user.role !== "admin") {
@@ -21,7 +21,7 @@ export class CommentService {
         return comments;
     }
 
-    async findOneComment(commentId: string): Promise<Comment> {
+    async findOneComment(commentId: string): Promise<CommentDocument> {
         const comment = await this.commentModel.findById(commentId);
 
         if (!comment) {
@@ -31,7 +31,7 @@ export class CommentService {
         return comment;
     }
 
-    async createComment(createCommentDTO: CreateCommentDTO, user: User): Promise<Comment> {
+    async createComment(createCommentDTO: CreateCommentDTO, user: User): Promise<CommentDocument> {
         const commentData = {
             ...createCommentDTO,
             irisCode: user.irisCode,
@@ -41,7 +41,7 @@ export class CommentService {
         return created.save();
     }
 
-    async updateComment(commentId: string, user: User, updateDTO: UpdateCommentDTO): Promise<Comment> {
+    async updateComment(commentId: string, user: User, updateDTO: UpdateCommentDTO): Promise<CommentDocument> {
         const comment = await this.commentModel.findById(commentId);
 
         if (!comment) {

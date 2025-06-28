@@ -1,9 +1,10 @@
-import { Module } from "@nestjs/common";
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Comment, CommentSchema } from "./comment.schema";
 import { CommentService } from "./comment.service";
 import { CommentController } from "./comment.controller";
 import { UserModule } from "../Users/user.module";
+import { LoadCommentResourceMiddleware } from "./middlewares/load-comment-resource.middleware";
 
 @Module({
     imports: [
@@ -17,4 +18,13 @@ import { UserModule } from "../Users/user.module";
     exports: [CommentService],
 })
 
-export class CommentModule {}
+export class CommentModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(LoadCommentResourceMiddleware)
+            .forRoutes(
+                { path: "news/:newsId/comments/:commentId", method: RequestMethod.ALL },
+                { path: "news/:newsId/comments/:commentId/*", method: RequestMethod.ALL }
+            )
+    }
+}
