@@ -178,7 +178,7 @@ function NewsDetailPage() {
         <div>
             <div className="w-[30%] mx-auto py-5 px-10 bg-white rounded-xl shadow-lg mt-10">
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/news")}
                     className="mb-6 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 >
                     ← Back

@@ -23,6 +23,36 @@ export class NewsController {
     constructor(private readonly newsService: NewsService) { }
 
     @UseGuards(JwtAuthGuard)
+    @Post("upload-images")
+    @UseInterceptors(FilesInterceptor("images", 10, {
+        storage: diskStorage({
+            destination: (_req, _file, cb) => {
+                const uploadPath = "./uploads/news";
+                if (!fs.existsSync(uploadPath)) {
+                    fs.mkdirSync(uploadPath, { recursive: true });
+                }
+                cb(null, uploadPath);
+            },
+            filename: (_req, file, cb) => {
+                const uniqueSuffix = uuidv4();
+                const ext = extname(file.originalname);
+                cb(null, `${uniqueSuffix}${ext}`);
+            },
+        }),
+        fileFilter: (_req, file, cb) => {
+            if (!file.mimetype.startsWith("image/")) {
+                return cb(new Error("Only images are allowed"), false);
+            }
+            cb(null, true);
+        },
+        limits: { fileSize: 5 * 1024 * 1024 }
+    }))
+    async uploadImages(@UploadedFiles() files: Express.Multer.File[]): Promise<{ urls: string[] }> {
+        const urls = files.map(file => `/uploads/news/${file.filename}`);
+        return { urls };
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAllNews(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -59,36 +89,6 @@ export class NewsController {
     ) {
         const user = req.user as User;
         return this.newsService.createNews(createNewsDTO, user);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Post("upload-images")
-    @UseInterceptors(FilesInterceptor("images", 10, {
-        storage: diskStorage({
-            destination: (_req, _file, cb) => {
-                const uploadPath = "./uploads/news";
-                if (!fs.existsSync(uploadPath)) {
-                    fs.mkdirSync(uploadPath, { recursive: true });
-                }
-                cb(null, uploadPath);
-            },
-            filename: (_req, file, cb) => {
-                const uniqueSuffix = uuidv4();
-                const ext = extname(file.originalname);
-                cb(null, `${uniqueSuffix}${ext}`);
-            },
-        }),
-        fileFilter: (_req, file, cb) => {
-            if (!file.mimetype.startsWith("image/")) {
-                return cb(new Error("Only images are allowed"), false);
-            }
-            cb(null, true);
-        },
-        limits: { fileSize: 5 * 1024 * 1024 }
-    }))
-    async uploadImages(@UploadedFiles() files: Express.Multer.File[]): Promise<{ urls: string[] }> {
-        const urls = files.map(file => `/uploads/news/${file.filename}`);
-        return { urls };
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)

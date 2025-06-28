@@ -6,7 +6,6 @@ import { NewsController } from "./news.controller";
 import { PermissionsModule } from "../Permissions/permissions.module";
 import { LoadNewsResourceMiddleware } from "./middlewares/load-news-resource.middleware";
 
-
 @Module({
     imports: [
         MongooseModule.forFeature([

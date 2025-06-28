@@ -3,6 +3,7 @@ import { NewsService } from '../news.service';
 import { Response, NextFunction } from 'express';
 import { RequestWithResource } from 'src/modules/Utils/request-with-resource.interface';
 import { NewsDocument } from '../news.schema';
+import { isValidObjectId } from 'mongoose';
 
 @Injectable()
 export class LoadNewsResourceMiddleware implements NestMiddleware {
@@ -15,6 +16,9 @@ export class LoadNewsResourceMiddleware implements NestMiddleware {
     ) {
         const id = req.params.id;
         if (id) {
+            if (!isValidObjectId(id)) {
+                return next();
+            }
             const news = await this.newsService.findOneNews(id);
             if (!news) {
                 throw new NotFoundException("News not found");
