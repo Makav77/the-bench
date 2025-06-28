@@ -23,6 +23,9 @@ export class GalleryModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(InjectGalleryItemServiceMiddleware, LoadGalleryItemResourceMiddleware)
-            .forRoutes({ path: "gallery/:id", method: RequestMethod.ALL });
+            .forRoutes(
+                { path: "gallery/:id", method: RequestMethod.ALL },
+                { path: "gallery/:id/like", method: RequestMethod.ALL },
+            );
     }
 }

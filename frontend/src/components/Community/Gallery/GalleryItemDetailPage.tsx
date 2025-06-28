@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import ReportModal from "../../Utils/ReportModal";
+import { X } from "lucide-react";
 
 export default function GalleryItemDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -74,12 +75,18 @@ export default function GalleryItemDetailPage() {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded shadow max-w-lg w-full">
+        <div
+            className="absolute left-0 top-0 w-full h-full flex items-center justify-center z-50 bg-black/30 backdrop-blur-xl"
+            onClick={() => navigate("/gallery")}
+        >
+            <div
+                className="bg-white p-6 rounded-2xl shadow max-w-lg w-full"
+                onClick={(e => e.stopPropagation())}
+            >
                 <button 
                     onClick={() => navigate("/gallery")}
                     className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline">
-                        X Close
+                        <X className="w-6 h-6 text-gray-600 hover:bg-gray-200 rounded-3xl" />
                 </button>
                 <img 
                     src={galleryItem.url} 
