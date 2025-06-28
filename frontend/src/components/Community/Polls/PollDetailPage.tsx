@@ -143,6 +143,12 @@ function PollDetailPage() {
                     </span>
                 </p>
 
+                {isAdminorModerator && (
+                    <p className="text-red-500">
+                        Admin and moderator can't vote.
+                    </p>
+                )}
+
                 {!isClosed ? (
                     <div>
                         {poll.options.map(o => (
@@ -154,7 +160,7 @@ function PollDetailPage() {
                                     type={poll.type === "single" ? "radio":"checkbox"}
                                     name="opt"
                                     value={o.id}
-                                    disabled={isClosed || hasVoted}
+                                    disabled={!!(isClosed || hasVoted || isAdminorModerator)}
                                 />{" "}
                                 {o.label}
                             </label>
@@ -189,7 +195,7 @@ function PollDetailPage() {
                 )}
 
                 <div className={`${restricted ? 'w-[100%]' : 'w-[80%]'} mx-auto flex justify-around mt-8`}>
-                    {!isClosed && !hasVoted ? (
+                    {!isClosed && !hasVoted && user?.role !== "admin" && user?.role !== "moderator" ? (
                         restricted ? (
                             <p className="text-red-600 font-semibold text-center">
                                 You are no longer allowed to vote to a poll until{" "}

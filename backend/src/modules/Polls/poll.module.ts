@@ -25,6 +25,10 @@ export class PollModule implements NestModule {
     configure (consumer: MiddlewareConsumer) {
         consumer
             .apply(InjectPollServiceMiddleware, LoadPollResourceMiddleware)
-            .forRoutes({ path: "polls/:id", method: RequestMethod.ALL });
+            .forRoutes(
+                { path: "polls/:id", method: RequestMethod.ALL },
+                { path: "polls/:id/vote", method: RequestMethod.ALL },
+                { path: "polls/:id/close", method: RequestMethod.ALL },
+            );
     }
 }
