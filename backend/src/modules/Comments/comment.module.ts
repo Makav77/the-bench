@@ -24,7 +24,7 @@ export class CommentModule implements NestModule {
             .apply(LoadCommentResourceMiddleware)
             .forRoutes(
                 { path: "news/:newsId/comments/:commentId", method: RequestMethod.ALL },
-                { path: "news/:newsId/comments/:commentId/*", method: RequestMethod.ALL }
+                { path: "news/:newsId/comments/:commentId/like", method: RequestMethod.ALL }
             )
     }
 }
