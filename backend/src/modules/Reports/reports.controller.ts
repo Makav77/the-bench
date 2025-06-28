@@ -8,12 +8,12 @@ import { RequiredPermission } from "../Permissions/decorator/require-permission.
 import { Report } from "./entities/report.entity";
 import { User } from "../Users/entities/user.entity";
 import { IrisGuard } from "../Auth/guards/iris.guard";
-import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
 import { Resource } from "../Utils/resource.decorator";
 
 @Controller("reports")
 export class ReportsController {
-    constructor(private readonly reportsService: ReportsService) {}
+    constructor(private readonly reportsService: ReportsService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()

@@ -42,7 +42,7 @@ export class NewsService {
         return { data, total, page, lastPage };
     }
 
-    async findOneNews(id: string): Promise<News> {
+    async findOneNews(id: string): Promise<NewsDocument> {
         const news = await this.newsModel.findById(id).exec();
         if (!news) {
             throw new NotFoundException("News not found.");

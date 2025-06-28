@@ -11,7 +11,7 @@ import { User } from "../Users/entities/user.entity";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";
-import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
 import { Resource } from "../Utils/resource.decorator";
 
 const multerOptions = {
@@ -21,7 +21,7 @@ const multerOptions = {
             const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
             const ext = extname(file.originalname);
             callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
-            },
+        },
     }),
     fileFilter: (_req: any, file: { mimetype: string; }, callback: (arg0: Error | null, arg1: boolean) => void) => {
         if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
@@ -35,7 +35,7 @@ const multerOptions = {
 
 @Controller("gallery")
 export class GalleryController {
-    constructor(private readonly galleryService: GalleryService) {}
+    constructor(private readonly galleryService: GalleryService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -71,9 +71,9 @@ export class GalleryController {
 
         const url = `/uploads/gallery/${file.filename}`;
         return this.galleryService.createGalleryItem(
-          createGalleryItemDTO.description,
-          url,
-          user,
+            createGalleryItemDTO.description,
+            url,
+            user,
         );
     }
 

@@ -12,7 +12,7 @@ import { RequiredPermission } from "../Permissions/decorator/require-permission.
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
 import { IrisGuard } from "../Auth/guards/iris.guard";
-import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
 import { Resource } from "../Utils/resource.decorator";
 
 @Controller("challenges")

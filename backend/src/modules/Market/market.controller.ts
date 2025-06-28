@@ -11,7 +11,7 @@ import { Request } from 'express';
 import { MarketItem } from './entities/market.entity';
 import { User } from '../Users/entities/user.entity';
 import { IrisGuard } from '../Auth/guards/iris.guard';
-import { RequestWithResource } from '../Auth/guards/iris.guard';
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
 import { Resource } from '../Utils/resource.decorator';
 
 const multerOptions = {
@@ -36,7 +36,7 @@ const multerOptions = {
 
 @Controller("market")
 export class MarketController {
-    constructor(private readonly marketService: MarketService) {}
+    constructor(private readonly marketService: MarketService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -88,7 +88,7 @@ export class MarketController {
 
     @UseGuards(JwtAuthGuard)
     @Delete(":id")
-    async removeItem (
+    async removeItem(
         @Resource() marketItem: MarketItem,
         @Req() req: RequestWithResource<MarketItem>
     ): Promise<void> {

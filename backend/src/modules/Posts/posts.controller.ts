@@ -8,7 +8,7 @@ import { User } from '../Users/entities/user.entity';
 import { RequiredPermission } from '../Permissions/decorator/require-permission.decorator';
 import { PermissionGuard } from '../Permissions/guards/permission.guard';
 import { IrisGuard } from '../Auth/guards/iris.guard';
-import { RequestWithResource } from '../Auth/guards/iris.guard';
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
 import { Resource } from 'src/modules/Utils/resource.decorator';
 
 @Controller("posts")

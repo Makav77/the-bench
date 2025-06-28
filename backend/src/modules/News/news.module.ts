@@ -1,9 +1,13 @@
-import { Module } from "@nestjs/common";
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { News, NewsSchema } from "./news.schema";
 import { NewsService } from "./news.service";
 import { NewsController } from "./news.controller";
 import { PermissionsModule } from "../Permissions/permissions.module";
+import { createInjectServiceMiddleware } from "../Utils/inject-resource-service.middleware";
+import { LoadNewsResourceMiddleware } from "./middlewares/load-news-resource.middleware";
+
+const InjectNewsServiceMiddleware = createInjectServiceMiddleware("newsService", NewsService);
 
 @Module({
     imports: [
@@ -17,4 +21,15 @@ import { PermissionsModule } from "../Permissions/permissions.module";
     exports: [NewsService],
 })
 
-export class NewsModule {}
+export class NewsModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(InjectNewsServiceMiddleware, LoadNewsResourceMiddleware)
+            .forRoutes(
+                { path: "news/:id", method: RequestMethod.ALL },
+                { path: "news/:id/like", method: RequestMethod.ALL },
+                { path: "news/:id/likes", method: RequestMethod.ALL },
+                { path: "news/:id/validate", method: RequestMethod.ALL }
+            );
+    }
+}

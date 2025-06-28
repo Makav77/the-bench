@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, DefaultValuePipe, ParseIntPipe, Req, NotFoundException } from "@nestjs/common";
 import { NewsService } from "./news.service";
-import { CreateNewsDTO } from "./dto/create-news.dto"; 
+import { CreateNewsDTO } from "./dto/create-news.dto";
 import { UpdateNewsDTO } from "./dto/update-news.dto";
-import { News } from "./news.schema";
+import { News, NewsDocument } from "./news.schema";
 import { User } from "../Users/entities/user.entity";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { UseInterceptors, UploadedFiles } from "@nestjs/common";
@@ -15,11 +15,12 @@ import { ValidateNewsDTO } from "./dto/validate-news.dto";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";
-import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
+import { Resource } from "../Utils/resource.decorator";
 
 @Controller("news")
 export class NewsController {
-    constructor(private readonly newsService: NewsService) {}
+    constructor(private readonly newsService: NewsService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -45,17 +46,7 @@ export class NewsController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneNews(
-        @Param("id") id: string,
-        @Req() req: RequestWithResource<News>
-    ): Promise<News> {
-        const news = await this.newsService.findOneNews(id);
-
-        if (!news) {
-            throw new NotFoundException("News not found.");
-        }
-
-        req.resource = news;
+    async findOneNews(@Resource() news: NewsDocument): Promise<NewsDocument> {
         return news;
     }
 
@@ -93,7 +84,7 @@ export class NewsController {
             }
             cb(null, true);
         },
-        limits: { fileSize: 5*1024*1024 }
+        limits: { fileSize: 5 * 1024 * 1024 }
     }))
     async uploadImages(@UploadedFiles() files: Express.Multer.File[]): Promise<{ urls: string[] }> {
         const urls = files.map(file => `/uploads/news/${file.filename}`);

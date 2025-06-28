@@ -8,6 +8,9 @@ export class IrisGuard implements CanActivate {
         const user = req.user as User;
         const resource = req.resource;
 
+        console.log(">>> [IrisGuard] resource:", resource?.id, "user:", user?.id, "iris", resource?.irisCode, user?.irisCode);
+
+
         if (user.role === "admin") {
             return true;
         }

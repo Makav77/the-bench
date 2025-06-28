@@ -7,7 +7,7 @@ import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { Comment } from "./comment.schema";
 import { User } from "../Users/entities/user.entity";
 import { IrisGuard } from "../Auth/guards/iris.guard";
-import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
 
 @Controller("news/:newsId/comments")
 export class CommentController {
@@ -15,7 +15,7 @@ export class CommentController {
     constructor(
         private readonly commentService: CommentService,
         private readonly userService: UserService
-    ) {}
+    ) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()

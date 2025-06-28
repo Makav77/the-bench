@@ -9,13 +9,13 @@ import { Request } from "express";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";
-import { RequestWithResource } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
 import { Resource } from "../Utils/resource.decorator";
 
 @Controller("polls")
 @UseGuards(JwtAuthGuard)
 export class PollController {
-    constructor(private readonly pollService: PollService) {}
+    constructor(private readonly pollService: PollService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -70,7 +70,7 @@ export class PollController {
         @Resource() poll: Poll,
         @Req() req: RequestWithResource<Poll>
     ): Promise<Poll> {
-    const user = req.user as User;
+        const user = req.user as User;
         return this.pollService.closePoll(poll.id, user);
     }
 
