@@ -97,7 +97,7 @@ function BulletinsBoardPage() {
                                                         <p className="text-sm text-gray-600">
                                                             Last update at {new Date(flashpost.updatedAt).toLocaleString()}
                                                         </p>
-                                                        <CountdownTimer createdAt={flashpost.updatedAt} />
+                                                        <CountdownTimer createdAt={flashpost.createdAt} />
                                                     </div>
                                                     <p className="text-sm text-gray-600">Author :{" "}
                                                         <span
