@@ -122,7 +122,7 @@ function BulletinsBoardPage() {
                     <button
                         disabled={flashPage <= 1}
                         onClick={() => setFlashPage(p => p - 1)}
-                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
                         ← Prev
                     </button>
@@ -132,7 +132,7 @@ function BulletinsBoardPage() {
                     <button
                         disabled={flashPage >= flashLastPage}
                         onClick={() => setFlashPage(p => p + 1)}
-                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
                         Next →
                     </button>
@@ -183,7 +183,7 @@ function BulletinsBoardPage() {
                         type="button"
                         disabled={page <= 1}
                         onClick={() => setPage((p) => p - 1)}
-                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
                         ← Prev
                     </button>
@@ -194,7 +194,7 @@ function BulletinsBoardPage() {
                         type="button"
                         disabled={page >= lastPage}
                         onClick={() => setPage((p) => p + 1)}
-                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
                         Next →
                     </button>

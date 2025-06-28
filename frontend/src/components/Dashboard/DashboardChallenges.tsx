@@ -165,7 +165,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleValidateChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? "Validation…"
@@ -175,7 +175,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleRejectChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? "Rejection..."
@@ -251,7 +251,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleValidateCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingCompletionId === completion.id
                                         ? "Validation…"
@@ -260,7 +260,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleRejectCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingCompletionId === completion.id
                                         ? "Rejection..."

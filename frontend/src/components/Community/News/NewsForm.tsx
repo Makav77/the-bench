@@ -125,7 +125,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                             {tag}
                             <button
                                 type="button"
-                                className="ml-2 text-red-500"
+                                className="ml-2 text-red-500 cursor-pointer"
                                 onClick={() => setTags(tags.filter((_, index) => index !== i))}
                             >
                                 ×
@@ -142,7 +142,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                 <div className="flex items-center gap-3 mb-2">
                     <button
                         type="button"
-                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={existingImages.length + images.length >= 10}
                     >
@@ -171,7 +171,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                             />
                             <button
                                 type="button"
-                                className="absolute top-1 right-1 bg-white rounded-full text-red-500 px-2"
+                                className="absolute top-1 right-1 bg-white rounded-full text-red-500 px-2 cursor-pointer"
                                 onClick={() => handleRemoveImage(i, true)}
                             >
                                 ×
@@ -190,7 +190,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                             />
                             <button
                                 type="button"
-                                className="absolute top-1 right-1 bg-white rounded-full text-red-500 px-2"
+                                className="absolute top-1 right-1 bg-white rounded-full text-red-500 px-2 cursor-pointer"
                                 onClick={() => handleRemoveImage(i, false)}
                             >
                                 ×

@@ -104,7 +104,7 @@ export default function GalleryItemDetailPage() {
                     <div className="flex space-x-4">
                         <button 
                             onClick={handleToggleLike} 
-                            className="flex items-center"
+                            className="flex items-center cursor-pointer"
                         >
                             {liked ? '💖' : '🤍'} {galleryItem.likedBy.length}
                         </button>
@@ -114,7 +114,10 @@ export default function GalleryItemDetailPage() {
                             {(isAuthor || user?.role==='admin') && (
                                 <button 
                                     onClick={handleDelete} 
-                                    className="text-red-600 cursor-pointer hover:underline px-2 py-1">Delete</button>
+                                    className="text-red-600 cursor-pointer hover:underline px-2 py-1"
+                                >
+                                    Delete
+                                </button>
                             )}
                         </div>
                     </div>

@@ -231,13 +231,13 @@ function NewsDetailPage() {
                     <div className="flex gap-3 mt-10 justify-center">
                         <button
                             onClick={() => navigate(`/news/${news.id}/edit`)}
-                            className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500  cursor-pointer"
+                            className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500 cursor-pointer"
                         >
                             Edit
                         </button>
                         <button
                             onClick={handleDelete}
-                            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600  cursor-pointer"
+                            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 cursor-pointer"
                         >
                             Delete
                         </button>
@@ -375,7 +375,7 @@ function NewsDetailPage() {
                                 className="max-w-[90vw] max-h-[90vh] rounded shadow-lg"
                             />
                             <button
-                                className="absolute top-2 right-2 text-white bg-black bg-opacity-60 rounded-full p-2 text-2xl hover:bg-opacity-80"
+                                className="absolute top-2 right-2 text-white bg-black bg-opacity-60 rounded-full p-2 text-2xl hover:bg-opacity-80 cursor-pointer"
                                 onClick={handleCloseModal}
                                 type="button"
                             >

@@ -33,7 +33,7 @@ export default function FriendsListModal({ isOpen, onClose, userId }: FriendsLis
                 <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Liste d’amis</h2>
                 <button onClick={onClose}>
-                    <X className="w-6 h-6 text-gray-600 hover:text-black" />
+                    <X className="w-6 h-6 text-gray-600 hover:text-black cursor-pointer" />
                 </button>
                 </div>
 

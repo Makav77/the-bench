@@ -72,10 +72,6 @@ function Footer() {
                 </div>
             </div>
             
-            
-            
-            
-            
             <p className="text-l font-bold text-center">The Bench © 2025</p>
         </div>
     );

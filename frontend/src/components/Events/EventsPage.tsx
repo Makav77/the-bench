@@ -106,7 +106,7 @@ function EventsPage() {
                                                     e.stopPropagation();
                                                     handleSubscribe(event.id);
                                                     }}
-                                                    className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700"
+                                                    className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700 cursor-pointer"
                                                 >
                                                     Register
                                                 </button>

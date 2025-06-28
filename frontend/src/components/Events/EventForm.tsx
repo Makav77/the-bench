@@ -176,7 +176,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
                     {isSubmitting ? "Loading..." : defaultValues ? "Update" : "Create"}
                 </button>

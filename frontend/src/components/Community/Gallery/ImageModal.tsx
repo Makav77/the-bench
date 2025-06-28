@@ -9,7 +9,7 @@ function ImageModal ({ imageUrl, onClose }: ImageModalProps) {
             <div className="relative max-w-3xl w-full p-4">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-white text-2xl"
+                    className="absolute top-2 right-2 text-white text-2xl cursor-pointer"
                 >
                     &times
                 </button>
