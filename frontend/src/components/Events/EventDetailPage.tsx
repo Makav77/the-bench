@@ -105,8 +105,9 @@ function EventDetailPage() {
             <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto bg-white rounded-3xl">
                 <div className="flex justify-between gap-4">
                     <button
+                        type="button"
                         onClick={() => navigate("/events")}
-                        className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white h-10"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                     >
                         ← Back
                     </button>

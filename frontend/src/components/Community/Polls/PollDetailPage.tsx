@@ -108,12 +108,12 @@ function PollDetailPage() {
 
     return (
         <div>
-            <div className="p-6 w-[30%] mx-auto space-y-4 bg-gray-200 rounded-2xl shadow mt-10">
+            <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
                 <div className="flex justify-between items-center">
                     <button
                         type="button"
-                        onClick={() => navigate("/polls")}
-                        className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                        onClick={() => navigate("/news")}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
                         ← Back
                     </button>

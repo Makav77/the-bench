@@ -212,7 +212,7 @@ function CreatePollPage() {
                         className="bg-red-400 hover:bg-red-500 text-white px-4 py-1 rounded shadow cursor-pointer w-[40%] font-semibold text-xl"
                         onClick={() => navigate("/polls")}
                     >
-                        Back
+                        Cancel
                     </button>
                     <button
                         type="submit"

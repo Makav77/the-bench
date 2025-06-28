@@ -18,12 +18,13 @@ function ArtisansListPage() {
 
     return (
         <div className="p-6 w-[30%] mx-auto">
-            <button
-                onClick={() => navigate("/community")}
-                className="bg-gray-300 font-bold px-4 py-2 rounded-2xl cursor-pointer hover:bg-gray-200 mb-5"
-            >
-                ← Back to Community
-            </button>
+                <button
+                    type="button"
+                    onClick={() => navigate("/community")}
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                >
+                    ← Back to community
+                </button>
             <h1 className="text-3xl font-bold mb-4">Artisans</h1>
             <ul className="grid grid-cols-2 gap-4">
                 {CATEGORIES.map((c) => (

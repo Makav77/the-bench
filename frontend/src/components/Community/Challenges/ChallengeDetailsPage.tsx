@@ -106,7 +106,7 @@ function ChallengeDetailPage() {
                     <button
                         type="button"
                         onClick={() => navigate("/challenges")}
-                        className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                     >
                         ← Back
                     </button>
@@ -211,7 +211,7 @@ function ChallengeDetailPage() {
                     <button
                         type="button"
                         onClick={() => navigate("/challenges")}
-                        className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
                         ← Back
                     </button>

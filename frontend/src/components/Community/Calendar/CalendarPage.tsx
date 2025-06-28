@@ -59,10 +59,11 @@ function CalendarPage() {
     return (
         <div className="p-6 w-[80%] mx-auto">
             <button
+                type="button"
                 onClick={() => navigate("/community")}
-                className="bg-gray-300 font-bold px-4 py-2 rounded-2xl cursor-pointer hover:bg-gray-200 mb-5"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
             >
-                ← Back to Community
+                ← Back to community
             </button>
 
             <div className="flex justify-between items-center mb-4">

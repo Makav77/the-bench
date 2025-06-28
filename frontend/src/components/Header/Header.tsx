@@ -32,7 +32,7 @@ function Header() {
 
                     {isAuthenticated && user?.irisName && (
                         <span className="ml-4 px-2 py-1 bg-amber-100 text-amber-800 rounded font-semibold text-sm" title="Votre quartier">
-                            🏡 {user.irisName}
+                            Neighborhood : {user.irisName}
                         </span>
                     )}
                 </div>

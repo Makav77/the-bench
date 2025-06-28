@@ -122,10 +122,11 @@ export default function UserProfilePage() {
     return (
         <div className="p-6 w-[40%] mx-auto space-y-6 bg-white rounded-2xl mt-10 shadow">
             <button
-                onClick={() => navigate(-1)}
-                className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white mb-4"
+                type="button"
+                onClick={() => navigate("/homepage")}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
             >
-                ← Back
+                {"< Homepage"}
             </button>
 
             <div className="flex flex-col items-center space-y-3">

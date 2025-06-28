@@ -179,8 +179,9 @@ function NewsDetailPage() {
         <div>
             <div className="w-[30%] mx-auto py-5 px-10 bg-white rounded-xl shadow-lg mt-10">
                 <button
+                    type="button"
                     onClick={() => navigate("/news")}
-                    className="mb-6 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
                     ← Back
                 </button>
