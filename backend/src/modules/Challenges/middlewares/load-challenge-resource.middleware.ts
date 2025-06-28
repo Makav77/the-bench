@@ -3,6 +3,7 @@ import { ChallengesService } from '../challenges.service';
 import { Response, NextFunction } from 'express';
 import { RequestWithResource } from 'src/modules/Utils/request-with-resource.interface';
 import { Challenge } from '../entities/challenge.entity'; 
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class LoadChallengeResourceMiddleware implements NestMiddleware {
@@ -14,7 +15,7 @@ export class LoadChallengeResourceMiddleware implements NestMiddleware {
         next: NextFunction
     ) {
         const id = req.params.id;
-        if (id) {
+        if (id && isUUID(id)) {
             const challenge = await this.challengesService.findOneChallenge(id);
             if (!challenge) {
                 throw new NotFoundException("Challenge not found");

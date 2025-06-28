@@ -21,7 +21,7 @@ export class News {
     authorLastname: string;
 
     @Prop({ required: true })
-    authorProfilePicture: string; 
+    authorProfilePicture: string;
 
     @Prop({ type: [String], default: [] })
     tags: string[];
@@ -39,7 +39,7 @@ export class News {
     status: string;
 
     @Prop({ type: String, required: false })
-    rejectionReason?: string;
+    rejectedReason?: string;
 
     @Prop({ required: true })
     irisCode: string;

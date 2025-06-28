@@ -19,14 +19,14 @@ export class ChallengesService {
         private readonly registrationRepo: Repository<ChallengeRegistration>,
         @InjectRepository(ChallengeCompletion)
         private readonly completionRepo: Repository<ChallengeCompletion>,
-    ) {}
+    ) { }
 
     async findPendingChallenges(page = 1, limit = 5, user: User): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
 
         let whereCondition: FindOptionsWhere<Challenge> = { status: "PENDING" };
         if (user.role !== Role.ADMIN) {
-            whereCondition = { 
+            whereCondition = {
                 ...whereCondition,
                 irisCode: user.irisCode,
             };
@@ -267,7 +267,7 @@ export class ChallengesService {
             challenge.rejectedReason = null;
         } else {
             challenge.status = "REJECTED";
-            challenge.rejectedReason = validateChallengeDTO.rejectionReason!;
+            challenge.rejectedReason = validateChallengeDTO.rejectedReason!;
         }
 
         challenge.reviewedAt = new Date();

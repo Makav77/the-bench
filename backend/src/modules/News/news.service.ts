@@ -9,7 +9,7 @@ import { User } from "../Users/entities/user.entity";
 
 @Injectable()
 export class NewsService {
-    constructor(@InjectModel(News.name) private newsModel: Model<NewsDocument>) {}
+    constructor(@InjectModel(News.name) private newsModel: Model<NewsDocument>) { }
 
     async findAllNews(page = 1, limit = 5, user: User): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number }> {
         const skip = (page - 1) * limit;
@@ -177,14 +177,14 @@ export class NewsService {
         if (news.authorId !== user.id && user.role !== "admin" && user.role !== "moderator") {
             throw new ForbiddenException("You are not allowed to validate this news.");
         }
-        
+
         if (validateNewsDTO.validated) {
             news.status = "APPROVED";
-            news.rejectionReason = undefined;
+            news.rejectedReason = undefined;
             news.published = true;
         } else {
             news.status = "REJECTED";
-            news.rejectionReason = validateNewsDTO.rejectionReason;
+            news.rejectedReason = validateNewsDTO.rejectedReason;
             news.published = false;
         }
         return news.save();

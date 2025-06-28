@@ -51,7 +51,7 @@ function DashboardNews() {
         }
         setUpdatingNewsId(newsId);
         try {
-            await validateNews(newsId, { validated: false, rejectionReason: reason.trim() });
+            await validateNews(newsId, { validated: false, rejectedReason: reason.trim() });
             toast.success("News rejected.");
             setPendingNews((prev) => prev.filter((c) => c.id !== newsId));
         } catch (error) {

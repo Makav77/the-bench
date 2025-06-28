@@ -25,6 +25,12 @@ export class ChallengesModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(InjectChallengeServiceMiddleware, LoadChallengeResourceMiddleware)
-            .forRoutes({ path: "challenges/:id", method: RequestMethod.ALL });
+            .forRoutes(
+                { path: "challenges/:id", method: RequestMethod.ALL },
+                { path: "challenges/:id/validate", method: RequestMethod.ALL },
+                { path: "challenges/:id/subscribe", method: RequestMethod.ALL },
+                { path: "challenges/:id/complete", method: RequestMethod.ALL },
+                { path: "challenges/:id/complete/:completionId", method: RequestMethod.ALL },
+            );
     }
 }
