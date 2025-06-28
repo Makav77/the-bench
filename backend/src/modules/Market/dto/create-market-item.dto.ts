@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsOptional, IsNumber, IsEmail, IsArray, ArrayNotEmpty, ArrayUnique, IsPhoneNumber, MaxLength } from "class-validator";
+import { Type } from "class-transformer";
+import { IsNotEmpty, IsString, IsOptional, IsNumber, IsEmail, IsArray, ArrayNotEmpty, ArrayUnique, IsPhoneNumber, MaxLength, Matches } from "class-validator";
 
 export class CreateMarketItemDTO {
     @IsNotEmpty()
@@ -11,6 +12,7 @@ export class CreateMarketItemDTO {
     description: string;
 
     @IsOptional()
+    @Type(() => Number)
     @IsNumber()
     price?: number;
 
@@ -26,7 +28,7 @@ export class CreateMarketItemDTO {
     contactEmail?: string;
 
     @IsOptional()
-    @IsPhoneNumber(undefined)
+    @Matches(/^(\+33|0)[1-9]\d{8}$/, { message: "contactPhone must be a valid French phone number" })
     contactPhone?: string;
 
     @IsOptional()

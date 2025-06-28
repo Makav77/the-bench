@@ -80,9 +80,9 @@ function ItemDetailsPage() {
                     Last update on {new Date(item.updatedAt).toLocaleString()}
                 </p>
 
-                {typeof item.price === "number" && (
+                {item.price != null && !isNaN(Number(item.price)) && (
                     <p className="text-xl font-semibold">
-                        Prix : {item.price.toFixed(2)} €
+                        Prix : {Number(item.price).toFixed(2)} €
                     </p>
                 )}
 
