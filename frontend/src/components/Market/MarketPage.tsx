@@ -55,7 +55,7 @@ function MarketPage() {
                     {items.map((item) => (
                         <div
                             key={item.id}
-                            className="p-4 border rounded-3xl cursor-pointer hover:shadow flex justify-between items-center"
+                            className="p-4 bg-white rounded-2xl cursor-pointer hover:shadow flex justify-between items-center hover:bg-gray-100"
                             onClick={() => navigate(`/market/${item.id}`)}
                         >
                             <div className="flex flex-col">

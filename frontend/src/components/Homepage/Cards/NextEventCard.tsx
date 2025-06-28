@@ -45,7 +45,7 @@ function NextEventCard() {
     return (
         <div
             onClick={() => navigate(`/events/${event.id}`)}
-            className="mb-10 flex justify-between items-center w-3/4 mx-auto bg-white rounded-lg shadow hover:cursor-pointer hover:shadow-md transition h-25 px-5"
+            className="mb-10 flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5"
         >
             <div className="pr-4">
                 <h4 className="text-lg font-bold">{event.name}</h4>

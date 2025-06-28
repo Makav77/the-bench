@@ -13,32 +13,32 @@ function Homepage() {
                 </p>
             </div>
             <div className="p-6 w-[70%] mx-auto">
-                <div className="grid grid-cols-2 grid-rows-3 gap-4 border-3 bg-white">
-                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 border-1 m-5 grid rounded-3xl">
+                <div className="grid grid-cols-2 grid-rows-3 gap-4 rounded-3xl bg-white">
+                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 m-5 grid rounded-3xl">
                         <h1 className="font-bold text-2xl text-left p-3">Suggestions</h1>
                     </div>
 
-                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 border-1 m-5 grid rounded-3xl">
+                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 m-5 grid rounded-3xl">
                         <h1 className="font-bold text-2xl text-left p-3">Weather</h1>
                         <WeatherCard />
                     </div>
 
-                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 border-1 m-5 grid rounded-3xl">
+                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 m-5 grid rounded-3xl">
                         <h1 className="font-bold text-2xl text-left p-3">Last item on sell</h1>
                         <LatestMarketItemCard />
                     </div>
 
-                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 border-1 m-5 grid rounded-3xl">
+                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 m-5 grid rounded-3xl">
                         <h1 className="font-bold text-2xl text-left p-3">Last post</h1>
                         <LatestPostCard />
                     </div>
 
-                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 border-1 m-5 grid rounded-3xl">
+                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 m-5 grid rounded-3xl">
                         <p className="font-bold text-2xl text-left p-3">Next event</p>
                         <NextEventCard />
                     </div>
 
-                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 border-1 m-5 grid rounded-3xl">
+                    <div className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] col-span-1 row-span-1 m-5 grid rounded-3xl">
                         <p className="font-bold text-2xl text-left p-3">Last flash post</p>
                         <LatestFlashPostCard />
                     </div>

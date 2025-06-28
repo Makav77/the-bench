@@ -112,7 +112,7 @@ function PollDetailPage() {
                 <div className="flex justify-between items-center">
                     <button
                         type="button"
-                        onClick={() => navigate("/news")}
+                        onClick={() => navigate("/polls")}
                         className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
                         ← Back

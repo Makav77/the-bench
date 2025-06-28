@@ -29,8 +29,18 @@ function NewsPage() {
     }, [page]);
 
     return (
-        <div className="max-w-3xl mx-auto py-10 px-4">
-            <div className="flex justify-end mb-4 h-10">
+        <div className="w-[30%] mx-auto">
+            <div className="mt-5">
+                <button
+                    type="button"
+                    onClick={() => navigate("/community")}
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                >
+                    ← Back to community
+                </button>
+            </div>
+
+            <div className="flex mb-7 justify-end">
                 <button
                     type="button"
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
@@ -40,7 +50,7 @@ function NewsPage() {
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-8 text-center">Neighborhood News</h1>
+            <h1 className="text-3xl font-bold mb-5">Neighborhood News</h1>
 
             {loading && <div className="text-center">Chargement...</div>}
             {error && <div className="text-red-500 text-center mb-4">{error}</div>}

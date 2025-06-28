@@ -26,7 +26,7 @@ function WeatherCard() {
     }
 
     return (
-        <div className="flex flex-col justify-center items-center w-3/4 mx-auto bg-white rounded-lg shadow h-25 px-5 pr-4  mb-10">
+        <div className="flex flex-col justify-center items-center w-3/4 mx-auto bg-white rounded-2xl shadow h-25 px-5 pr-4  mb-10">
             <h3 className="text-lg font-bold">
                 Neighborhood weather
             </h3>

@@ -68,7 +68,7 @@ function EventsPage() {
                     {new Date(expiresAt!).toLocaleDateString()}.
                 </p>
             ) : (
-                <>
+                <div>
                     {isLoading && <p>Loading...</p>}
                     {error && <p className="text-red-500">{error}</p>}
 
@@ -85,7 +85,7 @@ function EventsPage() {
                             return (
                                 <div
                                     key={event.id}
-                                    className="p-4 border rounded cursor-pointer hover:shadow flex justify-between items-center"
+                                    className="p-4 cursor-pointer hover:shadow flex justify-between items-center bg-white rounded-2xl hover:bg-gray-100"
                                     onClick={() => navigate(`/events/${event.id}`)}
                                 >
                                     <div className="flex flex-col">
@@ -120,7 +120,7 @@ function EventsPage() {
                             );
                         })}
                     </div>
-                </>
+                </div>
             )}
 
             <div className="flex justify-center items-center mt-6 gap-4">

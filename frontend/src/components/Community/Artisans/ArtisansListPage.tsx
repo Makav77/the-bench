@@ -31,7 +31,7 @@ function ArtisansListPage() {
                     <li
                         key={c}
                         onClick={() => navigate(`/artisans/${c}`)}
-                        className="p-4 border rounded-2xl cursor-pointer hover:shadow transition bg-white hover:bg-gray-200"
+                        className="p-4 rounded-2xl cursor-pointer hover:shadow transition bg-white hover:bg-gray-100"
                     >
                         <strong className="capitalize">{c}</strong>
                     </li>

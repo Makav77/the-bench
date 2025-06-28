@@ -23,7 +23,7 @@ function ChallengesPage() {
     }, [page]);
 
     return (
-        <div className="w-[25%] mx-auto">
+        <div className="w-[40%] mx-auto">
             <div className="mt-5">
                 <button
                     type="button"
@@ -34,8 +34,7 @@ function ChallengesPage() {
                 </button>
             </div>
 
-            <div className="my-5 flex justify-between mb-4">
-                <h1 className="text-2xl font-bold">Challenges</h1>
+            <div className="flex mb-7 justify-end">
                 <button
                     className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                     onClick={() => navigate("/challenges/create")}
@@ -44,11 +43,13 @@ function ChallengesPage() {
                 </button>
             </div>
 
-            <ul className="space-y-4">
+            <h1 className="text-3xl font-bold mb-5">Challenges</h1>
+
+            <ul className="grid grid-cols-2 gap-4">
                 {challenges.map(challenge => (
                     <li
                         key={challenge.id}
-                        className="p-4 border rounded hover:shadow cursor-pointer"
+                        className="p-4 rounded-2xl hover:shadow cursor-pointer bg-white hover:bg-gray-100"
                         onClick={() => navigate(`/challenges/${challenge.id}`)}
                     >
                         <h2 className="font-semibold">{challenge.title}</h2>

@@ -65,7 +65,7 @@ function ItemDetailsPage() {
     };
 
     return (
-        <div className="px-10 py-8 space-y-4 border mt-10 w-[40%] mx-auto">
+        <div className="px-10 py-8 space-y-4 mt-10 w-[30%] mx-auto bg-white rounded-3xl">
             <div className="">
                 <button
                     type="button"

@@ -56,7 +56,7 @@ function CreateNews() {
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-semibold mb-4 pl-2">Créer un article</h1>
+            <h1 className="text-3xl font-semibold mb-4 w-[30%] mx-auto">Create news</h1>
             <NewsForm 
                 onSubmit={handleSubmit} 
                 buttonLabel="Create article"

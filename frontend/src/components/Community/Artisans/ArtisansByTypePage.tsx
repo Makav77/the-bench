@@ -76,7 +76,7 @@ export default function ArtisansByTypePage() {
                     {artisans.map(a => (
                         <li 
                             key={a.place_id}
-                            className="border rounded-2xl p-6 shadow-xl bg-white"
+                            className="rounded-2xl p-6 shadow-xl bg-white"
                         >
                             <h3 className="text-xl font-bold">{a.name}</h3>
                             <p className="text-gray-700">{a.formatted_address}</p>
