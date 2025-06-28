@@ -157,7 +157,7 @@ export class ChallengesService {
     async subscribe(id: string, user: User): Promise<Challenge> {
         const challenge = await this.challengeRepo.findOne({
             where: { id },
-            relations: ["author", "registrations", "registrations.user"],
+            relations: ["author", "registrations", "registrations.user", "completions", "completions.user"],
         });
 
         if (!challenge) {
@@ -166,6 +166,14 @@ export class ChallengesService {
 
         if (challenge.registrations.some(r => r.user.id === user.id)) {
             throw new BadRequestException("Already registered");
+        }
+
+        if (challenge.completions.some(c => c.user.id === user.id && c.validated)) {
+            throw new BadRequestException("You already have a validated completion for this challenge and can't register again.");
+        }
+
+        if (challenge.author.id === user.id) {
+            throw new BadRequestException("The author of a challenge cannot register for their own challenge.");
         }
 
         const register = this.registrationRepo.create({ challenge: challenge, user });

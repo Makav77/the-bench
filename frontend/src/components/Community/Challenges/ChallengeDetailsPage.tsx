@@ -8,7 +8,6 @@ import { format } from "date-fns";
 import ReportModal from "../../Utils/ReportModal";
 import SubmissionModal from "./SubmissionModal";
 
-
 function ChallengeDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
@@ -59,6 +58,7 @@ function ChallengeDetailPage() {
     const hasPendingCompletion = user && challenge.completions.some((c) => c.user.id === user.id && c.validated === false);
     const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isSubscribe = challenge.registrations.some((u) => u.user.id === user?.id);
+    const hasValidatedCompletion = user && challenge && challenge.completions.some((c) => c.user.id === user.id && c.validated === true);
 
     const handleSubscribe = async () => {
         try {
@@ -99,16 +99,16 @@ function ChallengeDetailPage() {
         return <p className="p-6">Checking permissions...</p>
     }
 
-    return (
-        <div>
+    if (hasValidatedCompletion) {
+        return (
             <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
                 <div className="flex justify-between">
                     <button
-                            type="button"
-                            onClick={() => navigate("/challenges")}
-                            className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
-                        >
-                            ← Back
+                        type="button"
+                        onClick={() => navigate("/challenges")}
+                        className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                    >
+                        ← Back
                     </button>
 
                     {(isAuthor || isAdminorModerator) &&
@@ -145,72 +145,181 @@ function ChallengeDetailPage() {
                     <strong>Completions :</strong> {challenge.completions.filter((c) => c.validated).length}
                 </p>
 
-                <div className="flex gap-2">
-                {!isSubscribe ? (
-                    restricted ? (
-                        <p className="text-red-600 text-l font-semibold text-center">
-                            You are no longer allowed to register to a challenge until{" "}
-                            {expiresAt
-                                ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
-                                : "unknown date"}.
-                            <br />
-                            {reason && (
-                                <span>
-                                    Reason: {reason}
-                                    <br />
-                                </span>
-                            )}
-                            Contact a moderator or administrator for more information.
-                        </p>
+                <p className="px-4 py-2 bg-green-200 text-green-800 rounded text-center">
+                    Well done, challenge completed!
+                </p>
+
+                <div className="flex gap-2 justify-center">
+                    {(isAuthor || isAdminorModerator) &&
+                        <button
+                            onClick={() => navigate(`/challenges/${id}/edit`)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
+                        >
+                            Edit
+                        </button>
+                    }
+
+                    {(isAuthor || isAdminorModerator) &&
+                        <button
+                            onClick={handleDelete}
+                            className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
+                        >
+                            Delete
+                        </button>
+                    }
+                </div>
+
+                {showParticipantModal && (
+                    <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
+                        <div className="bg-white rounded p-6 w-[25%] overflow-auto">
+                            <h2 className="text-xl font-bold mb-4">
+                                Registered ({challenge.registrations.length})
+                            </h2>
+                            <ul className="space-y-2">
+                                {challenge.registrations.map((registration) => (
+                                    <div>
+                                        <li
+                                            key={registration.user.id}
+                                            className="flex justify-between items-center px-5"
+                                        >
+                                            <span>{registration.user.firstname} {registration.user.lastname}</span>
+                                            <span className="text-sm text-gray-500">
+                                                Registered on {new Date(registration.createdAt).toLocaleDateString()} {"at"} {new Date(registration.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </span>
+                                        </li>
+                                        <div className="border-t-1 h-1 text-black w-3/4 mx-auto" />
+                                    </div>
+                                ))}
+                            </ul>
+                            <button
+                                onClick={() => setShowParticipantModal(false)}
+                                className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    return (
+        <div>
+            <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
+                <div className="flex justify-between">
+                    <button
+                        type="button"
+                        onClick={() => navigate("/challenges")}
+                        className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                    >
+                        ← Back
+                    </button>
+
+                    {(isAuthor || isAdminorModerator) &&
+                        <button
+                            onClick={() => setShowParticipantModal(true)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
+                        >
+                            Participant list
+                        </button>
+                    }
+                </div>
+
+                <h1 className="text-2xl font-bold">{challenge.title}</h1>
+                <p className="whitespace-pre-wrap break-words">{challenge.description}</p>
+                <p className="italic text-sm">
+                    From {new Date(challenge.startDate).toLocaleDateString()} to {new Date(challenge.endDate).toLocaleDateString()}
+                </p>
+                <p className="-mt-2">
+                    <strong>How to win :</strong> {challenge.successCriteria}
+                </p>
+                <p className="-mt-3">
+                    <strong>Author :</strong>{" "}
+                    <span
+                        onClick={() => navigate(`/profile/${challenge.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {challenge.author.firstname} {challenge.author.lastname}
+                    </span>
+                </p>
+                <p className="-mt-3">
+                    <strong>Registered :</strong> {challenge.registrations.length}
+                </p>
+                <p className="-mt-3">
+                    <strong>Completions :</strong> {challenge.completions.filter((c) => c.validated).length}
+                </p>
+
+                <div className="flex gap-2 mt-10 justify-center">
+                    {!isSubscribe && !(user && user.id === challenge.author.id) && !hasValidatedCompletion ? (
+                        restricted ? (
+                            <p className="text-red-600 text-l font-semibold text-center">
+                                You are no longer allowed to register to a challenge until{" "}
+                                {expiresAt
+                                    ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
+                                    : "unknown date"}.
+                                <br />
+                                {reason && (
+                                    <span>
+                                        Reason: {reason}
+                                        <br />
+                                    </span>
+                                )}
+                                Contact a moderator or administrator for more information.
+                            </p>
+                        ) : (
+                            <button
+                                onClick={handleSubscribe}
+                                className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer mx-auto"
+                            >
+                                Subscribe
+                            </button>
+                        )
                     ) : (
+                        isSubscribe && !hasValidatedCompletion && (
+                            <button
+                                onClick={handleUnsubscribe}
+                                className="bg-yellow-600 text-white px-4 py-2 rounded cursor-pointer mx-auto"
+                            >
+                                Unsubscribe
+                            </button>
+                        )
+                    )}
+
+                    {(isAuthor || isAdminorModerator) &&
                         <button
-                            onClick={handleSubscribe}
-                            className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer mx-auto"
+                            onClick={() => navigate(`/challenges/${id}/edit`)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                         >
-                            Subscribe
+                            Edit
                         </button>
-                    )
-                ) : ( 
-                    <button
-                        onClick={handleUnsubscribe}
-                        className="bg-yellow-600 text-white px-4 py-2 rounded cursor-pointer mx-auto"
-                    >
-                        Unsubscribe
-                    </button>
-                )}
+                    }
 
-                {(isAuthor || isAdminorModerator) &&
-                    <button
-                        onClick={() => navigate(`/challenges/${id}/edit`)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
-                    >
-                        Edit
-                    </button>
-                }
-
-                {(isAuthor || isAdminorModerator) &&
-                    <button
-                        onClick={handleDelete}
-                        className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
-                    >
-                        Delete
-                    </button>
-                }
-
-                {hasPendingCompletion ? (
-                    <p className="mt-4 px-4 py-2 bg-yellow-200 text-yellow-800 rounded text-center">
-                        Waiting validation
-                    </p>
-                ) : (
-                    canSubmit && (
+                    {(isAuthor || isAdminorModerator) &&
                         <button
-                            onClick={() => setShowSubmissionModal(true)}
-                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
+                            onClick={handleDelete}
+                            className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
                         >
-                            Validate completion
+                            Delete
                         </button>
-                    )
-                )}
+                    }
+
+                    {!hasValidatedCompletion && (
+                        hasPendingCompletion ? (
+                            <p className="px-4 py-2 bg-yellow-200 text-yellow-800 rounded text-center">
+                                Waiting validation
+                            </p>
+                        ) : (
+                            canSubmit && (
+                                <button
+                                    onClick={() => setShowSubmissionModal(true)}
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
+                                >
+                                    Validate completion
+                                </button>
+                            )
+                        )
+                    )}
                 </div>
             </div>
 
