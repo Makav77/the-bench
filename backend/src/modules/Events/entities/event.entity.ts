@@ -31,7 +31,7 @@ export class Event {
     place: string;
 
     @Column({ type: "int", nullable: true })
-    maxNumberOfParticipants?: number;
+    maxNumberOfParticipants?: number | null;
 
     @Column()
     description: string;

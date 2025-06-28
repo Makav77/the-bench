@@ -7,7 +7,7 @@ export interface EventFormData {
     startDate: string;
     endDate: string;
     place: string;
-    maxNumberOfParticipants?: number;
+    maxNumberOfParticipants?: number | null;
     description: string;
 }
 
@@ -43,10 +43,11 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         const { name, value } = e.target;
         setForm((f) => ({
             ...f,
-            [name]:
-                name === "maxNumberOfParticipants" ? value === "" ? undefined: parseInt(value, 10): value
+            [name]: name === "maxNumberOfParticipants"
+                ? value === "" ? undefined : parseInt(value, 10)
+                : value
         }));
-        setError(null)
+        setError(null);
     }
 
     const handleSubmit = async (e: FormEvent) => {

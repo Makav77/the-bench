@@ -16,7 +16,7 @@ export class EventService {
     async findAllEvents(page = 1, limit = 5, user: User): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
 
-        let whereCondition: FindOptionsWhere<Event> = { startDate: MoreThan(new Date()) };
+        let whereCondition: FindOptionsWhere<Event> = { endDate: MoreThan(new Date()) };
 
         if (user.role !== Role.ADMIN) {
             whereCondition = {
@@ -74,6 +74,12 @@ export class EventService {
             throw new ForbiddenException("You are not allowed to edit this event.");
         }
 
+        if (updateEventDTO.maxNumberOfParticipants === null || updateEventDTO.maxNumberOfParticipants === undefined) {
+            event.maxNumberOfParticipants = null; // Limite supprimée
+        } else {
+            event.maxNumberOfParticipants = updateEventDTO.maxNumberOfParticipants;
+        }
+
         const updated = this.eventRepo.merge(event, updateEventDTO);
         return this.eventRepo.save(updated);
     }
@@ -127,9 +133,17 @@ export class EventService {
             throw new BadRequestException("You are already registered for this event.")
         }
 
-        if (event.maxNumberOfParticipants !== undefined && (event.participantsList ?? []).length >= event.maxNumberOfParticipants) {
-            throw new BadRequestException("The event is full.")
+        if (event.author.id === user.id) {
+            throw new BadRequestException("L'auteur ne peut pas s'inscrire à son propre événement.");
         }
+
+    if (
+        event.maxNumberOfParticipants !== undefined &&
+        event.maxNumberOfParticipants !== null &&
+        (event.participantsList ?? []).length >= event.maxNumberOfParticipants
+    ) {
+        throw new BadRequestException("The event is full.")
+    }
 
         event.participantsList?.push(user);
         return this.eventRepo.save(event);

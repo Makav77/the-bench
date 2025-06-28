@@ -23,6 +23,10 @@ export class EventModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(InjectEventServiceMiddleware, LoadEventResourceMiddleware)
-            .forRoutes({ path: "events/:id", method: RequestMethod.ALL });
+            .forRoutes(
+                { path: "events/:id", method: RequestMethod.ALL },
+                { path: "events/:id/subscribe", method: RequestMethod.ALL },
+                { path: "events/:id/participants/:userId", method: RequestMethod.ALL },
+            );
     }
 }
