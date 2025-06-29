@@ -20,17 +20,17 @@ export class ChallengesService {
         private readonly registrationRepo: Repository<ChallengeRegistration>,
         @InjectRepository(ChallengeCompletion)
         private readonly completionRepo: Repository<ChallengeCompletion>,
-    ) { }
+    ) {}
 
     async findPendingChallenges(page = 1, limit = 5, user: User): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
 
-        let whereCondition: FindOptionsWhere<Challenge> = { status: "PENDING" };
+        let whereCondition: FindOptionsWhere<Challenge>[] | FindOptionsWhere<Challenge> = { status: "PENDING" };
         if (user.role !== Role.ADMIN) {
-            whereCondition = {
-                ...whereCondition,
-                irisCode: user.irisCode,
-            };
+            whereCondition = [
+                { status: "PENDING", irisCode: user.irisCode },
+                { status: "PENDING", irisCode: "all" }
+            ];
         }
 
         const [data, total] = await this.challengeRepo.findAndCount({
@@ -48,15 +48,15 @@ export class ChallengesService {
     async findAllChallenges(page = 1, limit = 10, user: User): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
 
-        let whereCondition: FindOptionsWhere<Challenge> = {
+        let whereCondition: FindOptionsWhere<Challenge>[] | FindOptionsWhere<Challenge> = {
             status: "APPROVED",
             endDate: MoreThan(new Date()),
         };
         if (user.role !== Role.ADMIN) {
-            whereCondition = {
-                ...whereCondition,
-                irisCode: user.irisCode,
-            }
+            whereCondition = [
+                { status: "APPROVED", endDate: MoreThan(new Date()), irisCode: user.irisCode },
+                { status: "APPROVED", endDate: MoreThan(new Date()), irisCode: "all" }
+            ];
         }
 
         const [data, total] = await this.challengeRepo.findAndCount({
@@ -92,7 +92,7 @@ export class ChallengesService {
             .andWhere("completion.rejectedReason IS NULL");
 
         if (user.role != Role.ADMIN) {
-            queryBuilder.andWhere("challenge.irisCode = :irisCode", { irisCode: user.irisCode });
+            queryBuilder.andWhere("(challenge.irisCode = :irisCode OR challenge.irisCode = 'all')", { irisCode: user.irisCode });
         }
 
         queryBuilder.orderBy("completion.createdAt", "DESC")
@@ -107,6 +107,14 @@ export class ChallengesService {
 
     async createChallenge(createChallengeDTO: CreateChallengeDTO, author: User): Promise<Challenge> {
         const { title, description, startDate, endDate, successCriteria } = createChallengeDTO;
+
+        let irisCode = author.irisCode;
+        let irisName = author.irisName;
+        if (author.role === "admin") {
+            irisCode = "all";
+            irisName = "all";
+        }
+
         const challenge = this.challengeRepo.create({
             title,
             description,
@@ -114,8 +122,8 @@ export class ChallengesService {
             endDate: new Date(endDate),
             successCriteria,
             author,
-            irisCode: author.irisCode,
-            irisName: author.irisName,
+            irisCode,
+            irisName,
         });
         return this.challengeRepo.save(challenge);
     }

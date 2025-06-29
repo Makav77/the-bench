@@ -17,12 +17,12 @@ export class PostsService {
     async findAllPosts(page = 1, limit = 10, user: User): Promise<{ data: Posts[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
 
-        let whereCondition: FindOptionsWhere<Posts> = {};
+        let whereCondition: FindOptionsWhere<Posts>[] | FindOptionsWhere<Posts> = {};
         if (user.role !== Role.ADMIN) {
-            whereCondition = {
-                ...whereCondition,
-                irisCode: user.irisCode,
-            };
+            whereCondition = [
+                { irisCode: user.irisCode },
+                { irisCode: "all" }
+            ];
         }
 
         const [data, total] = await this.postRepo.findAndCount({
@@ -50,11 +50,18 @@ export class PostsService {
     }
 
     async createPost(createPostDTO: CreatePostDTO, author: User): Promise<Posts> {
+        let irisCode = author.irisCode;
+        let irisName = author.irisName;
+        if (author.role === Role.ADMIN) {
+            irisCode = "all";
+            irisName = "all";
+        }
+
         const post = this.postRepo.create({
             ...createPostDTO,
             author,
-            irisCode: author.irisCode,
-            irisName: author.irisName,
+            irisCode,
+            irisName,
         });
         return this.postRepo.save(post);
     }

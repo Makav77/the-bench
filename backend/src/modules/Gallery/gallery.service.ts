@@ -18,12 +18,12 @@ export class GalleryService {
     async findAllGalleryItems(page = 1, limit = 30, user: User): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
 
-        let whereCondition: FindOptionsWhere<GalleryItem> = {};
+        let whereCondition: FindOptionsWhere<GalleryItem>[] | FindOptionsWhere<GalleryItem> = {};
         if (user.role !== Role.ADMIN) {
-            whereCondition = {
-                ...whereCondition,
-                irisCode: user.irisCode,
-            };
+            whereCondition = [
+                { irisCode: user.irisCode },
+                { irisCode: "all" }
+            ];
         }
 
         const [data, total] = await this.galleryRepo.findAndCount({
@@ -50,17 +50,20 @@ export class GalleryService {
         return galleryItem;
     }
 
-    async createGalleryItem(
-        description: string | undefined,
-        url: string,
-        user: User
-    ): Promise<GalleryItem> {
+    async createGalleryItem(description: string | undefined, url: string, user: User): Promise<GalleryItem> {
+        let irisCode = user.irisCode;
+        let irisName = user.irisName;
+        if (user.role === Role.ADMIN) {
+            irisCode = "all";
+            irisName = "all";
+        }
+
         const galleryItem = this.galleryRepo.create({
             url,
             description,
             author: user,
-            irisCode: user.irisCode,
-            irisName: user.irisName,
+            irisCode,
+            irisName,
         });
         return this.galleryRepo.save(galleryItem);
     }

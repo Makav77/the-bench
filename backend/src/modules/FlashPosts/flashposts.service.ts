@@ -19,13 +19,13 @@ export class FlashPostsService {
         const offset = (page - 1) * limit;
         const lessThanADay = subHours(new Date(), 24);
 
-        let whereCondition: FindOptionsWhere<FlashPost> = { createdAt: MoreThan(lessThanADay) };
+        let whereCondition: FindOptionsWhere<FlashPost>[] | FindOptionsWhere<FlashPost> = { createdAt: MoreThan(lessThanADay) };
 
         if (user.role !== Role.ADMIN) {
-            whereCondition = {
-                ...whereCondition,
-                irisCode: user.irisCode,
-            }
+            whereCondition = [
+                { createdAt: MoreThan(lessThanADay), irisCode: user.irisCode },
+                { createdAt: MoreThan(lessThanADay), irisCode: "all" }
+            ];
         }
 
         const [data, total] = await this.flashRepo.findAndCount({
@@ -64,11 +64,18 @@ export class FlashPostsService {
             throw new BadRequestException("You already have an active flash post.");
         }
 
+        let irisCode = author.irisCode;
+        let irisName = author.irisName;
+        if (author.role === Role.ADMIN) {
+            irisCode = "all";
+            irisName = "all";
+        }
+
         const post = this.flashRepo.create({
             ...createFlashPostDTO,
             author: author,
-            irisCode: author.irisCode,
-            irisName: author.irisName,
+            irisCode,
+            irisName,
         });
         return this.flashRepo.save(post);
     }

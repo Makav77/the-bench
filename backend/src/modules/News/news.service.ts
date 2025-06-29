@@ -22,12 +22,12 @@ export class NewsService {
     async findAllNews(page = 1, limit = 5, user: User): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number }> {
         const skip = (page - 1) * limit;
 
-        const filter: Partial<News> = {
+        const filter: any = {
             status: "APPROVED",
             published: true,
         };
         if (user.role !== "admin") {
-            filter.irisCode = user.irisCode;
+            filter.irisCode = { $in: [user.irisCode, "all"] };
         }
 
         const [newsList, total] = await Promise.all([
@@ -67,8 +67,8 @@ export class NewsService {
             authorProfilePicture: author.profilePicture,
             status: "PENDING",
             published: false,
-            irisCode: author.irisCode,
-            irisName: author.irisName,
+            irisCode: author.role === "admin" ? "all" : author.irisCode,
+            irisName: author.role === "admin" ? "all" : author.irisName,
         });
         return news.save();
     }
@@ -150,9 +150,9 @@ export class NewsService {
     async findPendingNews(page = 1, limit = 5, user: User): Promise<{ data: News[]; total: number; page: number; lastPage: number }> {
         const skip = (page - 1) * limit;
 
-        const filter: Partial<News> = { status: "PENDING" };
+        const filter: any = { status: "PENDING" };
         if (user.role !== "admin") {
-            filter.irisCode = user.irisCode;
+            filter.irisCode = { $in: [user.irisCode, "all"] };
         }
 
         const [data, total] = await Promise.all([

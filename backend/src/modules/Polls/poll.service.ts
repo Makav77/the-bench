@@ -23,19 +23,19 @@ export class PollService {
     async findAllPolls(page = 1, limit = 10, user: User): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
 
-        let whereCondition: FindOptionsWhere<Poll> = {};
+        let whereCondition: FindOptionsWhere<Poll>[] | FindOptionsWhere<Poll> = {};
         if (user.role !== Role.ADMIN) {
-            whereCondition = {
-                ...whereCondition,
-                irisCode: user.irisCode,
-            };
-        }
-        
+            whereCondition = [
+                { irisCode: user.irisCode },
+                { irisCode: "all" }
+            ];
+    }
+
         const [data, total] = await this.pollRepo.findAndCount({
             where: whereCondition,
             order: { createdAt: "DESC" },
             relations: ["author", "votes"],
-            skip: (page - 1) * limit,
+            skip: offset,
             take: limit,
         });
 
@@ -73,14 +73,21 @@ export class PollService {
             }
         }
 
+        let irisCode = author.irisCode;
+        let irisName = author.irisName;
+        if (author.role === "admin") {
+            irisCode = "all";
+            irisName = "all";
+        }
+
         const pollData: Partial<Poll> = {
             question,
             type,
             maxSelections,
             manualClosed: false,
             author,
-            irisCode: author.irisCode,
-            irisName: author.irisName,
+            irisCode,
+            irisName,
         };
 
         if (autoCloseAt) {

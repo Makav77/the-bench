@@ -64,6 +64,8 @@ export class ReportsService{
             throw new NotFoundException("User to report not found.");
         }
 
+        
+
         const newReport = this.reportRepo.create({
             reporter,
             reportedUser,

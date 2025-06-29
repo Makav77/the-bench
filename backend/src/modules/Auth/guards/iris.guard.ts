@@ -16,10 +16,10 @@ export class IrisGuard implements CanActivate {
             throw new ForbiddenException("Unable to verify the neighborhood associated with the resource.");
         }
 
-        if (resource.irisCode !== user.irisCode) {
-            throw new ForbiddenException("You can only access resources in your neighborhood.");
+        if (resource.irisCode === "all" || resource.irisCode === user.irisCode) {
+            return true;
         }
 
-        return true;
+        throw new ForbiddenException("You can only access resources in your neighborhood.");
     }
 }

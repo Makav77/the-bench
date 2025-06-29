@@ -18,12 +18,12 @@ export class MarketService {
     async findAllItems(page = 1, limit = 10, user: User): Promise<{ data: MarketItem[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
 
-        let whereCondition: FindOptionsWhere<MarketItem> = {};
-        if(user.role !== Role.ADMIN) {
-            whereCondition = {
-                ...whereCondition,
-                irisCode: user.irisCode,
-            };
+        let whereCondition: FindOptionsWhere<MarketItem>[] | FindOptionsWhere<MarketItem> = {};
+        if (user.role !== Role.ADMIN) {
+            whereCondition = [
+                { irisCode: user.irisCode },
+                { irisCode: "all" }
+            ];
         }
 
         const [data, total] = await this.marketRepo.findAndCount({
@@ -51,11 +51,18 @@ export class MarketService {
     }
 
     async createItem(createItemDTO: CreateMarketItemDTO, user: User & { images?: string[] }): Promise<MarketItem> {
+        let irisCode = user.irisCode;
+        let irisName = user.irisName;
+        if (user.role === Role.ADMIN) {
+            irisCode = "all";
+            irisName = "all";
+        }
+        
         const item = this.marketRepo.create({
             ...createItemDTO,
             author: user,
-            irisCode: user.irisCode,
-            irisName: user.irisName,
+            irisCode,
+            irisName,
         });
         return this.marketRepo.save(item);
     }

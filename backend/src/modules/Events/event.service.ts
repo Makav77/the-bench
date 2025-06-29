@@ -17,13 +17,12 @@ export class EventService {
     async findAllEvents(page = 1, limit = 5, user: User): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
 
-        let whereCondition: FindOptionsWhere<Event> = { endDate: MoreThan(new Date()) };
-
+        let whereCondition: FindOptionsWhere<Event>[] | FindOptionsWhere<Event> = { endDate: MoreThan(new Date()) };
         if (user.role !== Role.ADMIN) {
-            whereCondition = {
-                ...whereCondition,
-                irisCode: user.irisCode,
-            };
+            whereCondition = [
+                { endDate: MoreThan(new Date()), irisCode: user.irisCode },
+                { endDate: MoreThan(new Date()), irisCode: "all" }
+            ];
         }
     
         const [data, total] = await this.eventRepo.findAndCount({
@@ -51,12 +50,19 @@ export class EventService {
     }
 
     async createEvent(createEventDTO: CreateEventDTO, author: User): Promise<Event> {
+        let irisCode = author.irisCode;
+        let irisName = author.irisName;
+        if (author.role === Role.ADMIN) {
+            irisCode = "all";
+            irisName = "all";
+        }
+
         const event = this.eventRepo.create({
             ...createEventDTO,
             author,
             participantsList: [],
-            irisCode: author.irisCode,
-            irisName: author.irisName,
+            irisCode,
+            irisName,
         });
         return this.eventRepo.save(event);
     }
