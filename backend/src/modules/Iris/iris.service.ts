@@ -1,5 +1,3 @@
-// backend/src/modules/Iris/iris.service.ts
-
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import axios from "axios";
 import fs from "fs";
@@ -56,7 +54,6 @@ export class IrisService {
             throw new BadRequestException("Erreur lors du géocodage de l'adresse");
         }
 
-        // Test point in polygon
         const userPoint = turfPoint([lon, lat]);
         for (const iris of this.irisFeatures) {
             if (booleanPointInPolygon(userPoint, iris.geometry)) {

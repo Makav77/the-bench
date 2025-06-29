@@ -82,7 +82,7 @@ export class EventService {
         }
 
         if (updateEventDTO.maxNumberOfParticipants === null || updateEventDTO.maxNumberOfParticipants === undefined) {
-            event.maxNumberOfParticipants = null; // Limite supprimée
+            event.maxNumberOfParticipants = null;
         } else {
             event.maxNumberOfParticipants = updateEventDTO.maxNumberOfParticipants;
         }

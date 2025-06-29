@@ -131,7 +131,6 @@ function Signup() {
         setIrisError("");
     }
 
-    // Correction ici : dépendances réduites pour éviter la boucle infinie 😅
     useEffect(() => {
         const { street, postalCode, city } = registerCredentials;
         if (street && postalCode.length === 5 && city) {
@@ -160,7 +159,7 @@ function Signup() {
             }));
             setIrisError("");
         }
-    }, [registerCredentials.street, registerCredentials.postalCode, registerCredentials.city]); // // Correction dépendances 😊
+    }, [registerCredentials.street, registerCredentials.postalCode, registerCredentials.city]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();

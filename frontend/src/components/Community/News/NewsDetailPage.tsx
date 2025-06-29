@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { deleteNews, getOneNews, NewsDTO, getNewsLikes, toggleNewsLike, NewsLikesDTO } from "../../../api/newsService"; // //commentaire: Ajout des likes ici
+import { deleteNews, getOneNews, NewsDTO, getNewsLikes, toggleNewsLike, NewsLikesDTO } from "../../../api/newsService";
 import { getComments, createComment, updateComment, deleteComment, toggleCommentLike, CommentDTO } from "../../../api/commentService";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";

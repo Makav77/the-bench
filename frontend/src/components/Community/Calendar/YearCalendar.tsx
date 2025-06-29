@@ -77,7 +77,6 @@ function YearCalendar({ items, year, setYear }: YearCalendarProps) {
 
     useEffect(() => {
         setDate(isCurrentYear ? today : new Date(year, 0, 1));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [year]);
 
     const dayPropGetter = (dateCell: Date) => {
