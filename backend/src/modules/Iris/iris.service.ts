@@ -4,8 +4,8 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import booleanPointInPolygon from "@turf/boolean-point-in-polygon"; // Pour le test point in polygon
-import { point as turfPoint } from "@turf/helpers"; // Pour créer un point
+import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
+import { point as turfPoint } from "@turf/helpers";
 
 interface CityFromAPI {
     nom: string;
@@ -27,9 +27,8 @@ export class IrisService {
     private readonly irisFeatures: IrisFeature[];
 
     constructor() {
-        // On lit TOUJOURS dans src/data/iris-idf.geojson, même si on est buildé dans dist/
-        const irisPath = path.resolve(process.cwd(), "src/data/iris-idf.geojson"); // commentaire : chemin robuste
-        const geojsonData = JSON.parse(fs.readFileSync(irisPath, "utf-8")); // commentaire : on charge le fichier une fois au démarrage
+        const irisPath = path.resolve(process.cwd(), "src/data/iris-idf.geojson");
+        const geojsonData = JSON.parse(fs.readFileSync(irisPath, "utf-8"));
         this.irisFeatures = geojsonData.features;
         console.log(`[IRIS] Chargé ${this.irisFeatures.length} quartiers IRIS d'Île-de-France`);
     }

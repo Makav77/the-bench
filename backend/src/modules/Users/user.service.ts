@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -9,6 +9,7 @@ import { Event } from '../Events/entities/event.entity';
 import { ChallengeRegistration } from '../Challenges/entities/challenge-registration.entity';
 import { MarketItem } from '../Market/entities/market.entity';
 import { ProfileSummaryDTO } from './dto/profile-summary.dto';
+import { IrisService } from '../Iris/iris.service';
 import axios from 'axios';
 
 type IrisInfo = { irisCode: string; irisName: string; };
@@ -24,7 +25,8 @@ export class UserService {
         private readonly challengeRegistrationRepository: Repository<ChallengeRegistration>,
         @InjectRepository(MarketItem)
         private readonly marketItemRepository: Repository<MarketItem>,
-    ) {}
+        private readonly irisService: IrisService,
+    ) { }
 
     async findAll(): Promise<User[]> {
         return this.userRepository.find();
@@ -331,5 +333,21 @@ export class UserService {
         }
     }
 
-    
+async updateAddress(userId: string, street: string, postalCode: string, city: string) {
+    if (!street || !postalCode || !city) {
+        throw new BadRequestException("All fields must be entered.");
+    }
+
+    const { irisCode, irisName } = await this.irisService.resolveIris(street, postalCode, city);
+
+    const address = `${street}, ${postalCode} ${city}`.trim();
+
+    await this.userRepository.update(userId, {
+        address,
+        irisCode,
+        irisName,
+    });
+
+    return { irisCode, irisName };
+}
 }
