@@ -88,7 +88,12 @@ function Footer() {
                                 onClick={() => setShowModeratorsModal(true)}
                             >
                                 Contact a moderator</li>
-                            <li>Conditions of use</li>
+                            <li
+                                className="hover:underline cursor-pointer"
+                                onClick={() => navigate("/termsofuse")}
+                            >
+                                Conditions of use
+                            </li>
                         </ul>
                     </div>
 
@@ -136,7 +141,7 @@ function Footer() {
             <p className="text-l font-bold text-center">The Bench © 2025</p>
 
             {showModeratorsModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
                     <div className="bg-white rounded-lg shadow-lg p-8 w-[400px] relative">
                         <h2 className="text-xl font-bold mb-4 text-center">Contact the staff</h2>
                         {loadingMods ? (

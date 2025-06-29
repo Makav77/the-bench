@@ -365,12 +365,6 @@ export class UserService {
             where: { role: Role.MODERATOR, irisCode: user.irisCode }
         });
 
-        console.log("--------------------------------------------------------------userId:", userId);
-        console.log("--------------------------------------------------------------User trouvé:", user);
-        console.log("--------------------------------------------------------------All users:", await this.userRepository.find());
-        console.log("--------------------------------------------------------------Admins trouvés:", admins);
-        console.log("--------------------------------------------------------------Moderators trouvés:", moderators);
-
         return {
             admins: admins.map(u => ({
                 id: u.id,
