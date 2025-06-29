@@ -6,10 +6,18 @@ import { CreateNewsDTO } from "./dto/create-news.dto";
 import { UpdateNewsDTO } from "./dto/update-news.dto";
 import { ValidateNewsDTO } from "./dto/validate-news.dto";
 import { User } from "../Users/entities/user.entity";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class NewsService {
-    constructor(@InjectModel(News.name) private newsModel: Model<NewsDocument>) { }
+    constructor(
+        @InjectModel(News.name)
+        private newsModel: Model<NewsDocument>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+    ) {}
 
     async findAllNews(page = 1, limit = 5, user: User): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number }> {
         const skip = (page - 1) * limit;
@@ -198,5 +206,25 @@ export class NewsService {
         ]);
         const lastPage = Math.ceil(total / limit) || 1;
         return { data, total, page, lastPage };
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanNewsOfFormerUsers() {
+        const users = await this.userRepository.find({
+            select: ["id", "irisCode"]
+        });
+        const userIrisById: Record<string, string> = {};
+        users.forEach(user => {
+            userIrisById[user.id] = user.irisCode;
+        });
+
+        const allNews = await this.newsModel.find().lean();
+
+        for (const news of allNews) {
+            const userIris = userIrisById[news.authorId];
+            if (userIris && news.irisCode !== userIris) {
+                await this.newsModel.deleteOne({ _id: news._id });
+            }
+        }
     }
 }

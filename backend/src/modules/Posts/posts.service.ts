@@ -5,6 +5,7 @@ import { Posts } from './entities/post.entity';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { User, Role } from '../Users/entities/user.entity';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class PostsService {
@@ -91,5 +92,19 @@ export class PostsService {
         }
 
         await this.postRepo.delete(id);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanPostsOfFormersUsers() {
+        const posts = await this.postRepo.find({ relations: ["author"] });
+        for (const post of posts) {
+            if (!post.author) {
+                continue;
+            }
+
+            if (post.irisCode && post.author.irisCode && post.irisCode !== post.author.irisCode) {
+                await this.postRepo.delete(post.id);
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ import { CreateMarketItemDTO } from './dto/create-market-item.dto';
 import { UpdateMarketItemDTO } from './dto/update-market-item.dto';
 import { User, Role } from '../Users/entities/user.entity';
 import { GalleryItem } from '../Gallery/entities/gallery-item.entity';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class MarketService {
@@ -92,5 +93,19 @@ export class MarketService {
         }
 
         await this.marketRepo.delete(id);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanItemsMarketOfFormersUsers() {
+        const items = await this.marketRepo.find({ relations: ["author"] });
+        for (const item of items) {
+            if (!item.author) {
+                continue;
+            }
+
+            if (item.irisCode && item.author.irisCode && item.irisCode !== item.author.irisCode) {
+                await this.marketRepo.delete(item.id);
+            }
+        }
     }
 }

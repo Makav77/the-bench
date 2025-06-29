@@ -6,6 +6,7 @@ import { CreateGalleryItemDTO } from "./dto/create-gallery-item.dto";
 import { User, Role } from "../Users/entities/user.entity";
 import { join } from "path";
 import { unlink } from "fs/promises";
+import { Cron, CronExpression } from "@nestjs/schedule";
 
 @Injectable()
 export class GalleryService {
@@ -103,5 +104,19 @@ export class GalleryService {
         }
 
         await this.galleryRepo.delete(id);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanItemsGalleryOfFormersUsers() {
+        const items = await this.galleryRepo.find({ relations: ["author"] });
+        for (const item of items) {
+            if (!item.author) {
+                continue;
+            }
+
+            if (item.irisCode && item.author.irisCode && item.irisCode !== item.author.irisCode) {
+                await this.galleryRepo.delete(item.id);
+            }
+        }
     }
 }

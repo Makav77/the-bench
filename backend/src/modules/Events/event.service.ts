@@ -5,6 +5,7 @@ import { Event } from "./entities/event.entity";
 import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
 import { User, Role } from "../Users/entities/user.entity";
+import { Cron, CronExpression } from "@nestjs/schedule";
 
 @Injectable()
 export class EventService {
@@ -166,5 +167,19 @@ export class EventService {
 
         (event.participantsList ?? []).splice(index, 1);
         return this.eventRepo.save(event);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanEventsOfFormersUsers() {
+        const events = await this.eventRepo.find({ relations: ["author"] });
+        for (const event of events) {
+            if (!event.author) {
+                continue;
+            }
+
+            if (event.irisCode && event.author.irisCode && event.irisCode !== event.author.irisCode) {
+                await this.eventRepo.delete(event.id);
+            }
+        }
     }
 }

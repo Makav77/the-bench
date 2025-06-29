@@ -9,6 +9,7 @@ import { SubmitCompletionDTO } from "./dto/submit-completion.dto";
 import { ValidateCompletionDTO } from "./dto/validate-completion.dto";
 import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
 import { User, Role } from "../Users/entities/user.entity";
+import { Cron, CronExpression } from "@nestjs/schedule";
 
 @Injectable()
 export class ChallengesService {
@@ -280,5 +281,19 @@ export class ChallengesService {
 
         challenge.reviewedAt = new Date();
         return this.challengeRepo.save(challenge);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanChallengesOfFormersUsers() {
+        const challenges = await this.challengeRepo.find({ relations: ["author"] });
+        for (const challenge of challenges) {
+            if (!challenge.author) {
+                continue;
+            }
+
+            if (challenge.irisCode && challenge.author.irisCode && challenge.irisCode !== challenge.author.irisCode) {
+                await this.challengeRepo.delete(challenge.id);
+            }
+        }
     }
 }

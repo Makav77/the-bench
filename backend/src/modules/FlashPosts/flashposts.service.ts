@@ -117,4 +117,18 @@ export class FlashPostsService {
     async handleCronPurgeExpired() {
         await this.purgeExpired();
     }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanFlashPostsOfFormersUsers() {
+        const flashPosts = await this.flashRepo.find({ relations: ["author"] });
+        for (const flashPost of flashPosts) {
+            if (!flashPost.author) {
+                continue;
+            }
+
+            if (flashPost.irisCode && flashPost.author.irisCode && flashPost.irisCode !== flashPost.author.irisCode) {
+                await this.flashRepo.delete(flashPost.id);
+            }
+        }
+    }
 }

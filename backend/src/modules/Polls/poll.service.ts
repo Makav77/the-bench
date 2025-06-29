@@ -7,6 +7,7 @@ import { PollVote } from "./entities/poll-vote.entity";
 import { CreatePollDTO, PollType } from "./dto/create-poll.dto";
 import { VotePollDTO } from "./dto/vote-poll.dto";
 import { User, Role } from "../Users/entities/user.entity";
+import { Cron, CronExpression } from "@nestjs/schedule";
 
 @Injectable()
 export class PollService {
@@ -152,5 +153,19 @@ export class PollService {
             throw new ForbiddenException("Unauthorize to delete poll.");
         }
         await this.pollRepo.delete(id);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanPollsOfFormersUsers() {
+        const polls = await this.pollRepo.find({ relations: ["author"] });
+        for (const poll of polls) {
+            if (!poll.author) {
+                continue;
+            }
+
+            if (poll.irisCode && poll.author.irisCode && poll.irisCode !== poll.author.irisCode) {
+                await this.pollRepo.delete(poll.id);
+            }
+        }
     }
 }
