@@ -5,13 +5,18 @@ import { NewsService } from "./news.service";
 import { NewsController } from "./news.controller";
 import { PermissionsModule } from "../Permissions/permissions.module";
 import { LoadNewsResourceMiddleware } from "./middlewares/load-news-resource.middleware";
+import { UserModule } from "../Users/user.module";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { User } from "../Users/entities/user.entity";
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             { name: News.name, schema: NewsSchema }
         ]),
+        TypeOrmModule.forFeature([User]),
         PermissionsModule,
+        UserModule,
     ],
     controllers: [NewsController],
     providers: [NewsService],

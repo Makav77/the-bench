@@ -20,6 +20,13 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @UseGuards(JwtAuthGuard)
+    @Get("staff")
+    async getStaff(@Req() req: RequestWithUser) {
+        const userId = req.user.id;
+        return this.userService.getStaff(userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAll(): Promise<User[]> {
         return this.userService.findAll();

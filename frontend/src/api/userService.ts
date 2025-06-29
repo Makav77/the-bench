@@ -17,6 +17,18 @@ interface UserData {
     role: Role;
 };
 
+export interface StaffDTO {
+    id: string;
+    firstname: string;
+    lastname: string;
+    profilePicture?: string;
+}
+
+export interface ModeratorsAndAdminsDTO {
+    admins: StaffDTO[];
+    moderators: StaffDTO[];
+}
+
 export interface ProfileSummaryDTO {
     id: string;
     firstname: string;
@@ -100,3 +112,8 @@ export const getProfileSummary = async (userId: string) => {
         console.error("getProfileSummary error : " + error);
     }
 }
+
+export const getModeratorsAndAdmins = async (): Promise<ModeratorsAndAdminsDTO> => {
+    const response = await apiClient.get("/users/staff");
+    return response.data;
+};

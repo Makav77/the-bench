@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User, Role } from './entities/user.entity';
 import bcrypt from "bcryptjs";
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
@@ -333,21 +333,57 @@ export class UserService {
         }
     }
 
-async updateAddress(userId: string, street: string, postalCode: string, city: string) {
-    if (!street || !postalCode || !city) {
-        throw new BadRequestException("All fields must be entered.");
+    async updateAddress(userId: string, street: string, postalCode: string, city: string) {
+        if (!street || !postalCode || !city) {
+            throw new BadRequestException("All fields must be entered.");
+        }
+
+        const { irisCode, irisName } = await this.irisService.resolveIris(street, postalCode, city);
+
+        const address = `${street}, ${postalCode} ${city}`.trim();
+
+        await this.userRepository.update(userId, {
+            address,
+            irisCode,
+            irisName,
+        });
+
+        return { irisCode, irisName };
     }
 
-    const { irisCode, irisName } = await this.irisService.resolveIris(street, postalCode, city);
+    async getStaff(userId: string) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new NotFoundException("Utilisateur non trouvé");
+        }
 
-    const address = `${street}, ${postalCode} ${city}`.trim();
+        const admins = await this.userRepository.find({
+            where: { role: Role.ADMIN }
+        });
 
-    await this.userRepository.update(userId, {
-        address,
-        irisCode,
-        irisName,
-    });
+        const moderators = await this.userRepository.find({
+            where: { role: Role.MODERATOR, irisCode: user.irisCode }
+        });
 
-    return { irisCode, irisName };
-}
+        console.log("--------------------------------------------------------------userId:", userId);
+        console.log("--------------------------------------------------------------User trouvé:", user);
+        console.log("--------------------------------------------------------------All users:", await this.userRepository.find());
+        console.log("--------------------------------------------------------------Admins trouvés:", admins);
+        console.log("--------------------------------------------------------------Moderators trouvés:", moderators);
+
+        return {
+            admins: admins.map(u => ({
+                id: u.id,
+                firstname: u.firstname,
+                lastname: u.lastname,
+                profilePicture: u.profilePicture,
+            })),
+            moderators: moderators.map(u => ({
+                id: u.id,
+                firstname: u.firstname,
+                lastname: u.lastname,
+                profilePicture: u.profilePicture,
+            }))
+        };
+    }
 }
