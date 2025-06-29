@@ -34,7 +34,7 @@ function Footer() {
     return (
         <div
             data-test-id="footer"
-            className="bg-gradient-to-r from-[#0575E6] to-[#deeae4] border-t-2 mt-10"
+            className="bg-[#00c6ff] border-t-2 mt-10"
         >
             <div className="flex justify-between w-[30%] mx-auto mt-5 p-6">
                 <div className="flex flex-col items-start space-y-1">

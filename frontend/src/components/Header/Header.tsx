@@ -20,7 +20,7 @@ function Header() {
     };
 
     return (
-        <div data-testid = "header" className="bg-gradient-to-r from-[#0575E6] to-[#deeae4]">
+        <div data-testid = "header" className="bg-[#00c6ff]">
             <div className="grid grid-cols-3 h-10 mb-8 mx-auto w-[75%]">
                 <div className="flex items-center">
                     <img
