@@ -65,20 +65,21 @@ function PostDetailPage() {
     };
 
     return (
-        <>
-            <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
+        <div>
+            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl">
                 <button
                     type="button"
                     onClick={() => navigate("/bulletinsboard")}
-                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                 >
                     ← Back
                 </button>
 
-                <h1 className="text-2xl font-bold">{post.title}</h1>
+                <h1 className="text-3xl font-bold">{post.title}</h1>
                 <p className="text-sm text-gray-600">
-                Published on {new Date(post.createdAt).toLocaleString()} (update on{' '}
-                    {new Date(post.updatedAt).toLocaleString()}) by{" "}
+                    Published on {new Date(post.createdAt).toLocaleString()} <br />
+                    Updated on{' '} {new Date(post.updatedAt).toLocaleString()} <br />
+                    By{" "}
                     <span
                         onClick={() => navigate(`/profile/${post.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -127,7 +128,7 @@ function PostDetailPage() {
                     )}
                 </div>
             )}
-        </>
+        </div>
     );
 }
 

@@ -20,7 +20,7 @@ function Header() {
     };
 
     return (
-        <div data-testid = "header" className="bg-gradient-to-r from-[#0575E6] to-[#deeae4]">
+        <div data-testid = "header" className="bg-[#00c6ff]">
             <div className="grid grid-cols-3 h-10 mb-8 mx-auto w-[75%]">
                 <div className="flex items-center">
                     <img
@@ -29,7 +29,14 @@ function Header() {
                         className="h-10 cursor-pointer"
                         onClick={() => navigate("/homepage")}
                     />
+
+                    {isAuthenticated && user?.irisName && (
+                        <span className="ml-4 px-2 py-1 bg-amber-100 text-amber-800 rounded font-semibold text-sm" title="Votre quartier">
+                            Neighborhood : {user.irisName}
+                        </span>
+                    )}
                 </div>
+                
 
                 <div className="flex items-center justify-center">
                     <p className="text-4xl font-bold">The Bench</p>

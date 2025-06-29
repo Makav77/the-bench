@@ -34,6 +34,8 @@ import { NewsModule } from '../News/news.module';
 import { NewsController } from '../News/news.controller';
 import { CommentController } from '../Comments/comment.controller';
 import { CommentModule } from '../Comments/comment.module';
+import { IrisController } from '../Iris/iris.controller';
+import { IrisModule } from '../Iris/iris.module';
 
 @Module({
     imports: [
@@ -64,6 +66,7 @@ import { CommentModule } from '../Comments/comment.module';
         ReportsModule,
         NewsModule,
         CommentModule,
+        IrisModule,
     ],
     controllers: [
         ChallengesController,
@@ -79,6 +82,7 @@ import { CommentModule } from '../Comments/comment.module';
         ReportsController,
         NewsController,
         CommentController,
+        IrisController,
     ],
     providers: [AppService],
 })

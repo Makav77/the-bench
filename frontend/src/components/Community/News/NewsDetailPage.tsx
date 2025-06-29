@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { deleteNews, getOneNews, NewsDTO, getNewsLikes, toggleNewsLike, NewsLikesDTO } from "../../../api/newsService"; // //commentaire: Ajout des likes ici
+import { deleteNews, getOneNews, NewsDTO, getNewsLikes, toggleNewsLike, NewsLikesDTO } from "../../../api/newsService";
 import { getComments, createComment, updateComment, deleteComment, toggleCommentLike, CommentDTO } from "../../../api/commentService";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -114,6 +114,7 @@ function NewsDetailPage() {
     };
 
     const handleEditComment = (commentId: string, currentContent: string) => {
+        console.log('newsId:', id, 'commentId:', commentId);
         setEditingComment(commentId);
         setEditContent(currentContent);
     };
@@ -178,8 +179,9 @@ function NewsDetailPage() {
         <div>
             <div className="w-[30%] mx-auto py-5 px-10 bg-white rounded-xl shadow-lg mt-10">
                 <button
-                    onClick={() => navigate(-1)}
-                    className="mb-6 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                    type="button"
+                    onClick={() => navigate("/news")}
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
                     ← Back
                 </button>
@@ -231,13 +233,13 @@ function NewsDetailPage() {
                     <div className="flex gap-3 mt-10 justify-center">
                         <button
                             onClick={() => navigate(`/news/${news.id}/edit`)}
-                            className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500  cursor-pointer"
+                            className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500 cursor-pointer"
                         >
                             Edit
                         </button>
                         <button
                             onClick={handleDelete}
-                            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600  cursor-pointer"
+                            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 cursor-pointer"
                         >
                             Delete
                         </button>
@@ -375,7 +377,7 @@ function NewsDetailPage() {
                                 className="max-w-[90vw] max-h-[90vh] rounded shadow-lg"
                             />
                             <button
-                                className="absolute top-2 right-2 text-white bg-black bg-opacity-60 rounded-full p-2 text-2xl hover:bg-opacity-80"
+                                className="absolute top-2 right-2 text-white bg-black bg-opacity-60 rounded-full p-2 text-2xl hover:bg-opacity-80 cursor-pointer"
                                 onClick={handleCloseModal}
                                 type="button"
                             >

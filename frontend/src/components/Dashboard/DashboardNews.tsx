@@ -51,7 +51,7 @@ function DashboardNews() {
         }
         setUpdatingNewsId(newsId);
         try {
-            await validateNews(newsId, { validated: false, rejectionReason: reason.trim() });
+            await validateNews(newsId, { validated: false, rejectedReason: reason.trim() });
             toast.success("News rejected.");
             setPendingNews((prev) => prev.filter((c) => c.id !== newsId));
         } catch (error) {
@@ -103,7 +103,7 @@ function DashboardNews() {
                                 <button
                                     onClick={() => handleValidateNews(news.id)}
                                     disabled={updatingNewsId === news.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingNewsId === news.id
                                         ? "Validation…"
@@ -112,7 +112,7 @@ function DashboardNews() {
                                 <button
                                     onClick={() => handleRejectNews(news.id)}
                                     disabled={updatingNewsId === news.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingNewsId === news.id
                                         ? "Rejection..."

@@ -67,19 +67,20 @@ function FlashPostDetailPage() {
 
     return (
         <div>
-            <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
+            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl">
                 <button
                     type="button"
                     onClick={() => navigate("/bulletinsboard")}
-                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
                     ← Back
                 </button>
 
                 <h1 className="text-2xl font-bold">{flashPost.title}</h1>
                 <p className="text-sm text-gray-600">
-                Published on {new Date(flashPost.createdAt).toLocaleString()} (update on{' '}
-                    {new Date(flashPost.updatedAt).toLocaleString()}) by{' '}
+                    Published on {new Date(flashPost.createdAt).toLocaleString()} <br />
+                    Updated on{' '} {new Date(flashPost.updatedAt).toLocaleString()} <br />
+                    By{" "}
                     <span
                         onClick={() => navigate(`/profile/${flashPost.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"

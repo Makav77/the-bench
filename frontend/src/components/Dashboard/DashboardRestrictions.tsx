@@ -213,7 +213,7 @@ function DashboardRestrictions() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50"
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                     >
                         {isSubmitting ? "En cours…" : "Bannir"}
                     </button>

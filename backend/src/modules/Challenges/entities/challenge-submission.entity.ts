@@ -16,7 +16,7 @@ export class ChallengeSubmission {
     status: SubmissionStatus;
 
     @Column({ type: "text", nullable: true })
-    rejectionReason: string | null;
+    rejectedReason: string | null;
 
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;

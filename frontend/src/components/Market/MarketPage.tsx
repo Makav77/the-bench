@@ -55,16 +55,18 @@ function MarketPage() {
                     {items.map((item) => (
                         <div
                             key={item.id}
-                            className="p-4 border rounded-3xl cursor-pointer hover:shadow flex justify-between items-center"
+                            className="p-4 bg-white rounded-2xl cursor-pointer hover:shadow flex justify-between items-center hover:bg-gray-100"
                             onClick={() => navigate(`/market/${item.id}`)}
                         >
                             <div className="flex flex-col">
                                 <h2 className="text-lg font-semibold">{item.title}</h2>
 
                                 <p className="text-gray-600 text-sm">
-                                {typeof item.price === "number" && (
-                                    <>Price : {item.price.toFixed(2)} €</>
-                                )}
+                                    {item.price != null && !isNaN(Number(item.price)) && (
+                                        <p className="font-semibold">
+                                            Prix : {Number(item.price).toFixed(2)} €
+                                        </p>
+                                    )}
                                     Last update : {new Date(item.updatedAt).toLocaleDateString()}
                                 </p>
 

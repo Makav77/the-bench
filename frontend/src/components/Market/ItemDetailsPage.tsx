@@ -65,13 +65,14 @@ function ItemDetailsPage() {
     };
 
     return (
-        <div className="px-10 py-8 space-y-4 border mt-10 w-[40%] mx-auto">
+        <div className="px-10 py-8 space-y-4 mt-10 w-[30%] mx-auto bg-white rounded-3xl">
             <div className="">
                 <button
+                    type="button"
                     onClick={() => navigate("/marketplace")}
-                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white mb-8"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
-                    ← Back to market
+                    ← Back
                 </button>
 
                 <h1 className="text-5xl font-bold mb-4">{item.title}</h1>
@@ -80,9 +81,9 @@ function ItemDetailsPage() {
                     Last update on {new Date(item.updatedAt).toLocaleString()}
                 </p>
 
-                {typeof item.price === "number" && (
+                {item.price != null && !isNaN(Number(item.price)) && (
                     <p className="text-xl font-semibold">
-                        Prix : {item.price.toFixed(2)} €
+                        Prix : {Number(item.price).toFixed(2)} €
                     </p>
                 )}
 

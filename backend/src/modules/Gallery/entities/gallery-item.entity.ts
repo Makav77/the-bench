@@ -9,6 +9,12 @@ export class GalleryItem {
     @Column()
     url: string;
 
+    @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
+
     @Column({ type: "text", nullable: true })
     description?: string;
 

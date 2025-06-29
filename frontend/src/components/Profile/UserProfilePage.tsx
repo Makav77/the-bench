@@ -8,6 +8,7 @@ import { getFriends, FriendDTO, sendFriendRequest, acceptFriendRequest, rejectFr
 import apiClient from "../../api/apiClient";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
+import { getCitiesByPostalCode, resolveIris } from "../../api/irisService";
 
 export default function UserProfilePage() {
     const { id } = useParams<{ id: string }>();
@@ -25,6 +26,17 @@ export default function UserProfilePage() {
     const [friends, setFriends] = useState<FriendDTO[]>([]);
     const [showFriendsModal, setShowFriendsModal] = useState<boolean>(false);
     const [removingFriendId, setRemovingFriendId] = useState<string | null>(null);
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [address, setAddress] = useState({
+        street: "",
+        postalCode: "",
+        city: "",
+        irisCode: "",
+        irisName: "",
+    });
+    const [addressCities, setAddressCities] = useState<string[]>([]);
+    const [addressIrisError, setAddressIrisError] = useState<string>("");
+    const [addressLoading, setAddressLoading] = useState(false);
 
     const loadProfile = async () => {
         if (!id) {
@@ -59,6 +71,24 @@ export default function UserProfilePage() {
     useEffect(() => {
         refreshFriends();
     }, [id, isOwnProfile]);
+
+    useEffect(() => {
+        const { street, postalCode, city } = address;
+        if (street && postalCode.length === 5 && city) {
+            resolveIris(street, postalCode, city)
+                .then(({ irisCode, irisName }) => {
+                    setAddress((prev) => ({ ...prev, irisCode, irisName }));
+                    setAddressIrisError("");
+                })
+                .catch(() => {
+                    setAddress((prev) => ({ ...prev, irisCode: "", irisName: "" }));
+                    setAddressIrisError("Impossible de trouver le quartier pour cette adresse.");
+                });
+        } else {
+            setAddress((prev) => ({ ...prev, irisCode: "", irisName: "" }));
+            setAddressIrisError("");
+        }
+    }, [address.street, address.postalCode, address.city]);
 
     const handleRemoveFriend = async (friendId: string) => {
         if (!window.confirm("Are you sure you want to remove this user from your friend list ?")) {
@@ -119,13 +149,56 @@ export default function UserProfilePage() {
         return <p className="p-6">Profile not found.</p>;
     }
 
+    function handleAddressChange(e: ChangeEvent<HTMLInputElement>) {
+        const { name, value } = e.target;
+        setAddress((prev) => ({ ...prev, [name]: value }));
+
+        if (name === "postalCode") {
+            setAddress((prev) => ({
+                ...prev,
+                postalCode: value.replace(/\D/g, ""),
+                city: "",
+                irisCode: "",
+                irisName: "",
+            }));
+            setAddressCities([]);
+            setAddressIrisError("");
+        }
+
+        if (name === "city") {
+            setAddress((prev) => ({ ...prev, city: value }));
+            setAddressIrisError("");
+        }
+
+        if (name === "street") {
+            setAddress((prev) => ({ ...prev, street: value }));
+        }
+    }
+
+    async function handlePostalCodeSuggestion() {
+        if (address.postalCode.length === 5) {
+            try {
+                const cities = await getCitiesByPostalCode(address.postalCode);
+                setAddressCities(cities);
+            } catch {
+                setAddressCities([]);
+            }
+        }
+    }
+
+    function handleSelectCity(city: string) {
+        setAddress((prev) => ({ ...prev, city }));
+        setAddressCities([]);
+    }
+
     return (
         <div className="p-6 w-[40%] mx-auto space-y-6 bg-white rounded-2xl mt-10 shadow">
             <button
-                onClick={() => navigate(-1)}
-                className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white mb-4"
+                type="button"
+                onClick={() => navigate("/homepage")}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
             >
-                ← Back
+                {"< Homepage"}
             </button>
 
             <div className="flex flex-col items-center space-y-3">
@@ -231,6 +304,15 @@ export default function UserProfilePage() {
                             </button>
                         )}
                     </div>
+                )}
+
+                {isOwnProfile && (
+                    <button
+                        onClick={() => setShowAddressModal(true)}
+                        className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 cursor-pointer"
+                    >
+                        Modifier mon adresse
+                    </button>
                 )}
 
                 {isOwnProfile && (
@@ -442,6 +524,101 @@ export default function UserProfilePage() {
                                 className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
                             >
                                 Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showAddressModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+                        <h2 className="text-lg font-bold mb-3">Change my address</h2>
+                        <p className="text-red-500 text-sm mb-2">
+                            Changing neighborhoods will permanently delete all your content related to the old neighborhood!
+                        </p>
+                        <div className="mb-2">
+                            <input
+                                name="street"
+                                type="text"
+                                className="w-full mb-2 border rounded px-2 py-1"
+                                placeholder="Street"
+                                value={address.street}
+                                onChange={handleAddressChange}
+                            />
+                            <input
+                                name="postalCode"
+                                type="text"
+                                maxLength={5}
+                                className="w-full mb-2 border rounded px-2 py-1"
+                                placeholder="Postal code"
+                                value={address.postalCode}
+                                onChange={handleAddressChange}
+                                onBlur={handlePostalCodeSuggestion}
+                            />
+                            <div className="relative">
+                                <input
+                                    name="city"
+                                    type="text"
+                                    className="w-full mb-2 border rounded px-2 py-1"
+                                    placeholder="City"
+                                    value={address.city}
+                                    onChange={handleAddressChange}
+                                    autoComplete="off"
+                                    onFocus={() => setAddressCities(addressCities.length > 0 ? addressCities : [])}
+                                />
+                                {addressCities.length > 0 && (
+                                    <ul className="absolute bg-white border rounded w-full max-h-32 overflow-y-auto shadow">
+                                        {addressCities.map((city, idx) => (
+                                            <li
+                                                key={idx}
+                                                className="px-2 py-1 hover:bg-amber-100 cursor-pointer"
+                                                onClick={() => handleSelectCity(city)}
+                                            >
+                                                {city}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                            {address.irisName && (
+                                <div className="text-sm text-amber-700 italic mb-1">
+                                    Neighborhood found : <span className="font-bold">{address.irisName}</span>
+                                </div>
+                            )}
+                            {addressIrisError && (
+                                <div className="text-sm text-red-500 italic">{addressIrisError}</div>
+                            )}
+                        </div>
+                        <div className="flex justify-end gap-2 mt-4">
+                            <button
+                                onClick={() => setShowAddressModal(false)}
+                                className="px-3 py-1 rounded border text-gray-700 hover:bg-gray-100 cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    setAddressLoading(true);
+                                    try {
+                                        await apiClient.patch("/users/me/address", {
+                                            street: address.street,
+                                            postalCode: address.postalCode,
+                                            city: address.city,
+                                        });
+                                        toast.success("Adresse modifiée !");
+                                        setShowAddressModal(false);
+                                        window.location.reload();
+                                    } catch (error) {
+                                        toast.error("Error while loading address : " + error);
+                                    } finally {
+                                        setAddressLoading(false);
+                                    }
+                                }}
+                                className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer disabled:opacity-60"
+                                disabled={!address.street || address.postalCode.length !== 5 || !address.city || !address.irisCode || !!addressIrisError || addressLoading}
+                            >
+                                Validate
                             </button>
                         </div>
                     </div>

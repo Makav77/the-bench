@@ -43,10 +43,11 @@ function GalleryPage() {
         <div className="p-6 w-[50%] mx-auto">
             <div className="flex justify-between mb-4">
                 <button
+                    type="button"
                     onClick={() => navigate("/community")}
-                    className="bg-gray-300 font-bold px-4 py-2 rounded-2xl cursor-pointer hover:bg-gray-200"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
-                    ← Back to Community
+                    ← Back to community
                 </button>
 
                 <button

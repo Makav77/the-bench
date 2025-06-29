@@ -1,7 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User, Role } from './entities/user.entity';
 import bcrypt from "bcryptjs";
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
@@ -9,6 +9,10 @@ import { Event } from '../Events/entities/event.entity';
 import { ChallengeRegistration } from '../Challenges/entities/challenge-registration.entity';
 import { MarketItem } from '../Market/entities/market.entity';
 import { ProfileSummaryDTO } from './dto/profile-summary.dto';
+import { IrisService } from '../Iris/iris.service';
+import axios from 'axios';
+
+type IrisInfo = { irisCode: string; irisName: string; };
 
 @Injectable()
 export class UserService {
@@ -21,7 +25,8 @@ export class UserService {
         private readonly challengeRegistrationRepository: Repository<ChallengeRegistration>,
         @InjectRepository(MarketItem)
         private readonly marketItemRepository: Repository<MarketItem>,
-    ) {}
+        private readonly irisService: IrisService,
+    ) { }
 
     async findAll(): Promise<User[]> {
         return this.userRepository.find();
@@ -56,10 +61,16 @@ export class UserService {
     async create(createUserDTO: CreateUserDTO): Promise<User> {
         try {
             createUserDTO.password = await bcrypt.hash(createUserDTO.password, 10);
+
+            if (!createUserDTO.irisCode || !createUserDTO.irisName) {
+                throw new ConflictException("Missing IRIS neighborhood info. Please verify the address.")
+            }
+
             const user = this.userRepository.create({
                 ...createUserDTO,
                 profilePicture: "/uploads/profile/default.png",
             });
+
             return await this.userRepository.save(user);
         } catch (error) {
             if (error.code === "23505") {
@@ -71,6 +82,15 @@ export class UserService {
 
     async update(id: string, updateUserDTO: UpdateUserDTO): Promise<User> {
         const user = await this.findOne(id);
+        if (updateUserDTO.address && updateUserDTO.address != user.address) {
+            const irisInfo = await this.getIrisFromAddress(updateUserDTO.address);
+            if (!irisInfo) {
+                throw new ConflictException("Unable to link the new address to a Paris neighborhood (IRIS). Please verify the address.")
+            }
+            updateUserDTO.irisCode = irisInfo.irisCode;
+            updateUserDTO.irisName = irisInfo.irisName;
+        }
+
         const updated = this.userRepository.merge(user, updateUserDTO);
         return this.userRepository.save(updated);
     }
@@ -294,4 +314,70 @@ export class UserService {
         };
     }
 
+    async getIrisFromAddress(address: string): Promise<IrisInfo | null> {
+        try {
+            const url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(address)}&limit=1`;
+            const response = await axios.get(url);
+            const features = response.data.features;
+
+            if (features && features.length > 0 && features[0].properties && features[0].properties.iris && features[0].properties.iris_name) {
+                return {
+                    irisCode: features[0].properties.iris,
+                    irisName: features[0].properties.iris_name
+                };
+            }
+            return null;
+        } catch (error) {
+            console.error("Error while get IRIS : " + error);
+            return null;
+        }
+    }
+
+    async updateAddress(userId: string, street: string, postalCode: string, city: string) {
+        if (!street || !postalCode || !city) {
+            throw new BadRequestException("All fields must be entered.");
+        }
+
+        const { irisCode, irisName } = await this.irisService.resolveIris(street, postalCode, city);
+
+        const address = `${street}, ${postalCode} ${city}`.trim();
+
+        await this.userRepository.update(userId, {
+            address,
+            irisCode,
+            irisName,
+        });
+
+        return { irisCode, irisName };
+    }
+
+    async getStaff(userId: string) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new NotFoundException("Utilisateur non trouvé");
+        }
+
+        const admins = await this.userRepository.find({
+            where: { role: Role.ADMIN }
+        });
+
+        const moderators = await this.userRepository.find({
+            where: { role: Role.MODERATOR, irisCode: user.irisCode }
+        });
+
+        return {
+            admins: admins.map(u => ({
+                id: u.id,
+                firstname: u.firstname,
+                lastname: u.lastname,
+                profilePicture: u.profilePicture,
+            })),
+            moderators: moderators.map(u => ({
+                id: u.id,
+                firstname: u.firstname,
+                lastname: u.lastname,
+                profilePicture: u.profilePicture,
+            }))
+        };
+    }
 }

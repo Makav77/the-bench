@@ -60,6 +60,8 @@ import NewsDetailPage from "./components/Community/News/NewsDetailPage";
 import CreateNews from "./components/Community/News/CreateNews";
 import EditNews from "./components/Community/News/EditNewsForm";
 
+import TermsOfUse from "./components/Footer/TermsOfUse";
+
 export default function App() {
     return (
         <AuthProvider>
@@ -110,6 +112,7 @@ export default function App() {
                             <Route path="/news/:id" element={<NewsDetailPage />} />
                             <Route path="/news/create" element={<CreateNews />} />
                             <Route path="/news/:id/edit" element={<EditNews />} />
+                            <Route path="/termsofuse" element={<TermsOfUse />} />
                         </Route>
                     </Route>
                 </Routes>

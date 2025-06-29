@@ -108,12 +108,12 @@ function PollDetailPage() {
 
     return (
         <div>
-            <div className="p-6 w-[30%] mx-auto space-y-4 bg-gray-200 rounded-2xl shadow mt-10">
+            <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
                 <div className="flex justify-between items-center">
                     <button
                         type="button"
                         onClick={() => navigate("/polls")}
-                        className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
                         ← Back
                     </button>
@@ -143,6 +143,12 @@ function PollDetailPage() {
                     </span>
                 </p>
 
+                {isAdminorModerator && (
+                    <p className="text-red-500">
+                        Admin and moderator can't vote.
+                    </p>
+                )}
+
                 {!isClosed ? (
                     <div>
                         {poll.options.map(o => (
@@ -154,7 +160,7 @@ function PollDetailPage() {
                                     type={poll.type === "single" ? "radio":"checkbox"}
                                     name="opt"
                                     value={o.id}
-                                    disabled={isClosed || hasVoted}
+                                    disabled={!!(isClosed || hasVoted || isAdminorModerator)}
                                 />{" "}
                                 {o.label}
                             </label>
@@ -189,7 +195,7 @@ function PollDetailPage() {
                 )}
 
                 <div className={`${restricted ? 'w-[100%]' : 'w-[80%]'} mx-auto flex justify-around mt-8`}>
-                    {!isClosed && !hasVoted ? (
+                    {!isClosed && !hasVoted && user?.role !== "admin" && user?.role !== "moderator" ? (
                         restricted ? (
                             <p className="text-red-600 font-semibold text-center">
                                 You are no longer allowed to vote to a poll until{" "}

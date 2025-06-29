@@ -27,7 +27,7 @@ export interface NewsLikesDTO {
 
 export interface ValidateNewsDTO {
     validated: boolean;
-    rejectionReason?: string;
+    rejectedReason?: string;
 }
 
 export interface NewsSummary {

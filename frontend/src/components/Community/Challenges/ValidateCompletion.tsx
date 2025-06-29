@@ -23,30 +23,36 @@ export default function ValidateCompletionsPage() {
         }
     };
 
-    if (!challenge) return <p>Loading…</p>;
+    if (!challenge) {
+        return <p>Loading…</p>;
+    }
 
     const pending = challenge.completions.filter((c: any) => !c.validated);
 
     return (
         <div className="p-6 w-[60%] mx-auto">
-            <h1 className="text-2xl font-bold mb-4">Valider les complétions</h1>
+            <h1 className="text-2xl font-bold mb-4">Validate completions</h1>
             {pending.length === 0
-                ? <p>Aucune soumission en attente</p>
+                ? <p>No waiting completion</p>
                 : (
                     <ul className="space-y-4">
-                        {pending.map((c: any) => (
-                            <li key={c.id} className="border rounded p-4 bg-white shadow">
-                                {c.text && <p className="mb-2">{c.text}</p>}
-                                {c.imageUrl && <img src={c.imageUrl} alt="" className="mb-2 max-h-48 object-contain" />}
+                        {pending.map((completion: any) => (
+                            <li key={completion.id} className="border rounded p-4 bg-white shadow">
+                                {completion.text && <p className="mb-2">{completion.text}</p>}
+                                {completion.imageUrl && <img src={completion.imageUrl} alt="" className="mb-2 max-h-48 object-contain" />}
                                 <div className="flex gap-2">
                                     <button
-                                        onClick={() => handleValidate(c.id, true)}
-                                        className="bg-green-600 text-white px-4 py-2 rounded"
-                                    >Valider</button>
+                                        onClick={() => handleValidate(completion.id, true)}
+                                        className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer"
+                                    >
+                                        Validate
+                                    </button>
                                     <button
-                                        onClick={() => handleValidate(c.id, false)}
-                                        className="bg-red-600 text-white px-4 py-2 rounded"
-                                    >Rejeter</button>
+                                        onClick={() => handleValidate(completion.id, false)}
+                                        className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
+                                    >
+                                        Reject
+                                    </button>
                                 </div>
                             </li>
                         ))}

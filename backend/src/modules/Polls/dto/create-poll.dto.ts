@@ -28,4 +28,12 @@ export class CreatePollDTO {
 
     @IsOptional()
     autoCloseAt?: Date;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }

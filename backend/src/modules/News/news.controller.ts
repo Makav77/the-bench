@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, DefaultValuePipe, ParseIntPipe, Req } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, DefaultValuePipe, ParseIntPipe, Req, NotFoundException } from "@nestjs/common";
 import { NewsService } from "./news.service";
-import { CreateNewsDTO } from "./dto/create-news.dto"; 
+import { CreateNewsDTO } from "./dto/create-news.dto";
 import { UpdateNewsDTO } from "./dto/update-news.dto";
-import { News } from "./news.schema";
+import { News, NewsDocument } from "./news.schema";
 import { User } from "../Users/entities/user.entity";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { UseInterceptors, UploadedFiles } from "@nestjs/common";
@@ -14,49 +14,13 @@ import fs from "fs";
 import { ValidateNewsDTO } from "./dto/validate-news.dto";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
-
-interface RequestWithUser extends Request {
-    user: { id: string };
-}
+import { IrisGuard } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
+import { Resource } from "../Utils/resource.decorator";
 
 @Controller("news")
 export class NewsController {
-    constructor(private readonly newsService: NewsService) {}
-
-    @UseGuards(JwtAuthGuard)
-    @Get()
-    async findAllNews(
-        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
-    ): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number; }> {
-        return this.newsService.findAllNews(page, limit);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get("pending")
-    async findPendingNews(
-        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
-    ) {
-        return this.newsService.findPendingNews(page, limit);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get(":id")
-    async findOneNews(@Param("id") id: string): Promise<News> {
-        return this.newsService.findOneNews(id);
-    }
-
-    @UseGuards(JwtAuthGuard, PermissionGuard)
-    @RequiredPermission("create_news")
-    @Post()
-    async createNews(
-        @Body() createNewsDTO: CreateNewsDTO,
-        @Req() req: RequestWithUser,
-    ) {
-        const user = req.user as User;
-        return this.newsService.createNews(createNewsDTO, user);
-    }
+    constructor(private readonly newsService: NewsService) { }
 
     @UseGuards(JwtAuthGuard)
     @Post("upload-images")
@@ -81,7 +45,7 @@ export class NewsController {
             }
             cb(null, true);
         },
-        limits: { fileSize: 5*1024*1024 }
+        limits: { fileSize: 5 * 1024 * 1024 }
     }))
     async uploadImages(@UploadedFiles() files: Express.Multer.File[]): Promise<{ urls: string[] }> {
         const urls = files.map(file => `/uploads/news/${file.filename}`);
@@ -89,48 +53,128 @@ export class NewsController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get()
+    async findAllNews(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<News>
+    ): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number; }> {
+        const user = req.user as User;
+        return this.newsService.findAllNews(page, limit, user);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("pending")
+    async findPendingNews(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<News>
+    ) {
+        const user = req.user as User;
+        return this.newsService.findPendingNews(page, limit, user);
+    }
+
+    @UseGuards(JwtAuthGuard, IrisGuard)
+    @Get(":id")
+    async findOneNews(@Resource() news: NewsDocument): Promise<NewsDocument> {
+        return news;
+    }
+
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @RequiredPermission("create_news")
+    @Post()
+    async createNews(
+        @Body() createNewsDTO: CreateNewsDTO,
+        @Req() req: RequestWithResource<News>
+    ) {
+        const user = req.user as User;
+        return this.newsService.createNews(createNewsDTO, user);
+    }
+
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     async updateNews(
         @Param("id") id: string,
-        @Body() updateNewsDTO: UpdateNewsDTO
+        @Body() updateNewsDTO: UpdateNewsDTO,
+        @Req() req: RequestWithResource<News>
     ): Promise<News> {
-        return this.newsService.updateNews(id, updateNewsDTO);
+        const news = await this.newsService.findOneNews(id);
+
+        if (!news) {
+            throw new NotFoundException("News not found.");
+        }
+
+        req.resource = news;
+        const user = req.user as User;
+        return this.newsService.updateNews(id, updateNewsDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
-    async removeNews(@Param("id") id: string): Promise<void> {
-        await this.newsService.removeNews(id);
+    async removeNews(
+        @Param("id") id: string,
+        @Req() req: RequestWithResource<News>
+    ): Promise<void> {
+        const news = await this.newsService.findOneNews(id);
+
+        if (!news) {
+            throw new NotFoundException("News not found.");
+        }
+
+        req.resource = news;
+        const user = req.user as User;
+        await this.newsService.removeNews(id, user);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Post(":id/like")
-    async toggleLike(
-        @Param("id") newsId: string,
-        @Req() req: Request & { user: { id: string } }
-    ): Promise<{ liked: boolean; totalLikes: number }> {
-        const userId = req.user.id;
-        return this.newsService.toggleLike(newsId, userId);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get(":id/likes")
-    async getLikes(
-        @Param("id") newsId: string,
-        @Req() req: Request & { user: { id: string } }
-    ): Promise<{ totalLikes: number; liked: boolean }> {
-        const userId = req.user.id;
-        return this.newsService.getLikes(newsId, userId);
-    }
-
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id/validate")
     async validateNews(
         @Param("id") id: string,
         @Body() validateNewsDTO: ValidateNewsDTO,
-        @Req() req: RequestWithUser
+        @Req() req: RequestWithResource<News>
     ) {
+        const news = await this.newsService.findOneNews(id);
+
+        if (!news) {
+            throw new NotFoundException("News not found.");
+        }
+
+        req.resource = news;
         const user = req.user as User;
         return this.newsService.validateNews(id, validateNewsDTO, user);
+    }
+
+    @UseGuards(JwtAuthGuard, IrisGuard)
+    @Post(":id/like")
+    async toggleLike(
+        @Param("id") newsId: string,
+        @Req() req: RequestWithResource<News>
+    ): Promise<{ liked: boolean; totalLikes: number }> {
+        const news = await this.newsService.findOneNews(newsId);
+
+        if (!news) {
+            throw new NotFoundException("News not found.");
+        }
+
+        req.resource = news;
+        const user = req.user as User;
+        return this.newsService.toggleLike(newsId, user);
+    }
+
+    @UseGuards(JwtAuthGuard, IrisGuard)
+    @Get(":id/likes")
+    async getLikes(
+        @Param("id") newsId: string,
+        @Req() req: RequestWithResource<News>
+    ): Promise<{ totalLikes: number; liked: boolean }> {
+        const news = await this.newsService.findOneNews(newsId);
+
+        if (!news) {
+            throw new NotFoundException("News not found.");
+        }
+
+        req.resource = news;
+        const user = req.user as User;
+        return this.newsService.getLikes(newsId, user);
     }
 }

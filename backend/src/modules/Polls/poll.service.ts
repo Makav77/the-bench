@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThan } from "typeorm";
+import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { Poll } from "./entities/poll.entity";
 import { PollOption } from "./entities/poll-option.entity";
 import { PollVote } from "./entities/poll-vote.entity";
 import { CreatePollDTO, PollType } from "./dto/create-poll.dto";
 import { VotePollDTO } from "./dto/vote-poll.dto";
 import { User, Role } from "../Users/entities/user.entity";
+import { Cron, CronExpression } from "@nestjs/schedule";
 
 @Injectable()
 export class PollService {
@@ -19,11 +20,22 @@ export class PollService {
         private readonly voteRepo: Repository<PollVote>,
     ) { }
 
-    async findAllPolls(page = 1, limit = 10): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
+    async findAllPolls(page = 1, limit = 10, user: User): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
+        const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<Poll>[] | FindOptionsWhere<Poll> = {};
+        if (user.role !== Role.ADMIN) {
+            whereCondition = [
+                { irisCode: user.irisCode },
+                { irisCode: "all" }
+            ];
+    }
+
         const [data, total] = await this.pollRepo.findAndCount({
+            where: whereCondition,
             order: { createdAt: "DESC" },
             relations: ["author", "votes"],
-            skip: (page - 1) * limit,
+            skip: offset,
             take: limit,
         });
 
@@ -61,7 +73,22 @@ export class PollService {
             }
         }
 
-        const pollData: Partial<Poll> = { question, type, maxSelections, manualClosed: false, author };
+        let irisCode = author.irisCode;
+        let irisName = author.irisName;
+        if (author.role === "admin") {
+            irisCode = "all";
+            irisName = "all";
+        }
+
+        const pollData: Partial<Poll> = {
+            question,
+            type,
+            maxSelections,
+            manualClosed: false,
+            author,
+            irisCode,
+            irisName,
+        };
 
         if (autoCloseAt) {
             pollData.closesAt = new Date(autoCloseAt);
@@ -133,5 +160,19 @@ export class PollService {
             throw new ForbiddenException("Unauthorize to delete poll.");
         }
         await this.pollRepo.delete(id);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanPollsOfFormersUsers() {
+        const polls = await this.pollRepo.find({ relations: ["author"] });
+        for (const poll of polls) {
+            if (!poll.author) {
+                continue;
+            }
+
+            if (poll.irisCode && poll.author.irisCode && poll.irisCode !== poll.author.irisCode) {
+                await this.pollRepo.delete(poll.id);
+            }
+        }
     }
 }

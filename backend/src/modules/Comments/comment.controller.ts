@@ -1,10 +1,14 @@
-import { Controller, Post, Body, Param, Delete, Patch, Get, UseGuards, Request, ForbiddenException } from "@nestjs/common";
+import { Controller, Post, Body, Param, Delete, Patch, Get, UseGuards, Request, ForbiddenException, Req, NotFoundException } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { CreateCommentDTO } from "./dto/create-comment.dto";
 import { UpdateCommentDTO } from "./dto/update-comment.dto";
 import { UserService } from "../Users/user.service";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
-import { Comment } from "./comment.schema";
+import { Comment, CommentDocument } from "./comment.schema";
+import { User } from "../Users/entities/user.entity";
+import { IrisGuard } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
+import { Resource } from "../Utils/resource.decorator";
 
 @Controller("news/:newsId/comments")
 export class CommentController {
@@ -12,12 +16,16 @@ export class CommentController {
     constructor(
         private readonly commentService: CommentService,
         private readonly userService: UserService
-    ) {}
+    ) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async findAllComments(@Param("newsId") newsId: string): Promise<Comment[]> {
-        return this.commentService.findAllComments(newsId);
+    async findAllComments(
+        @Param("newsId") newsId: string,
+        @Req() req: RequestWithResource<Comment>
+    ): Promise<Comment[]> {
+        const user = req.user as User;
+        return this.commentService.findAllComments(newsId, user);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -25,39 +33,42 @@ export class CommentController {
     async create(
         @Param("newsId") newsId: string,
         @Body("content") content: string,
-        @Request() req: { user: { id: string; firstname: string; lastname: string; avatar: string } }
+        @Req() req: RequestWithResource<Comment>
     ): Promise<Comment> {
-        const user = req.user;
-        const userPicture = await this.userService.findOne(user.id);
-        const avatar = userPicture.profilePicture;
+        const user = req.user as User;
+        const userDB = await this.userService.findOne(user.id);
         const dto: CreateCommentDTO = {
             content,
             newsId,
             authorId: user.id,
             authorName: `${user.firstname} ${user.lastname}`,
-            authorAvatar: avatar,
+            authorAvatar: userDB.profilePicture,
+            irisCode: user.irisCode,
+            irisName: user.irisName,
         };
-        return this.commentService.createComment(dto);
+        return this.commentService.createComment(dto, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":commentId")
     async updateComment(
-        @Param("commentId") commentId: string,
-        @Request() req: { user: { id: string } },
-        @Body() updateCommentDTO: UpdateCommentDTO
+        @Resource() comment: CommentDocument,
+        @Body() updateCommentDTO: UpdateCommentDTO,
+        @Req() req: RequestWithResource<Comment>
     ): Promise<Comment> {
-        return this.commentService.updateComment(commentId, req.user.id, updateCommentDTO);
+        const user = req.user as User;
+        return this.commentService.updateComment(comment.id, user, updateCommentDTO);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":commentId")
     async removeComment(
-        @Param("commentId") commentId: string,
-        @Request() req: { user: { id: string; role: string } }
+        @Resource() comment: CommentDocument,
+        @Req() req: RequestWithResource<Comment>
     ): Promise<{ deleted: boolean }> {
-        const isAdminOrModerator = ["admin", "moderator"].includes(req.user.role);
-        await this.commentService.removeComment(commentId, req.user.id, isAdminOrModerator);
+        const user = req.user as User;
+        const isAdminOrModerator = ["admin", "moderator"].includes(user.role);
+        await this.commentService.removeComment(comment.id, user, isAdminOrModerator);
         return { deleted: true };
     }
 
@@ -66,8 +77,16 @@ export class CommentController {
     async toggleLike(
         @Param("newsId") newsId: string,
         @Param("commentId") commentId: string,
-        @Request() req: { user: { id: string } }
+        @Req() req: RequestWithResource<Comment>
     ): Promise<{ liked: boolean; totalLikes: number }> {
-        return this.commentService.toggleLike(commentId, req.user.id);
+        const comment = await this.commentService.findOneComment(commentId);
+
+        if (!comment) {
+            throw new NotFoundException("Comment not found.");
+        }
+
+        req.resource = comment;
+        const user = req.user as User;
+        return this.commentService.toggleLike(commentId, user);
     }
 }

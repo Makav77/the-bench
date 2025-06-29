@@ -55,7 +55,9 @@ function EventDetailPage() {
     const isAuthor = user && event && user.id === event.author.id;
     const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isSubscribe = event.participantsList.some((u) => u.id === user?.id);
-    const isFull = event.maxNumberOfParticipants !== undefined
+    const isFull =
+        typeof event.maxNumberOfParticipants === "number"
+        && event.maxNumberOfParticipants > 0
         && event.participantsList.length >= event.maxNumberOfParticipants
         && !isSubscribe;
 
@@ -100,40 +102,43 @@ function EventDetailPage() {
 
     return (
         <div>
-            <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
+            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl">
                 <div className="flex justify-between gap-4">
                     <button
+                        type="button"
                         onClick={() => navigate("/events")}
-                        className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white h-10"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer h-10"
                     >
                         ← Back
                     </button>
 
                     <div className="flex flex-col gap-2">
-                        {event.maxNumberOfParticipants == null ? (
-                            <p className="text-green-600 text-l font-semibold">Open event</p>
-                        ) : (
-                            isSubscribe ? (
-                                <button
-                                    onClick={handleUnsubscribe}
-                                    className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 cursor-pointer border"
-                                >
-                                    Unsubscribe
-                                </button>
-                            ) : isFull ? (
-                                <p className="text-gray-500 text-l font-semibold">Event full</p>
-                            ) : restricted ? (
-                                <p className="text-red-600 text-l font-semibold">
-                                    You are no longer allowed to register for this event until{" "}
-                                    {new Date(expiresAt!).toLocaleDateString()}.
-                                </p>
+                        {!isAuthor && (
+                            event.maxNumberOfParticipants == null ? (
+                                <p className="text-green-600 text-l font-semibold">Open event</p>
                             ) : (
-                                <button
-                                    onClick={handleSubscribe}
-                                    className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700 cursor-pointer"
-                                >
-                                    Subscribe
-                                </button>
+                                isSubscribe ? (
+                                    <button
+                                        onClick={handleUnsubscribe}
+                                        className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 cursor-pointer border"
+                                    >
+                                        Unsubscribe
+                                    </button>
+                                ) : isFull ? (
+                                    <p className="text-gray-500 text-l font-semibold">Event full</p>
+                                ) : restricted ? (
+                                    <p className="text-red-600 text-l font-semibold">
+                                        You are no longer allowed to register for this event until{" "}
+                                        {new Date(expiresAt!).toLocaleDateString()}.
+                                    </p>
+                                ) : (
+                                    <button
+                                        onClick={handleSubscribe}
+                                        className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700 cursor-pointer"
+                                    >
+                                        Subscribe
+                                    </button>
+                                )
                             )
                         )}
 
@@ -176,16 +181,11 @@ function EventDetailPage() {
                     {new Date(event.endDate).toLocaleString()}
                 </p>
 
-                {event.maxNumberOfParticipants && (
-                    <p>
-                        <strong>Max places :</strong> {event.maxNumberOfParticipants}
-                    </p>
-                )}
-
-                {event.maxNumberOfParticipants === null || event.maxNumberOfParticipants === undefined && (
-                    <p className="-mt-4">
-                        <strong>Participants :</strong> {event.participantsList.length}
-                    </p>
+                {typeof event.maxNumberOfParticipants === "number" && event.maxNumberOfParticipants > 0 && (
+                    <>
+                        <strong>Max places :</strong> {event.maxNumberOfParticipants} <br/>
+                        <strong>Remaining places :</strong> {event.maxNumberOfParticipants - event.participantsList.length}
+                    </>
                 )}
 
                 {(isAuthor || isAdminorModerator) && (
@@ -209,7 +209,7 @@ function EventDetailPage() {
                 {showParticipantModal && (
                     <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
                         <div className="bg-white rounded p-6 w-96 max-h-[70vh] overflow-auto">
-                            {event.maxNumberOfParticipants && (
+                            {typeof event.maxNumberOfParticipants === "number" && event.maxNumberOfParticipants > 0 && (
                                 <h2 className="text-xl font-bold mb-4">Registered ({event.participantsList.length} / {event.maxNumberOfParticipants})</h2>
                             )}
                             <ul className="space-y-2">

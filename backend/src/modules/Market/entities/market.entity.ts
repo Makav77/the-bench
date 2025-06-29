@@ -24,6 +24,12 @@ export class MarketItem {
     @Column({ nullable: true })
     contactPhone?: string;
 
+    @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
+
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 

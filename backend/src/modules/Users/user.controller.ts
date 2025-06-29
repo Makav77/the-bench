@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors, UploadedFile, Req } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors, UploadedFile, Req, BadRequestException } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname } from "path";
@@ -18,6 +18,13 @@ interface RequestWithUser extends Request {
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) {}
+
+    @UseGuards(JwtAuthGuard)
+    @Get("staff")
+    async getStaff(@Req() req: RequestWithUser) {
+        const userId = req.user.id;
+        return this.userService.getStaff(userId);
+    }
 
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -154,5 +161,15 @@ export class UserController {
     ): Promise<{ areFriends: boolean; requestSent: boolean; requestReceived: boolean; }> {
         const currentUserId = req.user.id;
         return this.userService.getFriendStatus(currentUserId, targetUserId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch("me/address")
+    async updateAddress(
+        @Req() req: RequestWithUser,
+        @Body() body: { street: string; postalCode: string; city: string }
+    ) {
+        const userId = req.user.id;
+        return this.userService.updateAddress(userId, body.street, body.postalCode, body.city);
     }
 }

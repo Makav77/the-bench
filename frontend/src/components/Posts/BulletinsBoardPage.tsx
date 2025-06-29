@@ -12,9 +12,9 @@ function BulletinsBoardPage() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [flashPosts, setFlashPosts] = useState<FlashPostSummary[]>([]);
-    const [flashPage, setFlashPage]     = useState(1);
+    const [flashPage, setFlashPage] = useState(1);
     const [flashLastPage, setFlashLastPage] = useState(1);
-    const [flashLoading, setFlashLoading]   = useState(false);
+    const [flashLoading, setFlashLoading] = useState(false);
 
     useEffect(() => {
         const load = async () => {
@@ -72,57 +72,59 @@ function BulletinsBoardPage() {
                 </button>
             </div>
 
-            <h1 className="text-2xl font-bold mb-4">Bulletins Board</h1>
+            <h1 className="text-3xl font-bold mb-4">Bulletins Board</h1>
 
             <section className="mb-8">
-                <h2 className="text-xl font-semibold mb-2">Flash Posts (24h)</h2>
+                <h2 className="text-2xl font-semibold mb-2">Flash Posts</h2>
 
-                    {flashLoading
-                        ? <p>Loading flash posts...</p>
-                        : flashPosts.length === 0
-                            ? <p className="italic text-gray-500 mb-5">No flash posts right now.</p>
-                            : (
-                                <div className="grid grid-cols-1 gap-4 border p-4 mb-4">
-                                    {flashPosts.map((flashpost) => {
-                                        const cardClass = (flashpost.author.role === "admin" || flashpost.author.role === "moderator") ? "border bg-green-400" : "border";
-                                        return (
-                                            <div
-                                                key={flashpost.id}
-                                                onClick={() => navigate(`/flashposts/${flashpost.id}`)}
-                                                className={`p-4 border ${cardClass} rounded cursor-pointer hover:shadow flex justify-between items-center`}
-                                            >
-                                                <div className="flex flex-col w-full">
-                                                    <h2 className="text-lg font-semibold">{flashpost.title}</h2>
-                                                    <div className="flex justify-between">
-                                                        <p className="text-sm text-gray-600">
-                                                            Last update at {new Date(flashpost.updatedAt).toLocaleString()}
-                                                        </p>
-                                                        <CountdownTimer createdAt={flashpost.updatedAt} />
-                                                    </div>
-                                                    <p className="text-sm text-gray-600">Author :{" "}
-                                                        <span
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                navigate(`/profile/${flashpost.author.id}`);
-                                                            }}
-                                                            className="text-blue-600 hover:underline cursor-pointer"
-                                                        >
-                                                            {flashpost.author.firstname} {flashpost.author.lastname}
-                                                        </span>
-                                                    </p>
-                                                </div>
+                {flashLoading
+                    ? <p>Loading flash posts...</p>
+                    : flashPosts.length === 0
+                        ? <p className="italic text-gray-500 mb-5">No flash posts right now.</p>
+                        : (
+                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl">
+                                {flashPosts.map((flashpost) => (
+                                    <div
+                                        key={flashpost.id}
+                                        onClick={() => navigate(`/flashposts/${flashpost.id}`)}
+                                        className="p-4 rounded-2xl cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100"
+                                    >
+                                        <div className="flex flex-col w-full">
+                                            <h2 className="text-lg font-semibold">{flashpost.title}</h2>
+                                            <div className="flex justify-between">
+                                                <p className="text-sm text-gray-600">
+                                                    Last update at {new Date(flashpost.updatedAt).toLocaleString()}
+                                                </p>
+                                                <CountdownTimer createdAt={flashpost.createdAt} />
                                             </div>
-                                        );
-                                    })}
-                                </div>
-                            )
-                    }
+                                            <p className="text-sm text-gray-600">Author :{" "}
+                                                <span
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        navigate(`/profile/${flashpost.author.id}`);
+                                                    }}
+                                                    className="text-blue-600 hover:underline cursor-pointer"
+                                                >
+                                                    {flashpost.author.firstname} {flashpost.author.lastname}
+                                                </span>
+                                                {(flashpost.author.role === "admin" || flashpost.author.role === "moderator") && (
+                                                    <span className="ml-1 font-semibold text-red-600">
+                                                        ({flashpost.author.role})
+                                                    </span>
+                                                )}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )
+                }
 
                 <div className="flex justify-center items-center gap-4">
                     <button
                         disabled={flashPage <= 1}
                         onClick={() => setFlashPage(p => p - 1)}
-                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
                         ← Prev
                     </button>
@@ -132,7 +134,7 @@ function BulletinsBoardPage() {
                     <button
                         disabled={flashPage >= flashLastPage}
                         onClick={() => setFlashPage(p => p + 1)}
-                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
                         Next →
                     </button>
@@ -140,40 +142,42 @@ function BulletinsBoardPage() {
             </section>
 
             <section className="mb-8">
-                <h2 className="text-xl font-semibold mb-2">Posts</h2>
+                <h2 className="text-2xl font-semibold mb-2">Posts</h2>
 
                 {loading
                     ? <p>Loading posts...</p>
                     : posts.length === 0
                         ? <p className="italic text-gray-500">No posts right now.</p>
                         : (
-                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4">
-                                {posts.map((post) => {
-                                    const cardClass = (post.author.role === "admin" || post.author.role === "moderator") ? "border bg-green-400" : "border";
-                                    return (
-                                        <div
-                                            key={post.id}
-                                            onClick={() => navigate(`/posts/${post.id}`)}
-                                            className={`p-4 border ${cardClass} rounded cursor-pointer hover:shadow flex justify-between items-center`}
-                                        >
-                                            <div className="flex flex-col">
-                                                <h2 className="text-lg font-semibold">{post.title}</h2>
-                                                <p className="text-sm text-gray-600">
-                                                    Last update at {new Date(post.updatedAt).toLocaleString()} by{" "}
-                                                    <span
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            navigate(`/profile/${post.author.id}`);
-                                                        }}
-                                                        className="text-blue-600 hover:underline cursor-pointer"
-                                                    >
-                                                        {post.author.firstname} {post.author.lastname}
+                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl">
+                                {posts.map((post) => (
+                                    <div
+                                        key={post.id}
+                                        onClick={() => navigate(`/posts/${post.id}`)}
+                                        className="p-4 rounded-2xl cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100"
+                                    >
+                                        <div className="flex flex-col">
+                                            <h2 className="text-lg font-semibold">{post.title}</h2>
+                                            <p className="text-sm text-gray-600">
+                                                Last update at {new Date(post.updatedAt).toLocaleString()} by{" "}
+                                                <span
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        navigate(`/profile/${post.author.id}`);
+                                                    }}
+                                                    className="text-blue-600 hover:underline cursor-pointer"
+                                                >
+                                                    {post.author.firstname} {post.author.lastname}
+                                                </span>
+                                                {(post.author.role === "admin" || post.author.role === "moderator") && (
+                                                    <span className="ml-1 font-semibold text-red-600">
+                                                        ({post.author.role})
                                                     </span>
-                                                </p>
-                                            </div>
+                                                )}
+                                            </p>
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                ))}
                             </div>
                         )
                 }
@@ -183,7 +187,7 @@ function BulletinsBoardPage() {
                         type="button"
                         disabled={page <= 1}
                         onClick={() => setPage((p) => p - 1)}
-                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
                         ← Prev
                     </button>
@@ -194,7 +198,7 @@ function BulletinsBoardPage() {
                         type="button"
                         disabled={page >= lastPage}
                         onClick={() => setPage((p) => p + 1)}
-                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
                         Next →
                     </button>

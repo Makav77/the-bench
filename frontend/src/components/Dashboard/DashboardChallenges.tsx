@@ -67,7 +67,7 @@ function DashboardChallenges() {
         }
         setUpdatingChallengeId(challengeId);
         try {
-            await validateChallenge(challengeId, { validated: false, rejectionReason: reason.trim() });
+            await validateChallenge(challengeId, { validated: false, rejectedReason: reason.trim() });
             toast.success("Challenge rejected.");
             setPendingChallenges((prev) => prev.filter((c) => c.id !== challengeId));
         } catch (error) {
@@ -93,7 +93,7 @@ function DashboardChallenges() {
     };
 
     const handleRejectCompletion = async (completion: PendingCompletion) => {
-        const reason = window.prompt("Raison du refus de la preuve :", "");
+        const reason = window.prompt("Please enter a reason for rejecting this completion :", "");
         if (reason === null) {
             return;
         }
@@ -105,6 +105,7 @@ function DashboardChallenges() {
         try {
             await validateCompletion(completion.challenge.id, completion.id, {
                 validated: false,
+                rejectedReason: reason.trim(),
             });
             toast.success("Completion refused.");
             setPendingCompletions((prev) => prev.filter((c) => c.id !== completion.id));
@@ -164,7 +165,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleValidateChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? "Validation…"
@@ -174,7 +175,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleRejectChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? "Rejection..."
@@ -250,7 +251,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleValidateCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingCompletionId === completion.id
                                         ? "Validation…"
@@ -259,7 +260,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleRejectCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingCompletionId === completion.id
                                         ? "Rejection..."

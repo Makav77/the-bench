@@ -31,13 +31,22 @@ export class User {
     @Column()
     lastname: string;
 
+    @Column()
+    address: string;
+
+    @Column({ nullable: true })
+    irisCode: string;
+
+    @Column({ nullable: true })
+    irisName: string;
+
     @Column({ unique: true })
     email: string;
 
     @Column()
     password: string;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: "date" })
     dateOfBirth: Date;
 
     @Column()

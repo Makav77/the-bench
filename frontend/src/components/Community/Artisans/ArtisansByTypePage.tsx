@@ -63,19 +63,20 @@ export default function ArtisansByTypePage() {
 
     return (
         <div className="w-[25%] mx-auto my-10">
-            <button
-                onClick={() => navigate("/artisans")}
-                className="bg-gray-300 font-bold px-4 py-2 rounded-2xl cursor-pointer hover:bg-gray-200 mb-5"
-            >
-                ← Back to artisans list
-            </button>
+                <button
+                    type="button"
+                    onClick={() => navigate("/artisans")}
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                >
+                    ← Back to artisan list
+                </button>
             <h2 className="text-2xl font-bold mb-4"><span className="capitalize">{job}</span> arounde me</h2>
             {artisans.length > 0 ? (
                 <ul className="space-y-6">
                     {artisans.map(a => (
                         <li 
                             key={a.place_id}
-                            className="border rounded-2xl p-6 shadow-xl bg-white"
+                            className="rounded-2xl p-6 shadow-xl bg-white"
                         >
                             <h3 className="text-xl font-bold">{a.name}</h3>
                             <p className="text-gray-700">{a.formatted_address}</p>
@@ -129,10 +130,11 @@ export default function ArtisansByTypePage() {
                 <p className="italic text-gray-500">No artisan found.</p>
             )}
             <button
+                type="button"
                 onClick={() => navigate("/artisans")}
-                className="mt-6 bg-white px-4 py-1 rounded-2xl hover:bg-gray-300 cursor-pointer border"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mt-5"
             >
-                ← Back
+                ← Back to artisan list
             </button>
         </div>
     );
