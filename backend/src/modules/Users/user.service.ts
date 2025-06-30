@@ -110,7 +110,6 @@ export class UserService {
             });
 
             if (!user) {
-                console.log("No user found for userId:", userId);
                 throw new NotFoundException("User not found.");
             }
 

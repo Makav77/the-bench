@@ -15,10 +15,8 @@ export class LoadCommentResourceMiddleware implements NestMiddleware {
         next: NextFunction
     ) {
         const id = req.params.commentId;
-        console.log("LoadCommentResourceMiddleware, commentId:", id);
         if (id) {
             if (!isValidObjectId(id)) {
-                console.log("Invalid ObjectId, skip resource load.");
                 return next();
             }
             const comment = await this.commentService.findOneComment(id);

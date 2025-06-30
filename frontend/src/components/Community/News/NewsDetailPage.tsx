@@ -114,7 +114,6 @@ function NewsDetailPage() {
     };
 
     const handleEditComment = (commentId: string, currentContent: string) => {
-        console.log('newsId:', id, 'commentId:', commentId);
         setEditingComment(commentId);
         setEditContent(currentContent);
     };

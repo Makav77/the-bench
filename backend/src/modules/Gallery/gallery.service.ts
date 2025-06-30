@@ -2,11 +2,11 @@ import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/commo
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { GalleryItem } from "./entities/gallery-item.entity";
-import { CreateGalleryItemDTO } from "./dto/create-gallery-item.dto";
 import { User, Role } from "../Users/entities/user.entity";
 import { join } from "path";
 import { unlink } from "fs/promises";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { toast } from "react-toastify";
 
 @Injectable()
 export class GalleryService {
@@ -103,7 +103,7 @@ export class GalleryService {
         try {
             await unlink(filePath);
         } catch (error) {
-            console.error("Could not delete file.");
+            toast.error("Could not delete file : " + error);
         }
 
         await this.galleryRepo.delete(id);

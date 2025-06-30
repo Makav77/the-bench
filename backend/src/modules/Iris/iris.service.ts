@@ -28,7 +28,6 @@ export class IrisService {
         const irisPath = path.resolve(process.cwd(), "src/data/iris-idf.geojson");
         const geojsonData = JSON.parse(fs.readFileSync(irisPath, "utf-8"));
         this.irisFeatures = geojsonData.features;
-        console.log(`[IRIS] Chargé ${this.irisFeatures.length} quartiers IRIS d'Île-de-France`);
     }
 
     async getCitiesByPostalCode(postalCode: string): Promise<string[]> {
