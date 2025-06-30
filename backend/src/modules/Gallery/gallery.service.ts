@@ -6,7 +6,6 @@ import { User, Role } from "../Users/entities/user.entity";
 import { join } from "path";
 import { unlink } from "fs/promises";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { toast } from "react-toastify";
 
 @Injectable()
 export class GalleryService {
@@ -103,7 +102,7 @@ export class GalleryService {
         try {
             await unlink(filePath);
         } catch (error) {
-            toast.error("Could not delete file : " + error);
+            console.error("Could not delete file : " + error);
         }
 
         await this.galleryRepo.delete(id);
