@@ -118,6 +118,7 @@ export default function App() {
                                 <Route path="/news/:id/edit" element={<EditNews />} />
                                 <Route path="/termsofuse" element={<TermsOfUse />} />
                             </Route>
+                        </Route>
                     </Routes>
 
                     <ToastContainer
