@@ -77,7 +77,6 @@ function Login() {
         }
         setCurrentLoginState(loginState.noError);
         setIsLoading(true);
-        console.log("Credentials : " + JSON.stringify(loginCredentials));
         try {
             const data = await loginUser(loginCredentials);
 
@@ -133,7 +132,7 @@ function Login() {
                     <button
                         type="button"
                         aria-label="toggle-password-visibility"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                         onClick={togglePasswordVisibility}
                         onKeyUp={handleKeyPress}
                     >

@@ -4,6 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { deleteEvent } from "../../api/eventService";
 import { toast } from "react-toastify";
+import { removeParticipant } from "../../api/eventService";
+import usePermission from "../Utils/usePermission";
+import ReportModal from "../Utils/ReportModal";
 import { subscribeEvent, unsubscribeEvent } from "../../api/eventService";
 
 function EventDetailPage() {
@@ -11,9 +14,13 @@ function EventDetailPage() {
     const { user } = useAuth();
     const navigate = useNavigate();
 
+    const { restricted, expiresAt, loading: permLoading } = usePermission("register_event");
     const [event, setEvent] = useState<EventDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showParticipantModal, setShowParticipantModal] = useState(false);
+    const [removingId, setRemovingId] = useState<string | null>(null);
+    const [showReportModal, setShowReportModal] = useState<boolean>(false);
     const isOwner = user && event && user.id === event.author.id;
     const isAdmin = user && user.role === "admin";
 
@@ -50,8 +57,12 @@ function EventDetailPage() {
         return null;
     }
 
+    const isAuthor = user && event && user.id === event.author.id;
+    const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
     const isSubscribe = event.participantsList.some((u) => u.id === user?.id);
-    const isFull = event.maxNumberOfParticipants !== undefined
+    const isFull =
+        typeof event.maxNumberOfParticipants === "number"
+        && event.maxNumberOfParticipants > 0
         && event.participantsList.length >= event.maxNumberOfParticipants
         && !isSubscribe;
 
@@ -94,87 +105,178 @@ function EventDetailPage() {
         }
     };
 
-    return (
-        <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
-            <div className="flex justify-between gap-4">
-                <button
-                    onClick={() => navigate("/events")}
-                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
-                >
-                    ← Back
-                </button>
+    if (permLoading) {
+        return <p>Checking permissions…</p>;
+    }
 
-                {isSubscribe ? (
+    return (
+        <div>
+            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl">
+                <div className="flex justify-between gap-4">
                     <button
-                        onClick={handleUnsubscribe}
-                        className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700"
+                        type="button"
+                        onClick={() => navigate("/events")}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer h-10"
                     >
-                        Unsubscribe
+                        ← Back
                     </button>
-                ) : isFull ? (
-                    <p className="text-gray-500 text-l font-semibold">
-                        Event full
-                    </p>
-                ) : (
-                    <button
-                        onClick={handleSubscribe}
-                        className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700"
+
+                    <div className="flex flex-col gap-2">
+                        {!isAuthor && (
+                            event.maxNumberOfParticipants == null ? (
+                                <p className="text-green-600 text-l font-semibold">Open event</p>
+                            ) : (
+                                isSubscribe ? (
+                                    <button
+                                        onClick={handleUnsubscribe}
+                                        className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 cursor-pointer border"
+                                    >
+                                        Unsubscribe
+                                    </button>
+                                ) : isFull ? (
+                                    <p className="text-gray-500 text-l font-semibold">Event full</p>
+                                ) : restricted ? (
+                                    <p className="text-red-600 text-l font-semibold">
+                                        You are no longer allowed to register for this event until{" "}
+                                        {new Date(expiresAt!).toLocaleDateString()}.
+                                    </p>
+                                ) : (
+                                    <button
+                                        onClick={handleSubscribe}
+                                        className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700 cursor-pointer"
+                                    >
+                                        Subscribe
+                                    </button>
+                                )
+                            )
+                        )}
+
+                        {event.maxNumberOfParticipants != null && (isAuthor || isAdminorModerator) && (
+                            <button
+                                onClick={() => setShowParticipantModal(true)}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 border rounded cursor-pointer"
+                            >
+                                Participant list
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                <h1 className="text-3xl font-bold">{event.name}</h1>
+
+                <p className="-mt-4">
+                    <strong>Author : </strong>
+                    <span
+                        onClick={() => navigate(`/profile/${event.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
                     >
-                        Subscribe
-                    </button>
+                        {event.author.firstname} {event.author.lastname}
+                    </span>
+                </p>
+
+                <strong>Description</strong>
+                <p className="whitespace-pre-wrap">{event.description}</p>
+
+                <strong>Place</strong> 
+                <p className="whitespace-pre-wrap">{event.place}</p>
+
+                <p>
+                    <strong>Start : </strong>
+                    {new Date(event.startDate).toLocaleString()}
+                </p>
+
+                <p className="-mt-4">
+                    <strong className="mr-2">End :</strong>{" "}
+                    {new Date(event.endDate).toLocaleString()}
+                </p>
+
+                {typeof event.maxNumberOfParticipants === "number" && event.maxNumberOfParticipants > 0 && (
+                    <>
+                        <strong>Max places :</strong> {event.maxNumberOfParticipants} <br/>
+                        <strong>Remaining places :</strong> {event.maxNumberOfParticipants - event.participantsList.length}
+                    </>
+                )}
+
+                {(isAuthor || isAdminorModerator) && (
+                    <div className="mt-4 flex gap-2 justify-center">
+                        <button
+                            onClick={() => navigate(`/events/${id}/edit`)}
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                        >
+                            Edit event
+                        </button>
+                        
+                        <button
+                            onClick={handleDelete}
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                        >
+                            Delete event
+                        </button>
+                    </div>
+                )}
+
+                {showParticipantModal && (
+                    <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
+                        <div className="bg-white rounded p-6 w-96 max-h-[70vh] overflow-auto">
+                            {typeof event.maxNumberOfParticipants === "number" && event.maxNumberOfParticipants > 0 && (
+                                <h2 className="text-xl font-bold mb-4">Registered ({event.participantsList.length} / {event.maxNumberOfParticipants})</h2>
+                            )}
+                            <ul className="space-y-2">
+                                {event.participantsList.map(user => (
+                                    <li
+                                        key={user.id}
+                                        className="flex justify-between items-center px-5"
+                                    >
+                                        <span>{user.firstname} {user.lastname}</span>
+                                        <button
+                                            disabled={removingId === user.id}
+                                            onClick={async () => {
+                                                setRemovingId(user.id);
+                                                try {
+                                                    const updated = await removeParticipant(id!, user.id);
+                                                    setEvent(updated);
+                                                    toast.success("User deleted.");
+                                                } catch (error) {
+                                                    toast.error("Error : " + error);
+                                                } finally {
+                                                    setRemovingId(null);
+                                                }
+                                            }}
+                                            className="text-red-600 hover:underline disabled:opacity-50 cursor-pointer underline"
+                                        >
+                                            Unsubscribe
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                            <button
+                                onClick={() => setShowParticipantModal(false)}
+                                className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
                 )}
             </div>
 
-            <h1 className="text-2xl font-bold">{event.name}</h1>
-            <p>
-                <strong>Début :</strong>{" "}
-                {new Date(event.startDate).toLocaleString()}
-            </p>
-
-            <p>
-                <strong>Fin :</strong>{" "}
-                {new Date(event.endDate).toLocaleString()}
-            </p>
-
-            <p>
-                <strong>Lieu :</strong> {event.place}
-            </p>
-
-            {event.maxNumberOfParticipants && (
-                <p>
-                    <strong>Max places :</strong> {event.maxNumberOfParticipants}
-                </p>
-            )}
-
-            <p>
-                <strong>Description :</strong>
-            </p>
-            <p className="whitespace-pre-wrap">{event.description}</p>
-
-            <p>
-                <strong>Auteur :</strong> {event.author.firstname}{" "}
-                {event.author.lastname}
-            </p>
-
-            <p>
-                <strong>Participants :</strong> {event.participantsList.length}
-            </p>
-
-            {(isOwner || isAdmin) && (
-                <div className="mt-4 flex gap-2 justify-center">
+            {!isAuthor && event.author.role !== "admin" && event.author.role !== "moderator" && (
+                <div className="w-[20%] mx-auto flex justify-end">
                     <button
-                        onClick={() => navigate(`/events/${id}/edit`)}
-                        className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                     >
-                        Edit event
+                        Report event
                     </button>
-                    
-                    <button
-                        onClick={handleDelete}
-                        className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
-                    >
-                        Delete event
-                    </button>
+
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={event.author.id}
+                            reportedContentId={event.id}
+                            reportedContentType="EVENT"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
                 </div>
             )}
         </div>

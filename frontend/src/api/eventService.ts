@@ -5,19 +5,20 @@ export interface EventSummary {
     id: string;
     name: string;
     startDate: string;
-    maxNumberOfParticipants?: number;
+    endDate: string;
+    maxNumberOfParticipants: number | null;
+    author: { id: string; firstname: string; lastname: string; role: string };
     participantsList: { id: string }[];
 }
 
 export interface EventDetails extends EventSummary {
-    endDate: string;
     createdDate: string;
     updatedDate: string;
     place: string;
-    maxNumberOfParticipants?: number;
+    maxNumberOfParticipants: number | null;
     description: string;
-    author: { id: string; firstname: string; lastname: string };
-    participantsList: { id: string }[];
+    author: { id: string; firstname: string; lastname: string; role: string };
+    participantsList: { id: string; firstname: string; lastname: string; }[];
 }
 
 export const getEvents = async (page = 1, limit = 5): Promise<{ data: EventSummary[]; total: number; page: number; lastPage: number }> => {
@@ -41,8 +42,7 @@ export const updateEvent = async (id: string, data: EventFormData): Promise<Even
 }
 
 export const deleteEvent = async (id: string): Promise<void> => {
-    const response = await apiClient.delete(`/events/${id}`);
-    return response.data;
+    await apiClient.delete(`/events/${id}`);
 }
 
 export const subscribeEvent = async (id: string): Promise<EventDetails> => {

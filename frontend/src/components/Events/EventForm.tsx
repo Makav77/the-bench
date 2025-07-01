@@ -6,7 +6,7 @@ export interface EventFormData {
     startDate: string;
     endDate: string;
     place: string;
-    maxNumberOfParticipants?: number;
+    maxNumberOfParticipants?: number | null;
     description: string;
 }
 
@@ -41,10 +41,11 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         const { name, value } = e.target;
         setForm((f) => ({
             ...f,
-            [name]:
-                name === "maxNumberOfParticipants" ? value === "" ? undefined: parseInt(value, 10): value
+            [name]: name === "maxNumberOfParticipants"
+                ? value === "" ? undefined : parseInt(value, 10)
+                : value
         }));
-        setError(null)
+        setError(null);
     }
 
     const handleSubmit = async (e: FormEvent) => {
@@ -167,7 +168,7 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
                     {isSubmitting ? "Loading..." : defaultValues ? "Update" : "Create"}
                 </button>

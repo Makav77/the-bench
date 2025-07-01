@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function Navigation() {
     const { t } = useTranslation("Navigation");
     const navigate = useNavigate();
+    const location = useLocation();
 
     return (
         <nav
@@ -13,7 +15,7 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="homepage-button"
-                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
+                className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 ${location.pathname.startsWith("/homepage") ? "text-white" : "hover:underline"}`}
                 onClick={() => navigate("/homepage")}
             >
                 {t("homePage")}
@@ -22,7 +24,7 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="market-button"
-                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
+                className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 ${location.pathname.startsWith("/marketplace") || location.pathname.startsWith("/market") ? "text-white" : "hover:underline"}`}
                 onClick={() => navigate("/marketplace")}
             >
                 {t("marketplace")}
@@ -31,7 +33,7 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="listings-button"
-                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
+                className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 ${location.pathname.startsWith("/bulletinsboard") || location.pathname.startsWith("/posts") || location.pathname.startsWith("/flashposts") ? "text-white" : "hover:underline"}`}
                 onClick={() => navigate("/listings")}
             >
                 {t("listings")}
@@ -40,7 +42,7 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="events-button"
-                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
+                className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 ${location.pathname.startsWith("/events") ? "text-white" : "hover:underline"}`}
                 onClick={() => navigate("/events")}
             >
                 {t("events")}
@@ -49,7 +51,15 @@ function Navigation() {
             <button
                 type="button"
                 aria-label="community-button"
-                className="w-[75%] mx-auto text-xl font-semibold hover:cursor-pointer underline hover:text-white transition-all duration-300"
+                className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 
+                    ${location.pathname.startsWith("/community") ||
+                    location.pathname.startsWith("/gallery") ||
+                    location.pathname.startsWith("/polls") ||
+                    location.pathname.startsWith("/challenges") ||
+                    location.pathname.startsWith("/calendar") ||
+                    location.pathname.startsWith("/artisans") ||
+                    location.pathname.startsWith("/news")
+                        ? "text-white" : "hover:underline"}`}
                 onClick={() => navigate("/community")}
             >
                 {t("community")}

@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         })();
     }, []);
 
-    const fetchUser = async() => {
+    const fetchUser = async () => {
         try {
             const me = await fetchMe();
             setUser(me);

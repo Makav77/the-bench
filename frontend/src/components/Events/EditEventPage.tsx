@@ -19,11 +19,26 @@ export default function EditEventPage() {
         fetch();
     }, [id]);
 
+
     const handleSubmit = async (data: EventFormData) => {
         if (!id) return;
-        const updated = await updateEvent(id, data);
+
+        const toSend: EventFormData = {
+            name: data.name,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            place: data.place,
+            description: data.description,
+            maxNumberOfParticipants:
+                (data.maxNumberOfParticipants === undefined || data.maxNumberOfParticipants === null || data.maxNumberOfParticipants <= 0)
+                    ? null
+                    : data.maxNumberOfParticipants
+        };
+
+        const updated = await updateEvent(id, toSend);
+        toast.success("Event updated !");
         navigate(`/events/${updated.id}`);
-    }
+    };
 
     if (!event) {
         return <p>Loading...</p>
