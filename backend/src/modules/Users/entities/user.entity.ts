@@ -13,6 +13,7 @@ import { ChallengeCompletion } from 'src/modules/Challenges/entities/challenge-c
 import { Permission } from 'src/modules/Permissions/entities/permission.entity';
 import { UserRestriction } from 'src/modules/Permissions/entities/user-restriction.entity';
 import { Report } from 'src/modules/Reports/entities/report.entity';
+import { Message } from 'src/modules/chat/entities/message.entity';
 
 export enum Role {
     USER = "user",
@@ -117,6 +118,9 @@ export class User {
 
     @OneToMany(() => Report, (report) => report.reportedUser)
     reportsReceived: Report[];
+
+    @OneToMany(() => Message, message => message.sender)
+    messages: Message[];
 
     @ManyToMany(() => User, (user) => user.friends)
     @JoinTable({ name: "user_friends" })
