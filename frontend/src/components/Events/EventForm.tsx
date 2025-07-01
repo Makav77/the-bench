@@ -1,12 +1,13 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { toLocalInput } from "../Utils/Date";
+import { useNavigate } from "react-router-dom";
 
 export interface EventFormData {
     name: string;
     startDate: string;
     endDate: string;
     place: string;
-    maxNumberOfParticipants?: number;
+    maxNumberOfParticipants?: number | null;
     description: string;
 }
 
@@ -15,7 +16,7 @@ interface EventFormProps {
     onSubmit: (data: EventFormData) => void;
 }
 
-export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
+function EventForm({ defaultValues, onSubmit }: EventFormProps) {
     const [form, setForm] = useState<EventFormData>(() => {
         if (defaultValues) {
             return {
@@ -36,15 +37,17 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
 
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setForm((f) => ({
             ...f,
-            [name]:
-                name === "maxNumberOfParticipants" ? value === "" ? undefined: parseInt(value, 10): value
+            [name]: name === "maxNumberOfParticipants"
+                ? value === "" ? undefined : parseInt(value, 10)
+                : value
         }));
-        setError(null)
+        setError(null);
     }
 
     const handleSubmit = async (e: FormEvent) => {
@@ -65,7 +68,7 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         }
 
         try {
-            await onSubmit(form);
+            onSubmit(form);
         } catch (error) {
             setError((error instanceof Error && error.message) ? error.message : "Error");
         } finally {
@@ -163,11 +166,18 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                 />
             </div>
 
-            <div className="text-right">
+            <div className="flex justify-between">
+                <button
+                    type="button"
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
+                    onClick={() => navigate("/events")}
+                >
+                    Cancel
+                </button>
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
                     {isSubmitting ? "Loading..." : defaultValues ? "Update" : "Create"}
                 </button>
@@ -175,3 +185,5 @@ export default function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         </form>
     );
 }
+
+export default EventForm;

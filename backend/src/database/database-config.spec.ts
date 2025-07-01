@@ -18,18 +18,18 @@ describe('Database Config', () => {
 
     it('should return valid TypeOrmModuleOptions', async () => {
         const expected = {
-        type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'admin',
-        password: 'password',
-        database: 'db',
-        logging: true,
-        synchronize: true,
-        entities: [expect.stringContaining('/**/*.entity')],
+            type: 'postgres',
+            host: 'localhost',
+            port: 5432,
+            username: 'admin',
+            password: 'password',
+            database: 'db',
+            logging: true,
+            synchronize: true,
+            entities: [expect.stringContaining('/**/*.entity')],
         };
 
-        const { databaseConfig } = await import('./database-config');
+        const { databaseConfig } = await import('./postgres-database-config');
         expect(databaseConfig).toMatchObject(expected);
     });
 });

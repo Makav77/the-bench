@@ -3,8 +3,10 @@ import { getEvents, EventSummary, subscribeEvent } from "../../api/eventService"
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import usePermission from "../Utils/usePermission";
 
 function EventsPage() {
+    const { restricted, expiresAt, loading: permLoading } = usePermission("register_event");
     const [events, setEvents] = useState<EventSummary[]>([]);
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
@@ -23,7 +25,7 @@ function EventsPage() {
                 setEvents(data);
                 setLastPage(lastPage);
             } catch(error) {
-                setError("Impossible de charger les événements : " + error);
+                setError("Unable to load events : " + error);
             } finally {
                 setIsLoading(false);
             }
@@ -45,7 +47,7 @@ function EventsPage() {
     }
 
     return (
-        <div className="p-6 w-[40%] mx-auto">
+        <div className="p-6 w-[30%] mx-auto">
             <div className="flex justify-end mb-4 h-10">
                 <button
                     type="button"
@@ -58,62 +60,77 @@ function EventsPage() {
 
             <h1 className="text-2xl font-bold mb-4">Upcoming Events</h1>
 
-            {isLoading && <p>Loading...</p>}
-            {error && <p className="text-red-500">{error}</p>}
+            {permLoading ? (
+                <p>Checking permissions...</p>
+            ) : restricted ? (
+                <p className="text-red-600">
+                    You are no longer allowed to register for events until{" "}
+                    {new Date(expiresAt!).toLocaleDateString()}.
+                </p>
+            ) : (
+                <div>
+                    {isLoading && <p>Loading...</p>}
+                    {error && <p className="text-red-500">{error}</p>}
 
-            <div className="grid grid-cols-1 gap-4">
-                {events.map((event) => (
-                    <div
-                        key={event.id}
-                        className="p-4 border rounded cursor-pointer hover:shadow flex justify-between items-center"
-                        onClick={() => navigate(`/events/${event.id}`)}
-                    >
-                        <div className="flex flex-col">
-                            <h2 className="text-lg font-semibold">{event.name}</h2>
-                            <p>{new Date(event.startDate).toLocaleString()}</p>
-                        </div>
-
-                        {(() => {
+                    <div className="grid grid-cols-1 gap-4">
+                        {events.map((event) => {
                             const isSubscribed = event.participantsList.some((u) => u.id === user?.id);
-                            const isFull = event.maxNumberOfParticipants !== undefined
+                            const isAuthor = user && user.id === event.author.id;
+                            const isFull =
+                                typeof event.maxNumberOfParticipants === "number"
+                                && event.maxNumberOfParticipants > 0
                                 && event.participantsList.length >= event.maxNumberOfParticipants
                                 && !isSubscribed;
 
-                            if (isSubscribed) {
-                                return <p className="text-blue-600 font-semibold">You are registered</p>
-                            }
-
                             return (
-                                <>
-                                    {event.maxNumberOfParticipants === null || event.maxNumberOfParticipants === undefined ? (
-                                        <span className="text-green-700 font-semibold">Open event</span>
-                                    ) : isFull ? (
-                                        <span className="text-red-500 font-semibold">Event full</span>
+                                <div
+                                    key={event.id}
+                                    className="p-4 cursor-pointer hover:shadow flex justify-between items-center bg-white rounded-2xl hover:bg-gray-100"
+                                    onClick={() => navigate(`/events/${event.id}`)}
+                                >
+                                    <div className="flex flex-col">
+                                        <h2 className="text-lg font-semibold">{event.name}</h2>
+                                        <p>{new Date(event.startDate).toLocaleString()}</p>
+                                    </div>
+
+                                    {isAuthor ? (
+                                        <span className="text-purple-700 font-semibold">Your event</span>
+                                    ) : isSubscribed ? (
+                                        <p className="text-blue-600 font-semibold">You are registered</p>
                                     ) : (
-                                        <button
-                                            onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleSubscribe(event.id);
-                                            }}
-                                            className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700"
-                                        >
-                                            Register
-                                        </button>
+                                        <>
+                                            {(typeof event.maxNumberOfParticipants !== "number" || event.maxNumberOfParticipants <= 0) ? (
+                                                <span className="text-green-700 font-semibold">Open event</span>
+                                            ) : isFull ? (
+                                                <span className="text-red-500 font-semibold">Event full</span>
+                                            ) : (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleSubscribe(event.id);
+                                                    }}
+                                                    className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700 cursor-pointer"
+                                                >
+                                                    Register
+                                                </button>
+                                            )}
+                                        </>
                                     )}
-                                </>
+                                </div>
                             );
-                        })()}
+                        })}
                     </div>
-                ))}
-            </div>
+                </div>
+            )}
 
             <div className="flex justify-center items-center mt-6 gap-4">
                 <button
+                    type="button"
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    ← Back
+                    ← Prev
                 </button>
 
                 <span>
@@ -121,9 +138,10 @@ function EventsPage() {
                 </span>
 
                 <button
-                disabled={page >= lastPage}
-                onClick={() => setPage((p) => p + 1)}
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    type="button"
+                    disabled={page >= lastPage}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
                     Next →
                 </button>

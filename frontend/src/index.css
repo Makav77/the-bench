@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
-:root { background-color: #77B5F5;}
+:root {
+    background: #0072ff;
+}
 
 @keyframes shake {
     0% {

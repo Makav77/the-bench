@@ -44,7 +44,7 @@ describe("Navigation link", () => {
         const listingsButton = screen.getByLabelText("listings-button");
         fireEvent.click(listingsButton);
 
-        expect(mockNavigate).toHaveBeenCalledWith("/listings");
+        expect(mockNavigate).toHaveBeenCalledWith("/bulletinsboard");
     })
 
     test("Navigation to events", () => {
