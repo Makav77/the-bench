@@ -21,7 +21,7 @@ function toFormData(data: ItemFormData): FormData {
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
-    if (data.price !== undefined) {
+    if (data.price != null && !isNaN(Number(data.price))) {
         formData.append("price", data.price.toString());
     }
     data.images?.forEach((file) => {

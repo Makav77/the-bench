@@ -1,5 +1,3 @@
-// frontend/src/components/Gallery/CreateGalleryItemPage.tsx
-
 import { useState, ChangeEvent, FormEvent, useRef } from "react";
 import { createGalleryItem } from "../../../api/galleryService";
 import { useNavigate } from "react-router-dom";

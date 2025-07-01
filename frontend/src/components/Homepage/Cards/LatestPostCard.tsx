@@ -41,7 +41,7 @@ function LatestPostCard() {
     return (
         <div
             onClick={() => navigate(`/posts/${post.id}`)}
-            className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-lg shadow hover:cursor-pointer hover:shadow-md transition h-25 px-5 mb-10"
+            className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5 mb-10"
         >
             <div className="pr-4">
                 <h4 className="text-lg font-bold">{post.title}</h4>
@@ -51,7 +51,17 @@ function LatestPostCard() {
             </div>
 
             <div>
-                <p>Author : {post.author.firstname} {post.author.lastname}</p>
+                <p>Author :{" "}
+                    <span
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/profile/${post.author.id}`);
+                        }}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {post.author.firstname} {post.author.lastname}
+                    </span>
+                </p>
             </div>
         </div>
     );

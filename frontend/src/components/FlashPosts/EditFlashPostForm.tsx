@@ -10,7 +10,7 @@ function EditFlashPostForm() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetch = async() => {
+        const fetch = async () => {
             if (id) {
                 const defaults = await getFlashPost(id);
                 setDefaults(defaults);
@@ -19,7 +19,7 @@ function EditFlashPostForm() {
         fetch();
     }, [id]);
 
-    const handleSubmit = async(data: { title: string; description: string; }) => {
+    const handleSubmit = async (data: { title: string; description: string; }) => {
         if (!id) return;
         const updated = await updateFlashPost(id!, data);
         toast.success("Flash Post updated !");

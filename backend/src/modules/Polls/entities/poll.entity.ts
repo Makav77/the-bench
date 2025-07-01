@@ -15,6 +15,12 @@ export class Poll {
     @Column({ type: "enum", enum: PollType })
     type: PollType;
 
+    @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
+
     @Column({ type: "int", nullable: true })
     maxSelections?: number;
 

@@ -47,7 +47,7 @@ function EventsPage() {
     }
 
     return (
-        <div className="p-6 w-[40%] mx-auto">
+        <div className="p-6 w-[30%] mx-auto">
             <div className="flex justify-end mb-4 h-10">
                 <button
                     type="button"
@@ -68,56 +68,59 @@ function EventsPage() {
                     {new Date(expiresAt!).toLocaleDateString()}.
                 </p>
             ) : (
-                <>
+                <div>
                     {isLoading && <p>Loading...</p>}
                     {error && <p className="text-red-500">{error}</p>}
 
                     <div className="grid grid-cols-1 gap-4">
-                        {events.map((event) => (
-                            <div
-                                key={event.id}
-                                className="p-4 border rounded cursor-pointer hover:shadow flex justify-between items-center"
-                                onClick={() => navigate(`/events/${event.id}`)}
-                            >
-                                <div className="flex flex-col">
-                                    <h2 className="text-lg font-semibold">{event.name}</h2>
-                                    <p>{new Date(event.startDate).toLocaleString()}</p>
-                                </div>
+                        {events.map((event) => {
+                            const isSubscribed = event.participantsList.some((u) => u.id === user?.id);
+                            const isAuthor = user && user.id === event.author.id;
+                            const isFull =
+                                typeof event.maxNumberOfParticipants === "number"
+                                && event.maxNumberOfParticipants > 0
+                                && event.participantsList.length >= event.maxNumberOfParticipants
+                                && !isSubscribed;
 
-                                {(() => {
-                                    const isSubscribed = event.participantsList.some((u) => u.id === user?.id);
-                                    const isFull = event.maxNumberOfParticipants !== undefined
-                                        && event.participantsList.length >= event.maxNumberOfParticipants
-                                        && !isSubscribed;
+                            return (
+                                <div
+                                    key={event.id}
+                                    className="p-4 cursor-pointer hover:shadow flex justify-between items-center bg-white rounded-2xl hover:bg-gray-100"
+                                    onClick={() => navigate(`/events/${event.id}`)}
+                                >
+                                    <div className="flex flex-col">
+                                        <h2 className="text-lg font-semibold">{event.name}</h2>
+                                        <p>{new Date(event.startDate).toLocaleString()}</p>
+                                    </div>
 
-                                    if (isSubscribed) {
-                                        return <p className="text-blue-600 font-semibold">You are registered</p>
-                                    }
-
-                                    return (
+                                    {isAuthor ? (
+                                        <span className="text-purple-700 font-semibold">Your event</span>
+                                    ) : isSubscribed ? (
+                                        <p className="text-blue-600 font-semibold">You are registered</p>
+                                    ) : (
                                         <>
-                                            {event.maxNumberOfParticipants === null || event.maxNumberOfParticipants === undefined ? (
+                                            {(typeof event.maxNumberOfParticipants !== "number" || event.maxNumberOfParticipants <= 0) ? (
                                                 <span className="text-green-700 font-semibold">Open event</span>
                                             ) : isFull ? (
                                                 <span className="text-red-500 font-semibold">Event full</span>
                                             ) : (
                                                 <button
                                                     onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleSubscribe(event.id);
+                                                        e.stopPropagation();
+                                                        handleSubscribe(event.id);
                                                     }}
-                                                    className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700"
+                                                    className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700 cursor-pointer"
                                                 >
                                                     Register
                                                 </button>
                                             )}
                                         </>
-                                    );
-                                })()}
-                            </div>
-                        ))}
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
-                </>
+                </div>
             )}
 
             <div className="flex justify-center items-center mt-6 gap-4">

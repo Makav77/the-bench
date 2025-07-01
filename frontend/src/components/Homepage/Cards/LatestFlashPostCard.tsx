@@ -42,7 +42,7 @@ function LatestFlashPostCard() {
     return (
         <div
             onClick={() => navigate(`/flashposts/${flashPost.id}`)}
-            className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-lg shadow hover:cursor-pointer hover:shadow-md transition h-25 px-5 mb-10"
+            className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5 mb-10"
         >
             <div className="pr-4">
                 <h4 className="text-lg font-bold">{flashPost.title}</h4>
@@ -52,7 +52,17 @@ function LatestFlashPostCard() {
             </div>
 
             <div>
-                <p>Author : {flashPost.author.firstname} {flashPost.author.lastname}</p>
+                <p>Author :{" "}
+                    <span
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/profile/${flashPost.author.id}`);
+                        }}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {flashPost.author.firstname} {flashPost.author.lastname}
+                    </span>
+                </p>
                 <div className="text-center">
                     <CountdownTimer createdAt={flashPost.updatedAt} />
                 </div>

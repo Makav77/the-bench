@@ -23,18 +23,18 @@ function ChallengesPage() {
     }, [page]);
 
     return (
-        <div className="w-[25%] mx-auto">
+        <div className="w-[40%] mx-auto">
             <div className="mt-5">
                 <button
+                    type="button"
                     onClick={() => navigate("/community")}
-                    className="bg-gray-300 font-bold px-4 py-2 rounded-2xl cursor-pointer hover:bg-gray-200"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
-                    ← Back to Community
+                    ← Back to community
                 </button>
             </div>
 
-            <div className="my-5 flex justify-between mb-4">
-                <h1 className="text-2xl font-bold">Challenges</h1>
+            <div className="flex mb-7 justify-end">
                 <button
                     className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                     onClick={() => navigate("/challenges/create")}
@@ -43,18 +43,32 @@ function ChallengesPage() {
                 </button>
             </div>
 
-            <ul className="space-y-4">
+            <h1 className="text-3xl font-bold mb-5">Challenges</h1>
+
+            <ul className="grid grid-cols-2 gap-4">
                 {challenges.map(challenge => (
                     <li
                         key={challenge.id}
-                        className="p-4 border rounded hover:shadow cursor-pointer"
+                        className="p-4 rounded-2xl hover:shadow cursor-pointer bg-white hover:bg-gray-100"
                         onClick={() => navigate(`/challenges/${challenge.id}`)}
                     >
                         <h2 className="font-semibold">{challenge.title}</h2>
                         <p className="text-sm text-gray-600">
                             Start from {new Date(challenge.startDate).toLocaleDateString()} to {new Date(challenge.endDate).toLocaleDateString()}
                         </p>
-                        <p>Registered : {challenge.registrations.length} - Completions : {challenge.completions.length}</p>
+                        <p className="text-sm">
+                            Author : {" "}
+                            <span
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(`/profile/${challenge.author.id}`);
+                                }}
+                                className="text-blue-600 hover:underline cursor-pointer"
+                            >
+                                {challenge.author.firstname} {challenge.author.lastname}
+                            </span>
+                        </p>
+                        <p>Registered : {challenge.registrations.length} - Completions : {challenge.completions.filter((c) => c.validated).length}</p>
                     </li>
                 ))}
             </ul>

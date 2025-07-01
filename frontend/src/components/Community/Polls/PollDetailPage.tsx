@@ -108,12 +108,12 @@ function PollDetailPage() {
 
     return (
         <div>
-            <div className="p-6 w-[30%] mx-auto space-y-4 bg-gray-200 rounded-2xl shadow mt-10">
+            <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
                 <div className="flex justify-between items-center">
                     <button
                         type="button"
                         onClick={() => navigate("/polls")}
-                        className="border px-3 py-1 rounded-xl cursor-pointer hover:bg-gray-300"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
                         ← Back
                     </button>
@@ -133,6 +133,22 @@ function PollDetailPage() {
 
                 <h1 className="text-2xl font-bold">{poll.question}</h1>
 
+                <p className="text-sm text-gray-500 mb-4 -mt-3">
+                    Published by{" "}
+                    <span
+                        onClick={() => navigate(`/profile/${poll.author.id}`)}
+                        className="text-blue-600 hover:underline cursor-pointer"
+                    >
+                        {poll.author.firstname} {poll.author.lastname}
+                    </span>
+                </p>
+
+                {isAdminorModerator && (
+                    <p className="text-red-500">
+                        Admin and moderator can't vote.
+                    </p>
+                )}
+
                 {!isClosed ? (
                     <div>
                         {poll.options.map(o => (
@@ -144,7 +160,7 @@ function PollDetailPage() {
                                     type={poll.type === "single" ? "radio":"checkbox"}
                                     name="opt"
                                     value={o.id}
-                                    disabled={isClosed || hasVoted}
+                                    disabled={!!(isClosed || hasVoted || isAdminorModerator)}
                                 />{" "}
                                 {o.label}
                             </label>
@@ -179,7 +195,7 @@ function PollDetailPage() {
                 )}
 
                 <div className={`${restricted ? 'w-[100%]' : 'w-[80%]'} mx-auto flex justify-around mt-8`}>
-                    {!isClosed && !hasVoted ? (
+                    {!isClosed && !hasVoted && user?.role !== "admin" && user?.role !== "moderator" ? (
                         restricted ? (
                             <p className="text-red-600 font-semibold text-center">
                                 You are no longer allowed to vote to a poll until{" "}
@@ -225,23 +241,25 @@ function PollDetailPage() {
                 </div>
             </div>
             
-            <div className="w-[30%] mx-auto flex justify-end">
-                <button
-                    onClick={() => setShowReportModal(true)}
-                    className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
-                >
-                    Report post
-                </button>
+            {!isAuthor && poll.author.role !== "admin" && poll.author.role !== "moderator" && (
+                <div className="w-[30%] mx-auto flex justify-end">
+                    <button
+                        onClick={() => setShowReportModal(true)}
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                    >
+                        Report poll
+                    </button>
 
-                {showReportModal && (
-                    <ReportModal
-                        reportedUserId={poll.author.id}
-                        reportedContentId={poll.id}
-                        reportedContentType="POLL"
-                        onClose={() => setShowReportModal(false)}
-                    />
-                )}
-            </div>
+                    {showReportModal && (
+                        <ReportModal
+                            reportedUserId={poll.author.id}
+                            reportedContentId={poll.id}
+                            reportedContentType="POLL"
+                            onClose={() => setShowReportModal(false)}
+                        />
+                    )}
+                </div>
+            )}
         </div>
     );
 }

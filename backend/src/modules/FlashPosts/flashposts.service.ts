@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThan, MoreThan } from 'typeorm';
+import { Repository, LessThan, MoreThan, FindOptionsWhere } from 'typeorm';
 import { FlashPost } from './entities/flash-post.entity';
 import { CreateFlashPostDTO } from './dto/create-flash-post.dto';
 import { UpdateFlashPostDTO } from './dto/update-flash-post.dto';
@@ -15,13 +15,21 @@ export class FlashPostsService {
         private readonly flashRepo: Repository<FlashPost>,
     ) { }
 
-    async findAllFlashPosts(page = 1, limit = 5): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
+    async findAllFlashPosts(page = 1, limit = 5, user: User): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
         const lessThanADay = subHours(new Date(), 24);
 
+        let whereCondition: FindOptionsWhere<FlashPost>[] | FindOptionsWhere<FlashPost> = { createdAt: MoreThan(lessThanADay) };
+
+        if (user.role !== Role.ADMIN) {
+            whereCondition = [
+                { createdAt: MoreThan(lessThanADay), irisCode: user.irisCode },
+                { createdAt: MoreThan(lessThanADay), irisCode: "all" }
+            ];
+        }
 
         const [data, total] = await this.flashRepo.findAndCount({
-            where: { createdAt: MoreThan(lessThanADay) },
+            where: whereCondition,
             relations: ["author"],
             order: { createdAt: "DESC" },
             skip: offset,
@@ -56,7 +64,19 @@ export class FlashPostsService {
             throw new BadRequestException("You already have an active flash post.");
         }
 
-        const post = this.flashRepo.create({ ...createFlashPostDTO, author: author });
+        let irisCode = author.irisCode;
+        let irisName = author.irisName;
+        if (author.role === Role.ADMIN) {
+            irisCode = "all";
+            irisName = "all";
+        }
+
+        const post = this.flashRepo.create({
+            ...createFlashPostDTO,
+            author: author,
+            irisCode,
+            irisName,
+        });
         return this.flashRepo.save(post);
     }
 
@@ -103,5 +123,19 @@ export class FlashPostsService {
     @Cron(CronExpression.EVERY_HOUR)
     async handleCronPurgeExpired() {
         await this.purgeExpired();
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanFlashPostsOfFormersUsers() {
+        const flashPosts = await this.flashRepo.find({ relations: ["author"] });
+        for (const flashPost of flashPosts) {
+            if (!flashPost.author) {
+                continue;
+            }
+
+            if (flashPost.irisCode && flashPost.author.irisCode && flashPost.irisCode !== flashPost.author.irisCode) {
+                await this.flashRepo.delete(flashPost.id);
+            }
+        }
     }
 }

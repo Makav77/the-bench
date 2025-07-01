@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getPendingChallenges, getPendingCompletions, validateCompletion, PendingCompletion, validateChallenge, ChallengeSummary } from "../../api/challengeService";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 function DashboardChallenges() {
     const [pageChallenge, setPageChallenge] = useState(1);
@@ -14,6 +15,7 @@ function DashboardChallenges() {
     const [pendingCompletions, setPendingCompletions] = useState<PendingCompletion[]>([]);
     const [loadingCompletions, setLoadingCompletions] = useState<boolean>(false);
     const [updatingCompletionId, setUpdatingCompletionId] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function loadPendings() {
@@ -65,7 +67,7 @@ function DashboardChallenges() {
         }
         setUpdatingChallengeId(challengeId);
         try {
-            await validateChallenge(challengeId, { validated: false, rejectionReason: reason.trim() });
+            await validateChallenge(challengeId, { validated: false, rejectedReason: reason.trim() });
             toast.success("Challenge rejected.");
             setPendingChallenges((prev) => prev.filter((c) => c.id !== challengeId));
         } catch (error) {
@@ -91,7 +93,7 @@ function DashboardChallenges() {
     };
 
     const handleRejectCompletion = async (completion: PendingCompletion) => {
-        const reason = window.prompt("Raison du refus de la preuve :", "");
+        const reason = window.prompt("Please enter a reason for rejecting this completion :", "");
         if (reason === null) {
             return;
         }
@@ -103,6 +105,7 @@ function DashboardChallenges() {
         try {
             await validateCompletion(completion.challenge.id, completion.id, {
                 validated: false,
+                rejectedReason: reason.trim(),
             });
             toast.success("Completion refused.");
             setPendingCompletions((prev) => prev.filter((c) => c.id !== completion.id));
@@ -139,7 +142,12 @@ function DashboardChallenges() {
                                 </p>
                                 <p>
                                     <span className="font-semibold">Author :</span>{" "}
-                                    {challenge.author.firstname} {challenge.author.lastname}
+                                    <span
+                                        onClick={() => navigate(`/profile/${challenge.author.id}`)}
+                                        className="text-blue-600 hover:underline cursor-pointer"
+                                    >
+                                        {challenge.author.firstname} {challenge.author.lastname}
+                                    </span>
                                 </p>
                                 <p>
                                 <span className="font-semibold">Dates :</span>{" "}
@@ -157,7 +165,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleValidateChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? "Validation…"
@@ -167,7 +175,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleRejectChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? "Rejection..."
@@ -243,7 +251,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleValidateCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingCompletionId === completion.id
                                         ? "Validation…"
@@ -252,7 +260,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleRejectCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingCompletionId === completion.id
                                         ? "Rejection..."

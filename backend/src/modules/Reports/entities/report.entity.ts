@@ -31,4 +31,13 @@ export class Report {
 
     @ManyToOne(() => User, (user) => user.reportsReceived, { onDelete: "CASCADE" })
     reportedUser: User;
+
+    @ManyToOne(() => User, { nullable: true })
+    treatedBy: User;
+
+    @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
 }

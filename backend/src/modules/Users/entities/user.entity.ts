@@ -32,17 +32,26 @@ export class User {
     @Column()
     lastname: string;
 
+    @Column()
+    address: string;
+
+    @Column({ nullable: true })
+    irisCode: string;
+
+    @Column({ nullable: true })
+    irisName: string;
+
     @Column({ unique: true })
     email: string;
 
     @Column()
     password: string;
 
-    @Column({ type: "timestamp" })
+    @Column({ type: "date" })
     dateOfBirth: Date;
 
     @Column()
-    profilePicture?: string;
+    profilePicture: string;
 
     @Column({ type: "int", default: 0 })
     points: number;
@@ -112,4 +121,15 @@ export class User {
 
     @OneToMany(() => Message, message => message.sender)
     messages: Message[];
+
+    @ManyToMany(() => User, (user) => user.friends)
+    @JoinTable({ name: "user_friends" })
+    friends: User[];
+
+    @ManyToMany(() => User, (user) => user.friendRequestsReceived)
+    @JoinTable({ name: "friend_requests_sent" })
+    friendRequestsSent: User[];
+
+    @ManyToMany(() => User, (user) => user.friendRequestsSent)
+    friendRequestsReceived: User[];
 }

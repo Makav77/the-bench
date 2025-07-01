@@ -1,10 +1,11 @@
 import { ForbiddenException, Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThan } from "typeorm";
+import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { Event } from "./entities/event.entity";
 import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
 import { User, Role } from "../Users/entities/user.entity";
+import { Cron, CronExpression } from "@nestjs/schedule";
 
 @Injectable()
 export class EventService {
@@ -13,10 +14,19 @@ export class EventService {
         private readonly eventRepo: Repository<Event>
     ) { }
 
-    async findAllEvents(page = 1, limit = 5): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
+    async findAllEvents(page = 1, limit = 5, user: User): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<Event>[] | FindOptionsWhere<Event> = { endDate: MoreThan(new Date()) };
+        if (user.role !== Role.ADMIN) {
+            whereCondition = [
+                { endDate: MoreThan(new Date()), irisCode: user.irisCode },
+                { endDate: MoreThan(new Date()), irisCode: "all" }
+            ];
+        }
+    
         const [data, total] = await this.eventRepo.findAndCount({
-            where: { startDate: MoreThan(new Date()) },
+            where: whereCondition,
             order: { startDate: "ASC" },
             skip: offset,
             take: limit,
@@ -40,10 +50,19 @@ export class EventService {
     }
 
     async createEvent(createEventDTO: CreateEventDTO, author: User): Promise<Event> {
+        let irisCode = author.irisCode;
+        let irisName = author.irisName;
+        if (author.role === Role.ADMIN) {
+            irisCode = "all";
+            irisName = "all";
+        }
+
         const event = this.eventRepo.create({
             ...createEventDTO,
             author,
             participantsList: [],
+            irisCode,
+            irisName,
         });
         return this.eventRepo.save(event);
     }
@@ -60,6 +79,12 @@ export class EventService {
 
         if (event.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to edit this event.");
+        }
+
+        if (updateEventDTO.maxNumberOfParticipants === null || updateEventDTO.maxNumberOfParticipants === undefined) {
+            event.maxNumberOfParticipants = null;
+        } else {
+            event.maxNumberOfParticipants = updateEventDTO.maxNumberOfParticipants;
         }
 
         const updated = this.eventRepo.merge(event, updateEventDTO);
@@ -115,9 +140,17 @@ export class EventService {
             throw new BadRequestException("You are already registered for this event.")
         }
 
-        if (event.maxNumberOfParticipants !== undefined && (event.participantsList ?? []).length >= event.maxNumberOfParticipants) {
-            throw new BadRequestException("The event is full.")
+        if (event.author.id === user.id) {
+            throw new BadRequestException("L'auteur ne peut pas s'inscrire à son propre événement.");
         }
+
+    if (
+        event.maxNumberOfParticipants !== undefined &&
+        event.maxNumberOfParticipants !== null &&
+        (event.participantsList ?? []).length >= event.maxNumberOfParticipants
+    ) {
+        throw new BadRequestException("The event is full.")
+    }
 
         event.participantsList?.push(user);
         return this.eventRepo.save(event);
@@ -140,5 +173,19 @@ export class EventService {
 
         (event.participantsList ?? []).splice(index, 1);
         return this.eventRepo.save(event);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanEventsOfFormersUsers() {
+        const events = await this.eventRepo.find({ relations: ["author"] });
+        for (const event of events) {
+            if (!event.author) {
+                continue;
+            }
+
+            if (event.irisCode && event.author.irisCode && event.irisCode !== event.author.irisCode) {
+                await this.eventRepo.delete(event.id);
+            }
+        }
     }
 }

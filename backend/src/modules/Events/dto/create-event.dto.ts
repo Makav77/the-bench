@@ -6,6 +6,14 @@ export class CreateEventDTO {
     @MaxLength(100)
     name: string;
 
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
+
     @IsDateString()
     startDate: string;
 

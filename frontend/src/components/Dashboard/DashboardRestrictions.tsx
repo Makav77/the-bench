@@ -1,7 +1,8 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { restrictUser } from "../../api/permissionsService";
 import { DEFAULT_PERMISSIONS } from "../../../../backend/src/modules/Permissions/ListPermissions";
 import { toast } from "react-toastify";
+import apiClient from "../../api/apiClient";
 
 function DashboardRestrictions() {
     const [userId, setUserId] = useState<string>("");
@@ -10,9 +11,37 @@ function DashboardRestrictions() {
     const [hours, setHours] = useState<number>(0);
     const [minutes, setMinutes] = useState<number>(0);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [query, setQuery] = useState<string>("");
+    const [isSearching, setIsSearching] = useState<boolean>(false);
+    const [results, setResults] = useState<{ id: string; firstname: string; lastname: string; }[]>([]);
     const [selectedPermission, setSelectedPermission] = useState<string>(
         DEFAULT_PERMISSIONS[0].code
     );
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            if (query.length >= 2) {
+                setIsSearching(true);
+                try {
+                    const response = await apiClient.get(`/users/search?query=${encodeURIComponent(query)}`);
+                    setResults(response.data);
+                } catch (error) {
+                    console.error("Error while searching users : ", error);
+                    setResults([]);
+                } finally {
+                    setIsSearching(false);
+                }
+            } else {
+                setResults([]);
+                setIsSearching(false);
+            }
+        };
+        const delayDebounceFn = setTimeout(() => {
+            fetchUsers();
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [query]);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -79,17 +108,40 @@ function DashboardRestrictions() {
 
                 <div>
                     <label className="block font-semibold mb-1">
-                        User ID to ban
-                        <span className="text-red-500">*</span>
+                        User to restrict <span className="text-red-500">*</span>
                     </label>
                     <input
-                        name="userId"
+                        name="userSearch"
                         type="text"
-                        value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
                         className="w-full border rounded px-2 py-1"
-                        placeholder="UUID de l'utilisateur"
+                        placeholder="User name"
                     />
+
+                    {query.length >= 2 && (
+                        <div className="border border-gray-300 rounded mt-1 bg-white shadow max-h-40 overflow-y-auto">
+                            {isSearching ? (
+                                <div className="px-2 py-1 text-gray-500 italic">Searching...</div>
+                            ) : results.length > 0 ? (
+                                results.map((user) => (
+                                    <div
+                                        key={user.id}
+                                        onClick={() => {
+                                            setUserId(user.id);
+                                            setQuery(`${user.firstname} ${user.lastname}`);
+                                            setResults([]);
+                                        }}
+                                        className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                    >
+                                        {user.firstname} {user.lastname} ({user.id})
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="px-2 py-1 text-gray-500 italic">No users found.</div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 <div>
@@ -161,7 +213,7 @@ function DashboardRestrictions() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50"
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                     >
                         {isSubmitting ? "En cours…" : "Bannir"}
                     </button>

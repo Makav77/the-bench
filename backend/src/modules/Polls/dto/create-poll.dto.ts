@@ -27,7 +27,13 @@ export class CreatePollDTO {
     maxSelections?: number;
 
     @IsOptional()
-    @IsInt()
-    @Min(1)
-    autoCloseIn?: number;
+    autoCloseAt?: Date;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }

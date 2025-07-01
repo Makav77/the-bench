@@ -7,6 +7,12 @@ export class Event {
     id: string;
 
     @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
+
+    @Column()
     name: string;
 
     @Column({ type: "timestamp" })
@@ -25,7 +31,7 @@ export class Event {
     place: string;
 
     @Column({ type: "int", nullable: true })
-    maxNumberOfParticipants?: number;
+    maxNumberOfParticipants?: number | null;
 
     @Column()
     description: string;

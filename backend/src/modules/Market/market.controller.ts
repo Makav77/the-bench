@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Post, Body, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from "multer";
@@ -10,6 +10,9 @@ import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
 import { Request } from 'express';
 import { MarketItem } from './entities/market.entity';
 import { User } from '../Users/entities/user.entity';
+import { IrisGuard } from '../Auth/guards/iris.guard';
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
+import { Resource } from '../Utils/resource.decorator';
 
 const multerOptions = {
     storage: diskStorage({
@@ -33,21 +36,23 @@ const multerOptions = {
 
 @Controller("market")
 export class MarketController {
-    constructor(private readonly marketService: MarketService) {}
+    constructor(private readonly marketService: MarketService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get()
     async findAllItems(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<MarketItem>
     ): Promise<{ data: MarketItem[]; total: number; page: number; lastPage: number; }> {
-        return this.marketService.findAllItems(page, limit);
+        const user = req.user as User;
+        return this.marketService.findAllItems(page, limit, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneItem(@Param("id") id: string): Promise<MarketItem> {
-        return this.marketService.findOneItem(id);
+    async findOneItem(@Resource() marketItem: MarketItem): Promise<MarketItem> {
+        return marketItem;
     }
 
     @UseGuards(JwtAuthGuard)
@@ -56,7 +61,7 @@ export class MarketController {
     async createItem(
         @UploadedFiles() files: Express.Multer.File[],
         @Body() createItemDTO: CreateMarketItemDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<MarketItem>
     ): Promise<MarketItem> {
         const user = req.user as User;
         const safeFiles = files ?? [];
@@ -64,31 +69,30 @@ export class MarketController {
         return this.marketService.createItem({ ...createItemDTO, images: urls }, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     @UseInterceptors(FilesInterceptor("images", 5, multerOptions))
     async updateItem(
-        @Param("id") id: string,
+        @Resource() marketItem: MarketItem,
         @UploadedFiles() files: Express.Multer.File[],
         @Body() updateMarketItemDTO: UpdateMarketItemDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<MarketItem>
     ) {
         const user = req.user as User;
         const safeFiles = files ?? [];
         const urls = safeFiles.map(file => `/uploads/market/${file.filename}`);
-        const existing = await this.marketService.findOneItem(id);
-        const allImages = existing.images ? [...existing.images, ...urls] : urls;
+        const allImages = marketItem.images ? [...marketItem.images, ...urls] : urls;
 
-        return this.marketService.updateItem(id, { ...updateMarketItemDTO, images: allImages }, user);
+        return this.marketService.updateItem(marketItem.id, { ...updateMarketItemDTO, images: allImages }, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(":id")
-    async removeItem (
-        @Param("id") id: string,
-        @Req() req: Request,
+    async removeItem(
+        @Resource() marketItem: MarketItem,
+        @Req() req: RequestWithResource<MarketItem>
     ): Promise<void> {
         const user = req.user as User;
-        return this.marketService.removeItem(id, user);
+        return this.marketService.removeItem(marketItem.id, user);
     }
 }

@@ -52,9 +52,17 @@ import CreateChallengePage from "./components/Community/Challenges/CreateChallen
 import ChallengeDetailPage from "./components/Community/Challenges/ChallengeDetailsPage";
 import ChatPage from "./components/Chat/ChatPage";
 
+import UserProfilePage from "./components/Profile/UserProfilePage";
+
 import DashboardPage from "./components/Dashboard/Dashboard";
 
 import { SocketProvider } from "./context/SocketContext";
+import NewsPage from "./components/Community/News/NewsPage";
+import NewsDetailPage from "./components/Community/News/NewsDetailPage";
+import CreateNews from "./components/Community/News/CreateNews";
+import EditNews from "./components/Community/News/EditNewsForm";
+
+import TermsOfUse from "./components/Footer/TermsOfUse";
 
 export default function App() {
     return (
@@ -103,8 +111,13 @@ export default function App() {
                                 <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
                                 <Route path="dashboard" element={<DashboardPage />} />
                                 <Route path="chat" element={<ChatPage />} />
+                                <Route path="/profile/:id" element={<UserProfilePage />} />
+                                <Route path="/news" element={<NewsPage />} />
+                                <Route path="/news/:id" element={<NewsDetailPage />} />
+                                <Route path="/news/create" element={<CreateNews />} />
+                                <Route path="/news/:id/edit" element={<EditNews />} />
+                                <Route path="/termsofuse" element={<TermsOfUse />} />
                             </Route>
-                        </Route>
                     </Routes>
 
                     <ToastContainer
