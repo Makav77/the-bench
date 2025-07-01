@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { removeParticipant } from "../../api/eventService";
 import usePermission from "../Utils/usePermission";
 import ReportModal from "../Utils/ReportModal";
-import { subscribeEvent, unsubscribeEvent } from "../../api/eventService";
 
 function EventDetailPage() {
     const { id } = useParams<{ id: string }>();
