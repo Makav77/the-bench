@@ -54,6 +54,7 @@
     "pg": "^8.15.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "socket": "^1.0.15",
     "socket.io": "^4.8.1",
     "turf": "^3.0.14",
     "typeorm": "^0.3.22"
