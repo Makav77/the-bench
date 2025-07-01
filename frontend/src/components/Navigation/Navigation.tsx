@@ -34,7 +34,7 @@ function Navigation() {
                 type="button"
                 aria-label="listings-button"
                 className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 ${location.pathname.startsWith("/bulletinsboard") || location.pathname.startsWith("/posts") || location.pathname.startsWith("/flashposts") ? "text-white" : "hover:underline"}`}
-                onClick={() => navigate("/bulletinsboard")}
+                onClick={() => navigate("/listings")}
             >
                 {t("listings")}
             </button>

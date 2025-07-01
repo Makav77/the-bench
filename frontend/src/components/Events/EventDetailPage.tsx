@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { removeParticipant } from "../../api/eventService";
 import usePermission from "../Utils/usePermission";
 import ReportModal from "../Utils/ReportModal";
+import { subscribeEvent, unsubscribeEvent } from "../../api/eventService";
 
 function EventDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -19,6 +20,8 @@ function EventDetailPage() {
     const [showParticipantModal, setShowParticipantModal] = useState(false);
     const [removingId, setRemovingId] = useState<string | null>(null);
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
+    const isOwner = user && event && user.id === event.author.id;
+    const isAdmin = user && user.role === "admin";
 
     useEffect(() => {
         async function load() {

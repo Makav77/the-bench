@@ -87,6 +87,12 @@ export class EventService {
             event.maxNumberOfParticipants = updateEventDTO.maxNumberOfParticipants;
         }
 
+        if (updateEventDTO.maxNumberOfParticipants === null || updateEventDTO.maxNumberOfParticipants === undefined) {
+            event.maxNumberOfParticipants = null;
+        } else {
+            event.maxNumberOfParticipants = updateEventDTO.maxNumberOfParticipants;
+        }
+
         const updated = this.eventRepo.merge(event, updateEventDTO);
         return this.eventRepo.save(updated);
     }
