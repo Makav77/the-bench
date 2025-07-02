@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPosts, PostSummary } from "../../../api/postService";
+import { useTranslation } from "react-i18next";
 
 function LatestPostCard() {
     const [post, setPost] = useState<PostSummary | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Homepage/LatestPostCard");
 
     useEffect(() => {
         async function load() {
@@ -27,7 +29,7 @@ function LatestPostCard() {
     }, []);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>;
+        return <p className="p-6">{t("loading")}</p>;
     }
 
     if (error) {
@@ -35,7 +37,7 @@ function LatestPostCard() {
     }
 
     if (!post) {
-        return <p className="p-6">No post available</p>
+        return <p className="p-6">{t("noPostAvailable")}</p>
     }
 
     return (
@@ -46,12 +48,12 @@ function LatestPostCard() {
             <div className="pr-4">
                 <h4 className="text-lg font-bold">{post.title}</h4>
                 <p className="text-sm text-gray-500">
-                    Last update {new Date(post.updatedAt).toLocaleDateString()}
+                    {t("lastUpdate")} {new Date(post.updatedAt).toLocaleDateString()}
                 </p>
             </div>
 
             <div>
-                <p>Author :{" "}
+                <p>{t("author")}{" "}
                     <span
                         onClick={(e) => {
                             e.stopPropagation();

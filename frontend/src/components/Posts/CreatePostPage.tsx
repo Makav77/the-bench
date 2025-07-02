@@ -4,10 +4,11 @@ import { createPost } from "../../api/postService";
 import { toast } from "react-toastify";
 import usePermission from "../Utils/usePermission";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 function CreatePostPage() {
     const navigate = useNavigate();
-
+    const { t } = useTranslation("Posts/CreatePostPage");
     const { restricted, expiresAt, reason } = usePermission("publish_post");
 
     if (restricted === null) {
@@ -18,18 +19,18 @@ function CreatePostPage() {
         return (
             <div className="p-6 text-center">
                 <p className="text-red-500">
-                    You are no longer allowed to publish a post until{" "}
+                    {t("restrictionMessage")} {" "}
                     {expiresAt
                         ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
                         : "unknown date"}.
                     <br />
                     {reason && (
                         <span>
-                            Reason: {reason}
+                            {t("reason")} {reason}
                             <br />
                         </span>
                     )}
-                    Contact a moderator or administrator for more information.
+                    {t("contactMessage")}
                 </p>
             </div>
         );
@@ -43,7 +44,7 @@ function CreatePostPage() {
 
     return (
         <div className="p-6">
-            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2">Create a Post</h1>
+            <h1 className="w-[31%] mx-auto text-4xl font-semibold mb-4 pl-2">{t("createPost")}</h1>
             <PostForm onSubmit={handleSubmit} />
         </div>
     );

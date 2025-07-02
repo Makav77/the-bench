@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import ReportModal from "../Utils/ReportModal";
+import { useTranslation } from "react-i18next";
 
 function PostDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -11,6 +12,7 @@ function PostDetailPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Posts/PostDetailPage");
     const { user } = useAuth();
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
@@ -35,7 +37,7 @@ function PostDetailPage() {
     }, [id]);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>
+        return <p className="p-6">{t("loading")}</p>
     }
 
     if (error) {
@@ -72,14 +74,14 @@ function PostDetailPage() {
                     onClick={() => navigate("/bulletinsboard")}
                     className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                 >
-                    ← Back
+                    {t("back")}
                 </button>
 
                 <h1 className="text-3xl font-bold">{post.title}</h1>
                 <p className="text-sm text-gray-600">
-                    Published on {new Date(post.createdAt).toLocaleString()} <br />
-                    Updated on{' '} {new Date(post.updatedAt).toLocaleString()} <br />
-                    By{" "}
+                    {t("publishedOn")} {new Date(post.createdAt).toLocaleString()} <br />
+                    {t("updatedOn")} {' '} {new Date(post.updatedAt).toLocaleString()} <br />
+                    {t("by")} {" "}
                     <span
                         onClick={() => navigate(`/profile/${post.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -96,14 +98,14 @@ function PostDetailPage() {
                             onClick={() => navigate(`/posts/${id}/edit`)}
                             className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            Edit post
+                            {t("editPost")}
                         </button>
                         <button
                             type="button"
                             onClick={handleDelete}
                             className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            Delete post
+                            {t("deletePost")}
                         </button>
                     </div>
                 )}
@@ -115,7 +117,7 @@ function PostDetailPage() {
                         onClick={() => setShowReportModal(true)}
                         className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                     >
-                        Report post
+                        {t("reportPost")}
                     </button>
 
                     {showReportModal && (

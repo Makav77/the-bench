@@ -4,6 +4,7 @@ import { getFlashPosts, FlashPostSummary } from "../../api/flashPostService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CountdownTimer from "../FlashPosts/CountdownTimer";
+import { useTranslation } from "react-i18next";
 
 function BulletinsBoardPage() {
     const [posts, setPosts] = useState<PostSummary[]>([]);
@@ -11,6 +12,7 @@ function BulletinsBoardPage() {
     const [lastPage, setLastPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { t } = useTranslation("Posts/BulletinsBoard");
     const [flashPosts, setFlashPosts] = useState<FlashPostSummary[]>([]);
     const [flashPage, setFlashPage] = useState(1);
     const [flashLastPage, setFlashLastPage] = useState(1);
@@ -60,7 +62,7 @@ function BulletinsBoardPage() {
                     onClick={() => navigate("/posts/create")}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
                 >
-                    Create Post
+                    {t("createPost")}
                 </button>
 
                 <button
@@ -68,19 +70,19 @@ function BulletinsBoardPage() {
                     onClick={() => navigate("/flashposts/create")}
                     className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
                 >
-                    Create Flash Post
+                    {t("createFlashPost")}
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">Bulletins Board</h1>
+            <h1 className="text-3xl font-bold mb-4">{t("bulletinsBoard")}</h1>
 
             <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-2">Flash Posts</h2>
+                <h2 className="text-2xl font-semibold mb-2">{t("flashPost")}</h2>
 
                 {flashLoading
-                    ? <p>Loading flash posts...</p>
+                    ? <p>{t("loading")}</p>
                     : flashPosts.length === 0
-                        ? <p className="italic text-gray-500 mb-5">No flash posts right now.</p>
+                        ? <p className="italic text-gray-500 mb-5">{t("noFlashPost")}</p>
                         : (
                             <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl">
                                 {flashPosts.map((flashpost) => (
@@ -93,11 +95,11 @@ function BulletinsBoardPage() {
                                             <h2 className="text-lg font-semibold">{flashpost.title}</h2>
                                             <div className="flex justify-between">
                                                 <p className="text-sm text-gray-600">
-                                                    Last update at {new Date(flashpost.updatedAt).toLocaleString()}
+                                                    {t("lastUpdate")} {new Date(flashpost.updatedAt).toLocaleString()}
                                                 </p>
                                                 <CountdownTimer createdAt={flashpost.createdAt} />
                                             </div>
-                                            <p className="text-sm text-gray-600">Author :{" "}
+                                            <p className="text-sm text-gray-600">{t("author")} {" "}
                                                 <span
                                                     onClick={(e) => {
                                                         e.stopPropagation();
@@ -126,28 +128,28 @@ function BulletinsBoardPage() {
                         onClick={() => setFlashPage(p => p - 1)}
                         className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        ← Prev
+                        {t("previous")}
                     </button>
 
-                    <span>Page {flashPage} / {flashLastPage}</span>
+                    <span>{t("page")} {flashPage} / {flashLastPage}</span>
 
                     <button
                         disabled={flashPage >= flashLastPage}
                         onClick={() => setFlashPage(p => p + 1)}
                         className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        Next →
+                        {t("next")}
                     </button>
                 </div>
             </section>
 
             <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-2">Posts</h2>
+                <h2 className="text-2xl font-semibold mb-2">{t("posts")}</h2>
 
                 {loading
-                    ? <p>Loading posts...</p>
+                    ? <p>{t("loading")}</p>
                     : posts.length === 0
-                        ? <p className="italic text-gray-500">No posts right now.</p>
+                        ? <p className="italic text-gray-500">{t("noPost")}</p>
                         : (
                             <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl">
                                 {posts.map((post) => (
@@ -159,21 +161,23 @@ function BulletinsBoardPage() {
                                         <div className="flex flex-col">
                                             <h2 className="text-lg font-semibold">{post.title}</h2>
                                             <p className="text-sm text-gray-600">
-                                                Last update at {new Date(post.updatedAt).toLocaleString()} by{" "}
-                                                <span
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        navigate(`/profile/${post.author.id}`);
-                                                    }}
-                                                    className="text-blue-600 hover:underline cursor-pointer"
-                                                >
-                                                    {post.author.firstname} {post.author.lastname}
-                                                </span>
-                                                {(post.author.role === "admin" || post.author.role === "moderator") && (
-                                                    <span className="ml-1 font-semibold text-red-600">
-                                                        ({post.author.role})
+                                                {t("lastUpdate")} {new Date(post.updatedAt).toLocaleString()}
+                                                <p className="text-sm text-gray-600">{t("author")} {" "}
+                                                    <span
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            navigate(`/profile/${post.author.id}`);
+                                                        }}
+                                                        className="text-blue-600 hover:underline cursor-pointer"
+                                                    >
+                                                        {post.author.firstname} {post.author.lastname}
                                                     </span>
-                                                )}
+                                                    {(post.author.role === "admin" || post.author.role === "moderator") && (
+                                                        <span className="ml-1 font-semibold text-red-600">
+                                                            ({post.author.role})
+                                                        </span>
+                                                    )}
+                                                </p>
                                             </p>
                                         </div>
                                     </div>
@@ -189,10 +193,10 @@ function BulletinsBoardPage() {
                         onClick={() => setPage((p) => p - 1)}
                         className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        ← Prev
+                        {t("previous")}
                     </button>
 
-                    <span>Page {page} / {lastPage}</span>
+                    <span>{t("page")} {page} / {lastPage}</span>
 
                     <button
                         type="button"
@@ -200,7 +204,7 @@ function BulletinsBoardPage() {
                         onClick={() => setPage((p) => p + 1)}
                         className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        Next →
+                        {t("next")}
                     </button>
                 </div>
             </section>

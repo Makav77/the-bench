@@ -20,7 +20,7 @@ enum loginState {
 
 function Login() {
     const { login } = useAuth();
-    const { t } = useTranslation("Login");
+    const { t } = useTranslation("Login/Login");
     const navigate = useNavigate();
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -192,7 +192,7 @@ function Login() {
                 <a
                     href="/register"
                     aria-label="register-link"
-                    className="text-blue-600 underline text-center hover:cursor-pointer hover:text-blue-800"
+                    className="text-blue-600 underline text-center hover:cursor-pointer hover:text-blue-800 "
                 >
                     {t("createAccountLink")}
                 </a>

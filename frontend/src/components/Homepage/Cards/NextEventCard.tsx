@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getEvents, EventSummary } from "../../../api/eventService";
+import { useTranslation } from "react-i18next";
 
 function NextEventCard() {
     const [event, setEvent] = useState<EventSummary | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Homepage/NextEventCard");
 
     useEffect(() => {
         async function load() {
@@ -31,7 +33,7 @@ function NextEventCard() {
     }, []);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>;
+        return <p className="p-6">{t("loading")}</p>;
     }
 
     if (error) {
@@ -39,7 +41,7 @@ function NextEventCard() {
     }
 
     if (!event) {
-        return <p className="p-6">No item available</p>
+        return <p className="p-6">{t("noEventAvailable")}</p>
     }
 
     return (
@@ -50,12 +52,12 @@ function NextEventCard() {
             <div className="pr-4">
                 <h4 className="text-lg font-bold">{event.name}</h4>
                 <p className="text-sm text-gray-500">
-                    Start on {new Date(event.startDate).toLocaleDateString()} at {new Date(event.startDate).toLocaleTimeString()}
+                    {t("startOn")} {new Date(event.startDate).toLocaleDateString()} {t("at")} {new Date(event.startDate).toLocaleTimeString()}
                 </p>
             </div>
 
             <div>
-                Organized by{" "}
+                {t("organizedBy")}{" "}
                 <span
                     onClick={(e) => {
                         e.stopPropagation();
