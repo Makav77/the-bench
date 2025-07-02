@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build:frontend": "cd frontend && npm install && npm run build",
-    "build:backend":  "cp -R frontend/dist/* backend/public/ && cd backend && npm install && npm run build",
+    "build:backend": "mkdir -p backend/public && cp -R frontend/dist/* backend/public/ && cd backend && npm install && npm run build",
     "build":          "npm run build:frontend && npm run build:backend",
     "start":          "cd backend && npm install --production && npm run start:prod"
   },
