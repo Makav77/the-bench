@@ -54,7 +54,7 @@ export default function ArtisansByTypePage() {
     }, [userLocation, job]);
 
     if (loading) {
-        return <p className="p-4 text-center">Loading…</p>;
+        return <p className="p-4 text-center">Loading...</p>;
     }
 
     if (error) {

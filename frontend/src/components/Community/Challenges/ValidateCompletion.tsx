@@ -24,7 +24,7 @@ export default function ValidateCompletionsPage() {
     };
 
     if (!challenge) {
-        return <p>Loading…</p>;
+        return <p>Loading...</p>;
     }
 
     const pending = challenge.completions.filter((c: any) => !c.validated);

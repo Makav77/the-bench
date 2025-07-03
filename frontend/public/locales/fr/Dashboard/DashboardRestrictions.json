@@ -1,0 +1,14 @@
+{
+    "addRestriction": "Ajouter une restriction à un utilisateur",
+    "restrictionChoice": "Ajouter une restriction",
+    "userToRestrict": "Utilisateur à restreindre",
+    "userToRestrictPlaceholder": "Identité de l'utilisateur",
+    "searching": "Recherche...",
+    "noUserFound": "Aucun utilisateur trouvé",
+    "reason": "Raison",
+    "days": "Jours",
+    "hours": "Heures",
+    "minutes": "Minutes",
+    "inProgress": "En cours...",
+    "restrict": "Restreindre"
+}

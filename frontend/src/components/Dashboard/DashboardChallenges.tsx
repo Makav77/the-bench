@@ -3,6 +3,7 @@ import { getPendingChallenges, getPendingCompletions, validateCompletion, Pendin
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function DashboardChallenges() {
     const [pageChallenge, setPageChallenge] = useState(1);
@@ -16,6 +17,7 @@ function DashboardChallenges() {
     const [loadingCompletions, setLoadingCompletions] = useState<boolean>(false);
     const [updatingCompletionId, setUpdatingCompletionId] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Dashboard/DashboardChallenges");
 
     useEffect(() => {
         async function loadPendings() {
@@ -58,7 +60,7 @@ function DashboardChallenges() {
     };
 
     const handleRejectChallenge = async (challengeId: string) => {
-        const reason = window.prompt("Please enter a reason for rejecting this challenge :", "");
+        const reason = window.prompt(t("confirmAlertChallenge"), "");
         if (reason === null) {
             return;
         }
@@ -93,7 +95,7 @@ function DashboardChallenges() {
     };
 
     const handleRejectCompletion = async (completion: PendingCompletion) => {
-        const reason = window.prompt("Please enter a reason for rejecting this completion :", "");
+        const reason = window.prompt(t("confirmAlertCompletion"), "");
         if (reason === null) {
             return;
         }
@@ -117,17 +119,17 @@ function DashboardChallenges() {
     };
 
     if (loadingChallenges) {
-        return <p className="p-6 text-center">Loading pending challenges...</p>
+        return <p className="p-6 text-center">{t("loadingPending")}</p>
     }
 
     return (
         <div className="bg-white p-6 rounded-2xl space-y-8">
-            <h2 className="text-2xl font-semibold">Waiting challenges</h2>
+            <h2 className="text-2xl font-semibold">{t("waitingChallenges")}</h2>
             {loadingChallenges ? (
-                <p className="text-center">Loading challenge...</p>
+                <p className="text-center">{t("loadingChallenges")}</p>
             ) : pendingChallenges.length === 0 ? (
                 <p className="text-center text-gray-600">
-                    No waiting challenge
+                    {t("noWaitingChallenge")}
                 </p>
             ) : (
                 <ul className="space-y-4">
@@ -138,10 +140,10 @@ function DashboardChallenges() {
                         >
                             <div>
                                 <p>
-                                    <span className="font-semibold">Title :</span> {challenge.title}
+                                    <span className="font-semibold">{t("title")}</span> {challenge.title}
                                 </p>
                                 <p>
-                                    <span className="font-semibold">Author :</span>{" "}
+                                    <span className="font-semibold">{t("author")}</span>{" "}
                                     <span
                                         onClick={() => navigate(`/profile/${challenge.author.id}`)}
                                         className="text-blue-600 hover:underline cursor-pointer"
@@ -150,13 +152,13 @@ function DashboardChallenges() {
                                     </span>
                                 </p>
                                 <p>
-                                <span className="font-semibold">Dates :</span>{" "}
+                                <span className="font-semibold">{t("dates")}</span>{" "}
                                     {format(new Date(challenge.startDate), "dd/MM/yyyy")}
                                     {" "}–{" "}
                                     {format(new Date(challenge.endDate), "dd/MM/yyyy")}
                                 </p>
                                 <p>
-                                    <span className="font-semibold">Success Criteria :</span>{" "}
+                                    <span className="font-semibold">{t("successCriteria")}</span>{" "}
                                     {challenge.successCriteria}
                                 </p>
                             </div>
@@ -168,8 +170,8 @@ function DashboardChallenges() {
                                     className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingChallengeId === challenge.id
-                                        ? "Validation…"
-                                        : "Validate"}
+                                        ? t("validationChallenge")
+                                        : t("validateChallenge")}
                                 </button>
 
                                 <button
@@ -178,8 +180,8 @@ function DashboardChallenges() {
                                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingChallengeId === challenge.id
-                                        ? "Rejection..."
-                                        : "Reject"}
+                                        ? t("rejectionChallenge")
+                                        : t("validateChallenge")}
                                 </button>
                             </div>
                         </li>
@@ -194,11 +196,11 @@ function DashboardChallenges() {
                     onClick={() => setPageChallenge((p) => p - 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    ← Prev
+                    {t("previous")}
                 </button>
 
                 <span>
-                    Page {pageChallenge} / {lastPageChallenge}
+                    {t("page")} {pageChallenge} / {lastPageChallenge}
                 </span>
 
                 <button
@@ -207,18 +209,18 @@ function DashboardChallenges() {
                     onClick={() => setPageChallenge((p) => p + 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    Next →
+                    {t("next")}
                 </button>
             </div>
 
             <hr className="my-6 border-gray-300" />
 
-            <h2 className="text-2xl font-semibold">Waiting completions validation</h2>
+            <h2 className="text-2xl font-semibold">{t("waitingCompletions")}</h2>
             {loadingCompletions ? (
-                <p className="text-center">Loading completions</p>
+                <p className="text-center">{t("loadingCompletions")}</p>
             ) : pendingCompletions.length === 0 ? (
                 <p className="text-center text-gray-600">
-                    No completions waiting
+                    {t("noWaitingCompletion")}
                 </p>
             ) : (
                 <ul className="space-y-4">
@@ -229,20 +231,20 @@ function DashboardChallenges() {
                         >
                             <div>
                                 <p>
-                                    <span className="font-semibold">User :</span>{" "}
+                                    <span className="font-semibold">{t("user")}</span>{" "}
                                     {completion.user.firstname} {completion.user.lastname}
                                 </p>
                                 <p>
-                                    <span className="font-semibold">Challenge :</span>{" "}
+                                    <span className="font-semibold">{t("challenge")}</span>{" "}
                                     {completion.challenge.title}
                                 </p>
                                 <p>
-                                    <span className="font-semibold">Date :</span>{" "}
+                                    <span className="font-semibold">{t("date")}</span>{" "}
                                     {format(new Date(completion.createdAt), "dd/MM/yyyy 'à' HH:mm")}
                                 </p>
                                 {completion.text && (
                                     <p>
-                                        <span className="font-semibold">Proof :</span> {completion.text}
+                                        <span className="font-semibold">{t("proof")}</span> {completion.text}
                                     </p>
                                 )}
                             </div>
@@ -254,8 +256,8 @@ function DashboardChallenges() {
                                     className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                 >
                                     {updatingCompletionId === completion.id
-                                        ? "Validation…"
-                                        : "Validate"}
+                                        ? t("validationCompletion")
+                                        : t("validateCompletion")}
                                 </button>
                                 <button
                                     onClick={() => handleRejectCompletion(completion)}
@@ -263,8 +265,8 @@ function DashboardChallenges() {
                                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
                                 >
                                     {updatingCompletionId === completion.id
-                                        ? "Rejection..."
-                                        : "Reject"}
+                                        ? t("rejectionCompletion")
+                                        : t("rejectCompletion")}
                                     </button>
                             </div>
                         </li>
@@ -279,11 +281,11 @@ function DashboardChallenges() {
                     onClick={() => setPageCompletion((p) => p - 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    ← Prev
+                    {t("previous")}
                 </button>
 
                 <span>
-                    Page {pageCompletion} / {lastPageCompletion}
+                    {t("page")} {pageCompletion} / {lastPageCompletion}
                 </span>
 
                 <button
@@ -292,7 +294,7 @@ function DashboardChallenges() {
                     onClick={() => setPageCompletion((p) => p + 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    Next →
+                    {t("next")}
                 </button>
             </div>
         </div>

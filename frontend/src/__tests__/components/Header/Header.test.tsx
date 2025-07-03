@@ -135,7 +135,7 @@ describe('Header component', () => {
     expect(screen.getByLabelText('logout-button')).toBeInTheDocument();
 
     // la navigation principale (<Navigation />) est affichée
-    expect(screen.getByText('…')) // remplace '…' par un item de ton Navigation
+    expect(screen.getByText('...')) // remplace '...' par un item de ton Navigation
   });
 
   test('logout redirige vers / et appelle logout du contexte', () => {
