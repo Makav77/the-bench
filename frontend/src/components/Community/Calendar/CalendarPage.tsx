@@ -3,11 +3,13 @@ import YearCalendar, { YearItem } from "./YearCalendar";
 import { getEvents, EventSummary } from "../../../api/eventService";
 import { ChallengeSummary, getChallenges } from "../../../api/challengeService";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function CalendarPage() {
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [items, setItems] = useState<YearItem[]>([]);
     const navigate = useNavigate();
+    const { t } = useTranslation("Community/CalendarPage");
 
     useEffect(() => {
         (async () => {
@@ -63,7 +65,7 @@ function CalendarPage() {
                 onClick={() => navigate("/community")}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
             >
-                ← Back to community
+                {t("back")}
             </button>
 
             <div className="flex justify-between items-center mb-4">
