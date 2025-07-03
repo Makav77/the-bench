@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import usePermission from "../Utils/usePermission";
+import { useTranslation } from "react-i18next";
 
 function EventsPage() {
     const { restricted, expiresAt, loading: permLoading } = usePermission("register_event");
@@ -13,6 +14,7 @@ function EventsPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Events/EventsPage");
     const { user } = useAuth();
 
     useEffect(() => {
@@ -54,22 +56,22 @@ function EventsPage() {
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
                     onClick={() => navigate("/events/create")}
                 >
-                    Create event
+                    {t("createEvent")}
                 </button>
             </div>
 
-            <h1 className="text-2xl font-bold mb-4">Upcoming Events</h1>
+            <h1 className="text-2xl font-bold mb-4">{t("upcomingEvent")}</h1>
 
             {permLoading ? (
-                <p>Checking permissions...</p>
+                <p>{t("checkingPermissions")}</p>
             ) : restricted ? (
                 <p className="text-red-600">
-                    You are no longer allowed to register for events until{" "}
+                    {t("restrictionMessage")} {" "}
                     {new Date(expiresAt!).toLocaleDateString()}.
                 </p>
             ) : (
                 <div>
-                    {isLoading && <p>Loading...</p>}
+                    {isLoading && <p>{t("loading")}</p>}
                     {error && <p className="text-red-500">{error}</p>}
 
                     <div className="grid grid-cols-1 gap-4">
@@ -94,15 +96,15 @@ function EventsPage() {
                                     </div>
 
                                     {isAuthor ? (
-                                        <span className="text-purple-700 font-semibold">Your event</span>
+                                        <span className="text-purple-700 font-semibold">{t("yourEvent")}</span>
                                     ) : isSubscribed ? (
-                                        <p className="text-blue-600 font-semibold">You are registered</p>
+                                        <p className="text-blue-600 font-semibold">{t("alreadyRegistered")}</p>
                                     ) : (
                                         <>
                                             {(typeof event.maxNumberOfParticipants !== "number" || event.maxNumberOfParticipants <= 0) ? (
-                                                <span className="text-green-700 font-semibold">Open event</span>
+                                                <span className="text-green-700 font-semibold">{t("openEvent")}</span>
                                             ) : isFull ? (
-                                                <span className="text-red-500 font-semibold">Event full</span>
+                                                <span className="text-red-500 font-semibold">{t("eventFull")}</span>
                                             ) : (
                                                 <button
                                                     onClick={(e) => {
@@ -111,7 +113,7 @@ function EventsPage() {
                                                     }}
                                                     className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700 cursor-pointer"
                                                 >
-                                                    Register
+                                                    {t("register")}
                                                 </button>
                                             )}
                                         </>
@@ -130,11 +132,11 @@ function EventsPage() {
                     onClick={() => setPage((p) => p - 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    ← Prev
+                    {t("previous")}
                 </button>
 
                 <span>
-                    Page {page} / {lastPage}
+                    {t("page")} {page} / {lastPage}
                 </span>
 
                 <button
@@ -143,7 +145,7 @@ function EventsPage() {
                     onClick={() => setPage((p) => p + 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    Next →
+                    {t("next")}
                 </button>
             </div>
         </div>

@@ -1,0 +1,15 @@
+{
+    "createEvent": "Créer un événement",
+    "upcomingEvent": "Événement à venir",
+    "checkingPermissions": "Vérification des permissions",
+    "restrictionMessage": "Vous n'êtes plus autorisé à vous inscrire à un événement jusqu'au",
+    "loading": "Loading...",
+    "yourEvent": "Votre événement",
+    "alreadyRegistered": "Déjà inscrit",
+    "openEvent": "Évéménement libre",
+    "eventFull": "Évéménement complet",
+    "register": "S'inscrire",
+    "previous": "← Prec",
+    "page": "Page",
+    "next": "Suiv →"
+}

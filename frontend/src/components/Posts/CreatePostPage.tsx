@@ -12,7 +12,7 @@ function CreatePostPage() {
     const { restricted, expiresAt, reason } = usePermission("publish_post");
 
     if (restricted === null) {
-        return <p className="p-6 text-center">Checking permissions ...</p>;
+        return <p className="p-6 text-center">{t("checkingPermissions")}</p>;
     }
 
     if (restricted) {

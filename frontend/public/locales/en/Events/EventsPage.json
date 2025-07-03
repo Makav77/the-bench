@@ -1,0 +1,15 @@
+{
+    "createEvent": "Create event",
+    "upcomingEvent": "Upcoming event",
+    "checkingPermissions": "Checking permissions...",
+    "restrictionMessage": "You are no longer allowed to register for events until",
+    "loading": "Loading...",
+    "yourEvent": "Your event",
+    "alreadyRegistered": "You are registered",
+    "openEvent": "Open event",
+    "eventFull": "Event full",
+    "register": "Register",
+    "previous": "← Prev",
+    "page": "Page",
+    "next": "Next →"
+}

@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { toLocalInput } from "../Utils/Date";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export interface EventFormData {
     name: string;
@@ -38,6 +39,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
+    const { t } = useTranslation("Events/EventForm");
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -85,7 +87,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Name<span className="text-red-500">*</span>
+                    {t("name")} <span className="text-red-500">*</span>
                 </label>
                 <input
                     name="name"
@@ -100,7 +102,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
             <div className="grid grid-cols-2 gap-4">
                 <div>
                     <label className="font-semibold">
-                        Start date<span className="text-red-500">*</span>
+                        {t("startDate")} <span className="text-red-500">*</span>
                     </label>
                     <input
                         name="startDate"
@@ -113,7 +115,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
 
                 <div>
                     <label className="font-semibold">
-                        End date<span className="text-red-500">*</span>
+                        {t("endDate")} <span className="text-red-500">*</span>
                     </label>
                     <input
                         name="endDate"
@@ -127,7 +129,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Place<span className="text-red-500">*</span>
+                    {t("place")} <span className="text-red-500">*</span>
                 </label>
                 <input
                     name="place"
@@ -140,7 +142,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Max number of participants
+                    {t("maxNumberOfParticipants")}
                 </label>
                 <input
                     name="maxNumberOfParticipants"
@@ -154,7 +156,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Description<span className="text-red-500">*</span>
+                    {t("description")} <span className="text-red-500">*</span>
                 </label>
                 <textarea
                     name="description"
@@ -172,14 +174,14 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
                     onClick={() => navigate("/events")}
                 >
-                    Cancel
+                    {t("cancel")}
                 </button>
                 <button
                     type="submit"
                     disabled={isSubmitting}
                     className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    {isSubmitting ? "Loading..." : defaultValues ? "Update" : "Create"}
+                    {isSubmitting ? t("loading") : defaultValues ? t("update") : t("create")}
                 </button>
             </div>
         </form>

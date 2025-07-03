@@ -4,9 +4,11 @@ import EventForm, { EventFormData } from "./EventForm";
 import { getEvent, updateEvent } from "../../api/eventService";
 import { EventDetails } from "../../api/eventService";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function EditEventPage() {
     const navigate = useNavigate();
+    const { t } = useTranslation("Events/EditEventPage");
     const { id } = useParams<{ id: string}>();
     const [event, setEvent] = useState<EventDetails | null>(null);
 
@@ -22,7 +24,9 @@ function EditEventPage() {
 
 
     const handleSubmit = async (data: EventFormData) => {
-        if (!id) return;
+        if (!id) {
+            return;
+        }
 
         const toSend: EventFormData = {
             name: data.name,
@@ -42,12 +46,12 @@ function EditEventPage() {
     };
 
     if (!event) {
-        return <p>Loading...</p>
+        return <p>{t("loading")}</p>
     }
 
     return (
         <div className="p-6">
-            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2">Edit event</h1>
+            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2">{t("editEvent")}</h1>
             <EventForm defaultValues={event} onSubmit={handleSubmit} />
         </div>
     );
