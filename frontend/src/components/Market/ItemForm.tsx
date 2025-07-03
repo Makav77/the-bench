@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export interface ItemFormData {
@@ -28,12 +29,12 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
         contactEmail: defaultValues?.contactEmail || "",
         contactPhone: defaultValues?.contactPhone || "",
     }));
-
     const [previewURLs, setPreviewURLs] = useState<string[]>(defaultValues?.images || []);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { t } = useTranslation("Market/ItemForm");
 
 
     useEffect(() => {
@@ -79,7 +80,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
         setIsSubmitting(true);
 
         try {
-            await onSubmit(form);
+            onSubmit(form);
         } catch (error) {
             setError("Error : " + error);
         } finally {
@@ -96,7 +97,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Title<span className="text-red-500">*</span>
+                    {t("title")}<span className="text-red-500">*</span>
                 </label>
                 <input
                     name="title"
@@ -110,7 +111,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Description<span className="text-red-500">*</span>
+                    {t("description")}<span className="text-red-500">*</span>
                 </label>
                 <textarea
                     name="description"
@@ -123,7 +124,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
 
             <div className="flex flex-col">
                 <label className="font-semibold">
-                    Price (€)
+                    {t("price")} (€)
                 </label>
                 <input
                     name="price"
@@ -138,14 +139,14 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
 
             <div className="flex flex-col">
                 <label className="font-semibold">
-                    Pictures
+                    {t("pictures")}
                 </label>
                 <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     className="bg-green-600 hover:bg-green-700 text-white rounded cursor-pointer w-[30%] h-8"
                 >
-                    Select files
+                    {t("selectFiles")}
                 </button>
                 <input
                     ref={fileInputRef}
@@ -173,7 +174,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Contact (email)
+                    {t("contactMail")}
                 </label>
                 <input
                     name="contactEmail"
@@ -186,7 +187,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Contact (phone)
+                    {t("contactPhone")}
                 </label>
                 <input
                     name="contactPhone"
@@ -203,14 +204,14 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
                     onClick={() => navigate("/marketplace")}
                 >
-                    Cancel
+                    {t("cancel")}
                 </button>
                 <button
                     type="submit"
                     disabled={isSubmitting}
                     className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    {isSubmitting ? "Loading..." : defaultValues ? "Update" : "Create"}
+                    {isSubmitting ? t("loading") : defaultValues ? t("update") : t("create")}
                 </button>
             </div>
         </form>

@@ -1,0 +1,9 @@
+{
+    "reportTitle": "Signaler un contenu",
+    "reason": "Raison du signalement",
+    "description": "Description",
+    "descriptionPlaceholder": "Fournissez plus de détails si nécessaire",
+    "cancel": "Annuler",
+    "sending": "Envoi...",
+    "send": "Envoyer"
+}

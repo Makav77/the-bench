@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getItems, MarketItemSummary } from "../../api/marketService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function MarketPage() {
     const [items, setItems] = useState<MarketItemSummary[]>([]);
@@ -10,6 +11,7 @@ function MarketPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Market/MarketPage");
 
     useEffect(() => {
         async function load() {
@@ -38,18 +40,18 @@ function MarketPage() {
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
                     onClick={() => navigate("/market/create")}
                 >
-                    Sell item
+                    {t("sellItem")}
                 </button>
             </div>
 
-            <h1 className="text-2xl font-bold mb-4">Market</h1>
+            <h1 className="text-2xl font-bold mb-4">{t("market")}</h1>
 
             {error && <p className="text-red-500">{error}</p>}
 
             {isLoading ? (
-                <p>Loading market items...</p>
+                <p>{t("loading")}</p>
             ) : items.length === 0 ? (
-                <p>No item to show.</p>
+                <p>{t("noItem")}</p>
             ) : (
                 <div className="grid grid-cols-1 gap-4">
                     {items.map((item) => (
@@ -64,14 +66,14 @@ function MarketPage() {
                                 <p className="text-gray-600 text-sm">
                                     {item.price != null && !isNaN(Number(item.price)) && (
                                         <p className="font-semibold">
-                                            Prix : {Number(item.price).toFixed(2)} €
+                                            {t("price")} {Number(item.price).toFixed(2)} €
                                         </p>
                                     )}
-                                    Last update : {new Date(item.updatedAt).toLocaleDateString()}
+                                    {t("lastUpdate")} {new Date(item.updatedAt).toLocaleDateString()}
                                 </p>
 
                                 <p className="text-gray-600">
-                                    Sell by {" "}
+                                    {t("sellBy")} {" "}
                                     <span
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -103,11 +105,11 @@ function MarketPage() {
                     onClick={() => setPage((p) => p - 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    ← Prev
+                    {t("previous")}
                 </button>
 
                 <span>
-                    Page {page} / {lastPage}
+                    {t("Page")} {page} / {lastPage}
                 </span>
 
                 <button
@@ -116,7 +118,7 @@ function MarketPage() {
                     onClick={() => setPage((p) => p + 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    Next →
+                    {t("next")}
                 </button>
             </div>
         </div>
