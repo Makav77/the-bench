@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 interface FlashPostFormProps {
@@ -12,6 +13,7 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("FlashPosts/FlashPostForm");
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -40,7 +42,7 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Title<span className="text-red-500">*</span>
+                    {t("title")}<span className="text-red-500">*</span>
                 </label>
                 <input
                     type="text"
@@ -52,7 +54,7 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Description<span className="text-red-500">*</span>
+                    {t("description")}<span className="text-red-500">*</span>
                 </label>
                 <textarea
                     rows={5}
@@ -69,14 +71,15 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
                     onClick={() => navigate("/bulletinsboard")}
                 >
-                    Cancel
+                    {t("cancel")}
                 </button>
+
                 <button
                     type="submit"
                     disabled={isLoading}
                     className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    {isLoading ? "Loading..." : defaultValues ? "Update" : "Create"}
+                    {isLoading ? t("loading") : defaultValues ? t("update") : t("create")}
                 </button>
             </div>
         </form>

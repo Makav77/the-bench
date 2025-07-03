@@ -52,7 +52,7 @@ function PostDetailPage() {
     const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
 
     const handleDelete = async () => {
-        const confirmed = window.confirm("You are about to delete a post. Would you like to confirm?");
+        const confirmed = window.confirm(t("confirmAlert"));
         if (!confirmed) {
             return;
         }
