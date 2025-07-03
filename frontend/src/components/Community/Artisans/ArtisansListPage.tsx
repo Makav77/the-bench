@@ -1,20 +1,22 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-
-const CATEGORIES = [
-    "plumber",
-    "electrician",
-    "carpenter",
-    "painter",
-    "mason",
-    "gardener",
-    "heating engineer",
-    "tiler",
-    "locksmith",
-    "glazier",
-];
 
 function ArtisansListPage() {
     const navigate = useNavigate();
+    const { t } = useTranslation("Community/ArtisansListPage");
+
+    const CATEGORIES = [
+        t("plumber"),
+        t("electrician"),
+        t("carpenter"),
+        t("painter"),
+        t("mason"),
+        t("gardener"),
+        t("heatingEngineer"),
+        t("tiler"),
+        t("locksmith"),
+        t("glazier"),
+    ];
 
     return (
         <div className="p-6 w-[30%] mx-auto">
@@ -23,9 +25,9 @@ function ArtisansListPage() {
                     onClick={() => navigate("/community")}
                     className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
-                    ← Back to community
+                    {t("back")}
                 </button>
-            <h1 className="text-3xl font-bold mb-4">Artisans</h1>
+            <h1 className="text-3xl font-bold mb-4">{t("artisans")}</h1>
             <ul className="grid grid-cols-2 gap-4">
                 {CATEGORIES.map((c) => (
                     <li
