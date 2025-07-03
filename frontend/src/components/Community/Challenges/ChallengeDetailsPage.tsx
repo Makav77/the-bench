@@ -107,7 +107,7 @@ function ChallengeDetailPage() {
                     <button
                         type="button"
                         onClick={() => navigate("/challenges")}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
                         {t("back")}
                     </button>

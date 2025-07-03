@@ -82,7 +82,7 @@ function BulletinsBoardPage() {
                 {flashLoading
                     ? <p>{t("loading")}</p>
                     : flashPosts.length === 0
-                        ? <p className="italic text-gray-500 mb-5">{t("noFlashPost")}</p>
+                        ? <p className="italic text-red-500 mb-5">{t("noFlashPost")}</p>
                         : (
                             <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl">
                                 {flashPosts.map((flashpost) => (

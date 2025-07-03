@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export interface ChallengeFormData {
@@ -29,6 +30,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
+    const { t } = useTranslation("Community/ChallengeForm");
 
     useEffect(() => {
         if (defaultValues) {
@@ -85,7 +87,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Title<span className="text-red-500">*</span>
+                    {t("title")}<span className="text-red-500">*</span>
                 </label>
                 <input
                     name="title"
@@ -99,7 +101,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
 
             <div>
                 <label className="font-semibold">
-                    Description<span className="text-red-500">*</span>
+                    {t("description")}<span className="text-red-500">*</span>
                 </label>
                 <textarea
                     name="description"
@@ -113,7 +115,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
             <div className="grid grid-cols-2 gap-4">
                 <div>
                     <label className="font-semibold">
-                        Start date<span className="text-red-500">*</span>
+                        {t("startDate")}<span className="text-red-500">*</span>
                     </label>
                     <input
                         name="startDate"
@@ -125,7 +127,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                 </div>
                 <div>
                     <label className="font-semibold">
-                        End date<span className="text-red-500">*</span>
+                        {t("endDate")}<span className="text-red-500">*</span>
                     </label>
                     <input
                         name="endDate"
@@ -138,7 +140,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
             </div>
 
             <div>
-                <label className="font-semibold">Success criteria<span className="text-red-500">*</span></label>
+                <label className="font-semibold">{t("successCriteria")}<span className="text-red-500">*</span></label>
                 <input
                     name="successCriteria"
                     type="text"
@@ -154,14 +156,14 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
                     onClick={() => navigate("/challenges")}
                 >
-                    Cancel
+                    {t("cancel")}
                 </button>
                 <button
                     type="submit"
                     disabled={isSubmitting}
                     className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    {isSubmitting ? "Loading..." : defaultValues ? "Update" : "Create"}
+                    {isSubmitting ? t("loading") : defaultValues ? t("update") : t("create")}
                 </button>
             </div>
         </form>
