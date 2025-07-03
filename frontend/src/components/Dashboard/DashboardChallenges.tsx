@@ -181,7 +181,7 @@ function DashboardChallenges() {
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? t("rejectionChallenge")
-                                        : t("validateChallenge")}
+                                        : t("rejectChallenge")}
                                 </button>
                             </div>
                         </li>
