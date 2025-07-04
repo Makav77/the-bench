@@ -8,11 +8,13 @@ import PollCountdownTimer from "./PollCountdownTimer";
 import usePermission from "../../Utils/usePermission";
 import { format } from "date-fns";
 import ReportModal from "../../Utils/ReportModal";
+import { useTranslation } from "react-i18next";
 
 function PollDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate= useNavigate();
+    const { t } = useTranslation("Community/PollDetailPage");
 
     const { restricted, expiresAt, reason, loading: permLoading } = usePermission("vote_poll");
     const [poll, setPoll] = useState<PollDetails | null>(null);
@@ -41,7 +43,7 @@ function PollDetailPage() {
     }, [id]);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>
+        return <p className="p-6">{t("loading")}</p>
     }
 
     if (error) {
@@ -71,7 +73,7 @@ function PollDetailPage() {
     };
 
     const handleClose = async () => {
-        const confirmed = window.confirm("You are about to close the poll. Would you like to confirm?")
+        const confirmed = window.confirm(t("confirmAlertClose"));
         if (!confirmed) {
             return;
         }
@@ -86,7 +88,7 @@ function PollDetailPage() {
     }
 
     const handleDelete = async () => {
-        const confirmed = window.confirm("You are about to delete a poll. Would you like to confirm?");
+        const confirmed = window.confirm(t("confirmAlertDelete"));
         if (!confirmed) {
             return;
         }
@@ -101,7 +103,7 @@ function PollDetailPage() {
     }
 
     if (permLoading) {
-        return <p className="p-6">Checking permission...</p>;
+        return <p className="p-6">{t("checkingPermissons")}</p>;
     }
 
     const isExpired = !!poll.closesAt && new Date(poll.closesAt) < new Date();
@@ -115,17 +117,17 @@ function PollDetailPage() {
                         onClick={() => navigate("/polls")}
                         className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
-                        ← Back
+                        {t("back")}
                     </button>
 
                     <div>
                         <p>
                             {poll.manualClosed || isExpired ? (
-                                <span className="text-gray-500 font-semibold text-sm">Closed</span>
+                                <span className="text-gray-500 font-semibold text-sm">{t("closed")}</span>
                             ) : poll.closesAt ? (
                                 <PollCountdownTimer expiresAt={poll.closesAt} />
                             ) : (
-                                <span className="text-green-600 font-semibold text-sm">Open</span>
+                                <span className="text-green-600 font-semibold text-sm">{t("open")}</span>
                             )}
                         </p>
                     </div>
@@ -134,7 +136,7 @@ function PollDetailPage() {
                 <h1 className="text-2xl font-bold">{poll.question}</h1>
 
                 <p className="text-sm text-gray-500 mb-4 -mt-3">
-                    Published by{" "}
+                    {t("publishedBy")} {" "}
                     <span
                         onClick={() => navigate(`/profile/${poll.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -145,7 +147,7 @@ function PollDetailPage() {
 
                 {isAdminorModerator && (
                     <p className="text-red-500">
-                        Admin and moderator can't vote.
+                        {t("adminAndModeratorCantVote")}
                     </p>
                 )}
 
@@ -169,7 +171,7 @@ function PollDetailPage() {
                 ) : (
                     <div>
                         <div className="mt-4 p-4 bg-white rounded-2xl shadow w-[60%] mx-auto">
-                            <h2 className="text-xl font-semibold mb-2">Results :</h2>
+                            <h2 className="text-xl font-semibold mb-2">{t("results")}</h2>
                             {(() => {
                                 const totalVotes = poll.options.reduce((sum, o) => sum + o.votesCount, 0);
                                 const sorted = [...poll.options].sort((a, b) => b.votesCount - a.votesCount);
@@ -198,25 +200,25 @@ function PollDetailPage() {
                     {!isClosed && !hasVoted && user?.role !== "admin" && user?.role !== "moderator" ? (
                         restricted ? (
                             <p className="text-red-600 font-semibold text-center">
-                                You are no longer allowed to vote to a poll until{" "}
+                                {t("restrictionMessage")} {" "}
                                 {expiresAt
                                     ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
                                     : "unknown date"}.
                                 <br />
                                 {reason && (
                                     <span>
-                                        Reason: {reason}
+                                        {t("reason")} {reason}
                                         <br />
                                     </span>
                                 )}
-                                Contact a moderator or administrator for more information.
+                                {t("contactMessage")}
                             </p>
                         ) : (
                             <button
                                 onClick={handleVote}
                                 className="w-[25%] bg-green-600 text-white px-6 py-2 rounded cursor-pointer"
                             >
-                                Vote
+                                {t("vote")}
                             </button>
                         )
                     ) : null}
@@ -226,7 +228,7 @@ function PollDetailPage() {
                             onClick={handleClose}
                             className="w-[25%] bg-yellow-600 text-white px-6 py-1 rounded cursor-pointer"
                         >
-                            Close
+                            {t("close")}
                         </button>
                     )}
 
@@ -235,7 +237,7 @@ function PollDetailPage() {
                             onClick={handleDelete}
                             className="w-[25%] bg-red-600 text-white px-6 py-1 rounded cursor-pointer"
                         >
-                            Delete
+                            {t("delete")}
                         </button>
                     )}
                 </div>
@@ -247,7 +249,7 @@ function PollDetailPage() {
                         onClick={() => setShowReportModal(true)}
                         className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                     >
-                        Report poll
+                        {t("report")}
                     </button>
 
                     {showReportModal && (

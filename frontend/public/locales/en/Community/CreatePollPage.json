@@ -1,0 +1,19 @@
+{
+    "checkingPermissions": "Checking permissions...",
+    "restrictionMessage": "You are no longer allowed to create a poll until",
+    "reason": "Reason:",
+    "contactMessage": "Contact a moderator or administrator for more information.",
+    "createPoll": "Create a poll",
+    "question": "Question",
+    "pollType": "Poll type",
+    "singleAnswer": "Single answer",
+    "multipleAnswer": "Multiple answer",
+    "limitedAnswer": "Limited answer",
+    "autoClosingDate": "Auto closing Date",
+    "optionnal": "optionnal",
+    "autoClosingTime": "Auto closing Time",
+    "answers": "Answers (2-10)",
+    "addAnswers": "Add answers",
+    "cancel": "Cancel",
+    "create": "Create"
+}
