@@ -13,15 +13,9 @@ interface ChatSidebarProps {
   refreshTrigger?: number;
 }
 
-const mockGroups = [
-  { id: 'g1', name: 'Sport' },
-  { id: 'g2', name: 'Cinéma' },
-];
-
-
 export default function ChatSidebar({ onSelect, user, onlineUsers, refreshTrigger }: ChatSidebarProps) {
   const [friends, setFriends] = useState<FriendDTO[]>([]);
-  const [groups, setGroups] = useState<{ id: string; name: string }[]>([...mockGroups]);
+  const [groups, setGroups] = useState<{ id: string; name: string }[]>([]);
   useEffect(() => {
     const fetchFriends = async () => {
       try {
@@ -39,7 +33,7 @@ export default function ChatSidebar({ onSelect, user, onlineUsers, refreshTrigge
     const fetchGroups = async () =>{
       try {
         const groups = await getGroups(user?.id);
-        setGroups(mockGroups.concat(groups));
+        setGroups(groups);
       }
       catch (err) {
         console.error("Failed to fetch groups:", err);
