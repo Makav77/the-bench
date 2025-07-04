@@ -3,15 +3,17 @@ import DashboardChallenges from "./DashboardChallenges";
 import DashboardReports from "./DashboardReports";
 import DashboardRestrictions from "./DashboardRestrictions";
 import DashboardNews from "./DashboardNews";
+import { useTranslation } from "react-i18next";
 
 type Tab = "challenges" | "restrictions" | "reports" | "news";
 
 function DashboardPage() {
     const [activeTab, setActiveTab] = useState<Tab>("restrictions");
+    const { t } = useTranslation("Dashboard/Dashboard");
 
     return (
         <div className="p-6 w-[30%] mx-auto">
-            <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
+            <h1 className="text-3xl font-bold mb-4">{t("dashboard")}</h1>
 
             <div className="flex border-b mb-6">
                 <button
@@ -22,7 +24,7 @@ function DashboardPage() {
                             : "text-gray-600 hover:text-gray-800"
                     }`}
                 >
-                    Challenges
+                    {t("challenges")}
                 </button>
                 <button
                     onClick={() => setActiveTab("restrictions")}
@@ -32,7 +34,7 @@ function DashboardPage() {
                             : "text-gray-600 hover:text-gray-800"
                     }`}
                 >
-                    Restrictions
+                    {t("restrictions")}
                 </button>
                 <button
                     onClick={() => setActiveTab("reports")}
@@ -42,7 +44,7 @@ function DashboardPage() {
                             : "text-gray-600 hover:text-gray-800"
                     }`}
                 >
-                    Reports
+                    {t("reports")}
                 </button>
                 <button
                     onClick={() => setActiveTab("news")}
@@ -52,7 +54,7 @@ function DashboardPage() {
                             : "text-gray-600 hover:text-gray-800"
                     }`}
                 >
-                    News
+                    {t("news")}
                 </button>
             </div>
 

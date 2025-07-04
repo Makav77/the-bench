@@ -28,7 +28,7 @@ enum registerState {
 }
 
 function Signup() {
-    const { t } = useTranslation("Register");
+    const { t } = useTranslation("Register/Register");
     const navigate = useNavigate();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [registerCredentials, setRegisterCredentials] = useState<registerCredentials>({

@@ -1,0 +1,12 @@
+{
+    "name": "Name",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "place": "Place",
+    "maxNumberOfParticipants": "Max number of participant",
+    "description": "Description",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "update": "Update",
+    "create": "Create"
+}

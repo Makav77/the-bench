@@ -1,0 +1,17 @@
+{
+    "confirmAlert": "Please enter a reason for rejecting this news :",
+    "waitingNews": "Waiting news",
+    "loading": "Loading news...",
+    "noWaitingNews": "No waiting news",
+    "title": "Title :",
+    "author": "Author :",
+    "date": "Date :",
+    "preview": "Preview :",
+    "validation": "Validation...",
+    "validate": "Validate",
+    "rejection": "Rejection...",
+    "reject": "Reject",
+    "previous": "← Prev",
+    "page": "Page",
+    "next": "Next →"
+}

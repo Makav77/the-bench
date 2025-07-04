@@ -1,0 +1,19 @@
+{
+    "loading": "Loading...",
+    "confirmAlertClose": "You are about to close the poll. Would you like to confirm?",
+    "confirmAlertDelete": "You are about to delete a poll. Would you like to confirm?",
+    "checkingPermissions": "Checking permission...",
+    "back": "← Back",
+    "closed": "Closed",
+    "open": "Open",
+    "publishedBy": "Published by",
+    "adminAndModeratorCantVote": "Admin and moderator can't vote.",
+    "results": "Results :",
+    "restrictionMessage": "You are no longer allowed to vote to a poll until",
+    "reason": "Reason:",
+    "contactMessage": "Contact a moderator or administrator for more information.",
+    "vote": "Vote",
+    "close": "Close",
+    "delete": "Delete",
+    "report": "Report"
+}

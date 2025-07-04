@@ -1,0 +1,17 @@
+{
+    "loading": "Loading...",
+    "noArticle": "No article found.",
+    "confirmAlertArticle": "You are about to delete this article. Would you like to confirm?",
+    "confirmAlertComment": "You are about to delete this comment. Would you like to confirm ?",
+    "back": "← Back",
+    "unlike": "Unlike",
+    "like": "Like",
+    "edit": "Edit",
+    "delete": "Delete",
+    "comments": "Comments",
+    "noComment": "No comment yet.",
+    "validate": "Validate",
+    "cancel": "Cancel",
+    "publish": "Publish",
+    "report": "Report"
+}

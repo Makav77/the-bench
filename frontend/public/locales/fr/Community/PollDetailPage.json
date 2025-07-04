@@ -1,0 +1,19 @@
+{
+    "loading": "Chargement...",
+    "confirmAlertClose": "Vous êtes sur le point de clôturer ce sondage. Souhaitez-vous confirmer ?",
+    "confirmAlertDelete": "Vous êtes sur le point de supprimer ce sondage. Souhaitez-vous confirmer ?",
+    "checkingPermissions": "Vérification des permissions...",
+    "back": "← Retour",
+    "closed": "Clôturé",
+    "open": "Ouvert",
+    "publishedBy": "Publié par",
+    "adminAndModeratorCantVote": "Les modérateurs et administrateurs ne peuvent pas voter.",
+    "results": "Résultats :",
+    "restrictionMessage": "Vous n'êtes plus autorisé à voter pour un sondage jusqu'au",
+    "reason": "Raison :",
+    "contactMessage": "Contactez un modérateur ou un administrateur pour plus d'information.",
+    "vote": "Voter",
+    "close": "Clôturer",
+    "delete": "Supprimer",
+    "report": "Signaler"
+}

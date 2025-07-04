@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { submitCompletion } from "../../../api/challengeService";
+import { useTranslation } from "react-i18next";
 
 interface SubmissionModalProps {
     challengeId: string;
@@ -13,6 +14,7 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
     const [imageUrl, setImageUrl] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const { t } = useTranslation("Community/SubmissionModal");
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -49,13 +51,13 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                     ✕
                 </button>
 
-                <h2 className="text-2xl font-semibold mb-4">Validate my completion</h2>
+                <h2 className="text-2xl font-semibold mb-4">{t("validateCompletion")}</h2>
 
                 {error && <p className="mb-4 text-red-500">{error}</p>}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block font-medium mb-1">Text (optionnel)</label>
+                        <label className="block font-medium mb-1">{t("text")}</label>
                         <textarea
                             rows={3}
                             value={text}
@@ -65,7 +67,7 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                     </div>
 
                     <div>
-                        <label className="block font-medium mb-1">Image (optionnel)</label>
+                        <label className="block font-medium mb-1">{t("image")}</label>
                         <input
                             type="text"
                             value={imageUrl}
@@ -81,14 +83,14 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                             disabled={loading}
                             className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-500 disabled:opacity-50 cursor-pointer"
                         >
-                            Annuler
+                            {t("cancel")}
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
                             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 cursor-pointer"
                         >
-                            {loading ? "Envoi…" : "Envoyer"}
+                            {loading ? t("sending") : t("send")}
                         </button>
                     </div>
                 </form>

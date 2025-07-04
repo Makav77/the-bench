@@ -5,6 +5,7 @@ import { getComments, createComment, updateComment, deleteComment, toggleComment
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import ReportModal from "../../Utils/ReportModal";
+import { useTranslation } from "react-i18next";
 
 function NewsDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -12,6 +13,7 @@ function NewsDetailPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Community/NewsDetailPage");
     const { user } = useAuth();
     const [likes, setLikes] = useState<NewsLikesDTO>({ totalLikes: 0, liked: false });
     const [modalImage, setModalImage] = useState<string | null>(null);
@@ -182,7 +184,7 @@ function NewsDetailPage() {
                     onClick={() => navigate("/news")}
                     className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
-                    ← Back
+                    {t("back")}
                 </button>
 
                 <h1 className="text-3xl font-bold mb-4 text-center">{news.title}</h1>
@@ -199,7 +201,7 @@ function NewsDetailPage() {
                     </div>
                 )}
 
-                <div className="text-lg text-gray-800 whitespace-pre-line mb-6 px-2 text-justify">
+                <div className="text-lg text-gray-800 whitespace-pre-line mb-6 px-2 text-justify break-words">
                     {news.content}
                 </div>
 
@@ -223,9 +225,9 @@ function NewsDetailPage() {
                         className={`px-3 py-1 rounded cursor-pointer ${likes.liked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"} hover:bg-blue-600`}
                         disabled={!user}
                     >
-                        {likes.liked ? "Unlike" : "Like"} 👍
+                        {likes.liked ? t("unlike") : t("like")} 👍
                     </button>
-                    <span>{likes.totalLikes} like{likes.totalLikes !== 1 ? "s" : ""}</span>
+                    <span>{likes.totalLikes} {t("like")}{likes.totalLikes !== 1 ? "s" : ""}</span>
                 </div>
 
                 {canEditOrDelete && (
@@ -234,23 +236,23 @@ function NewsDetailPage() {
                             onClick={() => navigate(`/news/${news.id}/edit`)}
                             className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500 cursor-pointer"
                         >
-                            Edit
+                            {t("edit")}
                         </button>
                         <button
                             onClick={handleDelete}
                             className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 cursor-pointer"
                         >
-                            Delete
+                            {t("delete")}
                         </button>
                     </div>
                 )}
 
                 <div className="mt-10 border-t pt-6">
-                    <h2 className="text-xl font-bold mb-3">Comments</h2>
+                    <h2 className="text-xl font-bold mb-3">{t("comments")}</h2>
                     {commentError && <p className="text-red-500">{commentError}</p>}
 
                     <div className="space-y-4 mb-4">
-                        {comments.length === 0 && <p className="text-gray-500">No comments yet.</p>}
+                        {comments.length === 0 && <p className="text-gray-500">{t("noComment")}</p>}
                         {comments.map((c) => (
                             <div
                                 key={c.id}
@@ -282,14 +284,14 @@ function NewsDetailPage() {
                                                     className="bg-green-500 text-white font-semibold border cursor-pointer hover:bg-green-600 px-3 py-1 rounded-2xl"
                                                     onClick={() => handleUpdateComment(c.id)}
                                                 >
-                                                    Validate
+                                                    {t("validate")}
                                                 </button>
 
                                                 <button
                                                     className="bg-red-500 text-white font-semibold border cursor-pointer hover:bg-red-600 px-3 py-1 rounded-2xl"
                                                     onClick={() => setEditingComment(null)}
                                                 >
-                                                    Cancel
+                                                    {t("cancel")}
                                                 </button>
                                             </div>
                                         </div>
@@ -302,7 +304,7 @@ function NewsDetailPage() {
                                             onClick={() => handleToggleCommentLike(c.id)}
                                             disabled={!user}
                                         >
-                                            Like
+                                            {t("like")}
                                         </button>
                                         <span className="flex items-center gap-1 text-gray-700 text-sm">
                                             👍 {c.likedBy.length}
@@ -314,14 +316,14 @@ function NewsDetailPage() {
                                                     className="text-xs text-yellow-600 ml-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
                                                     onClick={() => handleEditComment(c.id, c.content)}
                                                 >
-                                                    Edit
+                                                    {t("edit")}
                                                 </button>
 
                                                 <button
                                                     className="text-xs text-red-500 ml-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
                                                     onClick={() => handleDeleteComment(c.id)}
                                                 >
-                                                    Delete
+                                                    {t("delete")}
                                                 </button>
                                             </>
                                         )}
@@ -344,7 +346,6 @@ function NewsDetailPage() {
                                     value={commentInput}
                                     onChange={e => setCommentInput(e.target.value)}
                                     rows={3}
-                                    placeholder="Add comment ..."
                                 />
                                 <div className="flex justify-end">
                                     <button
@@ -352,7 +353,7 @@ function NewsDetailPage() {
                                         disabled={commentLoading || !commentInput.trim()}
                                         className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 disabled:opacity-80 cursor-pointer"
                                     >
-                                        Publish
+                                        {t("publish")}
                                     </button>
                                 </div>
                             </div>
@@ -393,7 +394,7 @@ function NewsDetailPage() {
                         onClick={() => setShowReportModal(true)}
                         className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                     >
-                        Report news
+                        {t("report")}
                     </button>
 
                     {showReportModal && (

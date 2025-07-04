@@ -4,31 +4,33 @@ import { createFlashPost } from "../../api/flashPostService";
 import { toast } from "react-toastify";
 import usePermission from "../Utils/usePermission";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 function CreateFlashPostForm() {
     const navigate = useNavigate();
+    const { t } = useTranslation("FlashPosts/CreateFlashPostForm");
 
     const { restricted, expiresAt, reason } = usePermission("publish_flash_post");
     if (restricted === null) {
-        return <p className="p-6 text-center">Checking permissions ...</p>;
+        return <p className="p-6 text-center">{t("checkingPermissions")}</p>;
     }
 
     if (restricted) {
         return (
             <div className="p-6 text-center">
                 <p className="text-red-500">
-                    You are no longer allowed to publish a flash post until{" "}
+                    {t("restrictionMessage")} {" "}
                     {expiresAt
                         ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
                         : "unknown date"}.
                     <br />
                     {reason && (
                         <span>
-                            Reason: {reason}
+                            {t("reason")} {reason}
                             <br />
                         </span>
                     )}
-                    Contact a moderator or administrator for more information.
+                    {t("contactMessage")}
                 </p>
             </div>
         );
@@ -42,7 +44,7 @@ function CreateFlashPostForm() {
 
     return (
         <div className="p-6">
-            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2">Create a Flash Post</h1>
+            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2">{t("createFlashpost")}</h1>
             <FlashPostForm onSubmit={handleSubmit} />
         </div>
     );

@@ -3,14 +3,14 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function Navigation() {
-    const { t } = useTranslation("Navigation");
+    const { t } = useTranslation("Navigation/Navigation");
     const navigate = useNavigate();
     const location = useLocation();
 
     return (
         <nav
             data-testid="navigation-bar"
-            className="grid grid-cols-5 gap-1 m-2 mt-10 mb-5 w-[75%] mx-auto"
+            className="grid grid-cols-5 gap-1 m-2 mt-10 pt-5 mb-5 w-[75%] mx-auto border-t-1"
         >
             <button
                 type="button"

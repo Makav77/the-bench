@@ -1,0 +1,15 @@
+{
+    "createPost": "Create Post",
+    "createFlashPost": "Create Flash Post",
+    "bulletinsBoard": "Bulletins Board",
+    "flashPost": "Flash Posts",
+    "loading": "Loading...",
+    "noFlashPost": "No flash posts right now",
+    "lastUpdate": "Last update at",
+    "author": "Author :",
+    "previous": "← Prev",
+    "next": "Next →",
+    "page": "Page",
+    "posts": "Posts",
+    "noPost": "No posts right now"
+}

@@ -1,0 +1,11 @@
+{
+    "loading": "Loading...",
+    "confirmAlert": "You are about to delete a post. Would you like to confirm?",
+    "back": "← Back",
+    "publishedOn": "Published on",
+    "updatedOn": "Updated on",
+    "by": "by",
+    "editPost": "Edit post",
+    "deletePost": "Delete post",
+    "reportPost": "Report"
+}

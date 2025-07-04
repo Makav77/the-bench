@@ -1,0 +1,19 @@
+{
+    "checkingPermissions": "Vérification des permissions",
+    "restrictionMessage": "Vous n'êtes plus autorisé à créer de sondage jusqu'au",
+    "reason": "Raison :",
+    "contactMessage": "Contactez un modérateur ou un administrateur pour plus d'information.",
+    "createPoll": "Créer un sondage",
+    "question": "Question",
+    "pollType": "Type de sondage",
+    "singleAnswer": "Réponse unique",
+    "multipleAnswer": "Réponse multiple",
+    "limitedAnswer": "Réponse limité",
+    "autoClosingDate": "Date de clotûre",
+    "optionnal": "optionnel",
+    "autoClosingTime": "Heure de clôture",
+    "answers": "Réponses (2-10)",
+    "addAnswers": "Ajouter une réponse",
+    "cancel": "Annuler",
+    "create": "Créer"
+}

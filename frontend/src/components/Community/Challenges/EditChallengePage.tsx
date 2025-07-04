@@ -4,9 +4,11 @@ import ChallengeForm, { ChallengeFormData } from "./ChallengeForm";
 import { getChallenge, updateChallenge } from "../../../api/challengeService";
 import { ChallengeSummary } from "../../../api/challengeService";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function EditChallengePage() {
     const navigate = useNavigate();
+    const { t } = useTranslation("Community/EditChallengePage");
     const { id } = useParams<{ id: string }>();
     const [challenge, setChallenge] = useState<ChallengeSummary | null>(null);
 
@@ -20,19 +22,22 @@ export default function EditChallengePage() {
     }, [id]);
 
     const handleSubmit = async (data: ChallengeFormData) => {
-        if (!id) return;
+        if (!id) {
+            return;
+        }
+
         await updateChallenge(id, data);
         toast.success("Défi mis à jour !");
         navigate(`/challenges/${id}`);
     };
 
     if (!challenge) {
-        return <p>Loading...</p>;
+        return <p>{t("loading")}</p>;
     }
 
     return (
         <div className="p-6">
-            <h1 className="text-4xl font-semibold mb-4 max-w-xl mx-auto">Edit challenge</h1>
+            <h1 className="text-4xl font-semibold mb-4 max-w-xl mx-auto">{t("editChallenge")}</h1>
             <ChallengeForm defaultValues={challenge} onSubmit={handleSubmit} />
         </div>
     );

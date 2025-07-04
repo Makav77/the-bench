@@ -1,0 +1,13 @@
+{
+    "loading": "",
+    "confirmAlert": "Vous êtes sur le point de supprimer cet article. Souhaitez-vous confirmer ?",
+    "back": "← Retour",
+    "publishedOn": "Publié le",
+    "lastUpdate": "Dernière mise à jour le",
+    "price": "Prix :",
+    "sellBy": "Vendu par",
+    "contactMail": "Contact (mail) :",
+    "contactPhone": "Contact (phone) :",
+    "editPost": "Modifier",
+    "deletePost": "Supprimer"
+}

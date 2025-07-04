@@ -1,0 +1,13 @@
+{
+    "title": "Titre",
+    "description": "Description",
+    "price": "Prix",
+    "pictures": "Images",
+    "selectFiles": "Selectionner fichier",
+    "contactMail": "Contact (email)",
+    "contactPhone": "Contact (phone)",
+    "cancel": "Annuler",
+    "loading": "Loading...",
+    "update": "Mettre à jour",
+    "create": "Créer"
+}

@@ -3,6 +3,7 @@ import { getAllPolls } from "../../../api/pollService";
 import { PollSummary } from "../../../api/pollService";
 import { useNavigate } from "react-router-dom";
 import PollCountdownTimer from "./PollCountdownTimer";
+import { useTranslation } from "react-i18next";
 
 function PollsPage() {
     const [polls, setPolls] = useState<PollSummary[]>([]);
@@ -11,6 +12,7 @@ function PollsPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Community/PollPage");
 
     useEffect(() => {
         async function load() {
@@ -31,7 +33,7 @@ function PollsPage() {
     }, [page]);
 
     if (isLoading) {
-        return <p>Loading...</p>
+        return <p>{t("loading")}</p>
     }
 
     if (error) {
@@ -50,7 +52,7 @@ function PollsPage() {
                     onClick={() => navigate("/community")}
                     className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
-                    ← Back to community
+                    {t("back")}
                 </button>
             </div>
 
@@ -60,11 +62,11 @@ function PollsPage() {
                         onClick={() => navigate("/polls/create")}
                         className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700"
                     >
-                        Create a poll
+                        {t("createPoll")}
                     </button>
                 </div>
 
-                <h1 className="text-3xl font-bold mb-5">Polls list</h1>
+                <h1 className="text-3xl font-bold mb-5">{t("pollList")}</h1>
 
                 <ul className="grid grid-cols-2 gap-4">
                     {polls.map(poll => {
@@ -78,20 +80,20 @@ function PollsPage() {
                                 <strong>{poll.question}</strong>
 
                                 <div className="flex justify-between">
-                                    <p>{poll.votes.length} votes</p>
+                                    <p>{poll.votes.length} {t("votes")}</p>
                                     <p>
                                         {poll.manualClosed || isExpired ? (
-                                            <span className="text-gray-500 font-semibold text-sm">Closed</span>
+                                            <span className="text-gray-500 font-semibold text-sm">{t("closed")}</span>
                                         ) : poll.closesAt ? (
                                             <PollCountdownTimer expiresAt={poll.closesAt} />
                                         ) : (
-                                            <span className="text-green-600 font-semibold text-sm">Open</span>
+                                            <span className="text-green-600 font-semibold text-sm">{t("open")}</span>
                                         )}
                                     </p>
                                 </div>
 
                                 <p className="text-sm text-gray-600">
-                                    Created by{" "}
+                                    {t("createdBy")} {" "}
                                     <span
                                         onClick={() => navigate(`/profile/${poll.author.id}`)}
                                         className="text-blue-600 hover:underline cursor-pointer"
@@ -111,11 +113,11 @@ function PollsPage() {
                         onClick={() => setPage((p) => p - 1)}
                         className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        ← Prev
+                        {t("previous")}
                     </button>
 
                     <span>
-                        Page {page} / {lastPage}
+                        {t("page")} {page} / {lastPage}
                     </span>
 
                     <button
@@ -124,7 +126,7 @@ function PollsPage() {
                         onClick={() => setPage((p) => p + 1)}
                         className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        Next →
+                        {t("next")}
                     </button>
                 </div>
             </div>

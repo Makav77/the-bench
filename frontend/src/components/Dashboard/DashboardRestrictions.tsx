@@ -3,8 +3,10 @@ import { restrictUser } from "../../api/permissionsService";
 import { DEFAULT_PERMISSIONS } from "../../../../backend/src/modules/Permissions/ListPermissions";
 import { toast } from "react-toastify";
 import apiClient from "../../api/apiClient";
+import { useTranslation } from "react-i18next";
 
 function DashboardRestrictions() {
+    const { t } = useTranslation("Dashboard/DashboardRestrictions");
     const [userId, setUserId] = useState<string>("");
     const [reason, setReason] = useState<string>("");
     const [days, setDays] = useState<number>(0);
@@ -79,7 +81,7 @@ function DashboardRestrictions() {
     return (
         <div>
             <h2 className="text-2xl font-semibold mb-4">
-                Add a restriction to a user
+                {t("addRestriction")}
             </h2>
 
             <form
@@ -88,7 +90,7 @@ function DashboardRestrictions() {
             >
                 <div>
                     <label className="block font-semibold mb-1">
-                        Permission to restrict
+                        {t("restrictionChoice")}
                     </label>
                     <select
                         name="permissionCode"
@@ -108,7 +110,7 @@ function DashboardRestrictions() {
 
                 <div>
                     <label className="block font-semibold mb-1">
-                        User to restrict <span className="text-red-500">*</span>
+                        {t("userToRestrict")} <span className="text-red-500">*</span>
                     </label>
                     <input
                         name="userSearch"
@@ -116,13 +118,13 @@ function DashboardRestrictions() {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         className="w-full border rounded px-2 py-1"
-                        placeholder="User name"
+                        placeholder={t("userToRestrictPlaceholder")}
                     />
 
                     {query.length >= 2 && (
                         <div className="border border-gray-300 rounded mt-1 bg-white shadow max-h-40 overflow-y-auto">
                             {isSearching ? (
-                                <div className="px-2 py-1 text-gray-500 italic">Searching...</div>
+                                <div className="px-2 py-1 text-gray-500 italic">{t("reason")}</div>
                             ) : results.length > 0 ? (
                                 results.map((user) => (
                                     <div
@@ -138,7 +140,7 @@ function DashboardRestrictions() {
                                     </div>
                                 ))
                             ) : (
-                                <div className="px-2 py-1 text-gray-500 italic">No users found.</div>
+                                <div className="px-2 py-1 text-gray-500 italic">{t("noUserFound")}</div>
                             )}
                         </div>
                     )}
@@ -146,7 +148,7 @@ function DashboardRestrictions() {
 
                 <div>
                     <label className="block font-semibold mb-1">
-                        Reason
+                        {t("reason")}
                         <span className="text-red-500">*</span>
                     </label>
                     <textarea
@@ -155,14 +157,13 @@ function DashboardRestrictions() {
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
                         className="w-full border rounded px-2 py-1"
-                        placeholder="Ex : Comportement inapproprié…"
                     />
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
                     <div>
                         <label className="block font-semibold mb-1">
-                            Days
+                            {t("days")}
                         </label>
                         <input
                             name="days"
@@ -175,9 +176,10 @@ function DashboardRestrictions() {
                             className="w-full border rounded px-2 py-1"
                         />
                     </div>
+
                     <div>
                         <label className="block font-semibold mb-1">
-                            Hours
+                            {t("hours")}
                         </label>
                         <input
                             name="hours"
@@ -191,9 +193,10 @@ function DashboardRestrictions() {
                             className="w-full border rounded px-2 py-1"
                         />
                     </div>
+
                     <div>
                         <label className="block font-semibold mb-1">
-                            Minutes
+                            {t("minutes")}
                         </label>
                         <input
                             name="minutes"
@@ -215,7 +218,7 @@ function DashboardRestrictions() {
                         disabled={isSubmitting}
                         className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                     >
-                        {isSubmitting ? "En cours…" : "Bannir"}
+                        {isSubmitting ? t("inProgress") : t("restrict")}
                     </button>
                 </div>
             </form>

@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import CountdownTimer from "./CountdownTimer";
 import ReportModal from "../Utils/ReportModal";
+import { useTranslation } from "react-i18next";
 
 function FlashPostDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -12,6 +13,7 @@ function FlashPostDetailPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("FlashPosts/FlashPostDetailPage");
     const { user } = useAuth();
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
@@ -36,7 +38,7 @@ function FlashPostDetailPage() {
     }, [id]);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>
+        return <p className="p-6">{t("loading")}</p>
     }
 
     if (error) {
@@ -51,7 +53,7 @@ function FlashPostDetailPage() {
     const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
 
     const handleDelete = async () => {
-        const confirmed = window.confirm("You are about to delete a flash post. Would you like to confirm?");
+        const confirmed = window.confirm(t("confirmAlert"));
         if (!confirmed) {
             return;
         }
@@ -73,14 +75,14 @@ function FlashPostDetailPage() {
                     onClick={() => navigate("/bulletinsboard")}
                     className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
                 >
-                    ← Back
+                    {t("back")}
                 </button>
 
                 <h1 className="text-2xl font-bold">{flashPost.title}</h1>
                 <p className="text-sm text-gray-600">
-                    Published on {new Date(flashPost.createdAt).toLocaleString()} <br />
-                    Updated on{' '} {new Date(flashPost.updatedAt).toLocaleString()} <br />
-                    By{" "}
+                    {t("publishedOn")} {new Date(flashPost.createdAt).toLocaleString()} <br />
+                    {t("updatedOn")} {' '} {new Date(flashPost.updatedAt).toLocaleString()} <br />
+                    {t("by")} {" "}
                     <span
                         onClick={() => navigate(`/profile/${flashPost.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -100,14 +102,14 @@ function FlashPostDetailPage() {
                             onClick={() => navigate(`/flashposts/${id}/edit`)}
                             className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            Edit post
+                            {t("editPost")}
                         </button>
                         <button
                             type="button"
                             onClick={handleDelete}
                             className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            Delete post
+                            {t("deletePost")}
                         </button>
                     </div>
                 )}
@@ -119,7 +121,7 @@ function FlashPostDetailPage() {
                         onClick={() => setShowReportModal(true)}
                         className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                     >
-                        Report flashpost
+                        {t("report")}
                     </button>
 
                     {showReportModal && (

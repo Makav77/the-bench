@@ -5,14 +5,16 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../../context/AuthContext";
 import usePermission from "../../Utils/usePermission";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 function CreateNews() {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation("Community/CreateNews");
 
     const { restricted, expiresAt, reason } = usePermission("create_news");
     if (restricted === null) {
-        return <p className="p-6 text-center">Checking permissions ...</p>
+        return <p className="p-6 text-center">Checking permissions...</p>
     }
     if (restricted) {
         return (
@@ -58,8 +60,7 @@ function CreateNews() {
         <div className="p-6">
             <h1 className="text-3xl font-semibold mb-4 w-[30%] mx-auto">Create news</h1>
             <NewsForm 
-                onSubmit={handleSubmit} 
-                buttonLabel="Create article"
+                onSubmit={handleSubmit}
             />
         </div>
     );

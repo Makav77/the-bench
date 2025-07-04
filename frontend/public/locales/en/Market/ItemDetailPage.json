@@ -1,0 +1,13 @@
+{
+    "loading": "Loading...",
+    "confirmAlert": "You are about to delete an item. Would you like to confirm?",
+    "back": "← Back",
+    "publishedOn": "Publised on",
+    "lastUpdate": "Last update on",
+    "price": "Price :",
+    "sellBy": "Sell by",
+    "contactMail": "Contact by email :",
+    "contactPhone": "Contact by phone :",
+    "editPost": "Edit post",
+    "deletePost": "Delete post"
+}

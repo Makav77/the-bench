@@ -2,9 +2,11 @@ import { useNavigate } from "react-router-dom";
 import ItemForm, { ItemFormData } from "./ItemForm";
 import { createItem } from "../../api/marketService";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function CreateItemPage() {
     const navigate = useNavigate();
+    const { t } = useTranslation("Market/CreateItemPage");
 
     const handleSubmit = async (data: ItemFormData) => {
         const item = await createItem(data);
