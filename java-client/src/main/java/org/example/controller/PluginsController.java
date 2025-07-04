@@ -91,18 +91,6 @@ public class PluginsController {
         });
     }
 
-    private void saveToPluginFolder(File source) {
-        File dest = new File("plugins", source.getName());
-        if (!dest.exists()) {
-            try {
-                Files.copy(source.toPath(), dest.toPath());
-                System.out.println("Plugin saved to plugins folder.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @FXML
     public void onSelectPluginClicked(javafx.event.ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
@@ -141,7 +129,6 @@ public class PluginsController {
             }
         }
     }
-
 
     @FXML
     private void onManagePluginsClicked() {

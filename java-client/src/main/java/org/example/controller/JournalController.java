@@ -120,11 +120,9 @@ public class JournalController {
         }).start();
     }
     public void displayMovies(List<FilmPresentation> films, int pageNumber){
-        int totalPages = (int) Math.ceil((double) films.size() / filmsPerPage);
         int fromIndex = (pageNumber - 1) * filmsPerPage;
         int toIndex = Math.min(fromIndex + filmsPerPage, films.size());
         List<FilmPresentation> sublist = films.subList(fromIndex, toIndex);
-        int i = 0;
         for (FilmPresentation film : sublist) {
             VBox filmBox = new VBox(5);
             filmBox.setStyle("-fx-padding: 10; -fx-border-width: 1;");
@@ -211,21 +209,6 @@ public class JournalController {
         return label;
     }
 
-    public void addArticle(String title, String content) {
-        VBox articleBox = new VBox();
-        articleBox.setSpacing(5);
-        articleBox.setStyle("-fx-background-color: #4A5568; -fx-padding: 10; -fx-background-radius: 5;");
-
-        Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 16; -fx-font-weight: bold;");
-
-        Label contentLabel = new Label(content);
-        contentLabel.setStyle("-fx-text-fill: #d1d5db; -fx-font-size: 12;");
-
-        articleBox.getChildren().addAll(titleLabel, contentLabel);
-        articleContainer.getChildren().add(articleBox);
-    }
-
     public static List<DayArticles> filterByTitle(String filter) {
         List<DayArticles> allDays = DayArticlesUtils.getAllDayArticles();
         String lowerFilter = filter.toLowerCase();
@@ -286,8 +269,6 @@ public class JournalController {
 
         return false;
     }
-
-
 
     public List<DayArticles> sortOldDayArticles() {
         List<DayArticles> dayArticlesList = DayArticlesUtils.getAllDayArticles();

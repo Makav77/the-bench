@@ -37,11 +37,6 @@ public class MainController {
         themesButton.setOnAction(e -> loadView("/ui/themes.fxml"));
     }
 
-    private void showSection(String section) {
-        journalPane.setVisible("journal".equals(section));
-        pluginsPane.setVisible("plugins".equals(section));
-        themesPane.setVisible("themes".equals(section));
-    }
     private void loadView(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));

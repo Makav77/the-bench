@@ -1,15 +1,9 @@
 package org.example;
 import org.example.controller.MainController;
-import org.example.scraping.Scraper;
-import org.example.db.DatabaseManager;
 
 import java.io.File;
-import java.util.List;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

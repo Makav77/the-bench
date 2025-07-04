@@ -5,8 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import org.example.theme.ThemeManager;
 
-
-
 public class ThemesController {
     @FXML private BorderPane themesPane;
 
@@ -18,16 +16,16 @@ public class ThemesController {
 
     @FXML
     public void onNatureThemeSelected(ActionEvent actionEvent) {
-        ThemeManager.setTheme(ThemeManager.NATURE, themesPane.getScene());
+        ThemeManager.setTheme("nature", themesPane.getScene());
     }
 
     @FXML
     public void onDarkThemeSelected(ActionEvent actionEvent) {
-        ThemeManager.setTheme(ThemeManager.DARK, themesPane.getScene());
+        ThemeManager.setTheme("dark", themesPane.getScene());
     }
 
     @FXML
     public void onPastelThemeSelected(ActionEvent actionEvent) {
-        ThemeManager.setTheme(ThemeManager.PASTEL, themesPane.getScene());
+        ThemeManager.setTheme("pastel", themesPane.getScene());
     }
 }
