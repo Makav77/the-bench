@@ -3,11 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import NewsForm from "./NewsForm";
 import { getOneNews, updateNews, uploadNewsImages } from "../../../api/newsService";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function EditNews() {
     const { id } = useParams<{ id: string }>();
     const [defaults, setDefaults] = useState<{ title: string; content: string; tags: string[]; images: string[] }>();
     const navigate = useNavigate();
+    const { t } = useTranslation("Community/EditNewsForm");
 
     useEffect(() => {
         const load = async () => {
@@ -47,16 +49,15 @@ function EditNews() {
     };
 
     if (!defaults) {
-        return <p>Loading...</p>;
+        return <p>{t("loading")}</p>;
     }
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-semibold mb-4 pl-2">Edit article</h1>
+            <h1 className="text-3xl font-semibold mb-4 w-[30%] mx-auto">{t("editArticle")}</h1>
             <NewsForm 
                 defaultValues={defaults}
                 onSubmit={handleSubmit}
-                buttonLabel="Modifier"
             />
         </div>
     );

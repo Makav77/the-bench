@@ -1,0 +1,17 @@
+{
+    "loading": "Chargement...",
+    "noArticle": "Aucun article trouvé.",
+    "confirmAlertArticle": "Vous êtes sur le point de supprimer cet article. Souhaitez-vous confirmer ?",
+    "confirmAlertComment": "Vous êtes sur le point de supprimer ce commentaire. Souhaitez-vous confirmer ?",
+    "back": "← Retour",
+    "unlike": "J'aime pas",
+    "like": "J'aime",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "comments": "Commentaires",
+    "noComment": "Aucun commentaire.",
+    "validate": "Valider",
+    "cancel": "Annuler",
+    "publish": "Publier",
+    "report": "Signaler"
+}
