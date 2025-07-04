@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { UserData, getUsers } from "../../api/userService";
+//import { UserData, getUsers } from "../../api/userService";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
 import { getGroups } from "../../api/chatService";
+import { FriendDTO, getFriends } from "../../api/friendService";
 
 interface ChatSidebarProps {
   onSelect: (chat: { type: 'general' | 'private' | 'group' | 'create-group', targetId?: string, groupName?: string }) => void;
@@ -17,18 +18,18 @@ const mockGroups = [
 
 
 export default function ChatSidebar({ onSelect, user, onlineUsers, refreshTrigger }: ChatSidebarProps) {
-  const [friends, setFriends] = useState<UserData[]>([]);
+  const [friends, setFriends] = useState<FriendDTO[]>([]);
   const [groups, setGroups] = useState<{ id: string; name: string }[]>([...mockGroups]);
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchFriends = async () => {
       try {
-        const users = await getUsers();
-        setFriends(users);
+        const friends = await getFriends(user?.id || '');
+        setFriends(friends);
       } catch (err) {
-        console.error("Failed to fetch users:", err);
+        console.error("Failed to fetch friends:", err);
       }
     }
-    fetchUsers();
+    fetchFriends();
   }, []);
 
   
