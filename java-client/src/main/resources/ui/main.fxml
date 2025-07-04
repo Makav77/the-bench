@@ -24,7 +24,7 @@
 
 <BorderPane fx:id="mainPane" fx:controller="org.example.controller.MainController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="dark-background" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="medium-background" style="-fx-alignment:  CENTER_LEFT;" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="nav-bar" style="-fx-alignment:  CENTER_LEFT;" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="journalButton" contentDisplay="TOP" mnemonicParsing="false"   prefHeight="300.0" prefWidth="123.0" styleClass="nav-button" style="-fx-border-style: solid none none none;"  text="Journal">
                <cursor>

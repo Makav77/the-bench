@@ -5,9 +5,15 @@ buttonColor: #588157
 lightBackground: #FEFAE0
 mediumBackground: #3A5A40
 */
+
+.nav-bar {
+    -fx-background-color: #A3B18A;
+}
+
 .nav-button {
     -fx-background-color: #A3B18A;
     -fx-text-fill: #DAD7CD;
+    -fx-border-color: #FEFAE0;
 }
 
 

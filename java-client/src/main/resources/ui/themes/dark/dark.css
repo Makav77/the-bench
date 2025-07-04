@@ -6,9 +6,14 @@ lightBackground: #3D4051
 mediumBackground: #333F4C
 */
 
+.nav-bar {
+    -fx-background-color: #3D4051;
+}
+
 .nav-button {
     -fx-background-color: #3D4051;
     -fx-text-fill: #59747B;
+    -fx-border-color: #59747B;
 }
 
 .dark-background {

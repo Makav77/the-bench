@@ -151,7 +151,6 @@ public class JournalController {
                     for (Node inner : hbox.getChildren()) {
                         if (inner instanceof Label innerLabel) {
                             innerLabel.getStyleClass().addAll("textfill-accent");
-                            //innerLabel.setStyle("-fx-text-fill: #D4A373;");
                         }
                     }
                 }

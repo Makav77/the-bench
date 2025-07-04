@@ -110,9 +110,9 @@
     </top>
     <center>
         <StackPane>
-            <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" styleClass="light-background">
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" fitToHeight="true" styleClass="light-background" >
                 <content>
-                    <VBox fx:id="articleContainer" spacing="10" styleClass="dark-background"/>
+                    <VBox fx:id="articleContainer" spacing="10" styleClass="dark-background" style="-fx-padding: 0 0 0 15;"/>
                 </content>
             </ScrollPane>
             <ProgressIndicator fx:id="spinner" visible="false" maxWidth="100" maxHeight="100" />

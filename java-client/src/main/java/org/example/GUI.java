@@ -20,7 +20,6 @@ import org.example.version.VersionUtil;
 public class GUI extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        // Créer le dossier /plugins s'il n'existe pas
         File pluginDir = new File("plugins");
         if (!pluginDir.exists()) {
             pluginDir.mkdirs();
@@ -31,7 +30,10 @@ public class GUI extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/main.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ThemeManager.loadThemeFromConfig(scene);
-        stage.setTitle("The bench");
+        stage.setTitle("The Bench");
+        stage.getIcons().add(
+                new javafx.scene.image.Image(getClass().getResourceAsStream("/ui/icons/app_logo_transparent.png"))
+        );
         stage.setScene(scene);
         stage.setMinWidth(1000);
         stage.setMinHeight(700);

@@ -1,6 +1,7 @@
 package org.example.theme;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import org.example.config.AppConfigManager;
 
 import java.io.*;
 import java.util.HashMap;
@@ -53,23 +54,11 @@ public class ThemeManager {
     }
 
     private static void saveThemeToConfig(String themeName) {
-        try (OutputStream out = new FileOutputStream(CONFIG_PATH)) {
-            Properties props = new Properties();
-            props.setProperty(THEME_KEY, themeName);
-            props.store(out, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        AppConfigManager.setProperty("theme", themeName);
     }
 
     public static void loadThemeFromConfig(Scene scene) {
-        try (InputStream in = new FileInputStream(CONFIG_PATH)) {
-            Properties props = new Properties();
-            props.load(in);
-            currentTheme = props.getProperty(THEME_KEY, "dark");
-        } catch (IOException ignored) {
-        }
-
+        currentTheme = AppConfigManager.getProperty("theme", "dark");
         applyTheme(scene);
     }
 

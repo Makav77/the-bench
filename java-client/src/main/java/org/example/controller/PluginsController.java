@@ -1,10 +1,21 @@
 package org.example.controller;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.example.application.AppUtils;
+import org.example.config.AppConfigManager;
 import org.example.plugin.Plugin;
 import org.example.plugin.PluginLoader;
 import org.example.theme.ThemeManager;
@@ -13,6 +24,7 @@ import org.example.theme.ThemeManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 public class PluginsController {
@@ -23,7 +35,6 @@ public class PluginsController {
         ThemeManager.applyThemeToRoot(pluginsPane);
         System.out.println("Vue Plugins chargée !");
 
-        // Quand le fichier est dans la drag and drop zone
         dropZone.setOnDragOver(event -> {
             if (event.getGestureSource() != dropZone && event.getDragboard().hasFiles()) {
                 event.acceptTransferModes(javafx.scene.input.TransferMode.COPY);
@@ -31,7 +42,6 @@ public class PluginsController {
             event.consume();
         });
 
-        // Quand le fichier entre dans la zone : rajoute le style pour "réagir" visuellement
         dropZone.setOnDragEntered(event -> {
             if (event.getGestureSource() != dropZone && event.getDragboard().hasFiles()) {
                 dropZone.getStyleClass().add("drag-over-highlight");
@@ -39,27 +49,40 @@ public class PluginsController {
             event.consume();
         });
 
-        // Quand le fichier sort de la zone : supprime le style ajouté
         dropZone.setOnDragExited(event -> {
             dropZone.getStyleClass().remove("drag-over-highlight");
             event.consume();
         });
 
-        // Quand le fichier est "jeté" dans la zone
         dropZone.setOnDragDropped(event -> {
-            var db = event.getDragboard();
-            boolean success = false;
+        var db = event.getDragboard();
+        boolean success = false;
 
-            if (db.hasFiles()) {
-                File file = db.getFiles().get(0);
-                if (file.getName().endsWith(".jar")) {
-                    List<Plugin> loadedPlugins = PluginLoader.loadPlugins(file);
+        if (db.hasFiles()) {
+            File originalFile = db.getFiles().get(0);
+
+            if (originalFile.getName().endsWith(".jar")) {
+                File pluginsDir = new File("plugins");
+                if (!pluginsDir.exists()) {
+                    pluginsDir.mkdirs();
+                }
+
+                File targetFile = new File(pluginsDir, originalFile.getName());
+                try {
+                    Files.copy(originalFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                    AppConfigManager.setBoolean("plugin." + targetFile.getName(), true);
+
+                    List<Plugin> loadedPlugins = PluginLoader.loadPlugins(targetFile);
                     for (Plugin plugin : loadedPlugins) {
                         System.out.println("Dragged plugin loaded: " + plugin.getName());
-                        saveToPluginFolder(file);
                         plugin.start();
                     }
-                    success = true;
+
+                        success = true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -68,7 +91,6 @@ public class PluginsController {
         });
     }
 
-    // Sauvegarde le plugin dans /plugins
     private void saveToPluginFolder(File source) {
         File dest = new File("plugins", source.getName());
         if (!dest.exists()) {
@@ -81,7 +103,6 @@ public class PluginsController {
         }
     }
 
-    // Quand le bouton "Select files" est utilisé
     @FXML
     public void onSelectPluginClicked(javafx.event.ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
@@ -90,23 +111,103 @@ public class PluginsController {
                 new FileChooser.ExtensionFilter("JAR Files", "*.jar")
         );
 
-        Window window = javafx.stage.Window.getWindows().stream()
+        Window window = Window.getWindows().stream()
                 .filter(Window::isShowing)
                 .findFirst()
                 .orElse(null);
 
         if (window == null) return;
 
-        // Afficher la fenêtre du choix de fichiers
         File selectedFile = fileChooser.showOpenDialog(window);
 
         if (selectedFile != null) {
-            List<Plugin> loadedPlugins = PluginLoader.loadPlugins(selectedFile);
-            for (Plugin plugin : loadedPlugins) {
-                System.out.println("Running plugin: " + plugin.getName());
-                saveToPluginFolder(selectedFile);
-                plugin.start();
+            File pluginsDir = new File("plugins");
+            if (!pluginsDir.exists()) {
+                pluginsDir.mkdirs();
+            }
+
+            File targetFile = new File(pluginsDir, selectedFile.getName());
+            try {
+                Files.copy(selectedFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                AppConfigManager.setBoolean("plugin." + targetFile.getName(), true);
+
+                List<Plugin> loadedPlugins = PluginLoader.loadPlugins(targetFile);
+                for (Plugin plugin : loadedPlugins) {
+                    System.out.println("Running plugin: " + plugin.getName());
+                    plugin.start();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+
+    @FXML
+    private void onManagePluginsClicked() {
+        Stage manageStage = new Stage();
+        manageStage.setTitle("The Bench: Manage Plugins");
+        manageStage.getIcons().add(
+                new javafx.scene.image.Image(getClass().getResourceAsStream("/ui/icons/app_logo_transparent.png"))
+        );
+        manageStage.initModality(Modality.APPLICATION_MODAL);
+
+        VBox pluginListBox = new VBox(10);
+        pluginListBox.setPadding(new Insets(15));
+        pluginListBox.setStyle("-fx-background-color: #2e2e2e;");
+        pluginListBox.setPrefWidth(350);
+
+        File pluginFolder = new File("plugins");
+        File[] jars = pluginFolder.listFiles((dir, name) -> name.endsWith(".jar"));
+
+        if (jars != null && jars.length > 0) {
+            for (File jar : jars) {
+                String pluginKey = "plugin." + jar.getName();
+                boolean isEnabled = AppConfigManager.getBoolean(pluginKey, true);
+
+                HBox pluginRow = new HBox(10);
+                pluginRow.setAlignment(Pos.CENTER_LEFT);
+
+                Label nameLabel = new Label(jar.getName());
+                nameLabel.setPrefWidth(180);
+                nameLabel.setStyle("-fx-text-fill: white;");
+
+                ToggleButton enableToggle = new ToggleButton(isEnabled ? "Enabled" : "Disabled");
+                enableToggle.setSelected(isEnabled);
+                enableToggle.setOnAction(e -> {
+                    boolean enabled = enableToggle.isSelected();
+                    enableToggle.setText(enabled ? "Enabled" : "Disabled");
+                    AppConfigManager.setBoolean(pluginKey, enabled);
+
+                    AppUtils.restartApp();
+                });
+
+                Button deleteBtn = new Button("Delete");
+                deleteBtn.setStyle("-fx-text-fill: white; -fx-background-color: red;");
+                deleteBtn.setOnAction(e -> {
+                    boolean deleted = jar.delete();
+                    if (deleted) {
+                        pluginListBox.getChildren().remove(pluginRow);
+                        AppConfigManager.remove(pluginKey);
+
+                        AppUtils.restartApp();
+                    } else {
+                        System.out.println("Failed to delete: " + jar.getName());
+                    }
+                });
+
+                pluginRow.getChildren().addAll(nameLabel, enableToggle, deleteBtn);
+                pluginListBox.getChildren().add(pluginRow);
+            }
+        } else {
+            Label noPlugins = new Label("No plugins found.");
+            noPlugins.setStyle("-fx-text-fill: white;");
+            pluginListBox.getChildren().add(noPlugins);
+        }
+
+        Scene scene = new Scene(pluginListBox);
+        manageStage.setScene(scene);
+        manageStage.setResizable(false);
+        manageStage.showAndWait();
     }
 }

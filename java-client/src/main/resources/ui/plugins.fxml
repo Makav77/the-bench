@@ -40,6 +40,21 @@
                         <Cursor fx:constant="HAND" />
                     </cursor>
                 </Button>
+                <Button mnemonicParsing="false" prefWidth="140.0" styleClass="light-background bordered-button"
+                        style="-fx-border-width: 0.5; -fx-border-radius: 5;" text="Manage plugins" onAction="#onManagePluginsClicked">
+                    <HBox.margin>
+                        <Insets left="10.0" top="35.0" />
+                    </HBox.margin>
+                    <font>
+                        <Font name="Corbel" size="14.0" />
+                    </font>
+                    <effect>
+                        <Glow level="0.57" />
+                    </effect>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
             </children>
             <effect>
                 <DropShadow radius="4.75" width="0.0" />

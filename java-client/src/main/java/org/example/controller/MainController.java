@@ -2,7 +2,6 @@ package org.example.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
@@ -52,7 +51,6 @@ public class MainController {
                     ThemeManager.applyTheme(newScene);
                 }
             });
-            /*contentPane.getChildren().setAll(view);*/
             Parent parent = contentPane.getParent();
             if (parent instanceof Pane paneParent) {
                 int index = paneParent.getChildren().indexOf(contentPane);
@@ -68,7 +66,6 @@ public class MainController {
         }
     }
 
-    // Charger les plugins existants dans /plugins
     public void loadPlugins() {
         File pluginFolder = new File("plugins");
         if (pluginFolder.exists()) {
