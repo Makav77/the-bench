@@ -1,4 +1,5 @@
 {
     "loading": "Loading...",
-    "editFlashpost": "Edit flashpost"
+    "editFlashpost": "Edit flashpost",
+    "toastFlashpostUpdated": "Flash post updated"
 }

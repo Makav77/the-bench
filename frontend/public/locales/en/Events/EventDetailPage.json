@@ -20,5 +20,14 @@
     "deleteEvent": "Delete event",
     "registered": "Registered",
     "close": "Close",
-    "report": "Report"
+    "report": "Report",
+    "toastLoadEventError": "Unable to load event",
+    "toastSuccessfullRegistration": "Successful registration",
+    "toastRegistrationError": "Unable to register",
+    "toastSuccessfullUnsubscribe": "Unsubscribe successfull",
+    "toastUnsubscribeError": "Unable to unsubscribe ",
+    "toastEventDeleted": "Event deleted",
+    "toastEventDeletedError": "Unable to delete event",
+    "toastUserDeleted": "User deleted",
+    "toastUserDeletedError": "Unable to delete user"
 }

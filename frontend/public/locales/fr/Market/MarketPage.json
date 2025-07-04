@@ -8,5 +8,6 @@
     "sellBy": "Vendu par",
     "previous": "← Prec",
     "page": "Page",
-    "next": "Suiv →"
+    "next": "Suiv →",
+    "toastLoadMarketError": "Impossible de charger le magasin"
 }

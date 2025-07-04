@@ -15,5 +15,12 @@
     "vote": "Voter",
     "close": "Clôturer",
     "delete": "Supprimer",
-    "report": "Signaler"
+    "report": "Signaler",
+    "toastLoadPollError": "Impossible de charger les sondages",
+    "toastVoted": "Vote prit en compte",
+    "toastVotedError": "Impossible de voter",
+    "toastPollClosed": "Sondage clôturé",
+    "toastPollClosedError": "Impossible de clôturer le sondage",
+    "toastPollDeleted": "Sondage supprimé",
+    "toastPollDeletedError": "Impossible de supprimer le sondage"
 }

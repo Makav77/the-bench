@@ -26,8 +26,8 @@ function EventsPage() {
                 const { data, lastPage } = await getEvents(page, 5);
                 setEvents(data);
                 setLastPage(lastPage);
-            } catch(error) {
-                setError("Unable to load events : " + error);
+            } catch {
+                setError(t("toastLoadEventError"));
             } finally {
                 setIsLoading(false);
             }

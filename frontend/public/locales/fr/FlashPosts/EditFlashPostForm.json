@@ -1,4 +1,5 @@
 {
     "loading": "Chargement...",
-    "editFlashpost": "Modifier l'annonce flash"
+    "editFlashpost": "Modifier l'annonce flash",
+    "toastFlashpostUpdated": "Annonce flash modifiée"
 }

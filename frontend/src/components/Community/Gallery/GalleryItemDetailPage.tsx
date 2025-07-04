@@ -29,7 +29,7 @@ export default function GalleryItemDetailPage() {
                 }
             } catch (error) {
                 console.error(error);
-                toast.error("Unable to load gallery item");
+                toast.error(t("toastLoadGalleryError"));
             } finally {
                 setIsLoading(false);
             }
@@ -57,7 +57,7 @@ export default function GalleryItemDetailPage() {
             const updated = await toggleLikeGalleryItem(galleryItem.id);
             setGalleryItem(updated);
         } catch {
-            toast.error("Unable to like/unlike");
+            toast.error(t("toastLikeUnlikeError"));
         }
     };
 
@@ -69,10 +69,10 @@ export default function GalleryItemDetailPage() {
         
         try {
             await deleteGalleryItem(id!);
-            toast.success("Image successfully deleted!");
+            toast.success(t("toastImageDeleted"));
             navigate("/gallery");
-        } catch (error) {
-            toast.error("Unable to delete image : " + error);
+        } catch {
+            toast.error(t("toastImageDeletedError"));
         }
     };
 

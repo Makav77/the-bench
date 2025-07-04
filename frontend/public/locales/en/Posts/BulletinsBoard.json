@@ -11,5 +11,7 @@
     "next": "Next →",
     "page": "Page",
     "posts": "Posts",
-    "noPost": "No posts right now"
+    "noPost": "No posts right now",
+    "toastLoadPostError": "Unable to load posts",
+    "toastLoadFlashPostError": "Unable to load flash posts"
 }

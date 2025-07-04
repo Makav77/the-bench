@@ -13,5 +13,11 @@
     "reject": "Refuser",
     "previous": "← Prec",
     "page": "Page",
-    "next": "Next →"
+    "next": "Next →",
+    "toastLoadPendingNewsError": "Impossible de charger les articles en attente",
+    "toastNewsValidated": "Article validé",
+    "toastNewsValidatedError": "Impossible de valider l'article",
+    "toastRejectedReason": "La justification du refus est obligatoire",
+    "toastRejectNews": "Article refusé",
+    "toastRejectNewsError": "Impossible de refuser l'article"
 }

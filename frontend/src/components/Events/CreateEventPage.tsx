@@ -38,7 +38,7 @@ function CreateEventPage() {
 
     const handleSubmit = async (data: EventFormData) => {
         const event = await createEvent(data);
-        toast.success("Event created !");
+        toast.success(t("toastEventCreated"));
         navigate(`/events/${event.id}`);
     };
 

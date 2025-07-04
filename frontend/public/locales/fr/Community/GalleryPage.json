@@ -5,5 +5,7 @@
     "loading": "Chargement...",
     "previous": "← Prec",
     "page": "Page",
-    "next": "Next →"
+    "next": "Suiv →",
+    "toastLoadGalleryError": "Impossible de charger la galerie",
+    "toastLikeUnlikeError": "Impossible d'aimer/ne pas aimer"
 }

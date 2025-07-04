@@ -32,9 +32,8 @@ function PollDetailPage() {
                     const poll = await getPoll(id);
                     setPoll(poll);
                 }
-            } catch (error) {
-                console.error(error);
-                toast.error("Unable to load poll.");
+            } catch {
+                toast.error(t("toastLoadPollError"));
             } finally {
                 setIsLoading(false);
             }
@@ -66,9 +65,9 @@ function PollDetailPage() {
                     .map(el => el.value);
                     const updated = await votePoll(poll.id, selected);
                     setPoll(updated);
-                    toast.success("Voted.");
+                    toast.success(t("toastVoted"));
         } catch (error) {
-            toast.error("Error : " + error);
+            toast.error(t("toastVotedError"));
         }
     };
 
@@ -81,9 +80,9 @@ function PollDetailPage() {
         try {
             await closePoll(poll.id);
             setPoll(await getPoll(poll.id));
-            toast.success("Poll successfully closed!");
-        } catch (error) {
-            toast.error("Unable to close poll : " + error);
+            toast.success(t("toastPollClosed"));
+        } catch {
+            toast.error("toastPollClosedError");
         }
     }
 
@@ -95,10 +94,10 @@ function PollDetailPage() {
 
         try {
             await deletePoll(id!);
-            toast.success("Poll successfully deleted!");
+            toast.success(t("toastPollDeleted"));
             navigate("/polls");
-        } catch (error) {
-            toast.error("Unable to delete poll : " + error);
+        } catch {
+            toast.error(t("toastPollDeletedError"));
         }
     }
 

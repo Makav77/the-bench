@@ -10,5 +10,8 @@
     "hours": "Heures",
     "minutes": "Minutes",
     "inProgress": "En cours...",
-    "restrict": "Restreindre"
+    "restrict": "Restreindre",
+    "toastEmptyUserOrReason": "L'ID de l'utilisateur et la raison doivent être renseigné",
+    "toastUserRestricted": "Utilisateur restreint avec succès",
+    "toastUserRestrictedError": "Impossible de restreindre l'utilisateur"
 }

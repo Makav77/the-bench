@@ -9,5 +9,8 @@
     "contactMail": "Contact (mail) :",
     "contactPhone": "Contact (phone) :",
     "editPost": "Modifier",
-    "deletePost": "Supprimer"
+    "deletePost": "Supprimer",
+    "toastLoadItemError": "Impossible de charger les articles",
+    "toastItemDeleted": "Article supprimé",
+    "toastItemDeletedError": "Impossible de supprimer l'article"
 }

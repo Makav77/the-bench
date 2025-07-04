@@ -1,4 +1,5 @@
 {
     "loading": "Chargement...",
-    "editItem": "Modifier un article"
+    "editItem": "Modifier un article",
+    "toastItemUpdated": "Article modifié"
 }

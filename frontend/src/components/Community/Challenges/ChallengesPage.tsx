@@ -17,8 +17,8 @@ function ChallengesPage() {
                 const { data, lastPage } = await getChallenges(page, 10);
                 setChallenges(data);
                 setLastPage(lastPage);
-            } catch (error) {
-                toast.error("Unable to load challenges : " + error);
+            } catch {
+                toast.error(t("toastLoadChallengeError"));
             }
         }
         load();

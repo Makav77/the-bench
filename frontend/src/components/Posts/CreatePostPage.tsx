@@ -38,7 +38,7 @@ function CreatePostPage() {
 
     const handleSubmit = async (data: { title: string; description: string; }) => {
         const post = await createPost(data);
-        toast.success("Post created !");
+        toast.success(t("toastPostCreated"));
         navigate(`/posts/${post.id}`);
     };
 

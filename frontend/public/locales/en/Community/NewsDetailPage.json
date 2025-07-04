@@ -13,5 +13,10 @@
     "validate": "Validate",
     "cancel": "Cancel",
     "publish": "Publish",
-    "report": "Report"
+    "report": "Report",
+    "toastLikeError": "Unable to like article",
+    "toastArticleDeleted": "Article deleted",
+    "toastArticleDeletedError": "Unable to delete article",
+    "toastCommentDeleted": "Comment deleted",
+    "toastCommentDeletedError": "Unable to delete comment"
 }

@@ -5,5 +5,9 @@
     "publishedBy": "Publié par",
     "on": "le",
     "delete": "Supprimer",
-    "report": "Signaler"
+    "report": "Signaler",
+    "toastLoadGalleryError": "Impossible de charger les images de la galerie",
+    "toastLikeUnlikeError": "Impossible d'aimer/ne pas aimer",
+    "toastImageDeleted": "Image supprimée",
+    "toastImageDeletedError": "Impossible de supprimer l'image"
 }

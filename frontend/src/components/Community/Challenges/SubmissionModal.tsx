@@ -32,10 +32,10 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                 text: text.trim() !== "" ? text.trim() : undefined,
                 imageUrl: imageUrl.trim() !== "" ? imageUrl.trim() : undefined,
             });
+            toast.success(t("toastSendSubmission"));
             onSubmitted();
-        } catch (error) {
-            console.error("SubmitCompletion error : " + error);
-            toast.error("Unable to send submission.");
+        } catch {
+            toast.error(t("toastSendSubmissionError"));
         } finally {
             setLoading(false);
         }

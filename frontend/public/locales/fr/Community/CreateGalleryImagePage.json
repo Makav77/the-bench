@@ -9,5 +9,7 @@
     "description": "Description",
     "cancel": "Annuler",
     "sending": "Envoi...",
-    "send": "Ajouter l'image"
+    "send": "Ajouter l'image",
+    "toastImageUpload": "Image téléchargé",
+    "toastImageUploadError": "Impossible de télécharger l'image"
 }

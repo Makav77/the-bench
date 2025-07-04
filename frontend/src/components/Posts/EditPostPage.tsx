@@ -27,7 +27,7 @@ function EditPostPage() {
         }
 
         const updated = await updatePost(id!, data);
-        toast.success("Post updated !");
+        toast.success(t("toastPostUpdated"));
         navigate(`/posts/${updated.id}`);
     };
 

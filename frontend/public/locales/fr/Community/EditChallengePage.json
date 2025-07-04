@@ -1,4 +1,5 @@
 {
     "loading": "Chargement...",
-    "editChallenge": "Modifier un challenge"
+    "editChallenge": "Modifier un challenge",
+    "toastChallengeUpdated": "Challenge mis à jour"
 }

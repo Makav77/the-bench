@@ -24,5 +24,13 @@
     "waitingValidation": "En attente de validation",
     "validateCompletion": "Valider la completion",
     "report": "Signaler",
-    "at": "à"
+    "at": "à",
+    "toastLoadChallengeError": "Impossible de charger les challenges",
+    "toastSuccessfullRegistration": "Inscription réussie",
+    "toastRegistrationError": "Impossible de s'inscrire au challenge",
+    "toastSuccessfullUnsubscribe": "Désinscription réussie",
+    "toastUnsubscribeError": "Impossible de se désinscrire",
+    "toastChallengeDeleted": "Challenge supprimé",
+    "toastChallengeDeletedError": "Unable to delete challenge",
+    "toastSubmissionSent": "Soumission envoyée, en attente d’approbation"
 }

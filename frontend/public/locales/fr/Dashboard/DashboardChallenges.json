@@ -26,5 +26,16 @@
     "validationCompletion": "Validation...",
     "validateCompletion": "Valider",
     "rejectionCompletion": "Refus...",
-    "rejectCompletion": "Refuser"
+    "rejectCompletion": "Refuser",
+    "toastLoadPendingChallengeError": "Impossible de charger les challenges en attente",
+    "toastLoadPendingCompletionsError": "Impossible de charger les validations de challenge en attente",
+    "toastChallengeValidated": "Challenge validé",
+    "toastChallengeValidatedError": "Impossible de valider le challenge",
+    "toastRejectedReasonRequired": "La justification du refus est obligatoire",
+    "toastChallengeRejected": "Challenge refusé",
+    "toastChallengeRejectedError": "Impossible de refuser le challenge",
+    "toastCompletionValidated": "Complétion de challenge validé",
+    "toastCompletionValidatedError": "Impossible de valider la completion de challenge",
+    "toastCompletionRefused": "Complétion de challenge refusé",
+    "toastCompletionRefusedError": "Impossible de refuser la completion de challenge"
 }

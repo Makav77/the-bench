@@ -28,8 +28,8 @@ function FlashPostDetailPage() {
                 } else {
                     setError("Invalid ID")
                 }
-            } catch (error) {
-                toast.error("Unable to load flash post : " + error);
+            } catch {
+                toast.error(t("toastLoadFlashpostError"));
             } finally {
                 setIsLoading(false);
             }
@@ -60,10 +60,10 @@ function FlashPostDetailPage() {
 
         try {
             await deleteFlashPost(id!);
-            toast.success("Flash Post successfully deleted!");
+            toast.success(t("toastFlashpostDeleted"));
             navigate("/bulletinsboard");
-        } catch (error) {
-            toast.error("Unable to delete post : " + error);
+        } catch {
+            toast.error(t("toastFlashpostDeletedError"));
         }
     };
 

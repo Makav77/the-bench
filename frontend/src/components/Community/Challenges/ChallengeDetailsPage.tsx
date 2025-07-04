@@ -32,9 +32,8 @@ function ChallengeDetailPage() {
                     const event = await getChallenge(id);
                     setChallenge(event);
                 }
-            } catch(error) {
-                console.error(error);
-                toast.error("Unable to load event.");
+            } catch {
+                toast.error(t("toastLoadChallengeError"));
             } finally {
                 setIsLoading(false);
             }
@@ -65,9 +64,9 @@ function ChallengeDetailPage() {
         try {
             const updated = await subscribeChallenge(id!);
             setChallenge(updated);
-            toast.success("Successful registration !");
+            toast.success(t("toastSuccessfullRegistration"));
         } catch (error) {
-            toast.error("Error during registration : " + error);
+            toast.error(t("toastRegistrationError"));
         }
     }
 
@@ -75,9 +74,9 @@ function ChallengeDetailPage() {
         try {
             const updated = await unsubscribeChallenge(id!);
             setChallenge(updated);
-            toast.success("Unsubscribe successful !");
-        } catch (error) {
-            toast.error("Error unsubscribing : " + error);
+            toast.success(t("toastSuccessfullUnsubscribe"));
+        } catch {
+            toast.error(t("toastUnsubscribeError"));
         }
     }
 
@@ -89,10 +88,10 @@ function ChallengeDetailPage() {
 
         try {
             await deleteChallenge(id!);
-            toast.success("Challenge successfully deleted!");
+            toast.success(t("toastChallengeDeleted"));
             navigate("/challenges");
-        } catch (error) {
-            toast.error("Unable to delete challenge : " + error);
+        } catch {
+            toast.error(t("toastChallengeDeletedError"));
         }
     }
 
@@ -349,7 +348,7 @@ function ChallengeDetailPage() {
                     challengeId={challenge.id}
                     onClose={() => setShowSubmissionModal(false)}
                     onSubmitted={async () => {
-                        toast.success("Soumission envoyée, en attente d’approbation !");
+                        toast.success(t("toastSubmissionSent"));
                         setShowSubmissionModal(false);
                         try {
                             const updated = await getChallenge(id!);

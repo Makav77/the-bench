@@ -26,8 +26,8 @@ function DashboardChallenges() {
                 const { data, lastPage } = await getPendingChallenges(pageChallenge, 5);
                 setPendingChallenges(data);
                 setLastPageChallenge(lastPage);
-            } catch (error) {
-                toast.error("Unable to load pending challenges : " + error);
+            } catch {
+                toast.error(t("toastLoadPendingChallengeError"));
             } finally {
                 setLoadingChallenges(false);
             }
@@ -37,8 +37,8 @@ function DashboardChallenges() {
                 const { data, lastPage } = await getPendingCompletions(pageCompletion, 5);
                 setPendingCompletions(data);
                 setLastPageCompletion(lastPage);
-            } catch (error) {
-                toast.error("Unable to load pending completions : " + error);
+            } catch {
+                toast.error(t("toastLoadPendingCompletionsError"));
             } finally {
                 setLoadingCompletions(false);
             }
@@ -50,10 +50,10 @@ function DashboardChallenges() {
         setUpdatingChallengeId(challengeId);
         try {
             await validateChallenge(challengeId, { validated: true });
-            toast.success("Challenge validated.");
+            toast.success(t("toastChallengeValidated"));
             setPendingChallenges((prev) => prev.filter((c) => c.id !== challengeId));
-        } catch (error) {
-            toast.error("Unable to validate challenge : " + error);
+        } catch {
+            toast.error(t("toastChallengeValidatedError"));
         } finally {
             setUpdatingChallengeId(null);
         }
@@ -65,15 +65,15 @@ function DashboardChallenges() {
             return;
         }
         if (reason.trim() === "") {
-            toast.error("Rejection reason is required.");
+            toast.error(t("toastRejectedReasonRequired"));
         }
         setUpdatingChallengeId(challengeId);
         try {
             await validateChallenge(challengeId, { validated: false, rejectedReason: reason.trim() });
-            toast.success("Challenge rejected.");
+            toast.success(t("toastChallengeRejected"));
             setPendingChallenges((prev) => prev.filter((c) => c.id !== challengeId));
-        } catch (error) {
-            toast.error("Unable to reject challenge : " + error);
+        } catch {
+            toast.error(t("toastChallengeRejectedError"));
         } finally {
             setUpdatingChallengeId(null);
         }
@@ -85,10 +85,10 @@ function DashboardChallenges() {
             await validateCompletion(completion.challenge.id, completion.id, {
                 validated: true,
             });
-            toast.success("Completion validated.");
+            toast.success(t("toastCompletionValidated"));
             setPendingCompletions((prev) => prev.filter((c) => c.id !== completion.id));
-        } catch (error) {
-            toast.error("Unable to validate completion : " + error);
+        } catch {
+            toast.error(t("toastCompletionValidatedError"));
         } finally {
             setUpdatingCompletionId(null);
         }
@@ -100,7 +100,7 @@ function DashboardChallenges() {
             return;
         }
         if (reason.trim() === "") {
-            toast.error("Rejecttion reason needed.");
+            toast.error(t("toastRejectedReasonRequired"));
             return;
         }
         setUpdatingCompletionId(completion.id);
@@ -109,10 +109,10 @@ function DashboardChallenges() {
                 validated: false,
                 rejectedReason: reason.trim(),
             });
-            toast.success("Completion refused.");
+            toast.success(t("toastCompletionRefused"));
             setPendingCompletions((prev) => prev.filter((c) => c.id !== completion.id));
-        } catch (error) {
-            toast.error("Unable to reject completion : " + error);
+        } catch {
+            toast.error(t("toastCompletionRefused"));
         } finally {
             setUpdatingCompletionId(null);
         }

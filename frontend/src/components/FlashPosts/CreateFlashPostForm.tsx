@@ -38,7 +38,7 @@ function CreateFlashPostForm() {
 
     const handleSubmit = async (data: { title: string; description: string; }) => {
         const flashPost = await createFlashPost(data);
-        toast.success("Flash Post created !");
+        toast.success(t("toastFlashpostCreated"));
         navigate(`/flashposts/${flashPost.id}`);
     };
 

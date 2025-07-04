@@ -15,5 +15,12 @@
     "vote": "Vote",
     "close": "Close",
     "delete": "Delete",
-    "report": "Report"
+    "report": "Report",
+    "toastLoadPollError": "Unable to load poll",
+    "toastVoted": "Voted",
+    "toastVotedError": "Unable to vote",
+    "toastPollClosed": "Poll successfully closed",
+    "toastPollClosedError": "Unable to close poll",
+    "toastPollDeleted": "Poll successfully deleted",
+    "toastPollDeletedError": "Unable to delete poll"
 }

@@ -14,24 +14,24 @@ function CreateNews() {
 
     const { restricted, expiresAt, reason } = usePermission("create_news");
     if (restricted === null) {
-        return <p className="p-6 text-center">Checking permissions...</p>
+        return <p className="p-6 text-center">{t("checkingPermissions")}</p>
     }
     if (restricted) {
         return (
             <div className="p-6 text-center">
                 <p className="text-red-500">
-                    You are no longer allowed to create a news until{" "}
+                    {t("restrictionMessage")} {" "}
                     {expiresAt
                         ? format(expiresAt, "dd/MM/yyyy 'at' HH:mm")
                         : "unknow date"}.
                     {reason && (
                         <span>
                             <br />
-                        Reason: {reason}
+                        {t("reason")} {reason}
                         <br />
                         </span>
                     )}
-                    Contact a moderator or administrator for more information.
+                    {t("contactMessage")}
                 </p>
             </div>
         );
@@ -52,13 +52,13 @@ function CreateNews() {
             tags: data.tags,
             authorId: user.id,
         });
-        toast.success("Article sent, waiting validation.");
+        toast.success(t("toastArticleSent"));
         navigate("/news");
     };
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-semibold mb-4 w-[30%] mx-auto">Create news</h1>
+            <h1 className="text-3xl font-semibold mb-4 w-[30%] mx-auto">{t("createNews")}</h1>
             <NewsForm 
                 onSubmit={handleSubmit}
             />

@@ -22,9 +22,8 @@ function MarketPage() {
                 const { data, lastPage } = await getItems(page, 10);
                 setItems(data);
                 setLastPage(lastPage);
-            } catch (error) {
-                setError("Unable to load items : " + error);
-                toast.error("Unable to load market");
+            } catch {
+                toast.error(t("toastLoadMarketError"));
             } finally {
                 setIsLoading(false);
             }

@@ -39,11 +39,10 @@ function CreateChallengePage() {
     const handleSubmit = async (data: ChallengeFormData) => {
         try {
             await createChallenge(data);
-            toast.success("Challenge sent, awaiting validation.");
+            toast.success(t("toastChallengeWaiting"));
             navigate("/challenges");
-        } catch (error) {
-            console.error("Unable to send challenge : " + error);
-            toast.error("Unable to send challenge.");
+        } catch {
+            toast.error(t("toastChallengeWaitingError"));
         }
     };
 

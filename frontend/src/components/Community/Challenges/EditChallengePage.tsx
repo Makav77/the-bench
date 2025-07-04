@@ -27,7 +27,7 @@ export default function EditChallengePage() {
         }
 
         await updateChallenge(id, data);
-        toast.success("Défi mis à jour !");
+        toast.success(t("toastChallengeUpdated"));
         navigate(`/challenges/${id}`);
     };
 

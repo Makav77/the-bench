@@ -61,10 +61,10 @@ export default function CreateGalleryItemPage() {
         setError(null);
         try {
             const item = await createGalleryItem(file, description);
-            toast.success("Image ajoutée !");
+            toast.success(t("toastImageUpload"));
             navigate(`/gallery/${item.id}`);
         } catch {
-            toast.error("Unable to add image");
+            toast.error(t("toastImageUploadError"));
         } finally {
             setIsSubmitting(false);
         }

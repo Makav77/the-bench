@@ -49,7 +49,7 @@ function DashboardRestrictions() {
         e.preventDefault();
 
         if (!userId.trim() || !reason.trim()) {
-            toast.error("User ID and reason must be entered.");
+            toast.error(t("toastEmptyUserOrReason"));
             return;
         }
 
@@ -63,7 +63,7 @@ function DashboardRestrictions() {
                 hours,
                 minutes
             );
-            toast.success("User successfully restricted.");
+            toast.success(t("toastUserRestricted"));
             setUserId("");
             setReason("");
             setDays(0);
@@ -72,7 +72,7 @@ function DashboardRestrictions() {
             setSelectedPermission(DEFAULT_PERMISSIONS[0].code);
         } catch (error) {
             console.error(error);
-            toast.error("Unable to ban user : " + error);
+            toast.error(t("toastUserRestricted"));
         } finally {
             setIsSubmitting(false);
         }

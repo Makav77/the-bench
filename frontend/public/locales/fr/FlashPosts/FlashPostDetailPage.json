@@ -7,5 +7,8 @@
     "by": "par",
     "editPost": "Modifier",
     "deletePost": "Supprimer",
-    "report": "Signaler"
+    "report": "Signaler",
+    "toastLoadFlashpostError": "Impossible de charger les annonces flash",
+    "toastFlashpostDeleted": "Annonce flash supprimée",
+    "toastFlashpostDeletedError": "Impossible de supprimer l'annonce flash"
 }

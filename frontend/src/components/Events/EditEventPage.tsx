@@ -41,7 +41,7 @@ function EditEventPage() {
         };
 
         const updated = await updateEvent(id, toSend);
-        toast.success("Event updated !");
+        toast.success(t("toastEventUpdated"));
         navigate(`/events/${updated.id}`);
     };
 

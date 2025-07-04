@@ -57,8 +57,8 @@ function NewsDetailPage() {
         try {
             const response = await toggleNewsLike(id);
             setLikes(response);
-        } catch (error) {
-            toast.error("Error while liking the article : " + error);
+        } catch {
+            toast.error(t("toastLikeError"));
         }
     };
 
@@ -91,10 +91,10 @@ function NewsDetailPage() {
 
         try {
             await deleteNews(id);
-            toast.success("Article deleted.");
+            toast.success(t("toastArticleDeleted"));
             navigate("/news");
-        } catch (error) {
-            toast.error("Unable to delete this article : " + error);
+        } catch {
+            toast.error(t("toastArticleDeleted"));
         }
     };
 
@@ -150,8 +150,9 @@ function NewsDetailPage() {
         try {
             await deleteComment(id, commentId);
             setComments((prev) => prev.filter((c) => c.id !== commentId));
+            toast.success(t("toastCommentDeleted"))
         } catch (error) {
-            setCommentError("Unable to delete comment : " + error);
+            setCommentError(t("toastCommentDeletedError"));
         } finally {
             setCommentLoading(false);
         }

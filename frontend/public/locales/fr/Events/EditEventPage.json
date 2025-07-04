@@ -1,4 +1,5 @@
 {
     "loading": "Chargement...",
-    "editEvent": "Modifier un événement"
+    "editEvent": "Modifier un événement",
+    "toastEventUpdated": "Événement mis à jour"
 }

@@ -26,5 +26,16 @@
     "validationCompletion": "Validation...",
     "validateCompletion": "Validate",
     "rejectionCompletion": "Rejection...",
-    "rejectCompletion": "Reject"
+    "rejectCompletion": "Reject",
+    "toastLoadPendingChallengeError": "Unable to load pending challenges",
+    "toastLoadPendingCompletionsError": "Unable to load pending completions",
+    "toastChallengeValidated": "Challenge validated",
+    "toastChallengeValidatedError": "Unable to validate challenge",
+    "toastRejectedReasonRequired": "Rejection reason is required",
+    "toastChallengeRejected": "Challenge rejected",
+    "toastChallengeRejectedError": "Unable to reject challenge",
+    "toastCompletionValidated": "Completion validated",
+    "toastCompletionValidatedError": "Unable to validate completion",
+    "toastCompletionRefused": "Completion refused",
+    "toastCompletionRefusedError": "Unable to reject completion"
 }

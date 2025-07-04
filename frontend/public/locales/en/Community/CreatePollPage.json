@@ -15,5 +15,11 @@
     "answers": "Answers (2-10)",
     "addAnswers": "Add answers",
     "cancel": "Cancel",
-    "create": "Create"
+    "create": "Create",
+    "toastQuestionError": "You must ask a question",
+    "toastAnswerError": "You must provide at least two answers",
+    "toastTooManyAnswerError": "You can't provide more than ten answers",
+    "toastLimitedAnswerError": "You must set a minimum number of selections for a limited type",
+    "toastPollCreated": "Poll created",
+    "toastPollCreatedError": "Unable to create a poll"
 }

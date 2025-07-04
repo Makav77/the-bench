@@ -13,5 +13,11 @@
     "reject": "Reject",
     "previous": "← Prev",
     "page": "Page",
-    "next": "Next →"
+    "next": "Next →",
+    "toastLoadPendingNewsError": "Unable to load pendings news",
+    "toastNewsValidated": "News validated",
+    "toastNewsValidatedError": "Unable to validate news",
+    "toastRejectedReason": "Rejected reason is required",
+    "toastRejectNews": "News rejected",
+    "toastRejectNewsError": "Unable to reject news"
 }

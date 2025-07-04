@@ -34,9 +34,8 @@ function EventDetailPage() {
                     const event = await getEvent(id);
                     setEvent(event);
                 }
-            } catch(error) {
-                console.error(error);
-                toast.error("Unable to load event.");
+            } catch {
+                toast.error(t("toastLoadEventError"));
             } finally {
                 setIsLoading(false);
             }
@@ -69,9 +68,9 @@ function EventDetailPage() {
         try {
             const updated = await subscribeEvent(id!);
             setEvent(updated);
-            toast.success("Successful registration !");
-        } catch(error) {
-            toast.error("Error during registration : " + error);
+            toast.success(t("toastSuccessfullRegistration"));
+        } catch {
+            toast.error(t("toastRegistrationError"));
         }
     };
 
@@ -79,9 +78,9 @@ function EventDetailPage() {
         try {
             const updated = await unsubscribeEvent(id!);
             setEvent(updated);
-            toast.success("Unsubscribe successful !");
-        } catch (error) {
-            toast.error("Error unsubscribing : " + error);
+            toast.success(t("toastSuccessfullUnsubscribe"));
+        } catch {
+            toast.error(t("toastUnsubscribeError"));
         }
     }
 
@@ -93,10 +92,10 @@ function EventDetailPage() {
 
         try {
             await deleteEvent(id!);
-            toast.success("Event successfully deleted!")
+            toast.success(t("toastEventDeleted"))
             navigate("/events");
-        } catch (error) {
-            toast.error("Unable to delete event : " + error);
+        } catch {
+            toast.error(t("toastEventDeletedError"));
         }
     };
 
@@ -230,9 +229,9 @@ function EventDetailPage() {
                                                 try {
                                                     const updated = await removeParticipant(id!, user.id);
                                                     setEvent(updated);
-                                                    toast.success("User deleted.");
-                                                } catch (error) {
-                                                    toast.error("Error : " + error);
+                                                    toast.success(t("toastUserDeleted"));
+                                                } catch {
+                                                    toast.error(t("toastUserDeletedError"));
                                                 } finally {
                                                     setRemovingId(null);
                                                 }

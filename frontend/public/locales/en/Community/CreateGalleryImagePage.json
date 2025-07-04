@@ -9,5 +9,7 @@
     "description": "Description",
     "cancel": "Cancel",
     "sending": "Sending...",
-    "send": "Add picture"
+    "send": "Add picture",
+    "toastImageUpload": "Image upload",
+    "toastImageUploadError": "Unable to upload image"
 }

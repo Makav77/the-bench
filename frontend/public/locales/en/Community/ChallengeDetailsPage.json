@@ -24,5 +24,13 @@
     "waitingValidation": "Waiting validation",
     "validateCompletion": "Validate completion",
     "report": "Report",
-    "at": "at"
+    "at": "at",
+    "toastLoadChallengeError": "Unable to load challenges",
+    "toastSuccessfullRegistration": "Successfull registration",
+    "toastRegistrationError": "Unable to register",
+    "toastSuccessfullUnsubscribe": "Unsubscribe successfull",
+    "toastUnsubscribeError": "Unable to unsubscribe",
+    "toastChallengeDeleted": "Challenge deleted",
+    "toastChallengeDeletedError": "Unable to delete challenge",
+    "toastSubmissionSent": "Submission sent, awaiting approval"
 }

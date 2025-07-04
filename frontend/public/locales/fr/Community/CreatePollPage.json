@@ -15,5 +15,11 @@
     "answers": "Réponses (2-10)",
     "addAnswers": "Ajouter une réponse",
     "cancel": "Annuler",
-    "create": "Créer"
+    "create": "Créer",
+    "toastQuestionError": "Vous devez poser une question",
+    "toastAnswerError": "Vous devez proposer au moins deux réponses",
+    "toastTooManyAnswerError": "Vous ne pouvez proposer plus de 10 réponses",
+    "toastLimitedAnswerError": "Vous devez saisir un minimum de réponse à envoyer pour les sondages limités",
+    "toastPollCreated": "Sondage créé",
+    "toastPollCreatedError": "Impossible de créer un sondage"
 }

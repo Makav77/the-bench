@@ -26,9 +26,8 @@ function BulletinsBoardPage() {
                 const { data, lastPage } = await getPosts(page, 10);
                 setPosts(data);
                 setLastPage(lastPage);
-            } catch (error) {
-                console.error(error);
-                toast.error("Unable to load posts : " + error);
+            } catch {
+                toast.error(t("toastLoadPostError"));
             } finally {
                 setLoading(false);
             }
@@ -44,9 +43,8 @@ function BulletinsBoardPage() {
                 const { data, lastPage } = await getFlashPosts(flashPage, 5);
                 setFlashPosts(data);
                 setFlashLastPage(lastPage);
-            } catch (error) {
-                console.error(error);
-                toast.error("Unable to load flash posts : " + error);
+            } catch {
+                toast.error(t("toastLoadFlashPostError"));
             } finally {
                 setFlashLoading(false);
             }

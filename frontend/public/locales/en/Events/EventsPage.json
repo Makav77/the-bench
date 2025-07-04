@@ -11,5 +11,6 @@
     "register": "Register",
     "previous": "← Prev",
     "page": "Page",
-    "next": "Next →"
+    "next": "Next →",
+    "toastLoadEventError": "Unable to load events"
 }

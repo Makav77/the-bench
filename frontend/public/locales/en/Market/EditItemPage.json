@@ -1,4 +1,5 @@
 {
     "loading": "Loading...",
-    "editItem": "Edit item"
+    "editItem": "Edit item",
+    "toastItemUpdated": "Item updated"
 }

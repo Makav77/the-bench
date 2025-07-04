@@ -25,7 +25,7 @@ function EditItemPage() {
     const handleSubmit = async (data: ItemFormData) => {
         if (!id) return;
         const updated = await updateItem(id, data);
-        toast.success("Item updated !");
+        toast.success(t("toastItemUpdated"));
         navigate(`/market/${updated.id}`);
     }
 

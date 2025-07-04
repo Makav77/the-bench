@@ -27,8 +27,8 @@ function PostDetailPage() {
                 } else {
                     setError("Invalid ID")
                 }
-            } catch (error) {
-                toast.error("Unable to load post : " + error);
+            } catch {
+                toast.error(t("toastLoadPostError"));
             } finally {
                 setIsLoading(false);
             }
@@ -59,10 +59,10 @@ function PostDetailPage() {
 
         try {
             await deletePost(id!);
-            toast.success("Post successfully deleted!");
+            toast.success(t("toastPostDeleted"));
             navigate("/bulletinsboard");
-        } catch (error) {
-            toast.error("Unable to delete post : " + error);
+        } catch {
+            toast.error(t("toastPostDeleted"));
         }
     };
 

@@ -11,5 +11,7 @@
     "next": "Suiv →",
     "page": "Page",
     "posts": "Annonces",
-    "noPost": "Aucune annonce publiée"
+    "noPost": "Aucune annonce publiée",
+    "toastLoadPostError": "Impoosible de charger les annonces",
+    "toastLoadFlashPostError": "Impossible de charger les annonces flash"
 }

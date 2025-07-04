@@ -28,7 +28,7 @@ function ItemDetailsPage() {
                 }
             } catch(error) {
                 console.error(error);
-                toast.error("Unable to load item.");
+                toast.error(t("toastLoadItemError"));
             } finally {
                 setIsLoading(false);
             }
@@ -59,10 +59,10 @@ function ItemDetailsPage() {
 
         try {
             await deleteItem(id!);
-            toast.success("Item successfully deleted!");
+            toast.success(t("toastItemDeleted"));
             navigate("/marketplace");
-        } catch (error) {
-            toast.error("Unable to delete item : " + error);
+        } catch {
+            toast.error(t("toastItemDeletedError"));
         }
     };
 

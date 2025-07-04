@@ -9,5 +9,6 @@
     "completions": "Complétés :",
     "previous": "← Prec",
     "page": "Page",
-    "next": "Suiv →"
+    "next": "Suiv →",
+    "toastLoadChallengeError": "Impossible de charger les challenges"
 }

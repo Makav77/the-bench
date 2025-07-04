@@ -8,5 +8,6 @@
     "sellBy": "Sell by",
     "previous": "← Prev",
     "page": "Page",
-    "next": "Next →"
+    "next": "Next →",
+    "toastLoadMarketError": "Unable to load market"
 }

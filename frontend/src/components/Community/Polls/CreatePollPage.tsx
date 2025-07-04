@@ -48,25 +48,25 @@ function CreatePollPage() {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-
+a
         if (!question.trim()) {
-            toast.error("You must ask a question.");
+            toast.error(t("toastQuestionError"));
             return;
         }
 
         const cleanOptions = options.map(o => o.trim()).filter(o => o);
         if (cleanOptions.length < 2) {
-            toast.error("You must provide at least two answers.");
+            toast.error(t("toastAnswerError"));
             return;
         }
 
         if (cleanOptions.length > 10) {
-            toast.error("You can't provide more than ten answers.");
+            toast.error(t("toastTooManyAnswerError"));
             return;
         }
 
         if (type === "limited" && (!maxSelections || maxSelections < 1)) {
-            toast.error("Vous must set a minimum number of selections for a limited type");
+            toast.error(t("toastLimitedAnswerError"));
             return;
         }
 
@@ -81,10 +81,10 @@ function CreatePollPage() {
         try {
             const cleanOptions = options.filter(o => o.trim());
             await createPoll({ question, options: cleanOptions, type, maxSelections: type === "limited" ? maxSelections: undefined, autoCloseAt });
-            toast.success("Poll created.");
+            toast.success(t("toastPollCreated"));
             navigate("/polls");
-        } catch (error) {
-            toast.error("Unable to create a poll : " + error);
+        } catch {
+            toast.error(t("toastPollCreatedError"));
         }
     };
 

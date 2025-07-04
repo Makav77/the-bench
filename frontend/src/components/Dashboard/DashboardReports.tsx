@@ -31,7 +31,7 @@ function DashboardReports() {
                 setReports(data);
                 setLastPage(lastPage);
             } catch (error) {
-                toast.error("Unable to load reports.");
+                toast.error(t("toastLoadReportError"));
             } finally {
                 setLoadingReports(false);
             }
@@ -67,9 +67,8 @@ function DashboardReports() {
             setLoadingReports(true);
             const { data } = await getReports(page, 10);
             setReports(data);
-        } catch (error) {
-            console.error("Update report error : " + error);
-            toast.error("Unable to update report.");
+        } catch {
+            toast.error(t("toastUpdateReportError"));
         } finally {
             setUpdatingId(null);
             setLoadingReports(false);
@@ -103,7 +102,7 @@ function DashboardReports() {
                 navigate("/homepage");
                 break;
             default:
-                toast.error("No report.");
+                navigate("/");
         }
     }
 

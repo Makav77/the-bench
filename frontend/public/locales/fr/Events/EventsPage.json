@@ -11,5 +11,6 @@
     "register": "S'inscrire",
     "previous": "← Prec",
     "page": "Page",
-    "next": "Suiv →"
+    "next": "Suiv →",
+    "toastLoadEventError": "Impossible de charger les événements"
 }

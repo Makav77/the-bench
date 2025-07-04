@@ -1,4 +1,5 @@
 {
     "loading": "Loading...",
-    "editChallenge": "Edit challenge"
+    "editChallenge": "Edit challenge",
+    "toastChallengeUpdated": "Challenge updated"
 }

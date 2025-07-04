@@ -13,5 +13,10 @@
     "validate": "Valider",
     "cancel": "Annuler",
     "publish": "Publier",
-    "report": "Signaler"
+    "report": "Signaler",
+    "toastLikeError": "Impossible d'aimer l'article",
+    "toastArticleDeleted": "Article supprimé",
+    "toastArticleDeletedError": "Impossible de supprimer l'article",
+    "toastCommentDeleted": "Commentaire supprimé",
+    "toastCommentDeletedError": "Impossible de supprimer le commentaire"
 }

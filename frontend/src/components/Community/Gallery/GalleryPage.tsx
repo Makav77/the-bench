@@ -23,8 +23,8 @@ function GalleryPage() {
                 const { data, lastPage } = await getGalleryItems(page, 30);
                 setGalleryItems(data);
                 setLastPage(lastPage);
-            } catch (error) {
-                toast.error("Unable to load gallery : " + error);
+            } catch {
+                toast.error(t("toastLoadGalleryError"));
             } finally {
                 setIsLoading(false);
             }
@@ -37,7 +37,7 @@ function GalleryPage() {
             const updated = await toggleLikeGalleryItem(id);
             setGalleryItems(galleryItems.map(i => (i.id === id ? updated : i)));
         } catch (error) {
-            toast.error("Unable to like or unline : " + error);
+            toast.error(t("toastLikeUnlikeError"));
         }
     };
 

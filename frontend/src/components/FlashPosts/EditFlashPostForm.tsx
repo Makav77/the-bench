@@ -24,7 +24,7 @@ function EditFlashPostForm() {
     const handleSubmit = async (data: { title: string; description: string; }) => {
         if (!id) return;
         const updated = await updateFlashPost(id!, data);
-        toast.success("Flash Post updated !");
+        toast.success(t("toastFlashpostUpdated"));
         navigate(`/flashposts/${updated.id}`);
     }
 

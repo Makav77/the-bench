@@ -1,5 +1,6 @@
 {
     "loading": "Loading...",
+    "confirmAlert": "Are you sure you want to remove this user from your friend list ?",
     "profileNotFound": "Profile not found",
     "homepageButton": "← Homepage",
     "profilePicture": "Profile picture",
@@ -39,5 +40,19 @@
     "postalCode": "Postal code",
     "city": "City",
     "neighborhoodFound": "Neightborhood found :",
-    "validate": "Validate"
+    "validate": "Validate",
+    "toastUnableLoadProfile": "Unable to load user profile",
+    "toastUnableLoadFriendList": "Unable to load friends list",
+    "toastFriendRemoved": "Friend removed",
+    "toastFriendRemovedError": "Unable to remove this user",
+    "toastProfilPicUpdated": "Profile pic updated",
+    "toastProfilPicUpdatedError": "Unable to update profile pic",
+    "toastRequestAccepted": "Request accepted",
+    "toastRequestAcceptedError": "Unable to accept friend request",
+    "toastRequestRejected": "Request rejected",
+    "toastRequestRejectedError": "Unable to reject friend request",
+    "toastRequestSend": "Request send",
+    "toastRequestSendError": "Unable to send friend request",
+    "toastAddressUpdated": "Address updated",
+    "toastErrorLoadingAddress": "Unable to load address"
 }

@@ -5,5 +5,7 @@
     "loading": "Loading...",
     "previous": "← Prev",
     "page": "Page",
-    "next": "Suiv →"
+    "next": "Next →",
+    "toastLoadGalleryError": "Unable to load gallery",
+    "toastLikeUnlikeError": "Unable to like or unlike"
 }

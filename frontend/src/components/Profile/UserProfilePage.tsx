@@ -48,8 +48,8 @@ export default function UserProfilePage() {
         try {
             const data = await getProfileSummary(id);
             setProfile(data);
-        } catch (error) {
-            toast.error("Unable to load user profile : " + error);
+        } catch {
+            toast.error(t("toastUnableLoadProfile"));
         } finally {
             setLoading(false);
         }
@@ -64,8 +64,8 @@ export default function UserProfilePage() {
             try {
                 const data = await getFriends(id);
                 setFriends(data);
-            } catch (error) {
-                toast.error("Unable to load friends list : " + error);
+            } catch {
+                toast.error(t("toastUnableLoadFriendList"));
             }
         }
     };
@@ -93,17 +93,17 @@ export default function UserProfilePage() {
     }, [address.street, address.postalCode, address.city]);
 
     const handleRemoveFriend = async (friendId: string) => {
-        if (!window.confirm("Are you sure you want to remove this user from your friend list ?")) {
+        if (!window.confirm(t("confirmAlert"))) {
             return;
         }
         setRemovingFriendId(friendId);
         try {
             await removeFriend(friendId);
-            toast.success("Friend removed");
+            toast.success(t("toastFriendRemoved"));
             await refreshFriends();
             await loadProfile();
-        } catch (error) {
-            toast.error("Unable to remove this user : " + error);
+        } catch {
+            toast.error(t("toastFriendRemovedError"));
         } finally {
             setRemovingFriendId(null);
         }
@@ -137,10 +137,10 @@ export default function UserProfilePage() {
                 },
                 withCredentials: true,
             });
-            toast.success("Profile pic updated.");
+            toast.success(t("toastProfilPicUpdated"));
             window.location.reload();
         } catch (error) {
-            toast.error("Unable to update profile pic : " + error);
+            toast.error(t("toastProfilPicUpdatedError"));
         }
     };
 
@@ -225,10 +225,10 @@ export default function UserProfilePage() {
                                     setFriendActionLoading(true);
                                     try {
                                         await removeFriend(profile.id);
-                                        toast.success("Friend removed");
+                                        toast.success(t("toastFriendRemoved"));
                                         await loadProfile();
-                                    } catch (error) {
-                                        toast.error("Unable to remove friend : " + error);
+                                    } catch {
+                                        toast.error(t("toastFriendRemovedError"));
                                     } finally {
                                         setFriendActionLoading(false);
                                     }
@@ -252,11 +252,11 @@ export default function UserProfilePage() {
                                         setFriendActionLoading(true);
                                         try {
                                             await acceptFriendRequest(profile.id);
-                                            toast.success("Request accepted");
+                                            toast.success(t("toastRequestAccepted"));
                                             await loadProfile();
                                             await refreshFriends();
-                                        } catch (error) {
-                                            toast.error("Unable to accept friend request : " + error);
+                                        } catch {
+                                            toast.error(t("toastRequestAcceptedError"));
                                         } finally {
                                             setFriendActionLoading(false);
                                         }
@@ -271,10 +271,10 @@ export default function UserProfilePage() {
                                         setFriendActionLoading(true);
                                         try {
                                             await rejectFriendRequest(profile.id);
-                                            toast.success("Request rejected");
+                                            toast.success(t("toastRequestRejected"));
                                             await loadProfile();
-                                        } catch (error) {
-                                            toast.error("Unable to reject friend request : " + error);
+                                        } catch {
+                                            toast.error(t("toastRequestRejectedError"));
                                         } finally {
                                             setFriendActionLoading(false);
                                         }
@@ -291,10 +291,10 @@ export default function UserProfilePage() {
                                     setFriendActionLoading(true);
                                     try {
                                         await sendFriendRequest(profile.id);
-                                        toast.success("Request send");
+                                        toast.success(t("toastRequestSend"));
                                         await loadProfile();
-                                    } catch (error) {
-                                        toast.error("Unable to send friend request " + error);
+                                    } catch {
+                                        toast.error(t("toastRequestSendError"));
                                     } finally {
                                         setFriendActionLoading(false);
                                     }
@@ -608,11 +608,11 @@ export default function UserProfilePage() {
                                             postalCode: address.postalCode,
                                             city: address.city,
                                         });
-                                        toast.success("Adresse modifiée !");
+                                        toast.success(t("toastAddressUpdated"));
                                         setShowAddressModal(false);
                                         window.location.reload();
-                                    } catch (error) {
-                                        toast.error("Error while loading address : " + error);
+                                    } catch {
+                                        toast.error(t("toastErrorLoadingAddress"));
                                     } finally {
                                         setAddressLoading(false);
                                     }

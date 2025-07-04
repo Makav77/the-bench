@@ -20,5 +20,14 @@
     "deleteEvent": "Supprimer",
     "registered": "Inscrits",
     "close": "Fermer",
-    "report": "Signaler"
+    "report": "Signaler",
+    "toastLoadEventError": "Impossible de charger les événements",
+    "toastSuccessfullRegistration": "Inscription validée",
+    "toastRegistrationError": "Impossible de s'inscrire à l'événement",
+    "toastSuccessfullUnsubscribe": "Désincription validée",
+    "toastUnsubscribeError": "Impossible de se désinscrire de l'événement",
+    "toastEventDeleted": "Événement supprimé",
+    "toastEventDeletedError": "Impossible de supprimer l'événement",
+    "toastUserDeleted": "Utilisateur supprimé",
+    "toastUserDeletedError": "Impossible de supprimer l'utilisateur"
 }

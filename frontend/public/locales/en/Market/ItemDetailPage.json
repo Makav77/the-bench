@@ -9,5 +9,8 @@
     "contactMail": "Contact by email :",
     "contactPhone": "Contact by phone :",
     "editPost": "Edit post",
-    "deletePost": "Delete post"
+    "deletePost": "Delete post",
+    "toastLoadItemError": "Unable to load item",
+    "toastItemDeleted": "Item successfully deleted",
+    "toastItemDeletedError": "Unable to delete item"
 }

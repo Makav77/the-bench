@@ -1,5 +1,6 @@
 {
     "loading": "Chargement...",
+    "confirmAlert": "Êtes-vous sûr de vouloir supprimer cet ami ?",
     "profileNotFound": "Profil introuvable",
     "homepageButton": "← Page d'accueil",
     "profilePicture": "Photo de profil",
@@ -39,5 +40,19 @@
     "postalCode": "Code postal",
     "city": "Ville",
     "neighborhoodFound": "Quartier trouvé :",
-    "validate": "Valider"
+    "validate": "Valider",
+    "toastUnableLoadProfile": "Impossible de charger le profil",
+    "toastUnableLoadFriendList": "Impossible de charger la liste d'amis",
+    "toastFriendRemoved": "Ami supprimé",
+    "toastFriendRemovedError": "Impossible de supprimer cet utilisateur",
+    "toastProfilPicUpdated": "Photo de profil modifié",
+    "toastProfilPicUpdatedError": "Impossible de modifier la photo de profil",
+    "toastRequestAccepted": "Demande d'ami acceptée",
+    "toastRequestAcceptedError": "Impossible d'accepter la demande d'ami",
+    "toastRequestRejected": "Demande d'ami refusée",
+    "toastRequestRejectedError": "Impossible de refuser la demande d'ami",
+    "requestSend": "Demande d'ami envoyée",
+    "requestSendError": "Impossible d'envoyer une demande d'ami",
+    "toastAddressUpdated": "Adresse mise à jour",
+    "toastErrorLoadingAddress": "Impossible de charger l'adresse"
 }

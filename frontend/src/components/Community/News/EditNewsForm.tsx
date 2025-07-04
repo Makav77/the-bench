@@ -44,7 +44,7 @@ function EditNews() {
             images: allImages,
             tags: data.tags,
         });
-        toast.success("Article updated");
+        toast.success(t("toastArticleUpdated"));
         navigate(`/news/${updated.id}`);
     };
 

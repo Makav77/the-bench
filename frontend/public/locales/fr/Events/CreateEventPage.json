@@ -3,5 +3,6 @@
     "restrictionMessage": "Vous n'êtes plus autorisé à créer d'événement jusqu'au",
     "reason": "Raison :",
     "contactMessage": "Contactez un modérateur ou un administrateur pour plus d'information.",
-    "createEvent": "Créer un événement"
+    "createEvent": "Créer un événement",
+    "toastEventCreated": "Événement créé"
 }

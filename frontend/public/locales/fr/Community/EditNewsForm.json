@@ -1,4 +1,5 @@
 {
     "loading": "Chargement...",
-    "editArticle": "Modifier un article"
+    "editArticle": "Modifier un article",
+    "toastArticleUpdated": "Article mis à jour"
 }

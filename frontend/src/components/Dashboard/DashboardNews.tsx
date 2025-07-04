@@ -20,8 +20,8 @@ function DashboardNews() {
                 const { data, lastPage } = await getPendingNews(pageNews, 5);
                 setPendingNews(data);
                 setLastPageNews(lastPage);
-            } catch (error) {
-                toast.error("Unable to load pending news : " + error);
+            } catch{
+                toast.error(t("toastLoadPendingNewsError"));
             } finally {
                 setLoadingNews(false);
             }
@@ -33,10 +33,10 @@ function DashboardNews() {
         setUpdatingNewsId(newsId);
         try {
             await validateNews(newsId, { validated: true });
-            toast.success("News validated.");
+            toast.success(t("toastNewsValidated"));
             setPendingNews((prev) => prev.filter((c) => c.id !== newsId));
-        } catch (error) {
-            toast.error("Unable to validate news : " + error);
+        } catch {
+            toast.error(t("toastNewsValidatedError"));
         } finally {
             setUpdatingNewsId(null);
         }
@@ -48,16 +48,16 @@ function DashboardNews() {
             return;
         }
         if (reason.trim() === "") {
-            toast.error("Rejection reason is required.");
+            toast.error(t("toastRejectedReason"));
             return;
         }
         setUpdatingNewsId(newsId);
         try {
             await validateNews(newsId, { validated: false, rejectedReason: reason.trim() });
-            toast.success("News rejected.");
+            toast.success(t("toastRejectNews"));
             setPendingNews((prev) => prev.filter((c) => c.id !== newsId));
-        } catch (error) {
-            toast.error("Unable to reject news : " + error);
+        } catch {
+            toast.error(t("toastRejectNews"));
         } finally {
             setUpdatingNewsId(null);
         }

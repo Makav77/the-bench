@@ -32,5 +32,7 @@
     "actionPerformed": "Action performed by",
     "prev": "← Prev",
     "page": "Page",
-    "next": "Next →"
+    "next": "Next →",
+    "toastLoadReportError": "Unable to load reports",
+    "toastUpdateReportError": "Unable to update report"
 }

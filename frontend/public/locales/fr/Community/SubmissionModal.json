@@ -4,5 +4,7 @@
     "image": "Image (optionnel)",
     "cancel": "Annuler",
     "sending": "Envoi...",
-    "send": "Envoyer"
+    "send": "Envoyer",
+    "toastSendSubmissionError": "Impossible d'envoyer la soumission",
+    "toastSendSubmission": "Soumission envoyée"
 }
