@@ -91,7 +91,7 @@ describe('Header component', () => {
       isAuthenticated: false,
       login: jest.fn(),
       logout: jest.fn(),
-      fetchUser: jest.fn(),
+      refreshUser: jest.fn(),
     };
     return render(
       <AuthContext.Provider value={{ ...defaultAuth, ...authValue }}>

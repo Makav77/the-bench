@@ -20,7 +20,7 @@ export default function ChatSidebar({ onSelect, user, onlineUsers, refreshTrigge
   const [friends, setFriends] = useState<UserData[]>([]);
   const [groups, setGroups] = useState<{ id: string; name: string }[]>([...mockGroups]);
   useEffect(() => {
-    const fetchUsers = async () => {
+    const refreshUsers = async () => {
       try {
         const users = await getUsers();
         setFriends(users);
@@ -28,7 +28,7 @@ export default function ChatSidebar({ onSelect, user, onlineUsers, refreshTrigge
         console.error("Failed to fetch users:", err);
       }
     }
-    fetchUsers();
+    refreshUsers();
   }, []);
 
   

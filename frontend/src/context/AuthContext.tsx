@@ -8,7 +8,7 @@ interface AuthContextType {
     login: (token: string) => void;
     logout: () => void;
     isAuthenticated: boolean;
-    fetchUser: () => Promise<void>;
+    refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthContextType>({
     login: () => {},
     logout: () => {},
     isAuthenticated: false,
-    fetchUser: async () => {},
+    refreshUser: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         })();
     }, []);
 
-    const fetchUser = async () => {
+    const refreshUser = async () => {
         try {
             const me = await fetchMe();
             setUser(me);
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = (token: string) => {
         setAccessToken(token);
         localStorage.setItem("accessToken", token);
-        fetchUser();
+        refreshUser();
     };
 
     const logout = () => {
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
 
     return (
-        <AuthContext.Provider value={{ accessToken, user, login, logout, isAuthenticated, fetchUser }}>
+        <AuthContext.Provider value={{ accessToken, user, login, logout, isAuthenticated, refreshUser }}>
             {children}
         </AuthContext.Provider>
     );

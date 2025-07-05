@@ -62,6 +62,7 @@ import CreateNews from "./components/Community/News/CreateNews";
 import EditNews from "./components/Community/News/EditNewsForm";
 
 import TermsOfUse from "./components/Footer/TermsOfUse";
+import ShopPage from "./components/Community/Shop/ShopPage";
 
 export default function App() {
     return (
@@ -115,6 +116,7 @@ export default function App() {
                                 <Route path="/news/create" element={<CreateNews />} />
                                 <Route path="/news/:id/edit" element={<EditNews />} />
                                 <Route path="/termsofuse" element={<TermsOfUse />} />
+                                <Route path="/shop" element={<ShopPage />} />
                             </Route>
                         </Route>
                     </Routes>
