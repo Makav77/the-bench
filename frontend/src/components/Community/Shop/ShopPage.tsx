@@ -1,16 +1,16 @@
-// frontend/src/components/Shop/ShopPage.tsx
-
 import { useEffect, useState } from "react";
 import { getAllBadgesWithUserInfo, buyBadge, BadgeDTO } from "../../../api/shopService";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { AddBadgeModal } from "./CreateBadgeModal";
 
 function ShopPage() {
     const { user, refreshUser } = useAuth();
     const [badges, setBadges] = useState<BadgeDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const [buying, setBuying] = useState<string | null>(null);
+    const [showAddBadgeModal, setShowAddBadgeModal] = useState(false);
     const { t } = useTranslation("Community/ShopPage");
 
     useEffect(() => {
@@ -63,6 +63,15 @@ function ShopPage() {
                 <div>{t("loading")}</div>
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    {user?.role === "admin" && (
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+                            onClick={() => setShowAddBadgeModal(true)}
+                        >
+                            Add badge
+                        </button>
+                    )}
+
                     {badges.map(badge => (
                         <div
                             key={badge.id}
@@ -98,6 +107,23 @@ function ShopPage() {
                         </div>
                     ))}
                 </div>
+            )}
+
+            {showAddBadgeModal && (
+                <AddBadgeModal
+                    onClose={() => setShowAddBadgeModal(false)}
+                    onBadgeCreated={async () => {
+                        setShowAddBadgeModal(false);
+                        setLoading(true);
+                        try {
+                            const data = await getAllBadgesWithUserInfo();
+                            setBadges(data);
+                        } catch {
+                            toast.error(t("toastLoadBadgeError"));
+                        }
+                        setLoading(false);
+                    }}
+                />
             )}
         </div>
     );
