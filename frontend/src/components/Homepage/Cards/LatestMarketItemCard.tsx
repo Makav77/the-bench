@@ -17,10 +17,10 @@ function LatestMarketItemCard() {
                 if (data.length > 0) {
                     setItem(data[0]);
                 } else {
-                    setError("No items available.");
+                    setError(t("noItemAvailable"));
                 }
-            } catch (error) {
-                setError("Unable to load latest item: " + error);
+            } catch {
+                setError(t("loadItemError"));
             } finally {
                 setIsLoading(false);
             }

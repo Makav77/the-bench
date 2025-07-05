@@ -21,10 +21,10 @@ function NextEventCard() {
                 if (futureEvents.length > 0) {
                     setEvent(futureEvents[0]);
                 } else {
-                    setError("No future event.");
+                    setError(t("noEventAvailable"));
                 }
-            } catch (error) {
-                setError("Unable to load next event : " + error);
+            } catch {
+                setError(t("loadPostError"));
             } finally {
                 setIsLoading(false);
             }

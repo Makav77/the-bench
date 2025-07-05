@@ -1,5 +1,6 @@
 {
     "loading": "Chargement...",
+    "loadItemError": "Impossible de charger le dernier article",
     "noItemAvailable": "Aucun article en vente",
     "price": "Prix :",
     "lastUpdate": "Dernière mise à jour"
