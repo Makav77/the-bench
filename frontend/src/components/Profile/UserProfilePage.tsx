@@ -348,9 +348,16 @@ export default function UserProfilePage() {
                     <p className="text-gray-600 italic">{t("noBadges")}</p>
                 ) : (
                     <ul className="flex flex-wrap gap-2">
-                        {profile.badges.map((badge, index) => (
-                            <li key={index} className="px-3 py-1 bg-yellow-200 rounded-full text-sm font-medium">
-                                {badge}
+                        {profile.badges.map(badge => (
+                            <li 
+                                key={badge.id}
+                                className="px-3 py-1 bg-yellow-200 rounded-full text-sm font-medium flex items-center gap-2"
+                            >
+                                <img
+                                    src={badge.imageUrl}
+                                    alt="badge"
+                                    className="w-10 h-10 inline-block rounded-full"
+                                />
                             </li>
                         ))}
                     </ul>
