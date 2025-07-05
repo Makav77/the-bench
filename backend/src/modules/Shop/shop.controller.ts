@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body, UseGuards, Req, UseInterceptors, UploadedFile, BadRequestException } from "@nestjs/common";
+import { Controller, Get, Post, Param, Body, UseGuards, Req, UseInterceptors, UploadedFile, BadRequestException, Delete } from "@nestjs/common";
 import { ShopService } from "./shop.service";
 import { CreateBadgeDTO } from "./dto/create-badge.dto";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
@@ -74,5 +74,18 @@ export class ShopController {
     ): Promise<{ success: boolean }> {
         const user = req.user as User;
         return this.shopService.buyBadge(user.id, badgeId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete("badges/:id")
+    async deleteBadge(
+        @Param("id") id: string,
+        @Req() req: RequestWithResource<Badge>
+    ): Promise<{ success: boolean }> {
+        const user = req.user as User;
+        if (user.role !== "admin") {
+            throw new BadRequestException("Only admins can delete badges");
+        }
+        return this.shopService.deleteBadge(id);
     }
 }

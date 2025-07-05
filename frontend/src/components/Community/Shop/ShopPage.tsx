@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllBadgesWithUserInfo, buyBadge, BadgeDTO } from "../../../api/shopService";
+import { getAllBadgesWithUserInfo, buyBadge, BadgeDTO, deleteBadge } from "../../../api/shopService";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -89,26 +89,49 @@ function ShopPage() {
                                 alt="badge"
                                 className="w-16 h-16 mb-2"
                             />
+
                             <span className="mb-2">{t("cost")} <b>{badge.cost} {t("points2")}</b></span>
-                            <button
-                                disabled={badge.owned || buying === badge.id || !badge.available}
-                                onClick={() => handleBuy(badge)}
-                                className={`px-4 py-1 rounded ${
-                                    badge.owned
-                                        ? "bg-gray-300 text-gray-700 cursor-not-allowed"
-                                        : badge.available
-                                            ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
-                                            : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                                }`}
-                            >
-                                {badge.owned
-                                    ? t("alreadyPurchased")
-                                    : badge.available
+
+                            <div>
+                                <button
+                                    disabled={badge.owned || buying === badge.id || !badge.available}
+                                    onClick={() => handleBuy(badge)}
+                                    className={`px-4 py-1 rounded ${
+                                        badge.owned
+                                            ? "bg-gray-300 text-gray-700 cursor-not-allowed"
+                                            : badge.available
+                                                ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                                                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                    }`}
+                                >
+                                    {badge.available
                                         ? buying === badge.id
                                             ? t("purchase")
                                             : t("buy")
                                         : t("unavailable") }
-                            </button>
+                                </button>
+
+                                {user?.role === "admin" && (
+                                    <button
+                                        className="ml-2 px-2 py-1 rounded bg-red-600 text-white hover:bg-red-700 cursor-pointer"
+                                        onClick={async () => {
+                                            if (!window.confirm(t("deleteBadgeAlert"))) {
+                                                return;
+                                            }
+
+                                            try {
+                                                await deleteBadge(badge.id);
+                                                setBadges(badges => badges.filter(b => b.id !== badge.id));
+                                                toast.success(t("toastBadgeDeleted"));
+                                            } catch {
+                                                toast.error(t("toastBadgeDeletedError"));
+                                            }
+                                        }}
+                                    >
+                                        {t("delete")}
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     ))}
                 </div>

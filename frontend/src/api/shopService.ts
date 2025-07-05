@@ -28,10 +28,15 @@ export async function createBadge(file: File, cost: number, available: boolean) 
     formData.append("image", file);
     formData.append("cost", String(cost));
     formData.append("available", String(available));
-    const res = await apiClient.post("/shop/badges", formData, {
+    const response = await apiClient.post("/shop/badges", formData, {
         headers: {
             "Content-Type": "multipart/form-data"
         }
     });
-    return res.data;
+    return response.data;
+}
+
+export async function deleteBadge(badgeId: string): Promise<{ success: boolean }> {
+    const { data } = await apiClient.delete(`/shop/badges/${badgeId}`);
+    return data;
 }

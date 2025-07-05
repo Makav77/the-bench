@@ -12,5 +12,9 @@
     "alreadyPurchased": "Already purchased",
     "purchase": "Purchase...",
     "buy": "Buy",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "deleteBadgeAlert": "You are about to delete this badge. Would you like to confirm?",
+    "toastBadgeDeleted": "Badge deleted",
+    "toastBadgeDeletedError": "Unable to delete this badge",
+    "delete": "Delete"
 }
