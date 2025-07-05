@@ -5,7 +5,6 @@ import { extname } from "path";
 import { GalleryService } from "./gallery.service";
 import { CreateGalleryItemDTO } from "./dto/create-gallery-item.dto";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
-import { Request } from "express";
 import { GalleryItem } from "./entities/gallery-item.entity";
 import { User } from "../Users/entities/user.entity";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";

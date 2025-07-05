@@ -36,8 +36,11 @@ export class ShopService {
         }));
     }
 
-    async createBadge(dto: CreateBadgeDTO) {
-        const badge = this.badgeRepo.create(dto);
+    async createBadge(dto: CreateBadgeDTO, imageUrl: string) {
+        const badge = this.badgeRepo.create({
+            ...dto,
+            imageUrl,
+        });
         return this.badgeRepo.save(badge);
     }
 
