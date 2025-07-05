@@ -1,0 +1,16 @@
+{
+    "toastLoadBadgeError": "Impossible de charger les badges",
+    "toastNotEnoughPoints": "Pas assez de points",
+    "toastBadgePurchased": "Badge acheté",
+    "toastBadgePurchaseError": "Impossible d'acheter le badge",
+    "badgeShop": "Boutique de badge",
+    "points": "Points :",
+    "loading": "Chargement...",
+    "cost": "Coût :",
+    "points2": "points",
+    "alreadyPurchased": "Déjà acheté",
+    "purchase": "Achat...",
+    "buy": "Acheter",
+    "unavailable": "Indisponible"
+}
+
