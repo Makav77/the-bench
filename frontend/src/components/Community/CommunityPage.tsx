@@ -1,17 +1,18 @@
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export default function CommunityPage() {
     const navigate = useNavigate();
     const { t } = useTranslation("Community/Community");
 
     const sections = [
-        { label: t("gallery"), path: '/gallery' },
-        { label: t("polls"), path: '/polls' },
-        { label: t("challenges"), path: '/challenges' },
-        { label: t("calendar"), path: '/calendar' },
-        { label: t("artisans"), path: '/artisans' },
-        { label: t("news"), path: '/news' },
+        { label: t("gallery"), path: "/gallery" },
+        { label: t("polls"), path: "/polls" },
+        { label: t("challenges"), path: "/challenges" },
+        { label: t("calendar"), path: "/calendar" },
+        { label: t("artisans"), path: "/artisans" },
+        { label: t("news"), path: "/news" },
+        { label: t("shop"), path: "/shop" },
     ];
 
     return (
