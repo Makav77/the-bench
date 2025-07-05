@@ -8,12 +8,13 @@ import { ChallengesController } from "./challenges.controller";
 import { PermissionsModule } from "../Permissions/permissions.module";
 import { createInjectServiceMiddleware } from "../Utils/inject-resource-service.middleware";
 import { LoadChallengeResourceMiddleware } from "./middlewares/load-challenge-resource.middleware";
+import { User } from "../Users/entities/user.entity";
 
 const InjectChallengeServiceMiddleware = createInjectServiceMiddleware("challengesService", ChallengesService);
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Challenge, ChallengeRegistration, ChallengeCompletion]),
+        TypeOrmModule.forFeature([Challenge, ChallengeRegistration, ChallengeCompletion, User]),
         PermissionsModule,
     ],
     providers: [ChallengesService],

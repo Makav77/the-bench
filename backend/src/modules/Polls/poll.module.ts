@@ -8,12 +8,13 @@ import { PollController } from "./poll.controller";
 import { PermissionsModule } from "../Permissions/permissions.module";
 import { createInjectServiceMiddleware } from "../Utils/inject-resource-service.middleware";
 import { LoadPollResourceMiddleware } from "./middlewares/load-poll-resource.middleware";
+import { User } from "../Users/entities/user.entity";
 
 const InjectPollServiceMiddleware = createInjectServiceMiddleware("pollService", PollService);
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Poll, PollOption, PollVote]),
+        TypeOrmModule.forFeature([Poll, PollOption, PollVote, User]),
         PermissionsModule,
     ],
     providers: [PollService],
