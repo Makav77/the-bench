@@ -55,23 +55,28 @@ function ShopPage() {
 
     return (
         <div className="max-w-3xl mx-auto mt-8">
-            <h1 className="text-2xl font-bold mb-6 text-center">{t("badgeShop")}</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center">{t("badgeShop")}</h1>
+
+            
+            {user?.role === "admin" && (
+                <div className="flex justify-end">
+                    <button
+                        className="bg-green-600 text-white px-4 py-2 rounded mb-4 cursor-pointer hover:bg-green-700"
+                        onClick={() => setShowAddBadgeModal(true)}
+                    >
+                        {t("addBadge")}
+                    </button>
+                </div>
+            )}
+
             <div className="flex justify-between items-center mb-4">
                 <span>{t("points")} <b>{user?.points}</b></span>
             </div>
+
             {loading ? (
                 <div>{t("loading")}</div>
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                    {user?.role === "admin" && (
-                        <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-                            onClick={() => setShowAddBadgeModal(true)}
-                        >
-                            Add badge
-                        </button>
-                    )}
-
                     {badges.map(badge => (
                         <div
                             key={badge.id}
@@ -82,7 +87,7 @@ function ShopPage() {
                             <img
                                 src={badge.imageUrl}
                                 alt="badge"
-                                className="w-24 h-24 mb-2"
+                                className="w-16 h-16 mb-2"
                             />
                             <span className="mb-2">{t("cost")} <b>{badge.cost} {t("points2")}</b></span>
                             <button
@@ -92,7 +97,7 @@ function ShopPage() {
                                     badge.owned
                                         ? "bg-gray-300 text-gray-700 cursor-not-allowed"
                                         : badge.available
-                                            ? "bg-blue-600 text-white hover:bg-blue-700"
+                                            ? "bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
                                             : "bg-gray-200 text-gray-400 cursor-not-allowed"
                                 }`}
                             >

@@ -15,6 +15,7 @@ const multerOptions = {
         filename: (_req, file, callback) => {
             const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
             const ext = extname(file.originalname);
+            callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
         },
     }),
     fileFilter: (_req: any, file: { mimetype: string; }, callback: (arg0: Error | null, arg1: boolean) => void) => {
@@ -54,7 +55,7 @@ export class ShopController {
         if (user.role !== "admin") {
             throw new BadRequestException("Only admins can create badges");
         }
-        const imageUrl = `/upload/badges/${file.filename}`;
+        const imageUrl = `/uploads/badges/${file.filename}`;
         return this.shopService.createBadge(dto, imageUrl);
     }
 
