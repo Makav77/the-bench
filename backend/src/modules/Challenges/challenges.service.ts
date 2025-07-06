@@ -20,6 +20,8 @@ export class ChallengesService {
         private readonly registrationRepo: Repository<ChallengeRegistration>,
         @InjectRepository(ChallengeCompletion)
         private readonly completionRepo: Repository<ChallengeCompletion>,
+        @InjectRepository(User)
+        private readonly userRepo: Repository<User>,
     ) {}
 
     async findPendingChallenges(page = 1, limit = 5, user: User): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
@@ -254,6 +256,8 @@ export class ChallengesService {
         }
 
         if (validateCompletionDTO.validated) {
+            completion.user.points += 25;
+            await this.userRepo.save(completion.user);
             completion.validated = true;
             completion.rejectedReason = null;
         } else {
@@ -280,6 +284,8 @@ export class ChallengesService {
         }
 
         if (validateChallengeDTO.validated) {
+            challenge.author.points += 10;
+            await this.userRepo.save(challenge.author);
             challenge.status = "APPROVED";
             challenge.rejectedReason = null;
         } else {

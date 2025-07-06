@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Post, Body, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
 import { UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from "multer";
@@ -7,7 +7,6 @@ import { MarketService } from './market.service';
 import { CreateMarketItemDTO } from './dto/create-market-item.dto';
 import { UpdateMarketItemDTO } from './dto/update-market-item.dto';
 import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
-import { Request } from 'express';
 import { MarketItem } from './entities/market.entity';
 import { User } from '../Users/entities/user.entity';
 import { IrisGuard } from '../Auth/guards/iris.guard';

@@ -17,10 +17,10 @@ function LatestPostCard() {
                 if (data.length > 0) {
                     setPost(data[0]);
                 } else {
-                    setError("No post available.");
+                    setError(t("noPostAvailable"));
                 }
-            } catch (error) {
-                setError("Unable to load latest post: " + error);
+            } catch {
+                setError(t("loadPostError"));
             } finally {
                 setIsLoading(false);
             }

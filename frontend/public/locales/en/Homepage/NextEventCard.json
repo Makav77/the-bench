@@ -1,5 +1,6 @@
 {
     "loading": "Loading...",
+    "loadPostError": "Unable to load next event",
     "noEventAvailable": "No event available",
     "startOn": "Start on",
     "at": "at",

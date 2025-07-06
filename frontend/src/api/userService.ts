@@ -34,7 +34,6 @@ export interface ProfileSummaryDTO {
     firstname: string;
     lastname: string;
     profilePictureUrl: string;
-    badges: string[];
     points: number;
     events: {
         id: string;
@@ -51,6 +50,12 @@ export interface ProfileSummaryDTO {
         title: string;
         updatedAt: string;
         images: string[];
+    }[];
+    badges: {
+        id: string;
+        imageUrl: string;
+        cost: number;
+        available: boolean;
     }[];
     isFriend?: boolean;
     requestSent?: boolean;

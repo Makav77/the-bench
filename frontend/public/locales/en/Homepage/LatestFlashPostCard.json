@@ -1,5 +1,6 @@
 {
     "loading": "Loading...",
+    "loadPostError": "Unable to load latest post",
     "noPostAvailable": "No post available",
     "lastUpdate": "Last update",
     "author": "Author :"

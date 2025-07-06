@@ -1,5 +1,6 @@
 {
     "loading": "Loading...",
+    "loadItemError": "Unable to load latest item",
     "noItemAvailable": "No item available",
     "price": "Price :",
     "lastUpdate": "Last update"

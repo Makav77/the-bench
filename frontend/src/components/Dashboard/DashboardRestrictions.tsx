@@ -21,7 +21,7 @@ function DashboardRestrictions() {
     );
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const refreshUsers = async () => {
             if (query.length >= 2) {
                 setIsSearching(true);
                 try {
@@ -39,7 +39,7 @@ function DashboardRestrictions() {
             }
         };
         const delayDebounceFn = setTimeout(() => {
-            fetchUsers();
+            refreshUsers();
         }, 300);
 
         return () => clearTimeout(delayDebounceFn);
