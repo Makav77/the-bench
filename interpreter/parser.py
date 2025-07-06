@@ -109,8 +109,16 @@ def p_statement_insert(p):
     p[0] = ('insert', p[3], p[5])
 
 def p_statement_update(p):
-    'statement : UPDATE IDENTIFIER SET IDENTIFIER EQUALS value WHERE IDENTIFIER comparison_op value'
-    p[0] = ('update', p[2], p[4], p[6], (p[8], p[9], p[10]))
+    'statement : UPDATE IDENTIFIER SET assignments WHERE IDENTIFIER comparison_op value'
+    p[0] = ('update', p[2], p[4], (p[6], p[7], p[8]))
+
+def p_assignments_single(p):
+    'assignments : IDENTIFIER EQUALS value'
+    p[0] = {p[1]: p[3]}
+
+def p_assignments_multiple(p):
+    'assignments : IDENTIFIER EQUALS value COMMA assignments'
+    p[0] = {p[1]: p[3], **p[5]}
 
 def p_statement_delete(p):
     'statement : DELETE FROM IDENTIFIER WHERE IDENTIFIER comparison_op value'
@@ -261,12 +269,13 @@ def parse_query(query, data):
         data[table].append(obj)
         return "OK", True
     elif ast[0] == 'update':
-        _, table, target_column, new_value, condition = ast
+        _, table, assignments, condition = ast
         updated_count = 0
         for row in data.get(table, []):
             key, op, value = condition
             if compare(row.get(key), op, value):
-                row[target_column] = new_value
+                for col, val in assignments.items():
+                    row[col] = val
                 updated_count += 1
         return f"{updated_count} row(s) updated", True
     elif ast[0] == 'delete':
