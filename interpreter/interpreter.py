@@ -1,7 +1,9 @@
 from parser import parse_query
 from storage import load_data, save_data
+import os
 
-DATA_FILE = 'data.json'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, 'data.json')
 
 def main():
     data = load_data(DATA_FILE)
