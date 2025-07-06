@@ -3,9 +3,10 @@ import DashboardChallenges from "./DashboardChallenges";
 import DashboardReports from "./DashboardReports";
 import DashboardRestrictions from "./DashboardRestrictions";
 import DashboardNews from "./DashboardNews";
+import DashboardHangman from "./DashboardHangman"
 import { useTranslation } from "react-i18next";
 
-type Tab = "challenges" | "restrictions" | "reports" | "news";
+type Tab = "challenges" | "restrictions" | "reports" | "news" | "hangman";
 
 function DashboardPage() {
     const [activeTab, setActiveTab] = useState<Tab>("restrictions");
@@ -56,12 +57,23 @@ function DashboardPage() {
                 >
                     {t("news")}
                 </button>
+                <button
+                    onClick={() => setActiveTab("hangman")}
+                    className={`cursor-pointer px-4 py-2 -mb-px ${
+                        activeTab === "hangman"
+                            ? "border-b-2 border-blue-600 font-semibold"
+                            : "text-gray-600 hover:text-gray-800"
+                    }`}
+                >
+                    {t("hangman")}
+                </button>
             </div>
 
             {activeTab === "challenges" && <DashboardChallenges />}
             {activeTab === "restrictions" && <DashboardRestrictions />}
             {activeTab === "reports" && <DashboardReports />}
             {activeTab === "news" && <DashboardNews />}
+            {activeTab === "hangman" && <DashboardHangman />}
         </div>
     );
 }
