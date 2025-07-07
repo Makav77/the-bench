@@ -8,7 +8,7 @@ describe('Database Config', () => {
         process.env.DB_PASSWORD = 'password';
         process.env.DB_USER = 'admin';
         process.env.DB_SYNCHRONIZE = 'true';
-        process.env.DB_HOST = 'localhost';
+        process.env.DB_HOST = process.env.NODE_ENV === 'prod' ? '209.38.138.250' : 'localhost';
         process.env.DB_PORT = '5432';
     });
 
@@ -19,7 +19,7 @@ describe('Database Config', () => {
     it('should return valid TypeOrmModuleOptions', async () => {
         const expected = {
             type: 'postgres',
-            host: 'localhost',
+            host: process.env.NODE_ENV === 'prod' ? '209.38.138.250' : 'localhost',
             port: 5432,
             username: 'admin',
             password: 'password',
@@ -28,8 +28,8 @@ describe('Database Config', () => {
             synchronize: true,
             entities: [expect.stringContaining('/**/*.entity')],
         };
-
-        const { databaseConfig } = await import('./postgres-database-config');
-        expect(databaseConfig).toMatchObject(expected);
+        
+        const { postgresDatabaseConfig } = await import('./postgres-database-config');
+        expect(postgresDatabaseConfig).toMatchObject(expected);
     });
 });

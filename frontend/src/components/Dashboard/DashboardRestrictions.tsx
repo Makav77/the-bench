@@ -1,8 +1,10 @@
 import { useState, FormEvent, useEffect } from "react";
-import { restrictUser } from "../../api/permissionsService";
-import { DEFAULT_PERMISSIONS } from "../../../../backend/src/modules/Permissions/ListPermissions";
+import { restrictUser, DEFAULT_PERMISSIONS } from "../../api/permissionsService";
 import { toast } from "react-toastify";
 import apiClient from "../../api/apiClient";
+
+
+
 
 function DashboardRestrictions() {
     const [userId, setUserId] = useState<string>("");

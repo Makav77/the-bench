@@ -17,7 +17,7 @@ describe("Config", () => {
         process.env.DB_PASSWORD = "password";
         process.env.DB_USER = "admin";
         process.env.DB_SYNCHRONIZE = "true";
-        process.env.DB_HOST = "localhost";
+        process.env.DB_HOST = process.env.NODE_ENV === 'prod' ? "209.38.138.250" : "localhost";
         process.env.DB_PORT = "5432";
 
         const { config } = require("./config");
@@ -26,7 +26,7 @@ describe("Config", () => {
             dbPassword: "password",
             dbUser: "admin",
             dbSynchronize: true,
-            dbHost: "localhost",
+            dbHost: process.env.NODE_ENV === 'prod' ? "209.38.138.250" : "localhost",
             dbPort: 5432
         });
     });
@@ -44,7 +44,7 @@ describe("Config", () => {
         process.env.DB_PASSWORD = "mypassword";
         process.env.DB_USER = "myuser";
         process.env.DB_SYNCHRONIZE = "true";
-        process.env.DB_HOST = "localhost";
+        process.env.DB_HOST = process.env.NODE_ENV === 'prod' ? "209.38.138.250" : "localhost";
         delete process.env.DB_PORT;
 
         const { config } = require("./config");

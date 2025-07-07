@@ -7,17 +7,17 @@ export default defineConfig({
     server: {
         proxy: {
             "/uploads": {
-                target: "http://localhost:3000",
+                target: process.env.VITE_NODE_ENV === 'prod' ? "http://209.38.138.250:3000" : "http://localhost:3000",
                 changeOrigin: true,
                 secure: false,
             },
             "/market": {
-                target: "http://localhost:3000",
+                target: process.env.VITE_NODE_ENV === 'prod' ? "http://209.38.138.250:3000" : "http://localhost:3000",
                 changeOrigin: true,
                 secure: false,
             },
             '/places': {
-                target: 'http://localhost:3000',
+                target: process.env.VITE_NODE_ENV === 'prod' ? "http://209.38.138.250:3000" : "http://localhost:3000",
                 changeOrigin: true,
                 secure: false,
             },

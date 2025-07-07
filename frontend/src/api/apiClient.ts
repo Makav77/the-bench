@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders, HeadersDefaults, AxiosHeaderValue } from 'axios';
-
+console.log("Node env: ", import.meta.env.VITE_NODE_ENV);
 const apiClient = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: import.meta.env.VITE_NODE_ENV === 'prod' ? 'http://209.38.138.250:3000/' : 'http://localhost:3000/',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',

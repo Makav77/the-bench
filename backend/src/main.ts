@@ -5,15 +5,20 @@ import { ValidationPipe } from '@nestjs/common';
 import cookieParser from "cookie-parser";
 import { join } from 'path';
 
+import * as dotenv from 'dotenv';
+
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: ["error", "warn", "log", "debug", "verbose"] });
     const port = 3000;
 
-
     app.use(cookieParser());
 
+    dotenv.config();
+
+    const origin = process.env.NODE_ENV === 'prod' ? process.env.FRONTEND_ORIGIN_PROD : process.env.FRONTEND_ORIGIN_DEV;
+
     app.enableCors({
-        origin: 'http://localhost:5173',
+        origin: origin,
         credentials: true,
     });
 
