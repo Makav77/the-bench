@@ -4,9 +4,6 @@ import { toast } from "react-toastify";
 import apiClient from "../../api/apiClient";
 import { useTranslation } from "react-i18next";
 
-
-
-
 function DashboardRestrictions() {
     const { t } = useTranslation("Dashboard/DashboardRestrictions");
     const [userId, setUserId] = useState<string>("");

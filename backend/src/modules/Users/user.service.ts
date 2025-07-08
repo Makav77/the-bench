@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Brackets } from 'typeorm';
 import { User, Role } from './entities/user.entity';
 import bcrypt from "bcryptjs";
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -46,12 +46,25 @@ export class UserService {
         return user;
     }
 
-    async searchUsers(query: string): Promise<{ id: string; firstname: string; lastname: string; }[]> {
-        return this.userRepository
-            .createQueryBuilder("user")
-            .where('LOWER(user.firstname) LIKE LOWER(:query)', { query: `%${query}%` })
-            .orWhere('LOWER(user.lastname) LIKE LOWER(:query)', { query: `%${query}%` })
-            .select(['user.id', 'user.firstname', 'user.lastname'])
+    async searchUsers(query: string, irisCode: string, role: string): Promise<{ id: string; firstname: string; lastname: string; }[]> {
+        const qb = this.userRepository.createQueryBuilder("user");
+        if (role === "admin") {
+            qb.where(
+                new Brackets(qb2 => {
+                    qb2.where("LOWER(user.firstname) LIKE LOWER(:query)", { query: `%${query}%` })
+                        .orWhere("LOWER(user.lastname) LIKE LOWER(:query)", { query: `%${query}%` });
+                })
+            );
+        } else {
+            qb.where("user.irisCode = :irisCode", { irisCode })
+                .andWhere(
+                    new Brackets(qb2 => {
+                        qb2.where("LOWER(user.firstname) LIKE LOWER(:query)", { query: `%${query}%` })
+                            .orWhere("LOWER(user.lastname) LIKE LOWER(:query)", { query: `%${query}%` });
+                    })
+                );
+        }
+        return qb.select(["user.id", "user.firstname", "user.lastname"])
             .limit(10)
             .getMany();
     }

@@ -3,25 +3,57 @@ import Navigation from "../Navigation/Navigation";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logoutUser } from "../../api/authService";
+import { useEffect, useState } from "react";
+import apiClient from "../../api/apiClient";
+
+function capitalize(str: string) {
+    if (!str) {
+        return "";
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
 function Header() {
     const { t } = useTranslation("Header/Header");
     const navigate = useNavigate();
     const { isAuthenticated, user, logout } = useAuth();
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [searchResults, setSearchResults] = useState<{ id: string; firstname: string; lastname: string; }[]>([]);
+    const [isSearching, setIsSearching] = useState<boolean>(false);
 
     const handleLogout = async () => {
-        try {
-            await logoutUser();
-            logout();
-            navigate("/");
-        } catch(error) {
-            console.error("Logout error : " + error);
-        }
+        await logoutUser();
+        logout();
+        navigate("/");
     };
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            if (searchQuery.length >= 2) {
+                setIsSearching(true);
+                try {
+                    const response = await apiClient.get(`/users/search?query=${encodeURIComponent(searchQuery)}`);
+                    setSearchResults(response.data);
+                    console.log("Résultats de recherche : ", response.data);
+                } catch {
+                    setSearchResults([]);
+                } finally {
+                    setIsSearching(false);
+                }
+            } else {
+                setSearchResults([]);
+                setIsSearching(false);
+            }
+        };
+        const delayDebounceFn = setTimeout(() => {
+            fetchUsers();
+        }, 300);
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchQuery]);
 
     return (
         <div data-testid = "header" className="w-[100%] bg-[#00c6ff]">
-            <div className="grid grid-cols-3 h-10 mb-8 mx-auto w-[75%]">
+            <div className="grid grid-cols-3 h-10 mb-15 mx-auto w-[75%]">
                 <div className="flex items-center">
                     <img
                         src="assets/bench-logo.png"
@@ -37,12 +69,11 @@ function Header() {
                     )}
                 </div>
                 
-
                 <div className="flex items-center justify-center">
                     <p className="text-4xl font-bold">The Bench</p>
                 </div>
 
-                <div className="flex items-center justify-end">
+                <div className="flex flex-col items-end justify-end">
                     { isAuthenticated && user ? (
                         <div className="flex items-center">
                             <span className="mr-4">
@@ -56,7 +87,6 @@ function Header() {
                             >
                                 {t("profile")}
                             </button>
-
                             <button
                                 type="button"
                                 aria-label="logout-button"
@@ -65,7 +95,6 @@ function Header() {
                             >
                                 {t("logout")}
                             </button>
-
                             { user && (user.role === "admin" || user.role === "moderator") && (
                                 <button
                                     type="button"
@@ -85,6 +114,51 @@ function Header() {
                         >
                             {t("login")}
                         </button>
+                    )}
+
+                    {isAuthenticated && user && (
+                        <div className="mt-2 w-72">
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={e => setSearchQuery(e.target.value)}
+                                    onBlur={() => {
+                                        setTimeout(() => {
+                                            setSearchQuery("");
+                                            setSearchResults([]);
+                                        }, 100);
+                                    }}
+                                    className="w-full px-3 py-1 border rounded-2xl focus:outline-none focus:ring bg-gray-100"
+                                    placeholder={t("searchPlaceholder")}
+                                />
+                                {searchQuery.length >= 2 && (
+                                    <div className="absolute z-10 w-full bg-white border border-gray-300 rounded mt-1 shadow max-h-40 overflow-y-auto">
+                                        {isSearching ? (
+                                            <div className="px-2 py-1 text-gray-500 italic">{t("searching")}</div>
+                                        ) : searchResults.length > 0 ? (
+                                            searchResults.map(resultUser => (
+                                                <div
+                                                    key={resultUser.id}
+                                                    onClick={() => {
+                                                        setSearchQuery("");
+                                                        setSearchResults([]);
+                                                        navigate(`/profile/${resultUser.id}`);
+                                                    }}
+                                                    className="flex items-center px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                                >
+                                                    <span>
+                                                        {capitalize(resultUser.firstname)} {capitalize(resultUser.lastname)}
+                                                    </span>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="px-2 py-1 text-gray-500 italic">{t("noUserFound")}</div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>

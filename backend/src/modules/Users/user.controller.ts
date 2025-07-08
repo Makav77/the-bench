@@ -12,7 +12,7 @@ import fs from "fs";
 import path from "path";
 
 interface RequestWithUser extends Request {
-    user: { id: string };
+    user: User;
 }
 
 @Controller('users')
@@ -34,8 +34,12 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard)
     @Get("search")
-    async searchUsers(@Query("query") query: string): Promise<{ id: string; firstname: string; lastname: string; }[]> {
-        return this.userService.searchUsers(query);
+    async searchUsers(
+        @Query("query") query: string,
+        @Req() req: RequestWithUser
+    ): Promise<{ id: string; firstname: string; lastname: string; }[]> {
+        const user = req.user;
+        return this.userService.searchUsers(query, user.irisCode, user.role);
     }
 
     @UseGuards(JwtAuthGuard)
