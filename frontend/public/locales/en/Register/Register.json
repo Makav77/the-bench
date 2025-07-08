@@ -10,5 +10,6 @@
     "buttonRegister": "Register",
     "missingCredentials": "All fields must be completed",
     "invalidMailAddress": "Email address is already in use",
-    "unknowError": "Unknow Error"
+    "unknowError": "Unknow Error",
+    "neighborhoodSelected": "Neighborhood selected :"
 }
