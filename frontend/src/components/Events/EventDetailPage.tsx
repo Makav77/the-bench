@@ -6,11 +6,13 @@ import { toast } from "react-toastify";
 import { removeParticipant } from "../../api/eventService";
 import usePermission from "../Utils/usePermission";
 import ReportModal from "../Utils/ReportModal";
+import { useTranslation } from "react-i18next";
 
 function EventDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation("Events/EventDetailPage");
 
     const { restricted, expiresAt, loading: permLoading } = usePermission("register_event");
     const [event, setEvent] = useState<EventDetails | null>(null);
@@ -32,9 +34,8 @@ function EventDetailPage() {
                     const event = await getEvent(id);
                     setEvent(event);
                 }
-            } catch(error) {
-                console.error(error);
-                toast.error("Unable to load event.");
+            } catch {
+                toast.error(t("toastLoadEventError"));
             } finally {
                 setIsLoading(false);
             }
@@ -43,7 +44,7 @@ function EventDetailPage() {
     }, [id]);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>;
+        return <p className="p-6">{t("loading")}</p>;
     }
 
     if (error) {
@@ -67,9 +68,9 @@ function EventDetailPage() {
         try {
             const updated = await subscribeEvent(id!);
             setEvent(updated);
-            toast.success("Successful registration !");
-        } catch(error) {
-            toast.error("Error during registration : " + error);
+            toast.success(t("toastSuccessfullRegistration"));
+        } catch {
+            toast.error(t("toastRegistrationError"));
         }
     };
 
@@ -77,29 +78,29 @@ function EventDetailPage() {
         try {
             const updated = await unsubscribeEvent(id!);
             setEvent(updated);
-            toast.success("Unsubscribe successful !");
-        } catch (error) {
-            toast.error("Error unsubscribing : " + error);
+            toast.success(t("toastSuccessfullUnsubscribe"));
+        } catch {
+            toast.error(t("toastUnsubscribeError"));
         }
     }
 
     const handleDelete = async () => {
-        const confirmed = window.confirm("You are about to delete an event. Would you like to confirm?");
+        const confirmed = window.confirm(t("confirmAlert"));
         if (!confirmed) {
             return;
         }
 
         try {
             await deleteEvent(id!);
-            toast.success("Event successfully deleted!")
+            toast.success(t("toastEventDeleted"))
             navigate("/events");
-        } catch (error) {
-            toast.error("Unable to delete event : " + error);
+        } catch {
+            toast.error(t("toastEventDeletedError"));
         }
     };
 
     if (permLoading) {
-        return <p>Checking permissions…</p>;
+        return <p>{t("checkingPermissions")}</p>;
     }
 
     return (
@@ -111,26 +112,26 @@ function EventDetailPage() {
                         onClick={() => navigate("/events")}
                         className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer h-10"
                     >
-                        ← Back
+                        {t("back")}
                     </button>
 
                     <div className="flex flex-col gap-2">
                         {!isAuthor && (
                             event.maxNumberOfParticipants == null ? (
-                                <p className="text-green-600 text-l font-semibold">Open event</p>
+                                <p className="text-green-600 text-l font-semibold">{t("openEvent")}</p>
                             ) : (
                                 isSubscribe ? (
                                     <button
                                         onClick={handleUnsubscribe}
                                         className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 cursor-pointer border"
                                     >
-                                        Unsubscribe
+                                        {t("unsubscribe")}
                                     </button>
                                 ) : isFull ? (
-                                    <p className="text-gray-500 text-l font-semibold">Event full</p>
+                                    <p className="text-gray-500 text-l font-semibold">{t("eventFull")}</p>
                                 ) : restricted ? (
                                     <p className="text-red-600 text-l font-semibold">
-                                        You are no longer allowed to register for this event until{" "}
+                                        {t("restrictionMessage")} {" "}
                                         {new Date(expiresAt!).toLocaleDateString()}.
                                     </p>
                                 ) : (
@@ -138,7 +139,7 @@ function EventDetailPage() {
                                         onClick={handleSubscribe}
                                         className="bg-green-600 text-white px-4 py-2 border rounded hover:bg-green-700 cursor-pointer"
                                     >
-                                        Subscribe
+                                        {t("subscribe")}
                                     </button>
                                 )
                             )
@@ -149,7 +150,7 @@ function EventDetailPage() {
                                 onClick={() => setShowParticipantModal(true)}
                                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 border rounded cursor-pointer"
                             >
-                                Participant list
+                                {t("participantList")}
                             </button>
                         )}
                     </div>
@@ -158,7 +159,7 @@ function EventDetailPage() {
                 <h1 className="text-3xl font-bold">{event.name}</h1>
 
                 <p className="-mt-4">
-                    <strong>Author : </strong>
+                    <strong>{t("author")}</strong>{" "}
                     <span
                         onClick={() => navigate(`/profile/${event.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -167,26 +168,26 @@ function EventDetailPage() {
                     </span>
                 </p>
 
-                <strong>Description</strong>
+                <strong>{t("description")}</strong>
                 <p className="whitespace-pre-wrap">{event.description}</p>
 
-                <strong>Place</strong> 
+                <strong>{t("place")}</strong> 
                 <p className="whitespace-pre-wrap">{event.place}</p>
 
                 <p>
-                    <strong>Start : </strong>
+                    <strong>{t("start")}</strong>{" "}
                     {new Date(event.startDate).toLocaleString()}
                 </p>
 
                 <p className="-mt-4">
-                    <strong className="mr-2">End :</strong>{" "}
+                    <strong className="mr-2">{t("end")}</strong>{" "}
                     {new Date(event.endDate).toLocaleString()}
                 </p>
 
                 {typeof event.maxNumberOfParticipants === "number" && event.maxNumberOfParticipants > 0 && (
                     <>
-                        <strong>Max places :</strong> {event.maxNumberOfParticipants} <br/>
-                        <strong>Remaining places :</strong> {event.maxNumberOfParticipants - event.participantsList.length}
+                        <strong>{t("maxPlaces")}</strong> {event.maxNumberOfParticipants} <br/>
+                        <strong>{t("remainingPlaces")}</strong> {event.maxNumberOfParticipants - event.participantsList.length}
                     </>
                 )}
 
@@ -196,14 +197,14 @@ function EventDetailPage() {
                             onClick={() => navigate(`/events/${id}/edit`)}
                             className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            Edit event
+                            {t("editEvent")}
                         </button>
                         
                         <button
                             onClick={handleDelete}
                             className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            Delete event
+                            {t("deleteEvent")}
                         </button>
                     </div>
                 )}
@@ -212,7 +213,7 @@ function EventDetailPage() {
                     <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
                         <div className="bg-white rounded p-6 w-96 max-h-[70vh] overflow-auto">
                             {typeof event.maxNumberOfParticipants === "number" && event.maxNumberOfParticipants > 0 && (
-                                <h2 className="text-xl font-bold mb-4">Registered ({event.participantsList.length} / {event.maxNumberOfParticipants})</h2>
+                                <h2 className="text-xl font-bold mb-4">{t("registered")} ({event.participantsList.length} / {event.maxNumberOfParticipants})</h2>
                             )}
                             <ul className="space-y-2">
                                 {event.participantsList.map(user => (
@@ -228,16 +229,16 @@ function EventDetailPage() {
                                                 try {
                                                     const updated = await removeParticipant(id!, user.id);
                                                     setEvent(updated);
-                                                    toast.success("User deleted.");
-                                                } catch (error) {
-                                                    toast.error("Error : " + error);
+                                                    toast.success(t("toastUserDeleted"));
+                                                } catch {
+                                                    toast.error(t("toastUserDeletedError"));
                                                 } finally {
                                                     setRemovingId(null);
                                                 }
                                             }}
                                             className="text-red-600 hover:underline disabled:opacity-50 cursor-pointer underline"
                                         >
-                                            Unsubscribe
+                                            {t("unsubscribe")}
                                         </button>
                                     </li>
                                 ))}
@@ -246,7 +247,7 @@ function EventDetailPage() {
                                 onClick={() => setShowParticipantModal(false)}
                                 className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
                             >
-                                Close
+                                {t("close")}
                             </button>
                         </div>
                     </div>
@@ -259,7 +260,7 @@ function EventDetailPage() {
                         onClick={() => setShowReportModal(true)}
                         className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                     >
-                        Report event
+                        {t("report")}
                     </button>
 
                     {showReportModal && (

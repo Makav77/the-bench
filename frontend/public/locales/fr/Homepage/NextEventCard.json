@@ -1,0 +1,8 @@
+{
+    "loading": "Chargement...",
+    "loadPostError": "Impossible de charger le prochain événement",
+    "noEventAvailable": "Aucun événement disponible",
+    "startOn": "Débute le",
+    "at": "à",
+    "organizedBy": "Organisé par"
+}

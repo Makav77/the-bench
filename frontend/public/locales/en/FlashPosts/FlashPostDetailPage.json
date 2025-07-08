@@ -1,0 +1,14 @@
+{
+    "loading": "Loading...",
+    "confirmAlert": "You are about to delete a flash post. Would you like to confirm?",
+    "back": "← Back",
+    "publishedOn": "Published on",
+    "updatedOn": "Updated on",
+    "by": "by",
+    "editPost": "Edit post",
+    "deletePost": "Delete post",
+    "report": "Report",
+    "toastLoadFlashpostError": "Unable to load flash post",
+    "toastFlashpostDeleted": "Flash post successfully deleted",
+    "toastFlashpostDeletedError": "Unable to delete flash post"
+}

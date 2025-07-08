@@ -1,0 +1,11 @@
+{
+    "noImageError": "You must select an image",
+    "negativeCostError": "Cost must be positive",
+    "badgeCreated": "Badge created",
+    "badgeCreatedError": "Unable to create badge",
+    "addBadge": "Add badge",
+    "image": "Image",
+    "cost": "Cost (points)",
+    "creation": "Creation...",
+    "created": "Create"
+}

@@ -10,6 +10,8 @@ import { ChallengeRegistration } from '../Challenges/entities/challenge-registra
 import { MarketItem } from '../Market/entities/market.entity';
 import { ProfileSummaryDTO } from './dto/profile-summary.dto';
 import { IrisService } from '../Iris/iris.service';
+import { UserBadge } from '../Shop/entities/user-badge.entity';
+import { Badge } from '../Shop/entities/badge.entity';
 import axios from 'axios';
 
 type IrisInfo = { irisCode: string; irisName: string; };
@@ -25,6 +27,10 @@ export class UserService {
         private readonly challengeRegistrationRepository: Repository<ChallengeRegistration>,
         @InjectRepository(MarketItem)
         private readonly marketItemRepository: Repository<MarketItem>,
+        @InjectRepository(UserBadge)
+        private readonly userBadgeRepo: Repository<UserBadge>,
+        @InjectRepository(Badge)
+        private readonly badgeRepo: Repository<Badge>,
         private readonly irisService: IrisService,
     ) { }
 
@@ -149,12 +155,24 @@ export class UserService {
                 images: item.images ?? [],
             }));
 
+            const userBadges = await this.userBadgeRepo.find({
+                where: { user: { id: userId } },
+                relations: ["badge"],
+            });
+
+            const badges = userBadges.map(ub => ({
+                id: ub.badge.id,
+                imageUrl: ub.badge.imageUrl,
+                cost: ub.badge.cost,
+                available: ub.badge.available,
+            }));
+
             const profileSummary: ProfileSummaryDTO = {
                 id: user.id,
                 firstname: user.firstname,
                 lastname: user.lastname,
                 profilePictureUrl: user.profilePicture || "/uploads/profile/default.png",
-                badges: [],
+                badges,
                 points: user.points,
                 events: eventSummaries,
                 challenges: challengeSummaries,

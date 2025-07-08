@@ -91,7 +91,7 @@ describe('Header component', () => {
       isAuthenticated: false,
       login: jest.fn(),
       logout: jest.fn(),
-      fetchUser: jest.fn(),
+      refreshUser: jest.fn(),
     };
     return render(
       <AuthContext.Provider value={{ ...defaultAuth, ...authValue }}>
@@ -135,7 +135,7 @@ describe('Header component', () => {
     expect(screen.getByLabelText('logout-button')).toBeInTheDocument();
 
     // la navigation principale (<Navigation />) est affichée
-    expect(screen.getByText('…')) // remplace '…' par un item de ton Navigation
+    expect(screen.getByText('...')) // remplace '...' par un item de ton Navigation
   });
 
   test('logout redirige vers / et appelle logout du contexte', () => {

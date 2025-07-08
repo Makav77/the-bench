@@ -44,7 +44,6 @@ import ArtisansByTypePage from "./components/Community/Artisans/ArtisansByTypePa
 import CalendarPage from "./components/Community/Calendar/CalendarPage";
 
 import EditChallengePage from "./components/Community/Challenges/EditChallengePage";
-import ValidateCompletionPage from "./components/Community/Challenges/ValidateCompletion";
 
 import { ToastContainer } from "react-toastify";
 import ChallengesPage from "./components/Community/Challenges/ChallengesPage";
@@ -63,6 +62,7 @@ import CreateNews from "./components/Community/News/CreateNews";
 import EditNews from "./components/Community/News/EditNewsForm";
 
 import TermsOfUse from "./components/Footer/TermsOfUse";
+import ShopPage from "./components/Community/Shop/ShopPage";
 
 export default function App() {
     return (
@@ -108,7 +108,6 @@ export default function App() {
                                 <Route path="challenges/create" element={<CreateChallengePage />} />
                                 <Route path="challenges/:id" element={<ChallengeDetailPage />} />
                                 <Route path="challenges/:id/edit" element={<EditChallengePage />} />
-                                <Route path="challenges/:id/validate" element={<ValidateCompletionPage />} />
                                 <Route path="dashboard" element={<DashboardPage />} />
                                 <Route path="chat" element={<ChatPage />} />
                                 <Route path="/profile/:id" element={<UserProfilePage />} />
@@ -117,6 +116,7 @@ export default function App() {
                                 <Route path="/news/create" element={<CreateNews />} />
                                 <Route path="/news/:id/edit" element={<EditNews />} />
                                 <Route path="/termsofuse" element={<TermsOfUse />} />
+                                <Route path="/shop" element={<ShopPage />} />
                             </Route>
                         </Route>
                     </Routes>

@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { getModeratorsAndAdmins } from "../../api/userService";
 import { StaffDTO } from "../../api/userService";
+import LanguageSwitcher from "../Utils/LanguageSwitcher";
 
 function Footer() {
     const navigate = useNavigate();
+    const { t } = useTranslation("Footer/Footer");
     const [showModeratorsModal, setShowModeratorsModal] = useState(false);
     const [admins, setAdmins] = useState<StaffDTO[]>([]);
     const [moderators, setModerators] = useState<StaffDTO[]>([]);
@@ -38,13 +41,13 @@ function Footer() {
         >
             <div className="flex justify-between w-[30%] mx-auto mt-5 p-6">
                 <div className="flex flex-col items-start space-y-1">
-                    <p className="font-semibold">See also :</p>
+                    <p className="font-semibold">{t("seeAlso")}</p>
                     <button
                         type="button"
                         className="cursor-pointer hover:underline"
                         onClick={() => navigate("/homepage")}
                     >
-                        → Homepage
+                        → {t("homepage")}
                     </button>
 
                     <button
@@ -52,7 +55,7 @@ function Footer() {
                         className="cursor-pointer hover:underline"
                         onClick={() => navigate("/marketplace")}
                     >
-                        → Marketplace
+                        → {t("marketplace")}
                     </button>
 
                     <button
@@ -60,7 +63,7 @@ function Footer() {
                         className="cursor-pointer hover:underline"
                         onClick={() => navigate("/bulletinsboard")}
                     >
-                        → Bulletins board
+                        → {t("bulletinsBoard")}
                     </button>
 
                     <button
@@ -68,7 +71,7 @@ function Footer() {
                         className="cursor-pointer hover:underline"
                         onClick={() => navigate("/events")}
                     >
-                        → Events
+                        → {t("events")}
                     </button>
 
                     <button
@@ -76,7 +79,7 @@ function Footer() {
                         className="cursor-pointer hover:underline"
                         onClick={() => navigate("/community")}
                     >
-                        → Community
+                        → {t("community")}
                     </button>
                 </div>
 
@@ -87,19 +90,18 @@ function Footer() {
                                 className="hover:underline cursor-pointer"
                                 onClick={() => setShowModeratorsModal(true)}
                             >
-                                Contact a moderator</li>
+                                → {t("contactModerator")}
+                            </li>
                             <li
                                 className="hover:underline cursor-pointer"
                                 onClick={() => navigate("/termsofuse")}
                             >
-                                Conditions of use
+                                → {t("conditionsOfUse")}
                             </li>
                         </ul>
                     </div>
 
-                    <br />
-
-                    <div>
+                    <div className="mt-3">
                         <ul>
                             <li
                                 className="flex gap-3 hover:underline cursor-pointer"
@@ -135,6 +137,8 @@ function Footer() {
                             </li>
                         </ul>
                     </div>
+                    
+                    <LanguageSwitcher />
                 </div>
             </div>
             

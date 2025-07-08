@@ -3,14 +3,14 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-export enum mailState {
+enum mailState {
     noError = "noError",
     unknowError = "unknowError",
     missingMail = "missingMail",
 }
 
 function ResetPassword() {
-    const { t } = useTranslation("ResetPassword");
+    const { t } = useTranslation("ResetPassword/ResetPassword");
     const navigate = useNavigate();
     const [mailAddress, setMailAddress] = useState("");
     const [isLoading, setIsLoading] = useState(false);

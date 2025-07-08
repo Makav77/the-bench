@@ -17,7 +17,8 @@ export default function ChatSidebar({ onSelect, user, onlineUsers, refreshTrigge
   const [friends, setFriends] = useState<FriendDTO[]>([]);
   const [groups, setGroups] = useState<{ id: string; name: string }[]>([]);
   useEffect(() => {
-    const fetchFriends = async () => {
+
+    const refreshUsers = async () => {
       try {
         const friends = await getFriends(user?.id || '');
         setFriends(friends);
@@ -25,7 +26,8 @@ export default function ChatSidebar({ onSelect, user, onlineUsers, refreshTrigge
         console.error("Failed to fetch friends:", err);
       }
     }
-    fetchFriends();
+
+    refreshUsers();
   }, []);
 
   

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import usePermission from "../../Utils/usePermission";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 export default function CreateGalleryItemPage() {
     const [file, setFile] = useState<File | null>(null);
@@ -13,39 +14,41 @@ export default function CreateGalleryItemPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
-
+    const { t } = useTranslation("Community/CreateGalleryImagePage");
     const { restricted, expiresAt, reason } = usePermission("publish_gallery");
 
     if (restricted === null) {
-        return <p className="p-6 text-center">Checking permissions ...</p>;
+        return <p className="p-6 text-center">{t("checkingPermissions")}</p>;
     }
 
     if (restricted) {
         return (
             <div className="p-6 text-center">
                 <p className="text-red-500">
-                    You are no longer allowed to publish an image in gallery until{" "}
+                    {t("restrictionMessage")} {" "}
                     {expiresAt
                         ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
                         : "unknown date"}.
                     <br />
                     {reason && (
                         <span>
-                            Reason: {reason}
+                            {t("reason")} {reason}
                             <br />
                         </span>
                     )}
-                    Contact a moderator or administrator for more information.
+                    {t("contactMessage")}
                 </p>
             </div>
         );
     }
 
     function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-        const f = e.target.files?.[0] ?? null;
-        setFile(f);
+        const file = e.target.files?.[0] ?? null;
+        setFile(file);
         setError(null);
-        if (f) setPreviewURL(URL.createObjectURL(f));
+        if (file) {
+            setPreviewURL(URL.createObjectURL(file));
+        }
     }
 
     async function handleSubmit(e: FormEvent) {
@@ -58,10 +61,10 @@ export default function CreateGalleryItemPage() {
         setError(null);
         try {
             const item = await createGalleryItem(file, description);
-            toast.success("Image ajoutée !");
+            toast.success(t("toastImageUpload"));
             navigate(`/gallery/${item.id}`);
         } catch {
-            toast.error("Unable to add image");
+            toast.error(t("toastImageUploadError"));
         } finally {
             setIsSubmitting(false);
         }
@@ -69,7 +72,7 @@ export default function CreateGalleryItemPage() {
 
     return (
         <div className="p-6 w-[50%] mx-auto">
-            <h1 className="w-[56%] mx-auto text-4xl font-semibold mb-4">Add picture</h1>
+            <h1 className="w-[56%] mx-auto text-4xl font-semibold mb-4">{t("addPicture")}</h1>
             <form
                 onSubmit={handleSubmit}
                 className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
@@ -78,7 +81,7 @@ export default function CreateGalleryItemPage() {
 
                 <div>
                     <label className="block font-semibold">
-                        Image<span className="text-red-500">*</span>
+                        {t("Image")}<span className="text-red-500">*</span>
                     </label>
                     <button
                         type="button"
@@ -86,7 +89,7 @@ export default function CreateGalleryItemPage() {
                         className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer"
                         disabled={isSubmitting}
                     >
-                        Select file
+                        {t("selectFile")}
                     </button>
                     <input
                         ref={fileInputRef}
@@ -108,7 +111,7 @@ export default function CreateGalleryItemPage() {
                 )}
 
                 <div>
-                    <label className="block font-semibold">Description</label>
+                    <label className="block font-semibold">{t("description")}</label>
                     <textarea
                         rows={3}
                         value={description}
@@ -125,7 +128,7 @@ export default function CreateGalleryItemPage() {
                         onClick={() => navigate("/gallery")}
                         disabled={isSubmitting}
                     >
-                        Cancel
+                        {t("cancel")}
                     </button>
 
                     <button
@@ -133,7 +136,7 @@ export default function CreateGalleryItemPage() {
                         className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? "Sending..." : "Add picture"}
+                        {isSubmitting ? t("sending") : t("send")}
                     </button>
                 </div>
             </form>

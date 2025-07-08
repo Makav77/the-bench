@@ -18,7 +18,9 @@ export class PollService {
         private readonly optionRepo: Repository<PollOption>,
         @InjectRepository(PollVote)
         private readonly voteRepo: Repository<PollVote>,
-    ) { }
+        @InjectRepository(User)
+        private readonly userRepo: Repository<User>,
+    ) {}
 
     async findAllPolls(page = 1, limit = 10, user: User): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
@@ -138,6 +140,9 @@ export class PollService {
             if (!opt) {
                 throw new NotFoundException("Invalid option");
             }
+
+            user.points += 1;
+            await this.userRepo.save(user);
             const vote = this.voteRepo.create({ poll, option: opt, voter: user });
             await this.voteRepo.save(vote);
         }

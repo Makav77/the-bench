@@ -5,6 +5,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import ReportModal from "../../Utils/ReportModal";
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function GalleryItemDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -14,6 +15,7 @@ export default function GalleryItemDetailPage() {
     const navigate = useNavigate();
     const { user } = useAuth();
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
+    const { t } = useTranslation("Community/GalleryItemDetailPage");
 
     useEffect(() => {
         async function load() {
@@ -27,7 +29,7 @@ export default function GalleryItemDetailPage() {
                 }
             } catch (error) {
                 console.error(error);
-                toast.error("Unable to load gallery item");
+                toast.error(t("toastLoadGalleryError"));
             } finally {
                 setIsLoading(false);
             }
@@ -36,7 +38,7 @@ export default function GalleryItemDetailPage() {
     }, [id]);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>
+        return <p className="p-6">{t("loading")}</p>
     }
 
     if (error) {
@@ -44,7 +46,7 @@ export default function GalleryItemDetailPage() {
     }
 
     if (!galleryItem) {
-        return <p>Loading...</p>;
+        return <p>{t("emprtyGallery")}</p>;
     }
 
     const isAuthor = user?.id === galleryItem.author.id;
@@ -55,22 +57,22 @@ export default function GalleryItemDetailPage() {
             const updated = await toggleLikeGalleryItem(galleryItem.id);
             setGalleryItem(updated);
         } catch {
-            toast.error("Unable to like/unlike");
+            toast.error(t("toastLikeUnlikeError"));
         }
     };
 
     const handleDelete = async () => {
-        const confirmed = window.confirm("You are about to delete an image. Would you like to confirm ?");
+        const confirmed = window.confirm(t("confirmAlert"));
         if (!confirmed) {
             return;
         }
         
         try {
             await deleteGalleryItem(id!);
-            toast.success("Image successfully deleted!");
+            toast.success(t("toastImageDeleted"));
             navigate("/gallery");
-        } catch (error) {
-            toast.error("Unable to delete image : " + error);
+        } catch {
+            toast.error(t("toastImageDeletedError"));
         }
     };
 
@@ -97,14 +99,14 @@ export default function GalleryItemDetailPage() {
                 {galleryItem.description && <p className="mb-4">{galleryItem.description}</p>}
 
                 <p className="text-sm text-gray-500 mb-4">
-                    Published by{" "}
+                    {t("publishedBy")}{" "}
                     <span
                         onClick={() => navigate(`/profile/${galleryItem.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
                     >
                         {galleryItem.author.firstname} {galleryItem.author.lastname}
                     </span>{" "}
-                    on {new Date(galleryItem.createdAt).toLocaleString()}
+                    {t("on")} {new Date(galleryItem.createdAt).toLocaleString()}
                 </p>
 
                 <div className="flex justify-between items-center space-x-4">
@@ -123,7 +125,7 @@ export default function GalleryItemDetailPage() {
                                     onClick={handleDelete} 
                                     className="text-red-600 cursor-pointer hover:underline px-2 py-1"
                                 >
-                                    Delete
+                                    {t("delete")}
                                 </button>
                             )}
                         </div>
@@ -135,7 +137,7 @@ export default function GalleryItemDetailPage() {
                                 onClick={() => setShowReportModal(true)}
                                 className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                             >
-                                Report image
+                                {t("report")}
                             </button>
 
                             {showReportModal && (

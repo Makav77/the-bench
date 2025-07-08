@@ -1,0 +1,23 @@
+{
+    "confirmAlert": "Veuillez saisir une raison pour rejeter cet article",
+    "waitingNews": "Article en attente",
+    "loading": "Chargement des articles...",
+    "noWaitingNews": "Aucun article en attente",
+    "title": "Titre :",
+    "author": "Auteur :",
+    "date": "Date : ",
+    "preview": "Prévisualisation",
+    "validation": "Validation...",
+    "validate": "Valider",
+    "rejection": "Refus...",
+    "reject": "Refuser",
+    "previous": "← Prec",
+    "page": "Page",
+    "next": "Next →",
+    "toastLoadPendingNewsError": "Impossible de charger les articles en attente",
+    "toastNewsValidated": "Article validé",
+    "toastNewsValidatedError": "Impossible de valider l'article",
+    "toastRejectedReason": "La justification du refus est obligatoire",
+    "toastRejectNews": "Article refusé",
+    "toastRejectNewsError": "Impossible de refuser l'article"
+}

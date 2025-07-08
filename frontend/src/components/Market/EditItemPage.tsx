@@ -4,9 +4,11 @@ import ItemForm, { ItemFormData } from "./ItemForm";
 import { getItem, updateItem } from "../../api/marketService";
 import { MarketItemDetails } from "../../api/marketService";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function EditItemPage() {
     const navigate = useNavigate();
+    const { t } = useTranslation("Market/EditItemPage")
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<MarketItemDetails | null>(null);
 
@@ -23,17 +25,17 @@ function EditItemPage() {
     const handleSubmit = async (data: ItemFormData) => {
         if (!id) return;
         const updated = await updateItem(id, data);
-        toast.success("Item updated !");
+        toast.success(t("toastItemUpdated"));
         navigate(`/market/${updated.id}`);
     }
 
     if (!item) {
-        return <p>Loading...</p>
+        return <p>{t("loading")}</p>
     }
 
     return (
         <div className="p-6">
-            <h1 className="w-[40%] mx-auto text-4xl font-semibold mb-4 pl-2">Edit item</h1>
+            <h1 className="w-[40%] mx-auto text-4xl font-semibold mb-4 pl-2">{t("editItem")}</h1>
             <ItemForm defaultValues={item} onSubmit={handleSubmit} />
         </div>
     );

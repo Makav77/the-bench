@@ -1,6 +1,0 @@
-{
-    "login": "Login",
-    "logout": "Logout",
-    "profile": "Profile",
-    "hello": "Hello {{firstname}}"
-}

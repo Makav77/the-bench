@@ -13,7 +13,7 @@ import { ChallengeCompletion } from 'src/modules/Challenges/entities/challenge-c
 import { Permission } from 'src/modules/Permissions/entities/permission.entity';
 import { UserRestriction } from 'src/modules/Permissions/entities/user-restriction.entity';
 import { Report } from 'src/modules/Reports/entities/report.entity';
-import { Message } from 'src/modules/chat/entities/message.entity';
+import { Message } from 'src/modules/Chat/entities/message.entity';
 
 export enum Role {
     USER = "user",

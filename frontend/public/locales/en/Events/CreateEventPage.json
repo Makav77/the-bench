@@ -1,0 +1,8 @@
+{
+    "checkingPermissions": "Checking permission...",
+    "restrictionMessage": "You are no longer allowed to create an event until",
+    "reason": "Reason :",
+    "contactMessage": "Contact a moderator or administrator for more information.",
+    "createEvent": "Create event",
+    "toastEventCreated": "Event created"
+}

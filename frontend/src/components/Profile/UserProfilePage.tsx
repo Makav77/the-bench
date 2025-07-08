@@ -9,6 +9,7 @@ import apiClient from "../../api/apiClient";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import { getCitiesByPostalCode, resolveIris } from "../../api/irisService";
+import { useTranslation } from "react-i18next";
 
 export default function UserProfilePage() {
     const { id } = useParams<{ id: string }>();
@@ -18,6 +19,7 @@ export default function UserProfilePage() {
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Profile/UserProfilePage");
     const [showModal, setShowModal] = useState<boolean>(false);
     const [preview, setPreview] = useState<string | null>(null);
     const [friendActionLoading, setFriendActionLoading] = useState(false);
@@ -46,8 +48,8 @@ export default function UserProfilePage() {
         try {
             const data = await getProfileSummary(id);
             setProfile(data);
-        } catch (error) {
-            toast.error("Unable to load user profile : " + error);
+        } catch {
+            toast.error(t("toastUnableLoadProfile"));
         } finally {
             setLoading(false);
         }
@@ -62,8 +64,8 @@ export default function UserProfilePage() {
             try {
                 const data = await getFriends(id);
                 setFriends(data);
-            } catch (error) {
-                toast.error("Unable to load friends list : " + error);
+            } catch {
+                toast.error(t("toastUnableLoadFriendList"));
             }
         }
     };
@@ -91,17 +93,17 @@ export default function UserProfilePage() {
     }, [address.street, address.postalCode, address.city]);
 
     const handleRemoveFriend = async (friendId: string) => {
-        if (!window.confirm("Are you sure you want to remove this user from your friend list ?")) {
+        if (!window.confirm(t("confirmAlert"))) {
             return;
         }
         setRemovingFriendId(friendId);
         try {
             await removeFriend(friendId);
-            toast.success("Friend removed");
+            toast.success(t("toastFriendRemoved"));
             await refreshFriends();
             await loadProfile();
-        } catch (error) {
-            toast.error("Unable to remove this user : " + error);
+        } catch {
+            toast.error(t("toastFriendRemovedError"));
         } finally {
             setRemovingFriendId(null);
         }
@@ -135,18 +137,18 @@ export default function UserProfilePage() {
                 },
                 withCredentials: true,
             });
-            toast.success("Profile pic updated.");
+            toast.success(t("toastProfilPicUpdated"));
             window.location.reload();
         } catch (error) {
-            toast.error("Unable to update profile pic : " + error);
+            toast.error(t("toastProfilPicUpdatedError"));
         }
     };
 
     if (loading) {
-        return <p className="p-6">Loading profile...</p>;
+        return <p className="p-6">{t("loading")}</p>;
     }
     if (!profile) {
-        return <p className="p-6">Profile not found.</p>;
+        return <p className="p-6">{t("profileNotFound")}</p>;
     }
 
     function handleAddressChange(e: ChangeEvent<HTMLInputElement>) {
@@ -198,19 +200,19 @@ export default function UserProfilePage() {
                 onClick={() => navigate("/homepage")}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
             >
-                {"< Homepage"}
+                {t("homepageButton")}
             </button>
 
             <div className="flex flex-col items-center space-y-3">
                     {profile.profilePictureUrl ? (
                         <img
                             src={profile.profilePictureUrl ? `${profile.profilePictureUrl}?t=${Date.now()}` : "/uploads/profile/default.png"}
-                            alt="Profile"
+                            alt={t("profilePicture")}
                             className="w-32 h-32 rounded-full object-cover border"
                         />
                     ) : (
                         <div className="w-32 h-32 rounded-full border flex items-center justify-center bg-gray-100 text-gray-500">
-                            No image available
+                            {t("noImage")}
                         </div>
                     )}
                 <h1 className="text-2xl font-bold">{profile.firstname} {profile.lastname}</h1>
@@ -223,10 +225,10 @@ export default function UserProfilePage() {
                                     setFriendActionLoading(true);
                                     try {
                                         await removeFriend(profile.id);
-                                        toast.success("Friend removed");
+                                        toast.success(t("toastFriendRemoved"));
                                         await loadProfile();
-                                    } catch (error) {
-                                        toast.error("Unable to remove friend : " + error);
+                                    } catch {
+                                        toast.error(t("toastFriendRemovedError"));
                                     } finally {
                                         setFriendActionLoading(false);
                                     }
@@ -234,14 +236,14 @@ export default function UserProfilePage() {
                                 disabled={friendActionLoading}
                                 className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 cursor-pointer"
                             >
-                                {friendActionLoading ? "Removing..." : "Removed from friend"}
+                                {friendActionLoading ? t("removing") : t("removingFriend")}
                             </button>
                         ) : profile.requestSent ? (
                             <button
                                 disabled
                                 className="px-3 py-1 bg-gray-400 text-white rounded cursor-not-allowed"
                             >
-                                Request sent
+                                {t("requestSent")}
                             </button>
                         ) : profile.requestReceived ? (
                             <div className="flex space-x-2">
@@ -250,11 +252,11 @@ export default function UserProfilePage() {
                                         setFriendActionLoading(true);
                                         try {
                                             await acceptFriendRequest(profile.id);
-                                            toast.success("Request accepted");
+                                            toast.success(t("toastRequestAccepted"));
                                             await loadProfile();
                                             await refreshFriends();
-                                        } catch (error) {
-                                            toast.error("Unable to accept friend request : " + error);
+                                        } catch {
+                                            toast.error(t("toastRequestAcceptedError"));
                                         } finally {
                                             setFriendActionLoading(false);
                                         }
@@ -262,17 +264,17 @@ export default function UserProfilePage() {
                                     disabled={friendActionLoading}
                                     className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 cursor-pointer"
                                 >
-                                    {friendActionLoading ? "Acceptation..." : "Accepted"}
+                                    {friendActionLoading ? t("acceptation") : t("accepted")}
                                 </button>
                                 <button
                                     onClick={async () => {
                                         setFriendActionLoading(true);
                                         try {
                                             await rejectFriendRequest(profile.id);
-                                            toast.success("Request rejected");
+                                            toast.success(t("toastRequestRejected"));
                                             await loadProfile();
-                                        } catch (error) {
-                                            toast.error("Unable to reject friend request : " + error);
+                                        } catch {
+                                            toast.error(t("toastRequestRejectedError"));
                                         } finally {
                                             setFriendActionLoading(false);
                                         }
@@ -280,7 +282,7 @@ export default function UserProfilePage() {
                                     disabled={friendActionLoading}
                                     className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:opacity-50 cursor-pointer"
                                 >
-                                    {friendActionLoading ? "Reject..." : "Rejected"}
+                                    {friendActionLoading ? t("reject") : t("rejected")}
                                 </button>
                             </div>
                         ) : (
@@ -289,10 +291,10 @@ export default function UserProfilePage() {
                                     setFriendActionLoading(true);
                                     try {
                                         await sendFriendRequest(profile.id);
-                                        toast.success("Request send");
+                                        toast.success(t("toastRequestSend"));
                                         await loadProfile();
-                                    } catch (error) {
-                                        toast.error("Unable to send friend request " + error);
+                                    } catch {
+                                        toast.error(t("toastRequestSendError"));
                                     } finally {
                                         setFriendActionLoading(false);
                                     }
@@ -300,7 +302,7 @@ export default function UserProfilePage() {
                                 disabled={friendActionLoading}
                                 className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 cursor-pointer"
                             >
-                                {friendActionLoading ? "Sending..." : "Add friend"}
+                                {friendActionLoading ? t("sending") : t("addFriend")}
                             </button>
                         )}
                     </div>
@@ -311,7 +313,7 @@ export default function UserProfilePage() {
                         onClick={() => setShowAddressModal(true)}
                         className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 cursor-pointer"
                     >
-                        Modifier mon adresse
+                        {t("changeAddress")}
                     </button>
                 )}
 
@@ -321,14 +323,14 @@ export default function UserProfilePage() {
                             onClick={() => setShowModal(true)}
                             className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
                         >
-                            Change my profile picture
+                            {t("changePicture")}
                         </button>
 
                         <button
                             onClick={() => setShowFriendsModal(true)}
                             className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
                         >
-                            Show friends
+                            {t("showFriends")}
                         </button>
                     </div>
                 )}
@@ -337,18 +339,25 @@ export default function UserProfilePage() {
             <div>
                 {isOwnProfile && (
                     <div className="text-xl font-semibold text-blue-700">
-                        Points: {profile.points}
+                        {t("points")} {profile.points}
                     </div>
                 )}
 
-                <h2 className="text-xl font-semibold mb-2">Badges</h2>
+                <h2 className="text-xl font-semibold mb-2">{t("badges")}</h2>
                 {profile.badges.length === 0 ? (
-                    <p className="text-gray-600 italic">No badges yet.</p>
+                    <p className="text-gray-600 italic">{t("noBadges")}</p>
                 ) : (
                     <ul className="flex flex-wrap gap-2">
-                        {profile.badges.map((badge, index) => (
-                            <li key={index} className="px-3 py-1 bg-yellow-200 rounded-full text-sm font-medium">
-                                {badge}
+                        {profile.badges.map(badge => (
+                            <li 
+                                key={badge.id}
+                                className="px-3 py-1 bg-yellow-200 rounded-full text-sm font-medium flex items-center gap-2"
+                            >
+                                <img
+                                    src={badge.imageUrl}
+                                    alt="badge"
+                                    className="w-10 h-10 inline-block rounded-full"
+                                />
                             </li>
                         ))}
                     </ul>
@@ -356,9 +365,9 @@ export default function UserProfilePage() {
             </div>
 
             <div>
-                <h2 className="text-xl font-semibold mb-2">Participated Events</h2>
+                <h2 className="text-xl font-semibold mb-2">{t("participatedEvent")}</h2>
                 {profile.events.length === 0 ? (
-                    <p className="text-gray-600 italic">No event participation yet.</p>
+                    <p className="text-gray-600 italic">{t("noEventDone")}</p>
                 ) : (
                     <ul className="space-y-1">
                         {profile.events.map(event => (
@@ -371,9 +380,9 @@ export default function UserProfilePage() {
             </div>
 
             <div>
-                <h2 className="text-xl font-semibold mb-2">Participated Challenges</h2>
+                <h2 className="text-xl font-semibold mb-2">{t("participatedChallenge")}</h2>
                 {profile.challenges.length === 0 ? (
-                    <p className="text-gray-600 italic">No challenge participation yet.</p>
+                    <p className="text-gray-600 italic">{t("noChallengeDone")}</p>
                 ) : (
                     <ul className="space-y-1">
                         {profile.challenges.map(challenge => (
@@ -386,9 +395,9 @@ export default function UserProfilePage() {
             </div>
 
             <div>
-                <h2 className="text-xl font-semibold mb-2">Market Items</h2>
+                <h2 className="text-xl font-semibold mb-2">{t("marketItem")}</h2>
                 {profile.marketItems.length === 0 ? (
-                    <p className="text-gray-600 italic">No items currently online.</p>
+                    <p className="text-gray-600 italic">{t("noItemOnSell")}</p>
                 ) : (
                     <ul className="space-y-2">
                         {profile.marketItems.map(item => (
@@ -402,7 +411,7 @@ export default function UserProfilePage() {
                             >
                                 <p className="font-semibold">{item.title}</p>
                                 <p className="text-sm text-gray-500">
-                                    Last update: {new Date(item.updatedAt).toLocaleDateString()}
+                                    {t("lastUpdate")} {new Date(item.updatedAt).toLocaleDateString()}
                                 </p>
                                 {item.images[0] && (
                                     <img
@@ -421,7 +430,7 @@ export default function UserProfilePage() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     {preview && (
                         <div className="mb-4">
-                            <p className="text-sm text-gray-500 mb-1">Preview :</p>
+                            <p className="text-sm text-gray-500 mb-1">{t("preview")}</p>
                             <img
                                 src={preview}
                                 alt="Aperçu"
@@ -430,7 +439,7 @@ export default function UserProfilePage() {
                         </div>
                     )}
                     <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
-                        <h2 className="text-lg font-bold mb-4">Change my profile picture</h2>
+                        <h2 className="text-lg font-bold mb-4">{t("changePicture")}</h2>
 
                         <div className="mb-4 text-center">
                             <button
@@ -438,7 +447,7 @@ export default function UserProfilePage() {
                                 onClick={() => fileInputRef.current?.click()}
                                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer"
                             >
-                                Select file
+                                {t("selectFile")}
                             </button>
                             <input
                                 ref={fileInputRef}
@@ -448,7 +457,7 @@ export default function UserProfilePage() {
                                 onChange={handleFileChange}
                             />
                             {fileName && (
-                                <p className="text-sm text-gray-600 mt-2">Selected: <strong>{fileName}</strong></p>
+                                <p className="text-sm text-gray-600 mt-2">{t("selected")} <strong>{fileName}</strong></p>
                             )}
                         </div>
 
@@ -457,7 +466,7 @@ export default function UserProfilePage() {
                                 onClick={() => setShowModal(false)}
                                 className="px-3 py-1 rounded border text-gray-700 hover:bg-gray-100 cursor-pointer"
                             >
-                                Cancel
+                                {t("cancel")}
                             </button>
                             <button
                                 onClick={() => {
@@ -466,7 +475,7 @@ export default function UserProfilePage() {
                                 }}
                                 className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer"
                             >
-                                Upload
+                                {t("upload")}
                             </button>
                         </div>
                     </div>
@@ -477,14 +486,14 @@ export default function UserProfilePage() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
                         <h2 className="text-lg font-bold mb-4 text-center">
-                            Friends list
+                            {t("friendsList")}
                             <span className="ml-2 text-sm text-gray-500">
                                 ({friends.length})
                             </span>
                         </h2>
 
                         {friends.length === 0 ? (
-                            <p className="text-center text-gray-600 italic">No friends right now</p>
+                            <p className="text-center text-gray-600 italic">{t("noFriends")}</p>
                         ) : (
                             <ul className="space-y-3 max-h-96 overflow-y-auto">
                                 {friends.map(friend => (
@@ -523,7 +532,7 @@ export default function UserProfilePage() {
                                 onClick={() => setShowFriendsModal(false)}
                                 className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
                             >
-                                Close
+                                {t("close")}
                             </button>
                         </div>
                     </div>
@@ -533,16 +542,16 @@ export default function UserProfilePage() {
             {showAddressModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
-                        <h2 className="text-lg font-bold mb-3">Change my address</h2>
+                        <h2 className="text-lg font-bold mb-3">{t("changeAddress")}</h2>
                         <p className="text-red-500 text-sm mb-2">
-                            Changing neighborhoods will permanently delete all your content related to the old neighborhood!
+                            {t("warningChangeAddress")}
                         </p>
                         <div className="mb-2">
                             <input
                                 name="street"
                                 type="text"
                                 className="w-full mb-2 border rounded px-2 py-1"
-                                placeholder="Street"
+                                placeholder={t("street")}
                                 value={address.street}
                                 onChange={handleAddressChange}
                             />
@@ -551,7 +560,7 @@ export default function UserProfilePage() {
                                 type="text"
                                 maxLength={5}
                                 className="w-full mb-2 border rounded px-2 py-1"
-                                placeholder="Postal code"
+                                placeholder={t("postalCode")}
                                 value={address.postalCode}
                                 onChange={handleAddressChange}
                                 onBlur={handlePostalCodeSuggestion}
@@ -561,7 +570,7 @@ export default function UserProfilePage() {
                                     name="city"
                                     type="text"
                                     className="w-full mb-2 border rounded px-2 py-1"
-                                    placeholder="City"
+                                    placeholder={t("city")}
                                     value={address.city}
                                     onChange={handleAddressChange}
                                     autoComplete="off"
@@ -583,7 +592,7 @@ export default function UserProfilePage() {
                             </div>
                             {address.irisName && (
                                 <div className="text-sm text-amber-700 italic mb-1">
-                                    Neighborhood found : <span className="font-bold">{address.irisName}</span>
+                                    {t("neighborhoodFound")} <span className="font-bold">{address.irisName}</span>
                                 </div>
                             )}
                             {addressIrisError && (
@@ -595,7 +604,7 @@ export default function UserProfilePage() {
                                 onClick={() => setShowAddressModal(false)}
                                 className="px-3 py-1 rounded border text-gray-700 hover:bg-gray-100 cursor-pointer"
                             >
-                                Cancel
+                                {t("cancel")}
                             </button>
                             <button
                                 onClick={async () => {
@@ -606,11 +615,11 @@ export default function UserProfilePage() {
                                             postalCode: address.postalCode,
                                             city: address.city,
                                         });
-                                        toast.success("Adresse modifiée !");
+                                        toast.success(t("toastAddressUpdated"));
                                         setShowAddressModal(false);
                                         window.location.reload();
-                                    } catch (error) {
-                                        toast.error("Error while loading address : " + error);
+                                    } catch {
+                                        toast.error(t("toastErrorLoadingAddress"));
                                     } finally {
                                         setAddressLoading(false);
                                     }
@@ -618,7 +627,7 @@ export default function UserProfilePage() {
                                 className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer disabled:opacity-60"
                                 disabled={!address.street || address.postalCode.length !== 5 || !address.city || !address.irisCode || !!addressIrisError || addressLoading}
                             >
-                                Validate
+                                {t("validate")}
                             </button>
                         </div>
                     </div>

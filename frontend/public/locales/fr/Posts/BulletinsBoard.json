@@ -1,0 +1,17 @@
+{
+    "createPost": "Poster une annonce",
+    "createFlashPost": "Poster une annonce flash",
+    "bulletinsBoard": "Annonces",
+    "flashPost": "Annonces Flash",
+    "loading": "Chargement...",
+    "noFlashPost": "Aucune annonce flash publiée",
+    "lastUpdate": "Dernière mise à jour le",
+    "author :": "Auteur :",
+    "previous": "← Prec",
+    "next": "Suiv →",
+    "page": "Page",
+    "posts": "Annonces",
+    "noPost": "Aucune annonce publiée",
+    "toastLoadPostError": "Impoosible de charger les annonces",
+    "toastLoadFlashPostError": "Impossible de charger les annonces flash"
+}

@@ -7,12 +7,13 @@ import usePermission from "../../Utils/usePermission";
 import { format } from "date-fns";
 import ReportModal from "../../Utils/ReportModal";
 import SubmissionModal from "./SubmissionModal";
+import { useTranslation } from "react-i18next";
 
 function ChallengeDetailPage() {
     const { id } = useParams<{ id: string }>();
     const { user } = useAuth();
     const navigate = useNavigate();
-
+    const { t } = useTranslation("Community/ChallengeDetailsPage");
     const { restricted, expiresAt, reason, loading: permLoading } = usePermission("register_challenge");
     const [challenge, setChallenge] = useState<ChallengeSummary | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -31,9 +32,8 @@ function ChallengeDetailPage() {
                     const event = await getChallenge(id);
                     setChallenge(event);
                 }
-            } catch(error) {
-                console.error(error);
-                toast.error("Unable to load event.");
+            } catch {
+                toast.error(t("toastLoadChallengeError"));
             } finally {
                 setIsLoading(false);
             }
@@ -42,7 +42,7 @@ function ChallengeDetailPage() {
     }, [id]);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>;
+        return <p className="p-6">{t("loading")}</p>;
     }
 
     if (error) {
@@ -64,9 +64,9 @@ function ChallengeDetailPage() {
         try {
             const updated = await subscribeChallenge(id!);
             setChallenge(updated);
-            toast.success("Successful registration !");
+            toast.success(t("toastSuccessfullRegistration"));
         } catch (error) {
-            toast.error("Error during registration : " + error);
+            toast.error(t("toastRegistrationError"));
         }
     }
 
@@ -74,29 +74,29 @@ function ChallengeDetailPage() {
         try {
             const updated = await unsubscribeChallenge(id!);
             setChallenge(updated);
-            toast.success("Unsubscribe successful !");
-        } catch (error) {
-            toast.error("Error unsubscribing : " + error);
+            toast.success(t("toastSuccessfullUnsubscribe"));
+        } catch {
+            toast.error(t("toastUnsubscribeError"));
         }
     }
 
     const handleDelete = async () => {
-        const confirmed = window.confirm("You are about to delete a challenge. Would you like to confirm?");
+        const confirmed = window.confirm(t("confirmAlert"));
         if (!confirmed) {
             return;
         }
 
         try {
             await deleteChallenge(id!);
-            toast.success("Challenge successfully deleted!");
+            toast.success(t("toastChallengeDeleted"));
             navigate("/challenges");
-        } catch (error) {
-            toast.error("Unable to delete challenge : " + error);
+        } catch {
+            toast.error(t("toastChallengeDeletedError"));
         }
     }
 
     if (permLoading) {
-        return <p className="p-6">Checking permissions...</p>
+        return <p className="p-6">{t("checkingPermissions")}</p>
     }
 
     if (hasValidatedCompletion) {
@@ -106,9 +106,9 @@ function ChallengeDetailPage() {
                     <button
                         type="button"
                         onClick={() => navigate("/challenges")}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
-                        ← Back
+                        {t("back")}
                     </button>
 
                     {(isAuthor || isAdminorModerator) &&
@@ -116,7 +116,7 @@ function ChallengeDetailPage() {
                             onClick={() => setShowParticipantModal(true)}
                             className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                         >
-                            Participant list
+                            {t("participantList")}
                         </button>
                     }
                 </div>
@@ -124,13 +124,13 @@ function ChallengeDetailPage() {
                 <h1 className="text-2xl font-bold">{challenge.title}</h1>
                 <p className="whitespace-pre-wrap break-words">{challenge.description}</p>
                 <p className="italic text-sm">
-                    From {new Date(challenge.startDate).toLocaleDateString()} to {new Date(challenge.endDate).toLocaleDateString()}
+                    {t("from")} {new Date(challenge.startDate).toLocaleDateString()} {t("to")} {new Date(challenge.endDate).toLocaleDateString()}
                 </p>
                 <p className="-mt-2">
-                    <strong>How to win :</strong> {challenge.successCriteria}
+                    <strong>{t("howToWin")}</strong> {challenge.successCriteria}
                 </p>
                 <p className="-mt-3">
-                    <strong>Author :</strong>{" "}
+                    <strong>{t("author")}</strong>{" "}
                     <span
                         onClick={() => navigate(`/profile/${challenge.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -139,14 +139,14 @@ function ChallengeDetailPage() {
                     </span>
                 </p>
                 <p className="-mt-3">
-                    <strong>Registered :</strong> {challenge.registrations.length}
+                    <strong>{t("registeredLength")}</strong> {challenge.registrations.length}
                 </p>
                 <p className="-mt-3">
-                    <strong>Completions :</strong> {challenge.completions.filter((c) => c.validated).length}
+                    <strong>{t("completions")}</strong> {challenge.completions.filter((c) => c.validated).length}
                 </p>
 
                 <p className="px-4 py-2 bg-green-200 text-green-800 rounded text-center">
-                    Well done, challenge completed!
+                    {t("congratulations")}
                 </p>
 
                 <div className="flex gap-2 justify-center">
@@ -155,7 +155,7 @@ function ChallengeDetailPage() {
                             onClick={() => navigate(`/challenges/${id}/edit`)}
                             className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                         >
-                            Edit
+                            {t("edit")}
                         </button>
                     }
 
@@ -164,7 +164,7 @@ function ChallengeDetailPage() {
                             onClick={handleDelete}
                             className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
                         >
-                            Delete
+                            {t("delete")}
                         </button>
                     }
                 </div>
@@ -173,7 +173,7 @@ function ChallengeDetailPage() {
                     <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
                         <div className="bg-white rounded p-6 w-[25%] overflow-auto">
                             <h2 className="text-xl font-bold mb-4">
-                                Registered ({challenge.registrations.length})
+                                {t("registered")} ({challenge.registrations.length})
                             </h2>
                             <ul className="space-y-2">
                                 {challenge.registrations.map((registration) => (
@@ -184,7 +184,7 @@ function ChallengeDetailPage() {
                                         >
                                             <span>{registration.user.firstname} {registration.user.lastname}</span>
                                             <span className="text-sm text-gray-500">
-                                                Registered on {new Date(registration.createdAt).toLocaleDateString()} {"at"} {new Date(registration.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {("registeredOn")} {new Date(registration.createdAt).toLocaleDateString()} {"at"} {new Date(registration.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </span>
                                         </li>
                                         <div className="border-t-1 h-1 text-black w-3/4 mx-auto" />
@@ -195,7 +195,7 @@ function ChallengeDetailPage() {
                                 onClick={() => setShowParticipantModal(false)}
                                 className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
                             >
-                                Close
+                                {t("close")}
                             </button>
                         </div>
                     </div>
@@ -213,7 +213,7 @@ function ChallengeDetailPage() {
                         onClick={() => navigate("/challenges")}
                         className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
                     >
-                        ← Back
+                        {t("back")}
                     </button>
 
                     {(isAuthor || isAdminorModerator) &&
@@ -221,7 +221,7 @@ function ChallengeDetailPage() {
                             onClick={() => setShowParticipantModal(true)}
                             className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                         >
-                            Participant list
+                            {t("participantList")}
                         </button>
                     }
                 </div>
@@ -229,13 +229,13 @@ function ChallengeDetailPage() {
                 <h1 className="text-2xl font-bold">{challenge.title}</h1>
                 <p className="whitespace-pre-wrap break-words">{challenge.description}</p>
                 <p className="italic text-sm">
-                    From {new Date(challenge.startDate).toLocaleDateString()} to {new Date(challenge.endDate).toLocaleDateString()}
+                    {t("from")} {new Date(challenge.startDate).toLocaleDateString()} {t("to")} {new Date(challenge.endDate).toLocaleDateString()}
                 </p>
                 <p className="-mt-2">
-                    <strong>How to win :</strong> {challenge.successCriteria}
+                    <strong>{t("howToWin")}</strong> {challenge.successCriteria}
                 </p>
                 <p className="-mt-3">
-                    <strong>Author :</strong>{" "}
+                    <strong>{t("author")}</strong>{" "}
                     <span
                         onClick={() => navigate(`/profile/${challenge.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -244,35 +244,35 @@ function ChallengeDetailPage() {
                     </span>
                 </p>
                 <p className="-mt-3">
-                    <strong>Registered :</strong> {challenge.registrations.length}
+                    <strong>{t("registeredLength")}</strong> {challenge.registrations.length}
                 </p>
                 <p className="-mt-3">
-                    <strong>Completions :</strong> {challenge.completions.filter((c) => c.validated).length}
+                    <strong>{t("completions")}</strong> {challenge.completions.filter((c) => c.validated).length}
                 </p>
 
                 <div className="flex gap-2 mt-10 justify-center">
                     {!isSubscribe && !(user && user.id === challenge.author.id) && !hasValidatedCompletion ? (
                         restricted ? (
                             <p className="text-red-600 text-l font-semibold text-center">
-                                You are no longer allowed to register to a challenge until{" "}
+                                {t("restrictionMessage")} {" "}
                                 {expiresAt
                                     ? format(new Date(expiresAt), "dd/MM/yyyy 'at' HH:mm")
                                     : "unknown date"}.
                                 <br />
                                 {reason && (
                                     <span>
-                                        Reason: {reason}
+                                        {t("reason")} {reason}
                                         <br />
                                     </span>
                                 )}
-                                Contact a moderator or administrator for more information.
+                                {t("contactMessage")}
                             </p>
                         ) : (
                             <button
                                 onClick={handleSubscribe}
                                 className="bg-green-600 text-white px-4 py-2 rounded cursor-pointer mx-auto"
                             >
-                                Subscribe
+                                {t("subscribe")}
                             </button>
                         )
                     ) : (
@@ -281,7 +281,7 @@ function ChallengeDetailPage() {
                                 onClick={handleUnsubscribe}
                                 className="bg-yellow-600 text-white px-4 py-2 rounded cursor-pointer mx-auto"
                             >
-                                Unsubscribe
+                                {t("unsubscribe")}
                             </button>
                         )
                     )}
@@ -291,7 +291,7 @@ function ChallengeDetailPage() {
                             onClick={() => navigate(`/challenges/${id}/edit`)}
                             className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                         >
-                            Edit
+                            {t("edit")}
                         </button>
                     }
 
@@ -300,14 +300,14 @@ function ChallengeDetailPage() {
                             onClick={handleDelete}
                             className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer"
                         >
-                            Delete
+                            {t("delete")}
                         </button>
                     }
 
                     {!hasValidatedCompletion && (
                         hasPendingCompletion ? (
                             <p className="px-4 py-2 bg-yellow-200 text-yellow-800 rounded text-center">
-                                Waiting validation
+                                {t("waitingValidation")}
                             </p>
                         ) : (
                             canSubmit && (
@@ -315,7 +315,7 @@ function ChallengeDetailPage() {
                                     onClick={() => setShowSubmissionModal(true)}
                                     className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
                                 >
-                                    Validate completion
+                                    {t("validateCompletion")}
                                 </button>
                             )
                         )
@@ -329,7 +329,7 @@ function ChallengeDetailPage() {
                         onClick={() => setShowReportModal(true)}
                         className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                     >
-                        Report challenge
+                        {t("report")}
                     </button>
 
                     {showReportModal && (
@@ -348,7 +348,7 @@ function ChallengeDetailPage() {
                     challengeId={challenge.id}
                     onClose={() => setShowSubmissionModal(false)}
                     onSubmitted={async () => {
-                        toast.success("Soumission envoyée, en attente d’approbation ! 😊");
+                        toast.success(t("toastSubmissionSent"));
                         setShowSubmissionModal(false);
                         try {
                             const updated = await getChallenge(id!);
@@ -364,7 +364,7 @@ function ChallengeDetailPage() {
                 <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
                     <div className="bg-white rounded p-6 w-[25%] overflow-auto">
                         <h2 className="text-xl font-bold mb-4">
-                            Registered ({challenge.registrations.length})
+                            {t("registered")} ({challenge.registrations.length})
                         </h2>
                         <ul className="space-y-2">
                             {challenge.registrations.map((registration) => (
@@ -375,7 +375,7 @@ function ChallengeDetailPage() {
                                     >
                                         <span>{registration.user.firstname} {registration.user.lastname}</span>
                                         <span className="text-sm text-gray-500">
-                                            Registered on {new Date(registration.createdAt).toLocaleDateString()} {"at"} {new Date(registration.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {t("registeredOn")} {new Date(registration.createdAt).toLocaleDateString()} {t("at")} {new Date(registration.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                     </li>
                                     <div className="border-t-1 h-1 text-black w-3/4 mx-auto" />
@@ -386,7 +386,7 @@ function ChallengeDetailPage() {
                             onClick={() => setShowParticipantModal(false)}
                             className="mt-8 bg-gray-200 px-3 py-1 rounded hover:bg-gray-400 cursor-pointer block mx-auto"
                         >
-                            Close
+                            {t("close")}
                         </button>
                     </div>
                 </div>

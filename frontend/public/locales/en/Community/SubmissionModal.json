@@ -1,0 +1,10 @@
+{
+    "validateCompletion": "Validate my success",
+    "text": "Text (optionnal)",
+    "image": "Image (optionnal)",
+    "cancel": "Cancel",
+    "sending": "Sending...",
+    "send": "Send",
+    "toastSendSubmissionError": "Unable to send submission",
+    "toastSendSubmission": "Submission send"
+}

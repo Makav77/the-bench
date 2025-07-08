@@ -1,4 +1,5 @@
 import { useState, useRef, ChangeEvent, FormEvent, KeyboardEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 interface NewsFormProps {
@@ -10,10 +11,9 @@ interface NewsFormProps {
     };
     onSubmit: (data: { title: string; content: string; tags: string[]; images: File[]; removeImages?: string[] }) => Promise<void>;
     isLoading?: boolean;
-    buttonLabel?: string;
 }
 
-function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormProps) {
+function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
     const [title, setTitle] = useState(defaultValues?.title ?? "");
     const [content, setContent] = useState(defaultValues?.content ?? "");
     const [tags, setTags] = useState<string[]>(defaultValues?.tags ?? []);
@@ -25,6 +25,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
     const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Community/NewsForm");
 
     const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && tagInput.trim()) {
@@ -82,7 +83,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
 
             <div>
                 <label className="font-semibold">
-                    Title<span className="text-red-500">*</span>
+                    {t("title")}<span className="text-red-500">*</span>
                 </label>
                 <input
                     type="text"
@@ -95,7 +96,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
 
             <div>
                 <label className="font-semibold">
-                    Content<span className="text-red-500">*</span>
+                    {t("content")}<span className="text-red-500">*</span>
                 </label>
                 <textarea
                     rows={10}
@@ -108,7 +109,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
 
             <div>
                 <label className="font-semibold">
-                    Tags
+                    {t("tags")}
                 </label>
                 <input
                     type="text"
@@ -116,7 +117,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                     onChange={e => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
                     className="w-full border px-3 py-2 rounded mt-1"
-                    placeholder="Press Enter to add tag"
+                    placeholder={t("placeholderTag")}
                 />
                 <div className="flex flex-wrap mt-2 gap-2">
                     {tags.map((tag, i) => (
@@ -139,7 +140,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
 
             <div>
                 <label className="font-semibold">
-                    Images (max 10)
+                    {t("images")}
                 </label>
                 <div className="flex items-center gap-3 mb-2">
                     <button
@@ -148,7 +149,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                         onClick={() => fileInputRef.current?.click()}
                         disabled={existingImages.length + images.length >= 10}
                     >
-                        Add image
+                        {t("addImage")}
                     </button>
                     <input
                         ref={fileInputRef}
@@ -160,6 +161,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                         disabled={existingImages.length + images.length >= 10}
                     />
                 </div>
+
                 <div className="flex gap-3 flex-wrap">
                     {existingImages.map((src, i) => (
                         <div
@@ -208,7 +210,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                     className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
                     onClick={() => navigate("/news")}
                 >
-                    Cancel
+                    {t("cancel")}
                 </button>
 
                 <button
@@ -216,7 +218,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading, buttonLabel }: NewsFormP
                     disabled={isLoading}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
                 >
-                    {isLoading ? "Loading..." : buttonLabel ?? "Validate"}
+                    {isLoading ? t("loading") : t("validate")}
                 </button>
             </div>
         </form>

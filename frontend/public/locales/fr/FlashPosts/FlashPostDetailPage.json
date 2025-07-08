@@ -1,0 +1,14 @@
+{
+    "loading": "Chargement...",
+    "confirmAlert": "Vous êtes sur le point de supprimer cette annonce. Souhaitez-vous confirmer ?",
+    "back": "← Retour",
+    "publishedOn": "Publié le",
+    "updatedOn": "Mis à jour le",
+    "by": "par",
+    "editPost": "Modifier",
+    "deletePost": "Supprimer",
+    "report": "Signaler",
+    "toastLoadFlashpostError": "Impossible de charger les annonces flash",
+    "toastFlashpostDeleted": "Annonce flash supprimée",
+    "toastFlashpostDeletedError": "Impossible de supprimer l'annonce flash"
+}

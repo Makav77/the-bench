@@ -1,0 +1,14 @@
+{
+    "title": "S'INSCRIRE",
+    "subtitle": "Complétez les champs ci-dessous pour vous inscrire",
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "email": "Adresse mail",
+    "password": "Mot de passe",
+    "dateOfBirth": "Date de naissance",
+    "cancel": "Annuler",
+    "buttonRegister": "S'inscrire",
+    "missingCredentials": "Tous les champs doivent être renseignés",
+    "invalidMailAddress": "L'adresse mail est déjà utilisée",
+    "unknowError": "Erreur inconnue"
+}

@@ -1,0 +1,11 @@
+{
+    "title": "Title",
+    "content": "Content",
+    "tags": "Tags",
+    "placeholderTag": "Press Enter to add tag",
+    "images": "Images (max 10)",
+    "addImage": "Add image",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "validate": "Validate"
+}

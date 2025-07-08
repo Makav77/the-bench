@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getItems, MarketItemSummary } from "../../../api/marketService";
+import { useTranslation } from "react-i18next";
 
 function LatestMarketItemCard() {
     const [item, setItem] = useState<MarketItemSummary | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Homepage/LatestMarketItemCard")
 
     useEffect(() => {
         async function load() {
@@ -15,10 +17,10 @@ function LatestMarketItemCard() {
                 if (data.length > 0) {
                     setItem(data[0]);
                 } else {
-                    setError("No items available.");
+                    setError(t("noItemAvailable"));
                 }
-            } catch (error) {
-                setError("Unable to load latest item: " + error);
+            } catch {
+                setError(t("loadItemError"));
             } finally {
                 setIsLoading(false);
             }
@@ -27,7 +29,7 @@ function LatestMarketItemCard() {
     }, []);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>;
+        return <p className="p-6">{t("loading")}</p>;
     }
 
     if (error) {
@@ -35,7 +37,7 @@ function LatestMarketItemCard() {
     }
 
     if (!item) {
-        return <p className="p-6">No item available</p>
+        return <p className="p-6">{t("noItemAvailable")}</p>
     }
 
     const picture = item.images?.[0];
@@ -49,11 +51,11 @@ function LatestMarketItemCard() {
                 <h4 className="text-lg font-bold">{item.title}</h4>
                 {item.price != null && (
                     <p className="text-gray-600">
-                        Price : {item.price} €
+                        {t("price")} {item.price} €
                     </p>
                 )}
                 <p className="text-sm text-gray-500">
-                    Last update {new Date(item.updatedAt).toLocaleDateString()}
+                    {t("lastUpdate")} {new Date(item.updatedAt).toLocaleDateString()}
                 </p>
             </div>
 

@@ -1,0 +1,10 @@
+{
+    "validateCompletion": "Valider ma réussite",
+    "text": "Texte (optionnel)",
+    "image": "Image (optionnel)",
+    "cancel": "Annuler",
+    "sending": "Envoi...",
+    "send": "Envoyer",
+    "toastSendSubmissionError": "Impossible d'envoyer la soumission",
+    "toastSendSubmission": "Soumission envoyée"
+}

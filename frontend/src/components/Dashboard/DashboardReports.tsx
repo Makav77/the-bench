@@ -3,6 +3,7 @@ import { getReports, updateReport, ReportDTO } from "../../api/reportService";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type StatusFilter = "ALL" | "PENDING" | "VALIDATED" | "REJECTED";
 type ContentFilter = "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLL" | "CHALLENGE";
@@ -10,6 +11,7 @@ type ReasonFilter = "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INA
 
 function DashboardReports() {
     const navigate = useNavigate();
+    const { t } = useTranslation("Dashboard/DashboardReports");
 
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
@@ -29,8 +31,7 @@ function DashboardReports() {
                 setReports(data);
                 setLastPage(lastPage);
             } catch (error) {
-                console.error("getReports error : " + error);
-                toast.error("Unable to load reports.");
+                toast.error(t("toastLoadReportError"));
             } finally {
                 setLoadingReports(false);
             }
@@ -66,9 +67,8 @@ function DashboardReports() {
             setLoadingReports(true);
             const { data } = await getReports(page, 10);
             setReports(data);
-        } catch (error) {
-            console.error("Update report error : " + error);
-            toast.error("Unable to update report.");
+        } catch {
+            toast.error(t("toastUpdateReportError"));
         } finally {
             setUpdatingId(null);
             setLoadingReports(false);
@@ -102,7 +102,7 @@ function DashboardReports() {
                 navigate("/homepage");
                 break;
             default:
-                toast.error("No report.");
+                navigate("/");
         }
     }
 
@@ -142,75 +142,75 @@ function DashboardReports() {
     return (
         <div className="bg-white p-6 rounded-2xl">
             <h2 className="text-2xl font-semibold mb-4">
-                Reports
+                {t("reports")}
             </h2>
 
-            <div className="border-t-2 h-1 mb-5"></div>
+            <div className="border-t-2 h-1 mb-5" />
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">Reported user : </span>
+                <span className="font-semibold w-[25%] text-end">{t("reportedUser")}</span>
                 <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Firstname or lastname of user..."
+                    placeholder={t("reportedUserPlaceholder")}
                     className="border rounded px-2 py-1 w-full max-w-xs h-8"
                 />
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">Status :</span>
+                <span className="font-semibold w-[25%] text-end">{t("status")}</span>
                 <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value as "ALL" | "PENDING" | "VALIDATED" | "REJECTED")}
                     className="border rounded px-2 py-1 h-8"
                 >
-                    <option value="ALL">All</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="VALIDATED">Validated</option>
-                    <option value="REJECTED">Rejected</option>
+                    <option value="ALL">{t("all")}</option>
+                    <option value="PENDING">{t("pending")}</option>
+                    <option value="VALIDATED">{t("validated")}</option>
+                    <option value="REJECTED">{t("rejected")}</option>
                 </select>
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">Content :</span>
+                <span className="font-semibold w-[25%] text-end">{t("content")}</span>
                 <select
                     value={filterContentType}
                     onChange={(e) => setFilterContentType(e.target.value as "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLL" | "CHALLENGE")}
                     className="border rounded px-2 py-1 h-8"
                 >
-                    <option value="ALL">All</option>
-                    <option value="POST">Post</option>
-                    <option value="FLASHPOST">Flashpost</option>
-                    <option value="EVENT">Event</option>
-                    <option value="GALLERY">Gallery</option>
-                    <option value="POLL">Poll</option>
-                    <option value="CHALLENGE">Challenge</option>
+                    <option value="ALL">{t("all")}</option>
+                    <option value="POST">{t("post")}</option>
+                    <option value="FLASHPOST">{t("flashpost")}</option>
+                    <option value="EVENT">{t("event")}</option>
+                    <option value="GALLERY">{t("gallery")}</option>
+                    <option value="POLL">{t("poll")}</option>
+                    <option value="CHALLENGE">{t("challenge")}</option>
                 </select>
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">Reason :</span>
+                <span className="font-semibold w-[25%] text-end">{t("reason")}</span>
                 <select
                     value={filterReason}
                     onChange={(e) => setFilterReason(e.target.value as "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INAPPROPRIATE_CONTENT" | "OTHER")}
                     className="border rounded px-2 py-1 h-8"
                 >
-                    <option value="ALL">All</option>
-                    <option value="OFFENSIVE_LANGUAGE">Offensive language</option>
-                    <option value="HATE_SPEECH">Hate speech</option>
-                    <option value="SPAM">Spam</option>
-                    <option value="INAPPROPRIATE_CONTENT">Inappropriate content</option>
-                    <option value="OTHER">Other</option>
+                    <option value="ALL">{t("all")}</option>
+                    <option value="OFFENSIVE_LANGUAGE">{t("offensiveLanguage")}</option>
+                    <option value="HATE_SPEECH">{t("hateSpeech")}</option>
+                    <option value="SPAM">{t("spam")}</option>
+                    <option value="INAPPROPRIATE_CONTENT">{t("inappropriateContent")}</option>
+                    <option value="OTHER">{t("other")}</option>
                 </select>
             </div>
 
-            <div className="border-t-2 h-1 mb-5"></div>
+            <div className="border-t-2 h-1 mb-5" />
 
             {loadingReports ? (
-                <p className="text-center">Report loading...</p>
+                <p className="text-center">{t("loading")}</p>
             ) : filteredReports.length === 0 ? (
-                <p className="text-center">No report waiting</p>
+                <p className="text-center">{t("noWaitingReport")}</p>
             ) : (
                 <div className="space-y-4">
                     {filteredReports.map((report) => (
@@ -221,7 +221,7 @@ function DashboardReports() {
                         >
                             <div className="flex-1 space-y-1">
                                 <p>
-                                    <span className="font-semibold">Report by :</span>{" "}
+                                    <span className="font-semibold">{t("reportedBy")}</span>{" "}
                                     <span
                                         className="text-blue-600 hover:underline cursor-pointer"
                                         onClick={(e) => {
@@ -234,7 +234,7 @@ function DashboardReports() {
                                 </p>
 
                                 <p>
-                                    <span className="font-semibold">Reported user :</span>{" "}
+                                    <span className="font-semibold">{t("reportedUser")}</span>{" "}
                                     <span
                                         className="text-blue-600 hover:underline cursor-pointer"
                                         onClick={(e) => {
@@ -247,29 +247,29 @@ function DashboardReports() {
                                 </p>
 
                                 <p>
-                                    <span className="font-semibold">Content :</span>{" "}
+                                    <span className="font-semibold">{t("content")}</span>{" "}
                                     <span>{contentTypeLabel(report.reportedContentType)}</span>
                                 </p>
 
                                 <p>
-                                    <span className="font-semibold">Date :</span>{" "}
+                                    <span className="font-semibold">{t("date")}</span>{" "}
                                     {format(new Date(report.createdAt), "dd/MM/yyyy 'at' HH:mm")}
                                 </p>
 
                                 <p>
-                                    <span className="font-semibold">Reason :</span>{" "}
+                                    <span className="font-semibold">{t("reason")}</span>{" "}
                                     {report.reason}
                                 </p>
 
                                 {report.description && (
                                     <p>
-                                        <span className="font-semibold">Description :</span>{" "}
+                                        <span className="font-semibold">{t("description")}</span>{" "}
                                         {report.description}
                                     </p>
                                 )}
 
                                 <p>
-                                    <span className="font-semibold">Statut :</span>{" "}
+                                    <span className="font-semibold">{t("status")}</span>{" "}
                                     <span className={
                                         report.status === "PENDING" ? "bg-yellow-400 px-2 rounded" :
                                         report.status === "VALIDATED" ? "bg-green-400 px-2 rounded" :
@@ -292,8 +292,8 @@ function DashboardReports() {
                                             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
                                         >
                                             {updatingId === report.id
-                                                ? "Validation..."
-                                                : "Validate"}
+                                                ? t("validation")
+                                                : t("validate")}
                                         </button>
 
                                         <button
@@ -304,8 +304,8 @@ function DashboardReports() {
                                             disabled={updatingId === report.id}
                                             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer">
                                                 {updatingId === report.id
-                                                    ? "Rejection..."
-                                                    : "Reject"}
+                                                    ? t("rejection")
+                                                    : t("reject")}
                                         </button>
                                     </>
                                 ) : (
@@ -327,11 +327,11 @@ function DashboardReports() {
                             onClick={() => setPage((p) => p - 1)}
                             className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            ← Prev
+                            {t("previous")}
                         </button>
 
                         <span>
-                            Page {page} / {lastPage}
+                            {t("page")} {page} / {lastPage}
                         </span>
 
                         <button
@@ -340,7 +340,7 @@ function DashboardReports() {
                             onClick={() => setPage((p) => p + 1)}
                             className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            Next →
+                            {t("next")}
                         </button>
                     </div>
                 </div>

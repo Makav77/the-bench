@@ -1,0 +1,11 @@
+{
+    "back": "← Back to community",
+    "addImage": "Add image",
+    "gallery": "Gallery",
+    "loading": "Loading...",
+    "previous": "← Prev",
+    "page": "Page",
+    "next": "Next →",
+    "toastLoadGalleryError": "Unable to load gallery",
+    "toastLikeUnlikeError": "Unable to like or unlike"
+}

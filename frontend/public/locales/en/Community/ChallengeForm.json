@@ -1,0 +1,11 @@
+{
+    "title": "Title",
+    "description": "Description",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "successCriteria": "Success criteria",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "update": "Update",
+    "create": "Create"
+}
