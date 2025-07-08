@@ -10,7 +10,7 @@ function Navigation() {
     return (
         <nav
             data-testid="navigation-bar"
-            className="grid grid-cols-5 gap-1 m-2 mt-10 pt-5 mb-5 w-[75%] mx-auto border-t-1"
+            className="grid grid-cols-6 gap-1 m-2 mt-10 pt-5 mb-5 w-[90%] mx-auto border-t-1"
         >
             <button
                 type="button"
@@ -53,16 +53,25 @@ function Navigation() {
                 aria-label="community-button"
                 className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 
                     ${location.pathname.startsWith("/community") ||
-                    location.pathname.startsWith("/gallery") ||
-                    location.pathname.startsWith("/polls") ||
-                    location.pathname.startsWith("/challenges") ||
-                    location.pathname.startsWith("/calendar") ||
-                    location.pathname.startsWith("/artisans") ||
-                    location.pathname.startsWith("/news")
+                        location.pathname.startsWith("/gallery") ||
+                        location.pathname.startsWith("/polls") ||
+                        location.pathname.startsWith("/challenges") ||
+                        location.pathname.startsWith("/calendar") ||
+                        location.pathname.startsWith("/artisans") ||
+                        location.pathname.startsWith("/news")
                         ? "text-white" : "hover:underline"}`}
                 onClick={() => navigate("/community")}
             >
                 {t("community")}
+            </button>
+            <button
+                type="button"
+                aria-label="hangman-button"
+                className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 
+                    ${location.pathname.startsWith("/hangman") ? "text-white" : "hover:underline"}`}
+                onClick={() => navigate("/hangman")}
+            >
+                Hangman
             </button>
         </nav>
     );
