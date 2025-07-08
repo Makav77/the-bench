@@ -2,8 +2,10 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Socket, Server } from 'socket.io';
 import { UserService } from "../Users/user.service";
 import { ChatService } from './chat.service';
+import { Injectable } from '@nestjs/common';
 
-@WebSocketGateway({cors: {origin: '*'}})
+@Injectable()
+@WebSocketGateway({ cors: { origin: '*' } })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()
     server: Server;
@@ -12,7 +14,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     constructor(
         private readonly userService: UserService,
         private readonly chatService: ChatService,
-    ){}
+    ) { }
 
     @SubscribeMessage('auth')
     handleAuth(
@@ -48,7 +50,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const uniqueUserIds = Array.from(new Set(this.clients.values()));
         this.server.emit('online-users', uniqueUserIds);
     }
-    
+
     @SubscribeMessage('message')
     async handleMessage(
         @MessageBody() data: { room: string; content: string; userId: string; username?: string },
@@ -62,7 +64,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         const type = data.room === 'general'
             ? 'general'
             : data.room.startsWith('group') ? 'group' : 'private';
-        
+
         let normalizedRoom = data.room;
         if (type === 'private') {
             const ids = data.room.replace('private-', '').split('_').sort();
@@ -75,16 +77,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             type: type,
             sender: user,
         });
-        
+
         const payload = {
             content: data.content,
             userId: data.userId,
             username: data.username || `${user.lastname} ${user.firstname}`,
         };
-        
+
         if (data.room === 'general') {
             this.server.to(data.room).emit('general-message', payload);
-        } else if(data.room.startsWith('group')){
+        } else if (data.room.startsWith('group')) {
             const groupId = data.room.split("group-")[1];
             this.server.to(data.room).emit(`group-message-${groupId}`, payload);
         } else {
@@ -96,5 +98,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     handleJoinRoom(@MessageBody() room: string, @ConnectedSocket() client: Socket) {
         client.join(room);
         console.log(`Client ${client.id} joined room ${room}`);
+    }
+
+    @SubscribeMessage('hangman:wordSubmitted')
+    handleHangmanWordSubmitted(
+        @MessageBody() data: { inviteId: string; word: string },
+        @ConnectedSocket() client: Socket
+    ) {
+        const room = `hangman-${data.inviteId}`;
+        this.server.to(room).emit('hangman:wordSubmitted', { word: data.word });
+
+        console.log(`Broadcasted word to ${room}: ${data.word}`);
+    }
+
+    @SubscribeMessage('hangman:letterGuessed')
+    handleHangmanLetterGuessed(
+        @MessageBody() data: { inviteId: string; letter: string; incorrectGuesses: number },
+        @ConnectedSocket() client: Socket
+    ) {
+        const room = `hangman-${data.inviteId}`;
+        this.server.to(room).emit('hangman:letterGuessed', {
+            letter: data.letter,
+            incorrectGuesses: data.incorrectGuesses,
+        });
+
+        console.log(`Letter guessed in ${room}: ${data.letter}, Incorrect guesses: ${data.incorrectGuesses}`);
     }
 }

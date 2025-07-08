@@ -62,6 +62,7 @@ import CreateNews from "./components/Community/News/CreateNews";
 import EditNews from "./components/Community/News/EditNewsForm";
 
 import HangmanGame from "./components/Hangman/HangmanGame";
+import MultiplayerHangmanGame from "./components/Hangman/HangmanMultiplayer";
 
 import TermsOfUse from "./components/Footer/TermsOfUse";
 
@@ -117,6 +118,7 @@ export default function App() {
                                 <Route path="/news/create" element={<CreateNews />} />
                                 <Route path="/news/:id/edit" element={<EditNews />} />
                                 <Route path="/hangman" element={<HangmanGame />} />
+                                <Route path="/hangman/game/:inviteId" element={<MultiplayerHangmanGame />} />
                                 <Route path="/termsofuse" element={<TermsOfUse />} />
                             </Route>
                         </Route>

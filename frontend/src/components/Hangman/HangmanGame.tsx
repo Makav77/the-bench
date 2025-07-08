@@ -2,16 +2,29 @@ import { useEffect, useState } from "react";
 import { getWords } from "../../api/hangmanService";
 import { toast } from "react-toastify";
 import HangmanDrawing from "./HangmanDrawing";
+import { FriendDTO, getFriends } from "../../api/friendService";
+import { fetchMe } from "../../api/authService";
+import { getPendingHangmanInvites, respondToHangmanInvite, sendHangmanInvite } from "../../api/hangmanInviteService";
+import { useNavigate } from 'react-router-dom';
+import socket from "../../utils/socket";
 
 type GameMode = "solo" | "friend" | null;
 
 function HangmanPage() {
+  const navigate = useNavigate();
   const [gameMode, setGameMode] = useState<GameMode>(null);
   const [difficulty, setDifficulty] = useState<1 | 2 | 3 | null>(null);
   const [word, setWord] = useState<string | null>(null);
   const [noWordsMessage, setNoWordsMessage] = useState<string | null>(null);
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
   const [incorrectGuesses, setIncorrectGuesses] = useState(0);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [friends, setFriends] = useState<FriendDTO[]>([]);
+  const [invitedFriendId, setInvitedFriendId] = useState<string | null>(null);
+  const [waitingTimeLeft, setWaitingTimeLeft] = useState<number>(300);
+  const [waitingTimer, setWaitingTimer] = useState<ReturnType<typeof setInterval> | null>(null);
+  const [invitedFriendName, setInvitedFriendName] = useState<string | null>(null);
+  const [pendingInvites, setPendingInvites] = useState<any[]>([]);
 
   const maxIncorrect = 7;
   const normalizeLetter = (letter: string) =>
@@ -33,6 +46,89 @@ function HangmanPage() {
     setGuessedLetters((prev) => [...prev, letter]);
     if (!isCorrect) {
       setIncorrectGuesses((prev) => prev + 1);
+    }
+  };
+
+  const handleInvite = async (friendId: string, fullName: string) => {
+    if (!userId) {
+      toast.error("User not loaded.");
+      return;
+    }
+
+    setInvitedFriendId(friendId);
+    setInvitedFriendName(fullName);
+
+    try {
+      await sendHangmanInvite(friendId);
+      toast.success(`Invitation sent to ${fullName}`);
+    } catch (err) {
+      console.error("Failed to send invitation:", err);
+      toast.error("Could not invite your friend.");
+      setInvitedFriendId(null);
+      setInvitedFriendName(null);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setWaitingTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setInvitedFriendId(null);
+          setInvitedFriendName(null);
+          return 300;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    setWaitingTimer(timer);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (waitingTimer) clearInterval(waitingTimer);
+    };
+  }, [waitingTimer]);
+
+  useEffect(() => {
+    const init = async () => {
+      const me = await fetchMe();
+      setUserId(me.id);
+      setFriends(await getFriends(me.id));
+      socket.connect();
+      socket.emit('auth', { userId: me.id });
+      socket.emit('join', `user-${me.id}`);
+    };
+
+    if (gameMode === "friend") {
+      init();
+    }
+  }, [gameMode]);
+
+  const handleRespond = async (inviteId: string, action: "accepted" | "declined") => {
+    if (action === "accepted") {
+      return handleAccept(inviteId);
+    }
+
+    try {
+      await respondToHangmanInvite(inviteId, action);
+      toast.success(`Invitation ${action}`);
+      const updated = await getPendingHangmanInvites();
+      setPendingInvites(updated);
+    } catch (err) {
+      toast.error(`Failed to ${action} invitation.`);
+    }
+  };
+
+  const handleAccept = async (inviteId: string) => {
+    try {
+      const res = await respondToHangmanInvite(inviteId, 'accepted');
+      if (res.status === 'game_started') {
+        localStorage.setItem("hangman-role", res.role);
+        navigate(`/hangman/game/${res.inviteId}`);
+      }
+    } catch (err) {
+      toast.error("Failed to accept invite");
     }
   };
 
@@ -58,6 +154,36 @@ function HangmanPage() {
     fetchWord();
   }, [gameMode, difficulty]);
 
+  useEffect(() => {
+    const fetchPendingInvites = async () => {
+      try {
+        const invites = await getPendingHangmanInvites();
+        setPendingInvites(invites);
+      } catch (err) {
+        toast.error("Failed to fetch pending invites.");
+      }
+    };
+
+    fetchPendingInvites();
+
+    const interval = setInterval(fetchPendingInvites, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleGameStart = ({ inviteId, role }: { inviteId: string; role: 'giver' | 'guesser' }) => {
+      localStorage.setItem("hangman-role", role);
+      navigate(`/hangman/game/${inviteId}`);
+    };
+
+    socket.on('hangman:gameStarted', handleGameStart);
+
+    return () => {
+      socket.off('hangman:gameStarted', handleGameStart);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-blue-500 text-black py-12">
       <div className="p-6 max-w-2xl mx-auto space-y-6 bg-white rounded-lg shadow-lg">
@@ -71,7 +197,7 @@ function HangmanPage() {
                 setNoWordsMessage(null);
                 setDifficulty(null);
               }}
-              className="text-sm text-gray-600 hover:underline"
+              className="text-sm text-gray-600 hover:underline cursor-pointer"
             >
               ← Back
             </button>
@@ -81,13 +207,13 @@ function HangmanPage() {
         {gameMode === null && (
           <div className="flex gap-4 justify-center">
             <button
-              className="px-6 py-3 rounded bg-yellow-500 hover:bg-yellow-600 text-white text-lg"
+              className="px-6 py-3 rounded bg-yellow-500 hover:bg-yellow-600 text-white text-lg cursor-pointer"
               onClick={() => setGameMode("solo")}
             >
               Play Solo
             </button>
             <button
-              className="px-6 py-3 rounded bg-green-500 hover:bg-green-600 text-white text-lg"
+              className="px-6 py-3 rounded bg-green-500 hover:bg-green-600 text-white text-lg cursor-pointer"
               onClick={() => setGameMode("friend")}
             >
               Invite a Friend
@@ -95,34 +221,119 @@ function HangmanPage() {
           </div>
         )}
 
+        <div className="bg-yellow-100 p-4 rounded shadow">
+          <h2 className="text-lg font-semibold mb-2">Pending Hangman Invitations</h2>
+
+          {pendingInvites.length === 0 ? (
+            <p className="text-gray-600">No pending invitations.</p>
+          ) : (
+            <ul className="space-y-1">
+              {pendingInvites.map((invite) => (
+                <li key={invite.id} className="flex justify-between items-center">
+                  <span>
+                    From: <strong>{invite.sender.firstname} {invite.sender.lastname}</strong>
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleRespond(invite.id, "accepted")}
+                      className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-sm"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => handleRespond(invite.id, "declined")}
+                      className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-sm"
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         {gameMode === "solo" && difficulty === null && (
           <div className="flex flex-col gap-4 items-center">
             <div className="flex gap-4 justify-center">
               <button
                 onClick={() => setDifficulty(1)}
-                className="px-4 py-2 bg-blue-200 hover:bg-blue-300 rounded"
+                className="px-4 py-2 bg-blue-200 hover:bg-blue-300 rounded cursor-pointer"
               >
                 Easy
               </button>
               <button
                 onClick={() => setDifficulty(2)}
-                className="px-4 py-2 bg-yellow-200 hover:bg-yellow-300 rounded"
+                className="px-4 py-2 bg-yellow-200 hover:bg-yellow-300 rounded cursor-pointer"
               >
                 Medium
               </button>
               <button
                 onClick={() => setDifficulty(3)}
-                className="px-4 py-2 bg-red-200 hover:bg-red-300 rounded"
+                className="px-4 py-2 bg-red-200 hover:bg-red-300 rounded cursor-pointer"
               >
                 Hard
               </button>
             </div>
             <button
               onClick={() => setGameMode(null)}
-              className="text-sm text-gray-600 hover:underline"
+              className="text-sm text-gray-600 hover:underline cursor-pointer"
             >
               ← Back
             </button>
+          </div>
+        )}
+
+        {gameMode === "friend" && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-center">Invite a Friend</h2>
+
+            {invitedFriendId ? (
+              <div className="text-center space-y-2">
+                <p className="text-blue-600 font-medium">
+                  Waiting for {invitedFriendName} to join...
+                </p>
+                <p className="text-gray-600">
+                  Time remaining: {Math.floor(waitingTimeLeft / 60)}:
+                  {(waitingTimeLeft % 60).toString().padStart(2, "0")}
+                </p>
+                <button
+                  onClick={() => {
+                    setInvitedFriendId(null);
+                    setWaitingTimeLeft(300);
+                    if (waitingTimer) clearInterval(waitingTimer);
+                  }}
+                  className="text-sm text-gray-600 hover:underline cursor-pointer"
+                >
+                  Cancel Invitation
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3 items-center">
+                {friends.length === 0 && <p className="text-gray-500">You have no friends to invite.</p>}
+                {friends.map((friend) => (
+                  <div
+                    key={friend.id}
+                    className="flex items-center justify-between w-full max-w-md border p-3 rounded shadow-sm bg-gray-50"
+                  >
+                    <span>{friend.firstname} {friend.lastname}</span>
+                    <button
+                      onClick={() => handleInvite(friend.id, `${friend.firstname} ${friend.lastname}`)}
+                      disabled={!!invitedFriendId}
+                      className="px-4 py-1 rounded bg-green-500 hover:bg-green-600 text-white text-sm cursor-pointer disabled:bg-gray-300"
+                    >
+                      Invite
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={() => setGameMode(null)}
+                  className="mt-4 text-sm text-gray-600 hover:underline cursor-pointer"
+                >
+                  ← Back
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -152,11 +363,10 @@ function HangmanPage() {
                   key={letter}
                   onClick={() => handleGuess(letter)}
                   disabled={!!(guessedLetters.includes(letter) || isGameOver || isWin)}
-                  className={`w-8 h-8 border rounded text-lg ${
-                    guessedLetters.includes(letter)
-                      ? "bg-gray-300 cursor-not-allowed"
-                      : "hover:bg-blue-100"
-                  }`}
+                  className={`w-8 h-8 border rounded text-lg cursor-pointer ${guessedLetters.includes(letter)
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "hover:bg-blue-100"
+                    }`}
                 >
                   {letter}
                 </button>
@@ -178,7 +388,7 @@ function HangmanPage() {
                   setIncorrectGuesses(0);
                   setDifficulty(null);
                 }}
-                className="text-sm text-gray-600 hover:underline"
+                className="text-sm text-gray-600 hover:underline cursor-pointer"
               >
                 ↺ Restart
               </button>
@@ -190,7 +400,7 @@ function HangmanPage() {
                   setDifficulty(null);
                   setGameMode(null);
                 }}
-                className="text-sm text-gray-600 hover:underline"
+                className="text-sm text-gray-600 hover:underline cursor-pointer"
               >
                 ← Main Menu
               </button>
