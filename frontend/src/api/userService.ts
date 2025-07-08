@@ -62,7 +62,7 @@ export interface ProfileSummaryDTO {
     requestReceived?: boolean;
 }
 
-const API_URL = "http://localhost:3000/users";
+const API_URL = import.meta.env.VITE_NODE_ENV === 'prod' ? "http://209.38.138.250:3000/users" : "http://localhost:3000/users";
 
 export const getUsers = async () => {
     try {
