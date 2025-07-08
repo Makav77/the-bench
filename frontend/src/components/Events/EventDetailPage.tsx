@@ -210,7 +210,7 @@ function EventDetailPage() {
                 )}
 
                 {showParticipantModal && (
-                    <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
+                    <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex justify-center items-start pt-20">
                         <div className="bg-white rounded p-6 w-96 max-h-[70vh] overflow-auto">
                             {typeof event.maxNumberOfParticipants === "number" && event.maxNumberOfParticipants > 0 && (
                                 <h2 className="text-xl font-bold mb-4">{t("registered")} ({event.participantsList.length} / {event.maxNumberOfParticipants})</h2>

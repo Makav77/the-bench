@@ -170,7 +170,7 @@ function ChallengeDetailPage() {
                 </div>
 
                 {showParticipantModal && (
-                    <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
+                    <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex justify-center items-start pt-20">
                         <div className="bg-white rounded p-6 w-[25%] overflow-auto">
                             <h2 className="text-xl font-bold mb-4">
                                 {t("registered")} ({challenge.registrations.length})
@@ -361,7 +361,7 @@ function ChallengeDetailPage() {
             )}
 
             {showParticipantModal && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-start pt-20">
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex justify-center items-start pt-20">
                     <div className="bg-white rounded p-6 w-[25%] overflow-auto">
                         <h2 className="text-xl font-bold mb-4">
                             {t("registered")} ({challenge.registrations.length})

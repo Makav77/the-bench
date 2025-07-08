@@ -427,7 +427,7 @@ export default function UserProfilePage() {
             </div>
 
             {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
                     {preview && (
                         <div className="mb-4">
                             <p className="text-sm text-gray-500 mb-1">{t("preview")}</p>
@@ -483,7 +483,7 @@ export default function UserProfilePage() {
             )}
 
             {showFriendsModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
                         <h2 className="text-lg font-bold mb-4 text-center">
                             {t("friendsList")}
