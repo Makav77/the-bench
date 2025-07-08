@@ -7,5 +7,6 @@
     "dashboard": "Tableau de bord",
     "searchPlaceholder": "Rechercher un utilisateur...",
     "searching": "Recherche...",
-    "noUserFound": "Aucun utilisateur trouvé"
+    "noUserFound": "Aucun utilisateur trouvé",
+    "messages": "Messages"
 }
