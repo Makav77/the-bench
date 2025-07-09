@@ -16,7 +16,7 @@ function CreateItemPage() {
 
     return (
         <div className="p-6">
-            <h1 className="w-[40%] mx-auto text-4xl font-semibold mb-4 pl-2">{t("sellItem")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4 max-sm:w-full">{t("sellItem")}</h1>
             <ItemForm onSubmit={handleSubmit} />
         </div>
     );

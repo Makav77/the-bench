@@ -91,12 +91,12 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto space-y-4 p-8 bg-white rounded shadow"
+            className="max-w-xl mx-auto space-y-4 p-8 bg-white rounded shadow max-sm:p-2 max-sm:space-y-6"
         >
-            {error && <p className="test-red-500">{error}</p>}
+            {error && <p className="text-red-500">{error}</p>}
 
             <div>
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-lg">
                     {t("title")}<span className="text-red-500">*</span>
                 </label>
                 <input
@@ -105,12 +105,12 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                     maxLength={100}
                     value={form.title}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                 />
             </div>
 
             <div>
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-lg">
                     {t("description")}<span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -118,12 +118,12 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                     rows={5}
                     value={form.description}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                 />
             </div>
 
             <div className="flex flex-col">
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-lg">
                     {t("price")} (€)
                 </label>
                 <input
@@ -133,18 +133,18 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                     step="0.01"
                     value={form.price ?? ""}
                     onChange={handleChange}
-                    className="w-32 border rounded px-2 py-1"
+                    className="w-32 border rounded px-2 py-1 max-sm:text-lg max-sm:w-full max-sm:py-3"
                 />
             </div>
 
             <div className="flex flex-col">
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-lg">
                     {t("pictures")}
                 </label>
                 <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="bg-green-600 hover:bg-green-700 text-white rounded cursor-pointer w-[30%] h-8"
+                    className="bg-green-600 hover:bg-green-700 text-white rounded cursor-pointer w-[30%] h-8 max-sm:w-full max-sm:h-12 max-sm:text-lg"
                 >
                     {t("selectFiles")}
                 </button>
@@ -159,13 +159,13 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                     hidden
                 />
                 {previewURLs.length > 0 && (
-                    <div className="grid grid-cols-3 gap-2 mt-2">
+                    <div className="grid grid-cols-3 gap-2 mt-2 max-sm:grid-cols-1 max-sm:gap-4">
                         {previewURLs.map((url, index) => (
                             <img
                                 key={index}
                                 src={url}
                                 alt={`Preview ${index + 1}`}
-                                className="h-20 object-cover rounded"
+                                className="h-20 object-cover rounded max-sm:h-44 max-sm:w-full max-sm:rounded-xl"
                             />
                         ))}
                     </div>
@@ -173,7 +173,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
             </div>
 
             <div>
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-lg">
                     {t("contactMail")}
                 </label>
                 <input
@@ -181,12 +181,12 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                     type="email"
                     value={form.contactEmail}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                 />
             </div>
 
             <div>
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-lg">
                     {t("contactPhone")}
                 </label>
                 <input
@@ -194,14 +194,14 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                     type="tel"
                     value={form.contactPhone}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                 />
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between max-sm:flex-col max-sm:gap-4">
                 <button
                     type="button"
-                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer max-sm:w-full max-sm:text-lg max-sm:py-4"
                     onClick={() => navigate("/marketplace")}
                 >
                     {t("cancel")}
@@ -209,13 +209,13 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:w-full max-sm:text-lg max-sm:py-4"
                 >
                     {isSubmitting ? t("loading") : defaultValues ? t("update") : t("create")}
                 </button>
             </div>
         </form>
-    )
+    );
 }
 
 export default ItemForm;

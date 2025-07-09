@@ -21,8 +21,6 @@ function EventDetailPage() {
     const [showParticipantModal, setShowParticipantModal] = useState(false);
     const [removingId, setRemovingId] = useState<string | null>(null);
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
-    const isOwner = user && event && user.id === event.author.id;
-    const isAdmin = user && user.role === "admin";
 
     useEffect(() => {
         async function load() {
@@ -41,7 +39,7 @@ function EventDetailPage() {
             }
         };
         load();
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
         return <p className="p-6">{t("loading")}</p>;

@@ -53,7 +53,7 @@ return (
         <div className="flex justify-end mb-4 h-10 max-sm:h-15">
             <button
                 type="button"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 max-sm:px-8 rounded w-fit cursor-pointer "
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 max-sm:px-8 rounded w-fit cursor-pointer"
                 onClick={() => navigate("/events/create")}
             >
                 {t("createEvent")}
