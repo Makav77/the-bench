@@ -7,5 +7,6 @@
     "image": "Image",
     "cost": "Cost (points)",
     "creation": "Creation...",
-    "created": "Create"
+    "created": "Create",
+    "selectFile": "Select image"
 }
