@@ -103,7 +103,7 @@ function EventDetailPage() {
 
 return (
     <div>
-        <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl max-sm:w-[98%] max-sm:p-2 max-sm:space-y-6 max-sm:mt-3">
+        <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl max-sm:w-[98%] max-sm:space-y-6 max-sm:mt-3">
             <div className="flex justify-between gap-4 max-sm:flex-col max-sm:gap-2">
                 <button
                     type="button"

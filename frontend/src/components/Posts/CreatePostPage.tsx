@@ -44,7 +44,7 @@ function CreatePostPage() {
 
     return (
         <div className="p-6">
-            <h1 className="w-[31%] mx-auto text-4xl font-semibold mb-4 pl-2">{t("createPost")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("createPost")}</h1>
             <PostForm onSubmit={handleSubmit} />
         </div>
     );

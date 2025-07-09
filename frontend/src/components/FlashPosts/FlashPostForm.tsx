@@ -41,7 +41,7 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
             {error && <p className="text-red-500 text-base max-sm:text-center max-sm:text-sm">{error}</p>}
 
             <div>
-                <label className="font-semibold max-sm:text-base">
+                <label className="font-semibold max-sm:text-xl">
                     {t("title")}<span className="text-red-500">*</span>
                 </label>
                 <input
@@ -53,7 +53,7 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
             </div>
 
             <div>
-                <label className="font-semibold max-sm:text-base">
+                <label className="font-semibold max-sm:text-xl">
                     {t("description")}<span className="text-red-500">*</span>
                 </label>
                 <textarea
