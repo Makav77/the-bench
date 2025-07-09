@@ -26,8 +26,7 @@ function DashboardRestrictions() {
                 try {
                     const response = await apiClient.get(`/users/search?query=${encodeURIComponent(query)}`);
                     setResults(response.data);
-                } catch (error) {
-                    console.error("Error while searching users : ", error);
+                } catch {
                     setResults([]);
                 } finally {
                     setIsSearching(false);
@@ -70,7 +69,6 @@ function DashboardRestrictions() {
             setMinutes(0);
             setSelectedPermission(DEFAULT_PERMISSIONS[0].code);
         } catch (error) {
-            console.error(error);
             toast.error(t("toastUserRestricted"));
         } finally {
             setIsSubmitting(false);
@@ -82,13 +80,12 @@ function DashboardRestrictions() {
             <h2 className="text-2xl font-semibold mb-4">
                 {t("addRestriction")}
             </h2>
-
             <form
                 onSubmit={handleSubmit}
-                className="space-y-4 bg-white p-6 rounded shadow"
+                className="space-y-4 bg-white p-6 rounded-2xl shadow"
             >
                 <div>
-                    <label className="block font-semibold mb-1">
+                    <label className="block font-semibold mb-1 max-sm:text-lg">
                         {t("restrictionChoice")}
                     </label>
                     <select
@@ -97,7 +94,7 @@ function DashboardRestrictions() {
                         onChange={(e) =>
                             setSelectedPermission(e.target.value)
                         }
-                        className="w-full border rounded px-2 py-1"
+                        className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                     >
                         {DEFAULT_PERMISSIONS.map((opt) => (
                             <option key={opt.code} value={opt.code}>
@@ -108,7 +105,7 @@ function DashboardRestrictions() {
                 </div>
 
                 <div>
-                    <label className="block font-semibold mb-1">
+                    <label className="block font-semibold mb-1 max-sm:text-lg">
                         {t("userToRestrict")} <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -116,12 +113,12 @@ function DashboardRestrictions() {
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        className="w-full border rounded px-2 py-1"
+                        className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                         placeholder={t("userToRestrictPlaceholder")}
                     />
 
                     {query.length >= 2 && (
-                        <div className="border border-gray-300 rounded mt-1 bg-white shadow max-h-40 overflow-y-auto">
+                        <div className="border border-gray-300 rounded mt-1 bg-white shadow max-h-40 overflow-y-auto max-sm:text-lg">
                             {isSearching ? (
                                 <div className="px-2 py-1 text-gray-500 italic">{t("reason")}</div>
                             ) : results.length > 0 ? (
@@ -133,7 +130,7 @@ function DashboardRestrictions() {
                                             setQuery(`${user.firstname} ${user.lastname}`);
                                             setResults([]);
                                         }}
-                                        className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                        className="px-2 py-2 hover:bg-gray-100 cursor-pointer max-sm:text-lg"
                                     >
                                         {user.firstname} {user.lastname} ({user.id})
                                     </div>
@@ -146,7 +143,7 @@ function DashboardRestrictions() {
                 </div>
 
                 <div>
-                    <label className="block font-semibold mb-1">
+                    <label className="block font-semibold mb-1 max-sm:text-lg">
                         {t("reason")}
                         <span className="text-red-500">*</span>
                     </label>
@@ -155,13 +152,13 @@ function DashboardRestrictions() {
                         rows={3}
                         value={reason}
                         onChange={(e) => setReason(e.target.value)}
-                        className="w-full border rounded px-2 py-1"
+                        className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                     />
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-4 max-sm:grid-cols-1 max-sm:gap-2">
                     <div>
-                        <label className="block font-semibold mb-1">
+                        <label className="block font-semibold mb-1 max-sm:text-lg">
                             {t("days")}
                         </label>
                         <input
@@ -172,12 +169,12 @@ function DashboardRestrictions() {
                             onChange={(e) =>
                                 setDays(parseInt(e.target.value, 10) || 0)
                             }
-                            className="w-full border rounded px-2 py-1"
+                            className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                         />
                     </div>
 
                     <div>
-                        <label className="block font-semibold mb-1">
+                        <label className="block font-semibold mb-1 max-sm:text-lg">
                             {t("hours")}
                         </label>
                         <input
@@ -189,12 +186,12 @@ function DashboardRestrictions() {
                             onChange={(e) =>
                                 setHours(parseInt(e.target.value, 10) || 0)
                             }
-                            className="w-full border rounded px-2 py-1"
+                            className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                         />
                     </div>
 
                     <div>
-                        <label className="block font-semibold mb-1">
+                        <label className="block font-semibold mb-1 max-sm:text-lg">
                             {t("minutes")}
                         </label>
                         <input
@@ -206,7 +203,7 @@ function DashboardRestrictions() {
                             onChange={(e) =>
                                 setMinutes(parseInt(e.target.value, 10) || 0)
                             }
-                            className="w-full border rounded px-2 py-1"
+                            className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                         />
                     </div>
                 </div>
@@ -215,7 +212,7 @@ function DashboardRestrictions() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:w-full max-sm:text-xl max-sm:py-4"
                     >
                         {isSubmitting ? t("inProgress") : t("restrict")}
                     </button>
