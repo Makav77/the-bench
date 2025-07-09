@@ -46,7 +46,7 @@ export class HangmanService {
         }
 
         if (difficulty !== undefined) {
-            const safeTargetWord = newWord ?? oldWord; // use updated word if it changed
+            const safeTargetWord = newWord ?? oldWord;
             const safeWord = safeTargetWord.replace(/"/g, '\\"');
             const sql = `UPDATE dictionary SET difficulty = ${difficulty} WHERE word = "${safeWord}"`;
             await runSQLWithInterpreter(sql);

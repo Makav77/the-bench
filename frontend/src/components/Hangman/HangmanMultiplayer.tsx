@@ -4,7 +4,8 @@ import { fetchMe } from "../../api/authService";
 import { getInviteById } from "../../api/hangmanInviteService";
 import HangmanDrawing from "./HangmanDrawing";
 import { toast } from "react-toastify";
-import socket from "../../utils/socket";
+import hangmanSocket from "../../utils/hangmanSocket";
+import { useNavigate } from "react-router-dom";
 
 function MultiplayerHangmanGame() {
     const { inviteId } = useParams();
@@ -15,25 +16,31 @@ function MultiplayerHangmanGame() {
     const [inputWord, setInputWord] = useState("");
     const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
     const [incorrectGuesses, setIncorrectGuesses] = useState(0);
+    const navigate = useNavigate();
 
     const maxIncorrect = 7;
 
     const normalizeLetter = (letter: string) =>
         letter.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
+    const resetGame = () => {
+        setWordToGuess(null);
+        setInputWord("");
+        setGuessedLetters([]);
+        setIncorrectGuesses(0);
+    };
+
     const isGameOver = incorrectGuesses >= maxIncorrect;
-    const isWin =
-        wordToGuess &&
+    const isWin = wordToGuess &&
         wordToGuess
             .split("")
             .every((c) => guessedLetters.includes(normalizeLetter(c)));
 
-    const opponentName =
-        invite && userId
-            ? (invite.sender.id === userId
-                ? `${invite.recipient.firstname} ${invite.recipient.lastname}`
-                : `${invite.sender.firstname} ${invite.sender.lastname}`)
-            : null;
+    const opponentName = invite && userId
+        ? (invite.sender.id === userId
+            ? `${invite.recipient.firstname} ${invite.recipient.lastname}`
+            : `${invite.sender.firstname} ${invite.sender.lastname}`)
+        : null;
 
     const handleGuess = (letter: string) => {
         if (
@@ -42,8 +49,7 @@ function MultiplayerHangmanGame() {
             guessedLetters.includes(letter) ||
             isGameOver ||
             isWin
-        )
-            return;
+        ) return;
 
         const normalized = normalizeLetter(wordToGuess);
         const correct = normalized.includes(letter);
@@ -54,13 +60,12 @@ function MultiplayerHangmanGame() {
         setGuessedLetters(newGuessedLetters);
         setIncorrectGuesses(newIncorrect);
 
-        socket.emit("hangman:letterGuessed", {
+        hangmanSocket.emit("hangman:letterGuessed", {
             inviteId,
             letter,
             incorrectGuesses: newIncorrect,
         });
     };
-
 
     const handleSubmitWord = () => {
         const trimmed = inputWord.trim().toLowerCase();
@@ -69,7 +74,7 @@ function MultiplayerHangmanGame() {
             return;
         }
         setWordToGuess(trimmed);
-        socket.emit("hangman:wordSubmitted", {
+        hangmanSocket.emit("hangman:wordSubmitted", {
             inviteId,
             word: trimmed,
         });
@@ -77,22 +82,31 @@ function MultiplayerHangmanGame() {
 
     useEffect(() => {
         const setup = async () => {
-            socket.connect();
-            socket.emit("join", `hangman-${inviteId}`);
+
+            hangmanSocket.emit("hangman:join", `hangman-${inviteId}`);
+
             try {
                 const me = await fetchMe();
                 setUserId(me.id);
                 const inviteData = await getInviteById(inviteId!);
                 setInvite(inviteData);
 
-                const players = [inviteData.sender.id, inviteData.recipient.id].sort();
-                setRole(players[0] === me.id ? "giver" : "guesser");
+                const roleFromStorage = localStorage.getItem("hangman-role");
+                if (roleFromStorage === "giver" || roleFromStorage === "guesser") {
+                    setRole(roleFromStorage);
+                } else {
+                    const backendRole = inviteData.guesserId === me.id ? "guesser" : "giver";
+                    setRole(backendRole);
+                    localStorage.setItem("hangman-role", backendRole);
+                }
             } catch (err) {
                 toast.error("Failed to load game info.");
             }
         };
 
         setup();
+        return () => {
+        };
     }, [inviteId]);
 
     useEffect(() => {
@@ -100,30 +114,39 @@ function MultiplayerHangmanGame() {
             setWordToGuess(word);
         };
 
-        socket.on("hangman:wordSubmitted", handleWordSubmitted);
-
-        return () => {
-            socket.off("hangman:wordSubmitted", handleWordSubmitted);
-        };
-    }, []);
-
-    useEffect(() => {
-        const handleLetterGuessed = ({
-            letter,
-            incorrectGuesses: updatedIncorrect,
-        }: { letter: string; incorrectGuesses: number }) => {
-            if (role !== "giver") return;
-
+        const handleLetterGuessed = ({ letter, incorrectGuesses: updatedIncorrect }: { letter: string; incorrectGuesses: number }) => {
             setGuessedLetters((prev) => [...prev, letter]);
             setIncorrectGuesses(updatedIncorrect);
         };
 
-        socket.on("hangman:letterGuessed", handleLetterGuessed);
+        const handleReplayStarted = () => {
+            resetGame();
+        };
+
+        hangmanSocket.on("hangman:wordSubmitted", handleWordSubmitted);
+        hangmanSocket.on("hangman:letterGuessed", handleLetterGuessed);
+        hangmanSocket.on("hangman:replayStarted", handleReplayStarted);
 
         return () => {
-            socket.off("hangman:letterGuessed", handleLetterGuessed);
+            hangmanSocket.off("hangman:wordSubmitted", handleWordSubmitted);
+            hangmanSocket.off("hangman:letterGuessed", handleLetterGuessed);
+            hangmanSocket.off("hangman:replayStarted", handleReplayStarted);
         };
-    }, [role]);
+    }, []);
+
+    useEffect(() => {
+        const handleOpponentLeft = () => {
+            toast.info("Your opponent left the game.");
+            localStorage.removeItem("hangman-role");
+            navigate("/hangman");
+        };
+
+        hangmanSocket.on("hangman:opponentLeft", handleOpponentLeft);
+
+        return () => {
+            hangmanSocket.off("hangman:opponentLeft", handleOpponentLeft);
+        };
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100 p-8">
@@ -192,15 +215,55 @@ function MultiplayerHangmanGame() {
                             </div>
                         )}
 
-                        {isWin && (
-                            <p className="text-green-600 font-bold">
-                                🎉 You Win!
-                            </p>
-                        )}
-                        {isGameOver && (
-                            <p className="text-red-600 font-bold">
-                                💀 Game Over! The word was "{wordToGuess}"
-                            </p>
+                        {(isWin || isGameOver) && (
+                            <div className="space-y-2">
+                                {role === "guesser" ? (
+                                    <>
+                                        {isWin && (
+                                            <p className="text-green-600 font-bold">You Win!</p>
+                                        )}
+                                        {isGameOver && (
+                                            <p className="text-red-600 font-bold">
+                                                Game Over! The word was "{wordToGuess}"
+                                            </p>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        {isWin && (
+                                            <p className="text-green-600 font-bold">
+                                                {opponentName} won!
+                                            </p>
+                                        )}
+                                        {isGameOver && (
+                                            <p className="text-red-600 font-bold">
+                                                {opponentName} lost! The word was "{wordToGuess}"
+                                            </p>
+                                        )}
+                                    </>
+                                )}
+
+                                <div className="flex justify-center gap-4 mt-4">
+                                    <button
+                                        onClick={() => {
+                                            hangmanSocket.emit("hangman:replayRequested", { inviteId });
+                                        }}
+                                        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
+                                    >
+                                        ↺ Restart
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            hangmanSocket.emit("hangman:leaveGame", { inviteId });
+                                            localStorage.removeItem("hangman-role");
+                                            navigate("/hangman");
+                                        }}
+                                        className="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded"
+                                    >
+                                        ← Main Menu
+                                    </button>
+                                </div>
+                            </div>
                         )}
                     </div>
                 )}

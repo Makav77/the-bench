@@ -7,13 +7,12 @@ import { HangmanInviteController } from './hangman-invite.controller';
 import { User } from '../Users/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HangmanCleanupService } from './hangman-cleanup.service';
-import { ChatGateway } from '../chat/chat.gateway';
-import { ChatModule } from '../chat/chat.module';
-import { UserModule } from '../Users/user.module';
+import { HangmanGateway } from './hangman.gateway';
+
 
 @Module({
-  imports: [TypeOrmModule.forFeature([HangmanInvite, User]), ChatModule, UserModule],
+  imports: [TypeOrmModule.forFeature([HangmanInvite, User]),],
   controllers: [HangmanController, HangmanInviteController],
-  providers: [HangmanService, HangmanInviteService, HangmanCleanupService, ChatGateway],
+  providers: [HangmanService, HangmanInviteService, HangmanCleanupService, HangmanGateway],
 })
 export class HangmanModule {}

@@ -6,7 +6,8 @@ import { FriendDTO, getFriends } from "../../api/friendService";
 import { fetchMe } from "../../api/authService";
 import { getPendingHangmanInvites, respondToHangmanInvite, sendHangmanInvite } from "../../api/hangmanInviteService";
 import { useNavigate } from 'react-router-dom';
-import socket from "../../utils/socket";
+import hangmanSocket from "../../utils/hangmanSocket";
+import { cancelHangmanInvite } from "../../api/hangmanInviteService";
 
 type GameMode = "solo" | "friend" | null;
 
@@ -25,6 +26,7 @@ function HangmanPage() {
   const [waitingTimer, setWaitingTimer] = useState<ReturnType<typeof setInterval> | null>(null);
   const [invitedFriendName, setInvitedFriendName] = useState<string | null>(null);
   const [pendingInvites, setPendingInvites] = useState<any[]>([]);
+  const [inviteId, setInviteId] = useState<string | null>(null);
 
   const maxIncorrect = 7;
   const normalizeLetter = (letter: string) =>
@@ -59,8 +61,9 @@ function HangmanPage() {
     setInvitedFriendName(fullName);
 
     try {
-      await sendHangmanInvite(friendId);
+      const invite = await sendHangmanInvite(friendId);
       toast.success(`Invitation sent to ${fullName}`);
+      setInviteId(invite.id);
     } catch (err) {
       console.error("Failed to send invitation:", err);
       toast.error("Could not invite your friend.");
@@ -95,9 +98,9 @@ function HangmanPage() {
       const me = await fetchMe();
       setUserId(me.id);
       setFriends(await getFriends(me.id));
-      socket.connect();
-      socket.emit('auth', { userId: me.id });
-      socket.emit('join', `user-${me.id}`);
+      hangmanSocket.connect();
+      hangmanSocket.emit('auth', { userId: me.id });
+      hangmanSocket.emit('join', `user-${me.id}`);
     };
 
     if (gameMode === "friend") {
@@ -129,6 +132,17 @@ function HangmanPage() {
       }
     } catch (err) {
       toast.error("Failed to accept invite");
+    }
+  };
+
+  const handleCancel = async (inviteId: string) => {
+    try {
+      await cancelHangmanInvite(inviteId);
+      await toast.success("Invite cancelled.");
+
+      getPendingHangmanInvites();
+    } catch (err) {
+      toast.error("Failed to cancel invite.");
     }
   };
 
@@ -177,12 +191,13 @@ function HangmanPage() {
       navigate(`/hangman/game/${inviteId}`);
     };
 
-    socket.on('hangman:gameStarted', handleGameStart);
+    hangmanSocket.on('hangman:gameStarted', handleGameStart);
 
     return () => {
-      socket.off('hangman:gameStarted', handleGameStart);
+      hangmanSocket.off('hangman:gameStarted', handleGameStart);
     };
   }, []);
+
 
   return (
     <div className="min-h-screen bg-blue-500 text-black py-12">
@@ -236,13 +251,13 @@ function HangmanPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleRespond(invite.id, "accepted")}
-                      className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-sm"
+                      className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-sm cursor-pointer"
                     >
                       Accept
                     </button>
                     <button
                       onClick={() => handleRespond(invite.id, "declined")}
-                      className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-sm"
+                      className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-sm cursor-pointer"
                     >
                       Decline
                     </button>
@@ -298,7 +313,19 @@ function HangmanPage() {
                   {(waitingTimeLeft % 60).toString().padStart(2, "0")}
                 </p>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
+                    if (invitedFriendId) {
+                      try {
+                        if (!inviteId) {
+                          toast.error("No invite ID available.");
+                          return;
+                        }
+
+                        await handleCancel(inviteId);
+                      } catch (err) {
+                      }
+                    }
+
                     setInvitedFriendId(null);
                     setWaitingTimeLeft(300);
                     if (waitingTimer) clearInterval(waitingTimer);
@@ -388,7 +415,7 @@ function HangmanPage() {
                   setIncorrectGuesses(0);
                   setDifficulty(null);
                 }}
-                className="text-sm text-gray-600 hover:underline cursor-pointer"
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded cursor-pointer"
               >
                 ↺ Restart
               </button>
@@ -400,7 +427,7 @@ function HangmanPage() {
                   setDifficulty(null);
                   setGameMode(null);
                 }}
-                className="text-sm text-gray-600 hover:underline cursor-pointer"
+                className="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded cursor-pointer"
               >
                 ← Main Menu
               </button>

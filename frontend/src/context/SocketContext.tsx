@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import socket from "../utils/socket";
+import chatSocket from "../utils/chatSocket";
 import { useAuth } from "./AuthContext";
 
-const SocketContext = createContext(socket);
+const SocketContext = createContext(chatSocket);
 const OnlineUsersContext = createContext<string[]>([]);
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
@@ -12,7 +12,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const handleConnect = () => {
       if (user?.id) {
-        socket.emit("auth", { userId: user.id });
+        chatSocket.emit("auth", { userId: user.id });
       }
     };
 
@@ -20,23 +20,23 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       setOnlineUsers(userIds);
     };
 
-    if (!socket.connected) {
-      socket.connect();
-      socket.on("connect", handleConnect);
+    if (!chatSocket.connected) {
+      chatSocket.connect();
+      chatSocket.on("connect", handleConnect);
     } else {
       handleConnect();
     }
-    socket.on("online-users", handleOnlineUsers);
+    chatSocket.on("online-users", handleOnlineUsers);
 
     return () => {
-      socket.off("connect", handleConnect);
-      socket.off("online-users", handleOnlineUsers);
-      socket.disconnect();
+      chatSocket.off("connect", handleConnect);
+      chatSocket.off("online-users", handleOnlineUsers);
+      chatSocket.disconnect();
     };
   }, [user]);
 
   return (
-    <SocketContext.Provider value={socket}>
+    <SocketContext.Provider value={chatSocket}>
       <OnlineUsersContext.Provider value={onlineUsers}>
         {children}
       </OnlineUsersContext.Provider>

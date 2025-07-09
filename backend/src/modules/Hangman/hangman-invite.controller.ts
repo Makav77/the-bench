@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Get, UseGuards, Request, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, UseGuards, Request, Patch, Req } from '@nestjs/common';
 import { HangmanInviteService } from './hangman-invite.service';
 import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
 
@@ -36,5 +36,10 @@ export class HangmanInviteController {
         @Body('word') word: string,
     ) {
         return this.inviteService.setWord(id, word);
+    }
+
+    @Patch(':id/cancel')
+    async cancelInvite(@Param('id') id: string) {
+        return this.inviteService.cancelInvite(id);
     }
 }

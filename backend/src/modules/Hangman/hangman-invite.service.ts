@@ -1,16 +1,16 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HangmanInvite } from './entities/invite.entity';
 import { LessThan, Repository } from 'typeorm';
 import { User } from '../Users/entities/user.entity';
-import { ChatGateway } from '../chat/chat.gateway';
+import { HangmanGateway } from './hangman.gateway';
 
 @Injectable()
 export class HangmanInviteService {
     constructor(
         @InjectRepository(HangmanInvite)
         private inviteRepo: Repository<HangmanInvite>,
-        private readonly chatGateway: ChatGateway,
+        private readonly hangmanGateway: HangmanGateway,
     ) { }
 
     async sendInvite(sender: User, recipientId: string): Promise<HangmanInvite> {
@@ -47,11 +47,11 @@ export class HangmanInviteService {
                 ? [invite.sender.id, invite.recipient.id]
                 : [invite.recipient.id, invite.sender.id];
 
-            this.chatGateway.server.to(`user-${invite.sender.id}`).emit('hangman:gameStarted', {
+            this.hangmanGateway.server.to(`user-${invite.sender.id}`).emit('hangman:gameStarted', {
                 inviteId: invite.id,
                 role: invite.sender.id === giverId ? 'giver' : 'guesser',
             });
-            this.chatGateway.server.to(`user-${invite.recipient.id}`).emit('hangman:gameStarted', {
+            this.hangmanGateway.server.to(`user-${invite.recipient.id}`).emit('hangman:gameStarted', {
                 inviteId: invite.id,
                 role: invite.recipient.id === giverId ? 'giver' : 'guesser',
             });
@@ -63,6 +63,7 @@ export class HangmanInviteService {
             };
         }
     }
+
 
     async deleteExpiredInvites(): Promise<number> {
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
@@ -89,6 +90,18 @@ export class HangmanInviteService {
         }
 
         invite.wordToGuess = word;
+        return this.inviteRepo.save(invite);
+    }
+
+    async cancelInvite(id: string) {
+        const invite = await this.inviteRepo.findOne({ where: { id } });
+        if (!invite) throw new NotFoundException('Invite not found');
+
+        if (invite.status !== 'pending') {
+            throw new BadRequestException('Only pending invites can be cancelled');
+        }
+
+        invite.status = 'declined';
         return this.inviteRepo.save(invite);
     }
 }
