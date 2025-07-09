@@ -34,7 +34,7 @@ function EditFlashPostForm() {
 
     return (
         <div className="p-6">
-            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2">{t("editFlashpost")}</h1>
+            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2 max-sm:w-full">{t("editFlashpost")}</h1>
             <FlashPostForm defaultValues={defaults} onSubmit={handleSubmit} />
         </div>
     );
