@@ -109,12 +109,12 @@ function PollDetailPage() {
 
     return (
         <div>
-            <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
-                <div className="flex justify-between items-center">
+            <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10 max-sm:w-[95%] max-sm:p-6">
+                <div className="flex justify-between items-center gap-10">
                     <button
                         type="button"
                         onClick={() => navigate("/polls")}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer max-sm:w-full max-sm:text-base max-sm:h-12"
                     >
                         {t("back")}
                     </button>
@@ -135,7 +135,7 @@ function PollDetailPage() {
                 <h1 className="text-2xl font-bold">{poll.question}</h1>
 
                 <p className="text-sm text-gray-500 mb-4 -mt-3">
-                    {t("publishedBy")} {" "}
+                    {t("publishedBy")}{" "}
                     <span
                         onClick={() => navigate(`/profile/${poll.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -155,13 +155,14 @@ function PollDetailPage() {
                         {poll.options.map(o => (
                             <label
                                 key={o.id}
-                                className="block"
+                                className="block text-2xl"
                             >
                                 <input
                                     type={poll.type === "single" ? "radio":"checkbox"}
                                     name="opt"
                                     value={o.id}
                                     disabled={!!(isClosed || hasVoted || isAdminorModerator)}
+                                    className="mr-2"
                                 />{" "}
                                 {o.label}
                             </label>
@@ -169,7 +170,7 @@ function PollDetailPage() {
                     </div>
                 ) : (
                     <div>
-                        <div className="mt-4 p-4 bg-white rounded-2xl shadow w-[60%] mx-auto">
+                        <div className="mt-4 p-4 bg-white rounded-2xl shadow w-[60%] mx-auto max-sm:w-full">
                             <h2 className="text-xl font-semibold mb-2">{t("results")}</h2>
                             {(() => {
                                 const totalVotes = poll.options.reduce((sum, o) => sum + o.votesCount, 0);
@@ -177,13 +178,13 @@ function PollDetailPage() {
 
                                 return sorted.map(o => {
                                     const pct = totalVotes > 0
-                                    ? Math.round((o.votesCount / totalVotes) * 100)
-                                    : 0;
-                            
+                                        ? Math.round((o.votesCount / totalVotes) * 100)
+                                        : 0;
+
                                     return (
                                         <p key={o.id} className="text-sm">
                                             <div className="flex justify-between items-center">
-                                                {o.label} 
+                                                {o.label}
                                                 <span className="px-1 my-1 bg-blue-400 rounded">{pct}%</span>
                                             </div>
                                             <div className="border-t-1 h-1" />
@@ -195,7 +196,7 @@ function PollDetailPage() {
                     </div>
                 )}
 
-                <div className={`${restricted ? 'w-[100%]' : 'w-[80%]'} mx-auto flex justify-around mt-8`}>
+                <div className={`${restricted ? 'w-[100%]' : 'w-[80%]'} mx-auto flex justify-around mt-8 max-sm:w-full max-sm:flex-col max-sm:gap-4 max-sm:mt-6`}>
                     {!isClosed && !hasVoted && user?.role !== "admin" && user?.role !== "moderator" ? (
                         restricted ? (
                             <p className="text-red-600 font-semibold text-center">
@@ -215,7 +216,7 @@ function PollDetailPage() {
                         ) : (
                             <button
                                 onClick={handleVote}
-                                className="w-[25%] bg-green-600 text-white px-6 py-2 rounded cursor-pointer"
+                                className="w-[25%] bg-green-600 text-white px-6 py-2 rounded cursor-pointer max-sm:w-full max-sm:h-12 max-sm:text-base"
                             >
                                 {t("vote")}
                             </button>
@@ -225,7 +226,7 @@ function PollDetailPage() {
                     {(isAuthor || isAdminorModerator) && !isClosed && (
                         <button
                             onClick={handleClose}
-                            className="w-[25%] bg-yellow-600 text-white px-6 py-1 rounded cursor-pointer"
+                            className="w-[25%] bg-yellow-600 text-white px-6 py-1 rounded cursor-pointer max-sm:w-full max-sm:h-12 max-sm:text-base"
                         >
                             {t("close")}
                         </button>
@@ -234,7 +235,7 @@ function PollDetailPage() {
                     {(isAuthor || isAdminorModerator) && (
                         <button
                             onClick={handleDelete}
-                            className="w-[25%] bg-red-600 text-white px-6 py-1 rounded cursor-pointer"
+                            className="w-[25%] bg-red-600 text-white px-6 py-1 rounded cursor-pointer max-sm:w-full max-sm:h-12 max-sm:text-base"
                         >
                             {t("delete")}
                         </button>
@@ -243,10 +244,10 @@ function PollDetailPage() {
             </div>
             
             {!isAuthor && poll.author.role !== "admin" && poll.author.role !== "moderator" && (
-                <div className="w-[30%] mx-auto flex justify-end">
+                <div className="w-[30%] mx-auto flex justify-end max-sm:w-full">
                     <button
                         onClick={() => setShowReportModal(true)}
-                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer max-sm:w-full max-sm:h-12"
                     >
                         {t("report")}
                     </button>
