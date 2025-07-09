@@ -48,7 +48,7 @@ function CreateChallengePage() {
 
     return (
         <div className="p-6">
-            <h1 className="text-4xl font-semibold mb-4">{t("createChallenge")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("createChallenge")}</h1>
             <ChallengeForm onSubmit={handleSubmit} />
         </div>
     );

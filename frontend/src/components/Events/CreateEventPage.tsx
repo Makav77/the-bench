@@ -44,7 +44,7 @@ function CreateEventPage() {
 
     return (
         <div className="p-6">
-            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2 max-sm:w-full">{t("createEvent")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("createEvent")}</h1>
             <EventForm onSubmit={handleSubmit} />
         </div>
     );
