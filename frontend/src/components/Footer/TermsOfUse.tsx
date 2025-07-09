@@ -4,7 +4,7 @@ function TermsOfUse() {
     const navigate = useNavigate();
     return (
         <div>
-            <div className="relative w-[50%] mx-auto bg-white rounded-3xl p-10 my-10">
+            <div className="relative w-[50%] mx-auto bg-white rounded-3xl p-10 my-10 max-sm:w-[90%] max-sm:p-4">
                 <h1 className="text-3xl mb-5 font-bold">Terms of Use of "The Bench"</h1>
                 <p>This document governs</p>
                 <ul className="list-disc pl-15">
@@ -314,7 +314,8 @@ function TermsOfUse() {
 
             <button
                 type="button"
-                className="fixed bottom-10 right-10 z-50 bg-white text-blue-600 px-4 py-3 rounded-full shadow-lg hover:bg-gray-200 transition-colors duration-200 text-lg font-semibold cursor-pointer"
+                className="
+        fixed bottom-10 right-10 z-50 bg-white text-blue-600 px-4 py-3 rounded-full shadow-lg hover:bg-gray-200 transition-colors duration-200 text-lg font-semibold cursor-pointer max-sm:w-[90%] max-sm:bg-gray-400 max-sm:text-black max-sm:mx-auto max-sm:right-auto max-sm:left-1/2 max-sm:-translate-x-1/2"
                 onClick={() => navigate("/homepage")}
             >
                 Go to homepage
