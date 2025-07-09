@@ -26,6 +26,7 @@ function HangmanPage() {
   const [waitingTimer, setWaitingTimer] = useState<ReturnType<typeof setInterval> | null>(null);
   const [invitedFriendName, setInvitedFriendName] = useState<string | null>(null);
   const [pendingInvites, setPendingInvites] = useState<any[]>([]);
+  const [inviteExpired, setInviteExpired] = useState(false);
   const [inviteId, setInviteId] = useState<string | null>(null);
 
   const maxIncorrect = 7;
@@ -76,8 +77,7 @@ function HangmanPage() {
       setWaitingTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          setInvitedFriendId(null);
-          setInvitedFriendName(null);
+          setInviteExpired(true);
           return 300;
         }
         return prev - 1;
@@ -304,37 +304,54 @@ function HangmanPage() {
             <h2 className="text-xl font-semibold text-center">Invite a Friend</h2>
 
             {invitedFriendId ? (
-              <div className="text-center space-y-2">
-                <p className="text-blue-600 font-medium">
-                  Waiting for {invitedFriendName} to join...
-                </p>
-                <p className="text-gray-600">
-                  Time remaining: {Math.floor(waitingTimeLeft / 60)}:
-                  {(waitingTimeLeft % 60).toString().padStart(2, "0")}
-                </p>
-                <button
-                  onClick={async () => {
-                    if (invitedFriendId) {
-                      try {
-                        if (!inviteId) {
-                          toast.error("No invite ID available.");
-                          return;
-                        }
-
-                        await handleCancel(inviteId);
-                      } catch (err) {
+              inviteExpired ? (
+                <div className="text-center space-y-4">
+                  <p className="text-red-600 font-medium">
+                    {invitedFriendName} did not accept the invitation in time.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setInvitedFriendId(null);
+                      setInvitedFriendName(null);
+                      setInviteExpired(false);
+                      setWaitingTimeLeft(300);
+                      setGameMode(null);
+                    }}
+                    className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded cursor-pointer"
+                  >
+                    ← Back to Menu
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center space-y-2">
+                  <p className="text-blue-600 font-medium">
+                    Waiting for {invitedFriendName} to join...
+                  </p>
+                  <p className="text-gray-600">
+                    Time remaining: {Math.floor(waitingTimeLeft / 60)}:
+                    {(waitingTimeLeft % 60).toString().padStart(2, "0")}
+                  </p>
+                  <button
+                    onClick={async () => {
+                      if (invitedFriendId) {
+                        try {
+                          if (!inviteId) {
+                            toast.error("No invite ID available.");
+                            return;
+                          }
+                          await handleCancel(inviteId);
+                        } catch { }
                       }
-                    }
-
-                    setInvitedFriendId(null);
-                    setWaitingTimeLeft(300);
-                    if (waitingTimer) clearInterval(waitingTimer);
-                  }}
-                  className="text-sm text-gray-600 hover:underline cursor-pointer"
-                >
-                  Cancel Invitation
-                </button>
-              </div>
+                      setInvitedFriendId(null);
+                      setWaitingTimeLeft(300);
+                      if (waitingTimer) clearInterval(waitingTimer);
+                    }}
+                    className="text-sm text-gray-600 hover:underline cursor-pointer"
+                  >
+                    Cancel Invitation
+                  </button>
+                </div>
+              )
             ) : (
               <div className="flex flex-col gap-3 items-center">
                 {friends.length === 0 && <p className="text-gray-500">You have no friends to invite.</p>}

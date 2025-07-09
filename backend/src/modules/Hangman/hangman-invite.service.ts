@@ -19,7 +19,19 @@ export class HangmanInviteService {
             recipient: { id: recipientId } as User,
             status: 'pending',
         });
-        return this.inviteRepo.save(invite);
+
+        const savedInvite = await this.inviteRepo.save(invite);
+
+        setTimeout(async () => {
+            const fresh = await this.inviteRepo.findOneBy({ id: savedInvite.id });
+
+            if (fresh?.status === 'pending') {
+                fresh.status = 'declined';
+                await this.inviteRepo.save(fresh);
+            }
+        }, 5 * 60 * 1000);
+
+        return savedInvite;
     }
 
     async getPendingInvitesForUser(userId: string): Promise<HangmanInvite[]> {
