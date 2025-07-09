@@ -64,29 +64,29 @@ export default function ArtisansByTypePage() {
     }
 
     return (
-        <div className="w-[25%] mx-auto my-10">
-                <button
-                    type="button"
-                    onClick={() => navigate("/artisans")}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
-                >
-                    {t("back")}
-                </button>
-            <h2 className="text-2xl font-bold mb-4">
+        <div className="w-[25%] mx-auto my-10 max-sm:w-full max-sm:my-2 max-sm:px-2">
+            <button
+                type="button"
+                onClick={() => navigate("/artisans")}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5 max-sm:w-full max-sm:text-base max-sm:py-3"
+            >
+                {t("back")}
+            </button>
+            <h2 className="text-2xl font-bold mb-4 max-sm:mb-3">
                 <span className="capitalize">{job}</span> {t("aroundMe")}
             </h2>
             {artisans.length > 0 ? (
-                <ul className="space-y-6">
+                <ul className="space-y-6 max-sm:space-y-4">
                     {artisans.map(a => (
                         <li 
                             key={a.place_id}
-                            className="rounded-2xl p-6 shadow-xl bg-white"
+                            className="rounded-2xl p-6 shadow-xl bg-white max-sm:p-4"
                         >
-                            <h3 className="text-xl font-bold">{a.name}</h3>
-                            <p className="text-gray-700">{a.formatted_address}</p>
+                            <h3 className="text-xl font-bold max-sm:text-lg">{a.name}</h3>
+                            <p className="text-gray-700 max-sm:text-base">{a.formatted_address}</p>
 
                             {a.rating != null && (
-                                <p className="text-sm text-yellow-600">
+                                <p className="text-sm text-yellow-600 max-sm:text-base">
                                     ⭐ {a.rating.toFixed(1)}{" "}
                                     <span className="text-gray-500">
                                         ({a.user_ratings_total} {t("reviews")})
@@ -97,7 +97,7 @@ export default function ArtisansByTypePage() {
                             {a.opening_hours && (
                                 <div className="mt-1">
                                     <strong>{t("hours")}</strong>
-                                    <ul className="text-sm">
+                                    <ul className="text-sm max-sm:text-base">
                                         {a.opening_hours.weekday_text.map((d, i) => (
                                             <li key={i}>{d}</li>
                                         ))}
@@ -107,10 +107,9 @@ export default function ArtisansByTypePage() {
 
                             <div className="mt-3">
                                 <strong>{t("contact")}</strong>
-                            
 
                                 {a.formatted_phone_number && (
-                                    <p>📞 {a.formatted_phone_number}</p>
+                                    <p className="max-sm:text-base">📞 {a.formatted_phone_number}</p>
                                 )}
 
                                 {a.website && (
@@ -131,12 +130,12 @@ export default function ArtisansByTypePage() {
                     ))}
                 </ul>
             ) : (
-                <p className="italic text-gray-500">{t("noArtisans")}</p>
+                <p className="italic text-gray-500 max-sm:text-base">{t("noArtisans")}</p>
             )}
             <button
                 type="button"
                 onClick={() => navigate("/artisans")}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mt-5"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mt-5 max-sm:w-full max-sm:text-base max-sm:py-3"
             >
                 {t("back")}
             </button>
