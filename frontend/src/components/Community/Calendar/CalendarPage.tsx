@@ -59,27 +59,27 @@ function CalendarPage() {
 
 
     return (
-        <div className="p-6 w-[80%] mx-auto">
+        <div className="p-6 w-[80%] mx-auto max-sm:w-full max-sm:p-2">
             <button
                 type="button"
                 onClick={() => navigate("/community")}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5 max-sm:w-full max-sm:text-base max-sm:py-3"
             >
                 {t("back")}
             </button>
 
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-4 max-sm:gap-3">
                 <button
-                    className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-gray-300"
+                    className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-gray-300 max-sm:text-lg max-sm:px-10 max-sm:py-3"
                     onClick={() => setYear(y => y - 1)}
                 >
                     ← {year - 1}
                 </button>
 
-                <h2 className="text-3xl font-bold">{year}</h2>
+                <h2 className="text-3xl font-bold max-sm:text-2xl">{year}</h2>
 
                 <button
-                    className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-gray-300"
+                    className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-gray-300 max-sm:text-lg max-sm:px-10 max-sm:py-3"
                     onClick={() => setYear(y => y + 1)}
                 >
                     {year + 1} →
