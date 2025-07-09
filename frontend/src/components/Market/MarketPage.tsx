@@ -17,7 +17,6 @@ function MarketPage() {
         async function load() {
             setIsLoading(true);
             setError(null);
-
             try {
                 const { data, lastPage } = await getItems(page, 10);
                 setItems(data);
@@ -43,14 +42,20 @@ function MarketPage() {
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">{t("market")}</h1>
+            <h1 className="text-3xl font-bold mb-4">
+                {t("market")}
+            </h1>
 
             {error && <p className="text-red-500 max-sm:text-lg">{error}</p>}
 
             {isLoading ? (
-                <p className="max-sm:text-lg">{t("loading")}</p>
+                <p className="max-sm:text-lg">
+                    {t("loading")}
+                </p>
             ) : items.length === 0 ? (
-                <p className="max-sm:text-lg">{t("noItem")}</p>
+                <p className="max-sm:text-lg">
+                    {t("noItem")}
+                </p>
             ) : (
                 <div className="grid grid-cols-1 gap-4 max-sm:gap-4">
                     {items.map((item) => (
@@ -61,7 +66,9 @@ function MarketPage() {
                             onClick={() => navigate(`/market/${item.id}`)}
                         >
                             <div className="flex flex-col flex-1 max-sm:mb-2 max-sm:text-lg">
-                                <h2 className="text-lg font-semibold max-sm:text-2xl max-sm:mb-2">{item.title}</h2>
+                                <h2 className="text-lg font-semibold max-sm:text-2xl max-sm:mb-2">
+                                    {item.title}
+                                </h2>
 
                                 <div className="text-gray-600 text-sm max-sm:text-lg max-sm:mb-2">
                                     {item.price != null && !isNaN(Number(item.price)) && (

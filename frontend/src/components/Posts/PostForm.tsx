@@ -44,6 +44,7 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
                 <label className="font-semibold max-sm:xl">
                     {t("title")} <span className="text-red-500">*</span>
                 </label>
+
                 <input
                     type="text"
                     value={title}
@@ -73,6 +74,7 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
                 >
                     {t("cancel")}
                 </button>
+
                 <button
                     type="submit"
                     disabled={isLoading}

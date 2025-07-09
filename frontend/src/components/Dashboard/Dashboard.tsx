@@ -13,7 +13,9 @@ function DashboardPage() {
 
     return (
         <div className="p-6 w-[30%] mx-auto max-sm:w-full max-sm:p-2">
-            <h1 className="text-4xl font-bold mb-4 max-sm:text-4xl max-sm:text-center">{t("dashboard")}</h1>
+            <h1 className="text-4xl font-bold mb-4 max-sm:text-4xl max-sm:text-center">
+                {t("dashboard")}
+            </h1>
 
             <div className="flex border-b mb-6 max-sm:flex-col max-sm:gap-2 max-sm:border-none">
                 <button
@@ -26,6 +28,7 @@ function DashboardPage() {
                 >
                     {t("challenges")}
                 </button>
+
                 <button
                     onClick={() => setActiveTab("restrictions")}
                     className={`cursor-pointer px-4 py-2 -mb-px max-sm:px-3 max-sm:py-3 max-sm:text-lg max-sm:w-full max-sm:rounded max-sm:shadow
@@ -36,6 +39,7 @@ function DashboardPage() {
                 >
                     {t("restrictions")}
                 </button>
+
                 <button
                     onClick={() => setActiveTab("reports")}
                     className={`cursor-pointer px-4 py-2 -mb-px max-sm:px-3 max-sm:py-3 max-sm:text-lg max-sm:w-full max-sm:rounded max-sm:shadow
@@ -46,6 +50,7 @@ function DashboardPage() {
                 >
                     {t("reports")}
                 </button>
+
                 <button
                     onClick={() => setActiveTab("news")}
                     className={`cursor-pointer px-4 py-2 -mb-px max-sm:px-3 max-sm:py-3 max-sm:text-lg max-sm:w-full max-sm:rounded max-sm:shadow
@@ -63,8 +68,6 @@ function DashboardPage() {
             {activeTab === "reports" && <DashboardReports />}
             {activeTab === "news" && <DashboardNews />}
         </div>
-
-
     );
 }
 

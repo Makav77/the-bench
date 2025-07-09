@@ -12,7 +12,9 @@ function CreatePostPage() {
     const { restricted, expiresAt, reason } = usePermission("publish_post");
 
     if (restricted === null) {
-        return <p className="p-6 text-center">{t("checkingPermissions")}</p>;
+        return <p className="p-6 text-center">
+            {t("checkingPermissions")}
+        </p>;
     }
 
     if (restricted) {
@@ -44,7 +46,10 @@ function CreatePostPage() {
 
     return (
         <div className="p-6">
-            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("createPost")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">
+                {t("createPost")}
+            </h1>
+
             <PostForm onSubmit={handleSubmit} />
         </div>
     );

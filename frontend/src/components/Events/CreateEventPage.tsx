@@ -12,7 +12,9 @@ function CreateEventPage() {
 
     const { restricted, expiresAt, reason } = usePermission("create_event");
     if (restricted === null) {
-        return <p className="p-6 text-center">{t("checkingPermissions")}</p>;
+        return <p className="p-6 text-center">
+            {t("checkingPermissions")}
+        </p>;
     }
 
     if (restricted) {
@@ -44,7 +46,10 @@ function CreateEventPage() {
 
     return (
         <div className="p-6">
-            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("createEvent")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">
+                {t("createEvent")}
+            </h1>
+
             <EventForm onSubmit={handleSubmit} />
         </div>
     );

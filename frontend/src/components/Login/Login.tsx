@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/authService";
 import { useAuth } from "../../context/AuthContext";
 
-
 interface loginCredentials {
     email: string;
     password: string;
@@ -22,7 +21,6 @@ function Login() {
     const { login } = useAuth();
     const { t } = useTranslation("Login/Login");
     const navigate = useNavigate();
-
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [loginCredentials, setLoginCredentials] = useState<loginCredentials>({
@@ -58,7 +56,10 @@ function Login() {
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
         const { name, value } = e.target;
-        setLoginCredentials((prev) => ({ ...prev, [name]: value }));
+        setLoginCredentials((prev) => ({
+            ...prev,
+            [name]: value
+        }));
         setCurrentLoginState(loginState.noError);
     };
 
@@ -85,8 +86,7 @@ function Login() {
             }
 
             navigate("/resetpassword");
-        } catch (error) {
-            console.error("Login failed : " + error);
+        } catch {
             setCurrentLoginState(loginState.invalidCredentials)
         } finally {
             setIsLoading(false);

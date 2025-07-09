@@ -38,7 +38,6 @@ function BulletinsBoardPage() {
     useEffect(() => {
         const loadFlash = async () => {
             setFlashLoading(true);
-
             try {
                 const { data, lastPage } = await getFlashPosts(flashPage, 5);
                 setFlashPosts(data);
@@ -72,10 +71,14 @@ function BulletinsBoardPage() {
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">{t("bulletinsBoard")}</h1>
+            <h1 className="text-3xl font-bold mb-4">
+                {t("bulletinsBoard")}
+            </h1>
 
             <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-2 max-sm:text-xl">{t("flashPost")}</h2>
+                <h2 className="text-2xl font-semibold mb-2 max-sm:text-xl">
+                    {t("flashPost")}
+                </h2>
 
                 {flashLoading
                     ? <p className="max-sm:text-lg">{t("loading")}</p>
@@ -97,6 +100,7 @@ function BulletinsBoardPage() {
                                                 </p>
                                                 <CountdownTimer createdAt={flashpost.createdAt} />
                                             </div>
+
                                             <p className="text-sm text-gray-600 max-sm:text-base">
                                                 {t("author")}{" "}
                                                 <span
@@ -130,7 +134,9 @@ function BulletinsBoardPage() {
                         {t("previous")}
                     </button>
 
-                    <span className="max-sm:text-lg">{t("page")} {flashPage} / {flashLastPage}</span>
+                    <span className="max-sm:text-lg">
+                        {t("page")} {flashPage} / {flashLastPage}
+                    </span>
 
                     <button
                         disabled={flashPage >= flashLastPage}
@@ -143,7 +149,9 @@ function BulletinsBoardPage() {
             </section>
 
             <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-2 max-sm:text-xl">{t("posts")}</h2>
+                <h2 className="text-2xl font-semibold mb-2 max-sm:text-xl">
+                    {t("posts")}
+                </h2>
 
                 {loading
                     ? <p className="max-sm:text-lg">{t("loading")}</p>
@@ -195,7 +203,9 @@ function BulletinsBoardPage() {
                         {t("previous")}
                     </button>
 
-                    <span className="max-sm:text-lg">{t("page")} {page} / {lastPage}</span>
+                    <span className="max-sm:text-lg">
+                        {t("page")} {page} / {lastPage}
+                    </span>
 
                     <button
                         type="button"

@@ -12,7 +12,9 @@ function CreateFlashPostForm() {
 
     const { restricted, expiresAt, reason } = usePermission("publish_flash_post");
     if (restricted === null) {
-        return <p className="p-6 text-center">{t("checkingPermissions")}</p>;
+        return <p className="p-6 text-center">
+            {t("checkingPermissions")}
+        </p>;
     }
 
     if (restricted) {
@@ -44,7 +46,10 @@ function CreateFlashPostForm() {
 
     return (
         <div className="p-6">
-            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2 max-sm:w-full">{t("createFlashpost")}</h1>
+            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2 max-sm:w-full">
+                {t("createFlashpost")}
+            </h1>
+
             <FlashPostForm onSubmit={handleSubmit} />
         </div>
     );

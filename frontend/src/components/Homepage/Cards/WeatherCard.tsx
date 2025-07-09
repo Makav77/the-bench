@@ -23,7 +23,9 @@ function WeatherCard() {
 
     if (!weather) {
         return (
-            <div>{t("loading")}</div>
+            <div>
+                {t("loading")}
+            </div>
         );
     }
 

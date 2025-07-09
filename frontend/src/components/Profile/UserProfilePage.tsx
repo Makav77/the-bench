@@ -135,7 +135,7 @@ export default function UserProfilePage() {
             });
             toast.success(t("toastProfilPicUpdated"));
             window.location.reload();
-        } catch (error) {
+        } catch {
             toast.error(t("toastProfilPicUpdatedError"));
         }
     };
@@ -143,6 +143,7 @@ export default function UserProfilePage() {
     if (loading) {
         return <p className="p-6">{t("loading")}</p>;
     }
+
     if (!profile) {
         return <p className="p-6">{t("profileNotFound")}</p>;
     }
@@ -210,7 +211,10 @@ export default function UserProfilePage() {
                         {t("noImage")}
                     </div>
                 )}
-                <h1 className="text-2xl max-sm:text-lg font-bold">{profile.firstname} {profile.lastname}</h1>
+
+                <h1 className="text-2xl max-sm:text-lg font-bold">
+                    {profile.firstname} {profile.lastname}
+                </h1>
 
                 {!isOwnProfile && (
                     <div className="flex align-center items-center gap-4 max-sm:flex-col max-sm:w-3/4 max-sm:gap-2">
@@ -336,9 +340,14 @@ export default function UserProfilePage() {
                     </div>
                 )}
 
-                <h2 className="text-xl max-sm:text-base font-semibold mb-2">{t("badges")}</h2>
+                <h2 className="text-xl max-sm:text-base font-semibold mb-2">
+                    {t("badges")}
+                </h2>
+
                 {profile.badges.length === 0 ? (
-                    <p className="text-gray-600 italic">{t("noBadges")}</p>
+                    <p className="text-gray-600 italic">
+                        {t("noBadges")}
+                    </p>
                 ) : (
                     <ul className="flex flex-wrap gap-2">
                         {profile.badges.map(badge => (
@@ -358,7 +367,10 @@ export default function UserProfilePage() {
             </div>
 
             <div>
-                <h2 className="text-xl max-sm:text-base font-semibold mb-2">{t("participatedEvent")}</h2>
+                <h2 className="text-xl max-sm:text-base font-semibold mb-2">
+                    {t("participatedEvent")}
+                </h2>
+
                 {profile.events.length === 0 ? (
                     <p className="text-gray-600 italic">{t("noEventDone")}</p>
                 ) : (
@@ -373,7 +385,10 @@ export default function UserProfilePage() {
             </div>
 
             <div>
-                <h2 className="text-xl max-sm:text-base font-semibold mb-2">{t("participatedChallenge")}</h2>
+                <h2 className="text-xl max-sm:text-base font-semibold mb-2">
+                    {t("participatedChallenge")}
+                </h2>
+
                 {profile.challenges.length === 0 ? (
                     <p className="text-gray-600 italic">{t("noChallengeDone")}</p>
                 ) : (
@@ -388,7 +403,10 @@ export default function UserProfilePage() {
             </div>
 
             <div>
-                <h2 className="text-xl max-sm:text-base font-semibold mb-2">{t("marketItem")}</h2>
+                <h2 className="text-xl max-sm:text-base font-semibold mb-2">
+                    {t("marketItem")}
+                </h2>
+
                 {profile.marketItems.length === 0 ? (
                     <p className="text-gray-600 italic">{t("noItemOnSell")}</p>
                 ) : (
@@ -432,7 +450,10 @@ export default function UserProfilePage() {
                                 />
                             </div>
                         )}
-                        <h2 className="text-lg font-bold mb-4 text-center">{t("changePicture")}</h2>
+
+                        <h2 className="text-lg font-bold mb-4 text-center">
+                            {t("changePicture")}
+                        </h2>
 
                         <div className="mb-4 flex justify-center">
                             <button
@@ -450,8 +471,11 @@ export default function UserProfilePage() {
                                 onChange={handleFileChange}
                             />
                         </div>
+
                         {fileName && (
-                            <p className="text-sm text-gray-600 mt-2 text-center">{t("selected")} <strong>{fileName}</strong></p>
+                            <p className="text-sm text-gray-600 mt-2 text-center">
+                                {t("selected")} <strong>{fileName}</strong>
+                            </p>
                         )}
 
                         <div className="flex justify-end space-x-3 max-sm:flex-col max-sm:gap-3 max-sm:space-x-0 mt-4">
@@ -475,7 +499,6 @@ export default function UserProfilePage() {
                 </div>
             )}
 
-
             {showFriendsModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
                     <div className="bg-white p-6 max-sm:p-2 rounded-lg shadow-lg w-[90%] max-w-md">
@@ -497,6 +520,7 @@ export default function UserProfilePage() {
                                             alt={`${friend.firstname} ${friend.lastname}`}
                                             className="w-10 h-10 max-sm:w-7 max-sm:h-7 rounded-full object-cover border"
                                         />
+
                                         <Link
                                             to={`/profile/${friend.id}`}
                                             className="font-medium cursor-pointer hover:text-gray-800"
@@ -504,6 +528,7 @@ export default function UserProfilePage() {
                                         >
                                             {friend.firstname} {friend.lastname}
                                         </Link>
+
                                         <button
                                             onClick={() => handleRemoveFriend(friend.id)}
                                             disabled={removingFriendId === friend.id}
@@ -531,14 +556,15 @@ export default function UserProfilePage() {
                 </div>
             )}
 
-
             {showAddressModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
                     <div className="bg-white p-6 max-sm:p-2 rounded-lg shadow-lg w-[90%] max-w-md">
                         <h2 className="text-lg font-bold mb-3">{t("changeAddress")}</h2>
+
                         <p className="text-red-500 text-sm mb-2">
                             {t("warningChangeAddress")}
                         </p>
+
                         <div className="mb-2">
                             <input
                                 name="street"
@@ -548,6 +574,7 @@ export default function UserProfilePage() {
                                 value={address.street}
                                 onChange={handleAddressChange}
                             />
+
                             <input
                                 name="postalCode"
                                 type="text"
@@ -558,6 +585,7 @@ export default function UserProfilePage() {
                                 onChange={handleAddressChange}
                                 onBlur={handlePostalCodeSuggestion}
                             />
+
                             <div className="relative">
                                 <input
                                     name="city"
@@ -569,6 +597,7 @@ export default function UserProfilePage() {
                                     autoComplete="off"
                                     onFocus={() => setAddressCities(addressCities.length > 0 ? addressCities : [])}
                                 />
+
                                 {addressCities.length > 0 && (
                                     <ul className="absolute bg-white border rounded w-full max-h-32 overflow-y-auto shadow">
                                         {addressCities.map((city, idx) => (
@@ -583,15 +612,18 @@ export default function UserProfilePage() {
                                     </ul>
                                 )}
                             </div>
+
                             {address.irisName && (
                                 <div className="text-sm text-amber-700 italic mb-1">
                                     {t("neighborhoodFound")} <span className="font-bold">{address.irisName}</span>
                                 </div>
                             )}
+
                             {addressIrisError && (
                                 <div className="text-sm text-red-500 italic">{addressIrisError}</div>
                             )}
                         </div>
+
                         <div className="flex justify-end gap-2 mt-4 max-sm:flex-col max-sm:gap-3">
                             <button
                                 onClick={() => setShowAddressModal(false)}
@@ -599,6 +631,7 @@ export default function UserProfilePage() {
                             >
                                 {t("cancel")}
                             </button>
+
                             <button
                                 onClick={async () => {
                                     setAddressLoading(true);

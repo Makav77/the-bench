@@ -20,7 +20,6 @@ function FlashPostDetailPage() {
     useEffect(() => {
         const load = async () => {
             setIsLoading(true);
-
             try {
                 if (id) {
                     const post = await getFlashPost(id);
@@ -38,11 +37,15 @@ function FlashPostDetailPage() {
     }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">{t("loading")}</p>
+        return <p className="p-6">
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="p-6 text-red-500">{error}</p>
+        return <p className="p-6 text-red-500">
+            {error}
+        </p>
     }
 
     if (!flashPost) {
@@ -78,7 +81,10 @@ function FlashPostDetailPage() {
                     {t("back")}
                 </button>
 
-                <h1 className="text-2xl font-bold">{flashPost.title}</h1>
+                <h1 className="text-2xl font-bold">
+                    {flashPost.title}
+                </h1>
+
                 <p className="text-sm text-gray-600">
                     {t("publishedOn")} {new Date(flashPost.createdAt).toLocaleString()} <br />
                     {t("updatedOn")} {' '} {new Date(flashPost.updatedAt).toLocaleString()} <br />
@@ -95,7 +101,9 @@ function FlashPostDetailPage() {
                     <CountdownTimer createdAt={flashPost.createdAt} />
                 </div>
 
-                <p className="whitespace-pre-wrap max-sm:text-base">{flashPost.description}</p>
+                <p className="whitespace-pre-wrap max-sm:text-base">
+                    {flashPost.description}
+                </p>
 
                 {(isAuthor || isAdminorModerator) && (
                     <div className="mt-4 flex gap-2 justify-center max-sm:flex-col max-sm:gap-3">
@@ -106,6 +114,7 @@ function FlashPostDetailPage() {
                         >
                             {t("editPost")}
                         </button>
+
                         <button
                             type="button"
                             onClick={handleDelete}
@@ -138,7 +147,6 @@ function FlashPostDetailPage() {
             )}
         </div>
     );
-
 }
 
 export default FlashPostDetailPage;

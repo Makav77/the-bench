@@ -63,6 +63,7 @@ function Header() {
                         </span>
                     )}
                 </div>
+
                 <div className="flex items-center justify-center gap-2 w-full">
                     <img
                         src="assets/bench-logo.png"
@@ -72,11 +73,13 @@ function Header() {
                     />
                     <span className="text-4xl font-bold">The Bench</span>
                 </div>
+
                 {isAuthenticated && user && (
                     <span className="font-semibold mt-1 text-center text-xl">
                         {t("hello", { firstname: user.firstname })}
                     </span>
                 )}
+
                 <div className="flex flex-wrap gap-2 justify-center mt-2">
                     {isAuthenticated && user && (
                         <>
@@ -88,6 +91,7 @@ function Header() {
                             >
                                 {t("profile")}
                             </button>
+
                             <button
                                 type="button"
                                 aria-label="message-button"
@@ -96,6 +100,7 @@ function Header() {
                             >
                                 {t("messages")}
                             </button>
+
                             <button
                                 type="button"
                                 aria-label="logout-button"
@@ -104,6 +109,7 @@ function Header() {
                             >
                                 {t("logout")}
                             </button>
+
                             {user && (user.role === "admin" || user.role === "moderator") && (
                                 <button
                                     type="button"
@@ -117,6 +123,7 @@ function Header() {
                         </>
                     )}
                 </div>
+
                 {isAuthenticated && user && (
                     <div className="w-full mt-2 mb-1 px-2">
                         <div className="relative">
@@ -133,6 +140,7 @@ function Header() {
                                 className="w-full px-3 py-2 border rounded-2xl focus:outline-none focus:ring bg-gray-100 text-sm"
                                 placeholder={t("searchPlaceholder")}
                             />
+
                             {searchQuery.length >= 2 && (
                                 <div className="absolute z-10 w-full bg-white border border-gray-300 rounded mt-1 shadow max-h-40 overflow-y-auto">
                                     {isSearching ? (
@@ -162,6 +170,7 @@ function Header() {
                     </div>
                 )}
             </div>
+
             <div className="grid grid-cols-3 h-10 mb-15 mx-auto w-[75%] max-sm:hidden">
                 <div className="flex items-center">
                     <img
@@ -170,15 +179,20 @@ function Header() {
                         className="h-10 cursor-pointer"
                         onClick={() => navigate("/homepage")}
                     />
+
                     {isAuthenticated && user?.irisName && (
                         <span className="ml-8 px-2 py-1 bg-amber-100 text-amber-800 rounded font-semibold text-sm">
                             {t("neighborhood")} : {user.irisName}
                         </span>
                     )}
                 </div>
+
                 <div className="flex items-center justify-center">
-                    <p className="text-4xl font-bold">The Bench</p>
+                    <p className="text-4xl font-bold">
+                        The Bench
+                    </p>
                 </div>
+
                 <div className="flex flex-col items-end justify-end">
                     {isAuthenticated && user ? (
                         <div className="flex items-center">
@@ -191,6 +205,7 @@ function Header() {
                             >
                                 {t("profile")}
                             </button>
+
                             <button
                                 type="button"
                                 aria-label="message-button"
@@ -199,6 +214,7 @@ function Header() {
                             >
                                 {t("messages")}
                             </button>
+
                             <button
                                 type="button"
                                 aria-label="logout-button"
@@ -207,6 +223,7 @@ function Header() {
                             >
                                 {t("logout")}
                             </button>
+
                             {user && (user.role === "admin" || user.role === "moderator") && (
                                 <button
                                     type="button"
@@ -227,6 +244,7 @@ function Header() {
                             {t("login")}
                         </button>
                     )}
+
                     {isAuthenticated && user && (
                         <div className="mt-2 w-72">
                             <div className="relative">
@@ -243,6 +261,7 @@ function Header() {
                                     className="w-full px-3 py-1 border rounded-2xl focus:outline-none focus:ring bg-gray-100"
                                     placeholder={t("searchPlaceholder")}
                                 />
+
                                 {searchQuery.length >= 2 && (
                                     <div className="absolute z-10 w-full bg-white border border-gray-300 rounded mt-1 shadow max-h-40 overflow-y-auto">
                                         {isSearching ? (

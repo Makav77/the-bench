@@ -47,11 +47,14 @@ function DashboardNews() {
         if (reason === null) {
             return;
         }
+
         if (reason.trim() === "") {
             toast.error(t("toastRejectedReason"));
             return;
         }
+
         setUpdatingNewsId(newsId);
+
         try {
             await validateNews(newsId, { validated: false, rejectedReason: reason.trim() });
             toast.success(t("toastRejectNews"));
@@ -65,9 +68,14 @@ function DashboardNews() {
 
     return (
         <div className="bg-white p-6 rounded-2xl space-y-8 max-sm:p-2">
-            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">{t("waitingNews")}</h2>
+            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">
+                {t("waitingNews")}
+            </h2>
+
             {loadingNews ? (
-                <p className="text-center">{t("loading")}</p>
+                <p className="text-center">
+                    {t("loading")}
+                </p>
             ) : pendingNews.length === 0 ? (
                 <p className="text-center text-gray-600">
                     {t("noWaitingNews")}
@@ -83,6 +91,7 @@ function DashboardNews() {
                                 <p>
                                     <span className="font-semibold">{t("title")}</span> {news.title}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("author")}</span>{" "}
                                     <span
@@ -92,15 +101,18 @@ function DashboardNews() {
                                         {news.authorFirstname} {news.authorLastname}
                                     </span>
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("date")}</span>{" "}
                                     {news.createdAt && new Date(news.createdAt).toLocaleString()}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("preview")}</span>{" "}
                                     {news.content.slice(0, 200)}...
                                 </p>
                             </div>
+
                             <div className="flex gap-2 max-sm:flex-col max-sm:gap-3">
                                 <button
                                     onClick={() => handleValidateNews(news.id)}
@@ -111,6 +123,7 @@ function DashboardNews() {
                                         ? t("validation")
                                         : t("validate")}
                                 </button>
+
                                 <button
                                     onClick={() => handleRejectNews(news.id)}
                                     disabled={updatingNewsId === news.id}
@@ -135,9 +148,11 @@ function DashboardNews() {
                 >
                     {t("previous")}
                 </button>
+
                 <span className="max-sm:text-base">
                     {t("page")} {pageNews} / {lastPageNews}
                 </span>
+
                 <button
                     type="button"
                     disabled={pageNews >= lastPageNews}

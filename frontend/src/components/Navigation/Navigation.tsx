@@ -36,24 +36,28 @@ function Navigation() {
                 setMenuOpen(false);
             }
         };
+
         if (menuOpen) {
             document.addEventListener("mousedown", handleClick);
         }
+
         return () => {
             document.removeEventListener("mousedown", handleClick);
         };
     }, [menuOpen]);
 
     return (
-        <nav data-testid="navigation-bar" className="relative">
+        <nav
+            data-testid="navigation-bar" 
+            className="relative"
+        >
             <div className="grid grid-cols-5 gap-1 m-2 mt-10 pt-5 mb-5 w-[75%] mx-auto border-t-1 max-sm:hidden">
                 {navLinks.map((link) => (
                     <button
                         key={link.to}
                         type="button"
                         aria-label={link.label + "-button"}
-                        className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300
-                            ${isActive(link.match) ? "text-white" : "hover:underline"}`}
+                        className={`w-[75%] mx-auto text-xl font-semibold cursor-pointer transition-all duration-300 ${isActive(link.match) ? "text-white" : "hover:underline"}`}
                         onClick={() => navigate(link.to)}
                     >
                         {link.label}

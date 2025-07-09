@@ -176,6 +176,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                 >
                     {t("cancel")}
                 </button>
+
                 <button
                     type="submit"
                     disabled={isSubmitting}

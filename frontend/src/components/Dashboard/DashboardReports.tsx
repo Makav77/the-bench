@@ -12,7 +12,6 @@ type ReasonFilter = "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INA
 function DashboardReports() {
     const navigate = useNavigate();
     const { t } = useTranslation("Dashboard/DashboardReports");
-
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [reports, setReports] = useState<ReportDTO[]>([]);
@@ -158,6 +157,7 @@ function DashboardReports() {
                     className="border rounded px-2 py-1 w-full max-w-xs h-8 max-sm:max-w-none max-sm:w-full max-sm:text-lg max-sm:py-4"
                 />
             </div>
+
             <div className="mb-4 flex items-center space-x-2">
                 <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
                     {t("status")}
@@ -173,6 +173,7 @@ function DashboardReports() {
                     <option value="REJECTED">{t("rejected")}</option>
                 </select>
             </div>
+
             <div className="mb-4 flex items-center space-x-2">
                 <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
                     {t("content")}
@@ -191,6 +192,7 @@ function DashboardReports() {
                     <option value="CHALLENGE">{t("challenge")}</option>
                 </select>
             </div>
+
             <div className="mb-4 flex items-center space-x-2">
                 <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
                     {t("reason")}
@@ -212,9 +214,13 @@ function DashboardReports() {
             <div className="border-t-2 h-1 mb-5" />
 
             {loadingReports ? (
-                <p className="text-center">{t("loading")}</p>
+                <p className="text-center">
+                    {t("loading")}
+                </p>
             ) : filteredReports.length === 0 ? (
-                <p className="text-center">{t("noWaitingReport")}</p>
+                <p className="text-center">
+                    {t("noWaitingReport")}
+                </p>
             ) : (
                 <div className="space-y-4">
                     {filteredReports.map((report) => (
@@ -236,6 +242,7 @@ function DashboardReports() {
                                         {report.reporter.firstname} {report.reporter.lastname}
                                     </span>
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("reportedUser")}</span>{" "}
                                     <span
@@ -248,24 +255,29 @@ function DashboardReports() {
                                         {report.reportedUser.firstname} {report.reportedUser.lastname}
                                     </span>
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("content")}</span>{" "}
                                     <span>{contentTypeLabel(report.reportedContentType)}</span>
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("date")}</span>{" "}
                                     {format(new Date(report.createdAt), "dd/MM/yyyy 'at' HH:mm")}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("reason")}</span>{" "}
                                     {t(report.reason)}
                                 </p>
+
                                 {report.description && (
                                     <p>
                                         <span className="font-semibold">{t("description")}</span>{" "}
                                         {report.description}
                                     </p>
                                 )}
+
                                 <p>
                                     <span className="font-semibold">{t("status")}</span>{" "}
                                     <span className={
@@ -277,6 +289,7 @@ function DashboardReports() {
                                     </span>
                                 </p>
                             </div>
+
                             <div className="mt-4 md:mt-0 md:ml-4 flex-shrink-0 flex flex-col space-y-2 justify-center">
                                 {report.status === "PENDING" ? (
                                     <>
@@ -292,6 +305,7 @@ function DashboardReports() {
                                                 ? t("validation")
                                                 : t("validate")}
                                         </button>
+
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation()
@@ -325,9 +339,11 @@ function DashboardReports() {
                         >
                             {t("previous")}
                         </button>
+
                         <span>
                             {t("page")} {page} / {lastPage}
                         </span>
+
                         <button
                             type="button"
                             disabled={page >= lastPage}

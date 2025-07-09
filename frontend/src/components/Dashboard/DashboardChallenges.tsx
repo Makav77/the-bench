@@ -64,10 +64,13 @@ function DashboardChallenges() {
         if (reason === null) {
             return;
         }
+
         if (reason.trim() === "") {
             toast.error(t("toastRejectedReasonRequired"));
         }
+
         setUpdatingChallengeId(challengeId);
+
         try {
             await validateChallenge(challengeId, { validated: false, rejectedReason: reason.trim() });
             toast.success(t("toastChallengeRejected"));
@@ -99,11 +102,14 @@ function DashboardChallenges() {
         if (reason === null) {
             return;
         }
+
         if (reason.trim() === "") {
             toast.error(t("toastRejectedReasonRequired"));
             return;
         }
+
         setUpdatingCompletionId(completion.id);
+
         try {
             await validateCompletion(completion.challenge.id, completion.id, {
                 validated: false,
@@ -119,16 +125,25 @@ function DashboardChallenges() {
     };
 
     if (loadingChallenges) {
-        return <p className="p-6 text-center">{t("loadingPending")}</p>
+        return <p className="p-6 text-center">
+            {t("loadingPending")}
+        </p>
     }
 
     return (
         <div className="bg-white p-6 rounded-2xl space-y-8 max-sm:p-2">
-            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">{t("waitingChallenges")}</h2>
+            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">
+                {t("waitingChallenges")}
+            </h2>
+
             {loadingChallenges ? (
-                <p className="text-center">{t("loadingChallenges")}</p>
+                <p className="text-center">
+                    {t("loadingChallenges")}
+                </p>
             ) : pendingChallenges.length === 0 ? (
-                <p className="text-center text-gray-600">{t("noWaitingChallenge")}</p>
+                <p className="text-center text-gray-600">
+                    {t("noWaitingChallenge")}
+                </p>
             ) : (
                 <ul className="space-y-4">
                     {pendingChallenges.map((challenge) => (
@@ -160,6 +175,7 @@ function DashboardChallenges() {
                                     {challenge.successCriteria}
                                 </p>
                             </div>
+
                             <div className="flex gap-2 max-sm:flex-col max-sm:gap-3">
                                 <button
                                     onClick={() => handleValidateChallenge(challenge.id)}
@@ -170,6 +186,7 @@ function DashboardChallenges() {
                                         ? t("validationChallenge")
                                         : t("validateChallenge")}
                                 </button>
+
                                 <button
                                     onClick={() => handleRejectChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
@@ -194,9 +211,11 @@ function DashboardChallenges() {
                 >
                     {t("previous")}
                 </button>
+
                 <span className="max-sm:text-base">
                     {t("page")} {pageChallenge} / {lastPageChallenge}
                 </span>
+
                 <button
                     type="button"
                     disabled={pageChallenge >= lastPageChallenge}
@@ -209,11 +228,18 @@ function DashboardChallenges() {
 
             <hr className="my-6 border-gray-300 max-sm:my-3" />
 
-            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">{t("waitingCompletions")}</h2>
+            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">
+                {t("waitingCompletions")}
+            </h2>
+
             {loadingCompletions ? (
-                <p className="text-center">{t("loadingCompletions")}</p>
+                <p className="text-center">
+                    {t("loadingCompletions")}
+                </p>
             ) : pendingCompletions.length === 0 ? (
-                <p className="text-center text-gray-600">{t("noWaitingCompletion")}</p>
+                <p className="text-center text-gray-600">
+                    {t("noWaitingCompletion")}
+                </p>
             ) : (
                 <ul className="space-y-4">
                     {pendingCompletions.map((completion) => (
@@ -226,20 +252,24 @@ function DashboardChallenges() {
                                     <span className="font-semibold">{t("user")}</span>{" "}
                                     {completion.user.firstname} {completion.user.lastname}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("challenge")}</span>{" "}
                                     {completion.challenge.title}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("date")}</span>{" "}
                                     {format(new Date(completion.createdAt), "dd/MM/yyyy 'à' HH:mm")}
                                 </p>
+
                                 {completion.text && (
                                     <p>
                                         <span className="font-semibold">{t("proof")}</span> {completion.text}
                                     </p>
                                 )}
                             </div>
+
                             <div className="flex gap-2 max-sm:flex-col max-sm:gap-3">
                                 <button
                                     onClick={() => handleValidateCompletion(completion)}
@@ -250,6 +280,7 @@ function DashboardChallenges() {
                                         ? t("validationCompletion")
                                         : t("validateCompletion")}
                                 </button>
+
                                 <button
                                     onClick={() => handleRejectCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
@@ -274,9 +305,11 @@ function DashboardChallenges() {
                 >
                     {t("previous")}
                 </button>
+
                 <span className="max-sm:text-base">
                     {t("page")} {pageCompletion} / {lastPageCompletion}
                 </span>
+
                 <button
                     type="button"
                     disabled={pageCompletion >= lastPageCompletion}

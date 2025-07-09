@@ -30,15 +30,21 @@ function LatestFlashPostCard() {
     }, []);
 
     if (isLoading) {
-        return <p className="p-6">{t("loading")}</p>;
+        return <p className="p-6">
+            {t("loading")}
+        </p>;
     }
 
     if (error) {
-        return <p className="p-6 text-red-500">{error}</p>
+        return <p className="p-6 text-red-500">
+            {error}
+        </p>
     }
 
     if (!flashPost) {
-        return <p className="p-6">{t("noPostAvailable")}</p>
+        return <p className="p-6">
+            {t("noPostAvailable")}
+        </p>
     }
 
     return (
@@ -47,7 +53,10 @@ function LatestFlashPostCard() {
             className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5 mb-10"
         >
             <div className="pr-4">
-                <h4 className="text-lg font-bold">{flashPost.title}</h4>
+                <h4 className="text-lg font-bold">
+                    {flashPost.title}
+                </h4>
+
                 <p className="text-sm text-gray-500">
                     {t("lastUpdate")} {new Date(flashPost.updatedAt).toLocaleDateString()}
                 </p>

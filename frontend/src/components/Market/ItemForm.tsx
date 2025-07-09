@@ -141,6 +141,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 <label className="font-semibold max-sm:text-lg">
                     {t("pictures")}
                 </label>
+
                 <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
@@ -148,6 +149,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 >
                     {t("selectFiles")}
                 </button>
+
                 <input
                     ref={fileInputRef}
                     name="images"
@@ -158,6 +160,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                     className="w-full"
                     hidden
                 />
+
                 {previewURLs.length > 0 && (
                     <div className="grid grid-cols-3 gap-2 mt-2 max-sm:grid-cols-1 max-sm:gap-4">
                         {previewURLs.map((url, index) => (
@@ -176,6 +179,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 <label className="font-semibold max-sm:text-lg">
                     {t("contactMail")}
                 </label>
+
                 <input
                     name="contactEmail"
                     type="email"
@@ -189,6 +193,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 <label className="font-semibold max-sm:text-lg">
                     {t("contactPhone")}
                 </label>
+
                 <input
                     name="contactPhone"
                     type="tel"
@@ -206,6 +211,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 >
                     {t("cancel")}
                 </button>
+
                 <button
                     type="submit"
                     disabled={isSubmitting}

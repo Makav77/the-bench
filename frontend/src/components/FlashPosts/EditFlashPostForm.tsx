@@ -22,20 +22,31 @@ function EditFlashPostForm() {
     }, [id]);
 
     const handleSubmit = async (data: { title: string; description: string; }) => {
-        if (!id) return;
+        if (!id) {
+            return;
+        }
+
         const updated = await updateFlashPost(id!, data);
         toast.success(t("toastFlashpostUpdated"));
         navigate(`/flashposts/${updated.id}`);
     }
 
     if (!defaults) {
-        return <p>{t("loading")}</p>
+        return <p>
+            {t("loading")}
+        </p>
     };
 
     return (
         <div className="p-6">
-            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2 max-sm:w-full">{t("editFlashpost")}</h1>
-            <FlashPostForm defaultValues={defaults} onSubmit={handleSubmit} />
+            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2 max-sm:w-full">
+                {t("editFlashpost")}
+            </h1>
+
+            <FlashPostForm
+                defaultValues={defaults}
+                onSubmit={handleSubmit}
+            />
         </div>
     );
 }

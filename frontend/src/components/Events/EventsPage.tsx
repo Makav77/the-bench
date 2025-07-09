@@ -21,7 +21,6 @@ function EventsPage() {
         async function load() {
             setIsLoading(true);
             setError(null);
-
             try {
                 const { data, lastPage } = await getEvents(page, 5);
                 setEvents(data);
@@ -42,8 +41,7 @@ function EventsPage() {
                 ev.map((e) => (e.id === eventId ? { ...e, participantsList: updated.participantsList } : e))
             );
             toast.success("Succesful registration");
-        } catch (error) {
-            console.error(error);
+        } catch {
             toast.error("Error during registration");
         }
     }
@@ -60,10 +58,14 @@ function EventsPage() {
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">{t("upcomingEvent")}</h1>
+            <h1 className="text-3xl font-bold mb-4">
+                {t("upcomingEvent")}
+            </h1>
 
             {permLoading ? (
-                <p className="max-sm:text-lg">{t("checkingPermissions")}</p>
+                <p className="max-sm:text-lg">
+                    {t("checkingPermissions")}
+                </p>
             ) : restricted ? (
                 <p className="text-red-600 max-sm:text-lg">
                     {t("restrictionMessage")} {" "}
@@ -71,7 +73,10 @@ function EventsPage() {
                 </p>
             ) : (
                 <div>
-                    {isLoading && <p className="max-sm:text-lg">{t("loading")}</p>}
+                    {isLoading && <p className="max-sm:text-lg">
+                        {t("loading")}
+                    </p>}
+
                     {error && <p className="text-red-500 max-sm:text-lg">{error}</p>}
 
                     <div className="grid grid-cols-1 gap-4 max-sm:gap-2">
@@ -91,20 +96,33 @@ function EventsPage() {
                                     onClick={() => navigate(`/events/${event.id}`)}
                                 >
                                     <div className="flex flex-col max-sm:gap-1 max-sm:p-3">
-                                        <h2 className="text-lg font-semibold max-sm:text-base">{event.name}</h2>
-                                        <p className="max-sm:text-sm">{new Date(event.startDate).toLocaleString()}</p>
+                                        <h2 className="text-lg font-semibold max-sm:text-base">
+                                            {event.name}
+                                        </h2>
+
+                                        <p className="max-sm:text-sm">
+                                            {new Date(event.startDate).toLocaleString()}
+                                        </p>
                                     </div>
 
                                     {isAuthor ? (
-                                        <span className="text-purple-700 font-semibold max-sm:text-sm">{t("yourEvent")}</span>
+                                        <span className="text-purple-700 font-semibold max-sm:text-sm">
+                                            {t("yourEvent")}
+                                        </span>
                                     ) : isSubscribed ? (
-                                        <p className="text-blue-600 font-semibold max-sm:text-sm">{t("alreadyRegistered")}</p>
+                                        <p className="text-blue-600 font-semibold max-sm:text-sm">
+                                            {t("alreadyRegistered")}
+                                        </p>
                                     ) : (
                                         <>
                                             {(typeof event.maxNumberOfParticipants !== "number" || event.maxNumberOfParticipants <= 0) ? (
-                                                <span className="text-green-700 font-semibold max-sm:text-sm">{t("openEvent")}</span>
+                                                <span className="text-green-700 font-semibold max-sm:text-sm">
+                                                    {t("openEvent")}
+                                                </span>
                                             ) : isFull ? (
-                                                <span className="text-red-500 font-semibold max-sm:text-sm">{t("eventFull")}</span>
+                                                <span className="text-red-500 font-semibold max-sm:text-sm">
+                                                    {t("eventFull")}
+                                                </span>
                                             ) : (
                                                 <button
                                                     onClick={(e) => {

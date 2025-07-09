@@ -46,13 +46,21 @@ function EditEventPage() {
     };
 
     if (!event) {
-        return <p>{t("loading")}</p>
+        return <p>
+            {t("loading")}
+        </p>
     }
 
     return (
         <div className="p-6">
-            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2 max-sm:w-full">{t("editEvent")}</h1>
-            <EventForm defaultValues={event} onSubmit={handleSubmit} />
+            <h1 className="w-[28%] mx-auto text-4xl font-semibold mb-4 pl-2 max-sm:w-full">
+                {t("editEvent")}
+            </h1>
+
+            <EventForm
+                defaultValues={event}
+                onSubmit={handleSubmit}
+            />
         </div>
     );
 }

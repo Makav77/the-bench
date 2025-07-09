@@ -80,6 +80,7 @@ function DashboardRestrictions() {
             <h2 className="text-2xl font-semibold mb-4">
                 {t("addRestriction")}
             </h2>
+
             <form
                 onSubmit={handleSubmit}
                 className="space-y-4 bg-white p-6 rounded-2xl shadow"
@@ -88,6 +89,7 @@ function DashboardRestrictions() {
                     <label className="block font-semibold mb-1 max-sm:text-lg">
                         {t("restrictionChoice")}
                     </label>
+
                     <select
                         name="permissionCode"
                         value={selectedPermission}
@@ -108,6 +110,7 @@ function DashboardRestrictions() {
                     <label className="block font-semibold mb-1 max-sm:text-lg">
                         {t("userToRestrict")} <span className="text-red-500">*</span>
                     </label>
+
                     <input
                         name="userSearch"
                         type="text"
@@ -120,7 +123,9 @@ function DashboardRestrictions() {
                     {query.length >= 2 && (
                         <div className="border border-gray-300 rounded mt-1 bg-white shadow max-h-40 overflow-y-auto max-sm:text-lg">
                             {isSearching ? (
-                                <div className="px-2 py-1 text-gray-500 italic">{t("reason")}</div>
+                                <div className="px-2 py-1 text-gray-500 italic">
+                                    {t("reason")}
+                                </div>
                             ) : results.length > 0 ? (
                                 results.map((user) => (
                                     <div
@@ -136,7 +141,9 @@ function DashboardRestrictions() {
                                     </div>
                                 ))
                             ) : (
-                                <div className="px-2 py-1 text-gray-500 italic">{t("noUserFound")}</div>
+                                <div className="px-2 py-1 text-gray-500 italic">
+                                    {t("noUserFound")}
+                                </div>
                             )}
                         </div>
                     )}
@@ -147,6 +154,7 @@ function DashboardRestrictions() {
                         {t("reason")}
                         <span className="text-red-500">*</span>
                     </label>
+
                     <textarea
                         name="reason"
                         rows={3}
@@ -161,14 +169,13 @@ function DashboardRestrictions() {
                         <label className="block font-semibold mb-1 max-sm:text-lg">
                             {t("days")}
                         </label>
+
                         <input
                             name="days"
                             type="number"
                             min={0}
                             value={days}
-                            onChange={(e) =>
-                                setDays(parseInt(e.target.value, 10) || 0)
-                            }
+                            onChange={(e) => setDays(parseInt(e.target.value, 10) || 0)}
                             className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                         />
                     </div>
@@ -177,15 +184,14 @@ function DashboardRestrictions() {
                         <label className="block font-semibold mb-1 max-sm:text-lg">
                             {t("hours")}
                         </label>
+
                         <input
                             name="hours"
                             type="number"
                             min={0}
                             max={23}
                             value={hours}
-                            onChange={(e) =>
-                                setHours(parseInt(e.target.value, 10) || 0)
-                            }
+                            onChange={(e) => setHours(parseInt(e.target.value, 10) || 0)}
                             className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                         />
                     </div>
@@ -200,9 +206,7 @@ function DashboardRestrictions() {
                             min={0}
                             max={59}
                             value={minutes}
-                            onChange={(e) =>
-                                setMinutes(parseInt(e.target.value, 10) || 0)
-                            }
+                            onChange={(e) => setMinutes(parseInt(e.target.value, 10) || 0)}
                             className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                         />
                     </div>
