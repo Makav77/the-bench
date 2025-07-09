@@ -58,7 +58,7 @@ function CreateNews() {
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-semibold mb-4 w-[30%] mx-auto">{t("createNews")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("createNews")}</h1>
             <NewsForm 
                 onSubmit={handleSubmit}
             />

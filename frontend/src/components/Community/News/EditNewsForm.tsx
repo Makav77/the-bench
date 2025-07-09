@@ -54,7 +54,7 @@ function EditNews() {
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-semibold mb-4 w-[30%] mx-auto">{t("editArticle")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("editArticle")}</h1>
             <NewsForm 
                 defaultValues={defaults}
                 onSubmit={handleSubmit}

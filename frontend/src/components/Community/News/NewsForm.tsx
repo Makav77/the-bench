@@ -77,7 +77,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="w-[30%] mx-auto space-y-4 p-6 bg-white rounded-3xl shadow"
+            className="w-[30%] mx-auto space-y-4 p-6 bg-white rounded-2xl shadow max-sm:w-full"
         >
             {error && <p className="text-red-500">{error}</p>}
 
@@ -89,7 +89,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                     type="text"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-base"
                     required
                 />
             </div>
@@ -102,7 +102,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                     rows={10}
                     value={content}
                     onChange={e => setContent(e.target.value)}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-2"
                     required
                 />
             </div>
@@ -116,7 +116,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                     value={tagInput}
                     onChange={e => setTagInput(e.target.value)}
                     onKeyDown={handleTagKeyDown}
-                    className="w-full border px-3 py-2 rounded mt-1"
+                    className="w-full border px-3 py-2 rounded mt-1 max-sm:text-base"
                     placeholder={t("placeholderTag")}
                 />
                 <div className="flex flex-wrap mt-2 gap-2">
@@ -142,10 +142,10 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 <label className="font-semibold">
                     {t("images")}
                 </label>
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex items-center gap-3 mb-2 max-sm:flex-col max-sm:gap-2">
                     <button
                         type="button"
-                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
+                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer max-sm:w-full max-sm:h-12 max-sm:text-base"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={existingImages.length + images.length >= 10}
                     >
@@ -162,7 +162,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                     />
                 </div>
 
-                <div className="flex gap-3 flex-wrap">
+                <div className="flex gap-3 flex-wrap max-sm:gap-2">
                     {existingImages.map((src, i) => (
                         <div
                             key={i}
@@ -171,7 +171,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                             <img
                                 src={src}
                                 alt={`Image existante ${i + 1}`}
-                                className="w-24 h-24 object-cover rounded border"
+                                className="w-24 h-24 object-cover rounded border max-sm:w-20 max-sm:h-20"
                             />
                             <button
                                 type="button"
@@ -190,7 +190,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                             <img
                                 src={src}
                                 alt={`Preview ${i + 1}`}
-                                className="w-24 h-24 object-cover rounded border"
+                                className="w-24 h-24 object-cover rounded border max-sm:w-20 max-sm:h-20"
                             />
                             <button
                                 type="button"
@@ -204,10 +204,10 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between max-sm:flex-col max-sm:gap-3">
                 <button
                     type="button"
-                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:w-full max-sm:h-12 max-sm:text-base"
                     onClick={() => navigate("/news")}
                 >
                     {t("cancel")}
@@ -216,7 +216,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:w-full max-sm:h-12 max-sm:text-base"
                 >
                     {isLoading ? t("loading") : t("validate")}
                 </button>
