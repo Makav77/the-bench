@@ -35,7 +35,7 @@ export default function GalleryItemDetailPage() {
             }
         };
         load();
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
         return <p className="p-6">{t("loading")}</p>
@@ -78,7 +78,7 @@ export default function GalleryItemDetailPage() {
 
     return (
         <div
-            className="absolute left-0 top-0 w-full h-full flex items-center justify-center z-50 bg-black/30 backdrop-blur-xl"
+            className="absolute left-0 top-0 w-full h-full flex items-center justify-center z-50 bg-black/30 backdrop-blur-xl max-sm:p-2"
             onClick={() => navigate("/gallery")}
         >
             <div

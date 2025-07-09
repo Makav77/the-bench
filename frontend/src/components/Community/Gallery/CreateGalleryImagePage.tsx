@@ -70,76 +70,77 @@ export default function CreateGalleryItemPage() {
         }
     }
 
-    return (
-        <div className="p-6 w-[50%] mx-auto">
-            <h1 className="w-[56%] mx-auto text-4xl font-semibold mb-4">{t("addPicture")}</h1>
-            <form
-                onSubmit={handleSubmit}
-                className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
-            >
-                {error && <p className="text-red-500">{error}</p>}
+return (
+    <div className="p-6 w-[50%] mx-auto max-sm:w-full max-sm:p-2">
+        <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("addPicture")}</h1>
+        <form
+            onSubmit={handleSubmit}
+            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow max-sm:p-4 max-sm:space-y-4"
+        >
+            {error && <p className="text-red-500 max-sm:text-base">{error}</p>}
 
+            <div>
+                <label className="block font-semibold">
+                    {t("Image")}<span className="text-red-500">*</span>
+                </label>
+                <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
+                    disabled={isSubmitting}
+                >
+                    {t("selectFile")}
+                </button>
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={handleFileChange}
+                />
+            </div>
+
+            {previewURL && (
                 <div>
-                    <label className="block font-semibold">
-                        {t("Image")}<span className="text-red-500">*</span>
-                    </label>
-                    <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer"
-                        disabled={isSubmitting}
-                    >
-                        {t("selectFile")}
-                    </button>
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handleFileChange}
-                    />
-                </div>
-
-                {previewURL && (
-                    <div>
-                        <img
+                    <img
                         src={previewURL}
                         alt="Aperçu"
-                        className="h-40 object-cover rounded"
-                        />
-                    </div>
-                )}
-
-                <div>
-                    <label className="block font-semibold">{t("description")}</label>
-                    <textarea
-                        rows={3}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="w-full border rounded px-2 py-1"
-                        disabled={isSubmitting}
+                        className="h-40 object-cover rounded max-sm:w-full max-sm:h-32"
                     />
                 </div>
+            )}
 
-                <div className="flex justify-between">
-                    <button
-                        type="button"
-                        className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded cursor-pointer"
-                        onClick={() => navigate("/gallery")}
-                        disabled={isSubmitting}
-                    >
-                        {t("cancel")}
-                    </button>
+            <div>
+                <label className="block font-semibold max-sm:text-base">{t("description")}</label>
+                <textarea
+                    rows={3}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full border rounded px-2 py-1 max-sm:text-base"
+                    disabled={isSubmitting}
+                />
+            </div>
 
-                    <button
-                        type="submit"
-                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? t("sending") : t("send")}
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
+            <div className="flex justify-between max-sm:flex-col max-sm:gap-2">
+                <button
+                    type="button"
+                    className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded cursor-pointer max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
+                    onClick={() => navigate("/gallery")}
+                    disabled={isSubmitting}
+                >
+                    {t("cancel")}
+                </button>
+
+                <button
+                    type="submit"
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting ? t("sending") : t("send")}
+                </button>
+            </div>
+        </form>
+    </div>
+)
+
 }
