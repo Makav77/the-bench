@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Param, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, Query, NotFoundException, Post } from '@nestjs/common';
+import { Controller, Get, Body, Param, Patch, Delete, UseGuards, Req, DefaultValuePipe, ParseIntPipe, Query, Post } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';

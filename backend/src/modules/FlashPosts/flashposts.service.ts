@@ -13,7 +13,7 @@ export class FlashPostsService {
     constructor(
         @InjectRepository(FlashPost)
         private readonly flashRepo: Repository<FlashPost>,
-    ) { }
+    ) {}
 
     async findAllFlashPosts(page = 1, limit = 5, user: User): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
@@ -49,6 +49,7 @@ export class FlashPostsService {
         if (!flashPost) {
             throw new NotFoundException("FlashPost not found.");
         }
+
         return flashPost;
     }
 

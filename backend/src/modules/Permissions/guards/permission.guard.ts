@@ -12,10 +12,10 @@ export class PermissionGuard implements CanActivate {
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-            const code = this.reflector.get<string>(
-                PERMISSION_KEY,
-                context.getHandler(),
-            );
+        const code = this.reflector.get<string>(
+            PERMISSION_KEY,
+            context.getHandler(),
+        );
 
         if (!code) {
             return true;
@@ -65,6 +65,7 @@ export class PermissionGuard implements CanActivate {
 
             throw new ForbiddenException(message);
         }
+
         return true;
     }
 }

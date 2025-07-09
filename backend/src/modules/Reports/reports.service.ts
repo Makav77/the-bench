@@ -64,8 +64,6 @@ export class ReportsService{
             throw new NotFoundException("User to report not found.");
         }
 
-        
-
         const newReport = this.reportRepo.create({
             reporter,
             reportedUser,
@@ -77,6 +75,7 @@ export class ReportsService{
             irisCode: user.irisCode,
             irisName: user.irisName,
         });
+
         return this.reportRepo.save(newReport);
     }
 

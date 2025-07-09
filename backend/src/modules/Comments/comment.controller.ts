@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Delete, Patch, Get, UseGuards, Request, ForbiddenException, Req, NotFoundException } from "@nestjs/common";
+import { Controller, Post, Body, Param, Delete, Patch, Get, UseGuards, Req, NotFoundException } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { CreateCommentDTO } from "./dto/create-comment.dto";
 import { UpdateCommentDTO } from "./dto/update-comment.dto";
@@ -16,7 +16,7 @@ export class CommentController {
     constructor(
         private readonly commentService: CommentService,
         private readonly userService: UserService
-    ) { }
+    ) {}
 
     @UseGuards(JwtAuthGuard)
     @Get()

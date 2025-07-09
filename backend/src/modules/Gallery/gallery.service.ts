@@ -12,7 +12,7 @@ export class GalleryService {
     constructor(
         @InjectRepository(GalleryItem)
         private readonly galleryRepo: Repository<GalleryItem>,
-    ) { }
+    ) {}
 
     async findAllGalleryItems(page = 1, limit = 30, user: User): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
@@ -46,6 +46,7 @@ export class GalleryService {
         if (!galleryItem) {
             throw new NotFoundException("Gallery item not found.");
         }
+
         return galleryItem;
     }
 
@@ -64,6 +65,7 @@ export class GalleryService {
             irisCode,
             irisName,
         });
+
         return this.galleryRepo.save(galleryItem);
     }
 
@@ -75,11 +77,13 @@ export class GalleryService {
         }
 
         const index = galleryItem.likedBy.findIndex(u => u.id === user.id);
+
         if (index !== -1) {
             galleryItem.likedBy.splice(index, 1);
         } else {
             galleryItem.likedBy.push(user)
         }
+
         return this.galleryRepo.save(galleryItem);
     }
 
@@ -99,12 +103,7 @@ export class GalleryService {
 
         const filePath = join(process.cwd(), "uploads", "gallery", galleryItem.url.split("/").pop()!);
 
-        try {
-            await unlink(filePath);
-        } catch (error) {
-            console.error("Could not delete file : " + error);
-        }
-
+        await unlink(filePath);
         await this.galleryRepo.delete(id);
     }
 

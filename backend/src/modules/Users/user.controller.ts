@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors, UploadedFile, Req, BadRequestException } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors, UploadedFile, Req } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { extname } from "path";
@@ -15,7 +15,7 @@ interface RequestWithUser extends Request {
     user: User;
 }
 
-@Controller('users')
+@Controller("users")
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
@@ -93,12 +93,8 @@ export class UserController {
             const oldFilename = path.basename(user.profilePicture);
             const oldPath = path.join(__dirname, "../../../uploads/profile", oldFilename);
 
-            try {
-                if (fs.existsSync(oldPath)) {
-                    fs.unlinkSync(oldPath);
-                }
-            } catch (error) {
-                console.error("Erreur lors de la suppression de l'ancienne photo :", error);
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
             }
         }
 

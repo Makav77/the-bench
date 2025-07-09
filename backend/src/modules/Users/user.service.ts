@@ -201,9 +201,8 @@ export class UserService {
             }
 
             return profileSummary;
-        } catch (err) {
-            console.error("Error in getProfileSummary:", err);
-            throw err;
+        } catch (error) {
+            throw error;
         }
     }
 

@@ -102,18 +102,22 @@ export class PollService {
         const opts = options.map(label =>
             this.optionRepo.create({ label, poll: saved })
         );
+
         await this.optionRepo.save(opts);
         return this.findOnePoll(saved.id);
     }
 
     async vote(id: string, votePollDTO: VotePollDTO, user: User): Promise<Poll> {
         const poll = await this.findOnePoll(id);
+
         if (user.role === Role.ADMIN || user.role === Role.MODERATOR) {
             throw new ForbiddenException("Administrators and moderators can't vote.");
         }
+
         if (poll.manualClosed || (poll.closesAt && poll.closesAt < new Date())) {
             throw new BadRequestException("Sondage closed.");
         }
+
         const prior = await this.voteRepo.findOne({
             where: {
                 poll: { id },
@@ -146,6 +150,7 @@ export class PollService {
             const vote = this.voteRepo.create({ poll, option: opt, voter: user });
             await this.voteRepo.save(vote);
         }
+
         return this.findOnePoll(id);
     }
 
@@ -164,6 +169,7 @@ export class PollService {
         if (poll.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("Unauthorize to delete poll.");
         }
+
         await this.pollRepo.delete(id);
     }
 

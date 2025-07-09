@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Patch, Delete, Param, Query, Body, Req, DefaultValuePipe, ParseIntPipe, UseGuards, NotFoundException } from "@nestjs/common";
-import { Request } from "express";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { Challenge } from "./entities/challenge.entity";
 import { ChallengesService } from "./challenges.service";

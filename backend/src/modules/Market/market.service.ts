@@ -13,7 +13,7 @@ export class MarketService {
     constructor(
         @InjectRepository(MarketItem)
         private readonly marketRepo: Repository<MarketItem>,
-    ) { }
+    ) {}
 
     async findAllItems(page = 1, limit = 10, user: User): Promise<{ data: MarketItem[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
@@ -47,6 +47,7 @@ export class MarketService {
         if (!item) {
             throw new NotFoundException("Item not found.");
         }
+
         return item;
     }
 
@@ -64,6 +65,7 @@ export class MarketService {
             irisCode,
             irisName,
         });
+
         return this.marketRepo.save(item);
     }
 

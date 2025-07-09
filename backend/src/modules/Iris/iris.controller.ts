@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Post, Body, BadRequestException } from "@nestjs/common";
+import { Controller, Get, Query, Post, Body } from "@nestjs/common";
 import { IrisService } from "./iris.service";
 
 @Controller("iris")

@@ -32,7 +32,6 @@ const multerOptions = {
     limits: { fileSize: 2 * 1024 * 1024 },
 };
 
-
 @Controller("market")
 export class MarketController {
     constructor(private readonly marketService: MarketService) { }

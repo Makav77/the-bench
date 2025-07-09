@@ -1,7 +1,6 @@
-import { Controller, Get, Param, Query, DefaultValuePipe, ParseIntPipe, Post, Body, Patch, Delete, Req, UseGuards, ForbiddenException, NotFoundException } from "@nestjs/common";
+import { Controller, Get, Param, Query, DefaultValuePipe, ParseIntPipe, Post, Body, Patch, Delete, Req, UseGuards } from "@nestjs/common";
 import { EventService } from "./event.service";
 import { Event } from "./entities/event.entity";
-import { Request } from "express";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
