@@ -20,16 +20,6 @@ apiClient.interceptors.request.use(
     (error: AxiosError) => Promise.reject(error),
 );
 
-apiClient.interceptors.response.use(
-    restrictions => restrictions,
-    async error => {
-        if (error.response?.status === 403) {
-            alert("Action prohibited: You do not have the necessary rights.");
-        }
-        return Promise.reject(error);
-    }
-);
-
 let isRefreshing = false;
 let failedQueue: Array<{ resolve: (value?: unknown) => void; reject: (error: unknown) => void; }> = [];
 
@@ -47,44 +37,53 @@ const processQueue = (error: unknown, token: string | null = null) => {
 apiClient.interceptors.response.use(
     (response: AxiosResponse) => response,
     async (error: AxiosError) => {
-        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+        if (error.response?.status === 403) {
+            alert("Action prohibited: You do not have the necessary rights.");
+        }
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            if (isRefreshing) {
-                return new Promise((resolve, reject) => {
-                    failedQueue.push({ resolve, reject });
-                })
-                .then((token) => {
-                    originalRequest.headers = (originalRequest.headers ?? {}) as AxiosRequestHeaders;
-                    originalRequest.headers['Authorization'] = `Bearer ${token}`;
-                    return apiClient(originalRequest);
-                })
-                .catch(err => Promise.reject(err));
+        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+        if (error.response?.status === 401) {
+            if (originalRequest.url?.includes('/auth/login')) {
+                return Promise.reject(error);
             }
 
-            originalRequest._retry = true;
-            isRefreshing = true;
+            if (!originalRequest._retry) {
+                if (isRefreshing) {
+                    return new Promise((resolve, reject) => {
+                        failedQueue.push({ resolve, reject });
+                    })
+                    .then((token) => {
+                        originalRequest.headers = (originalRequest.headers ?? {}) as AxiosRequestHeaders;
+                        originalRequest.headers['Authorization'] = `Bearer ${token}`;
+                        return apiClient(originalRequest);
+                    })
+                    .catch(err => Promise.reject(err));
+                }
 
-            try {
-                const { accessToken: newToken } = await import('./authService').then(mod => mod.refreshToken());
-                localStorage.setItem('accessToken', newToken);
-                apiClient.defaults.headers = apiClient.defaults.headers = (apiClient.defaults.headers ?? {}) as HeadersDefaults & {[key: string]: AxiosHeaderValue;};
-                apiClient.defaults.headers['Authorization'] = `Bearer ${newToken}`;
-                processQueue(null, newToken);
+                originalRequest._retry = true;
+                isRefreshing = true;
 
-                originalRequest.headers = (originalRequest.headers ?? {}) as AxiosRequestHeaders;
-                originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+                try {
+                    const { accessToken: newToken } = await import('./authService').then(mod => mod.refreshToken());
+                    localStorage.setItem('accessToken', newToken);
+                    apiClient.defaults.headers = (apiClient.defaults.headers ?? {}) as HeadersDefaults & {[key: string]: AxiosHeaderValue;};
+                    apiClient.defaults.headers['Authorization'] = `Bearer ${newToken}`;
+                    processQueue(null, newToken);
 
-                return apiClient(originalRequest);
-            } catch (err) {
-                processQueue(err, null);
-                return Promise.reject(err);
-            } finally {
-                isRefreshing = false;
+                    originalRequest.headers = (originalRequest.headers ?? {}) as AxiosRequestHeaders;
+                    originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+
+                    return apiClient(originalRequest);
+                } catch (err) {
+                    processQueue(err, null);
+                    return Promise.reject(err);
+                } finally {
+                    isRefreshing = false;
+                }
             }
         }
         return Promise.reject(error);
-    },
+    }
 );
 
 export default apiClient;

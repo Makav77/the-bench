@@ -1,7 +1,6 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/authService";
 import { useAuth } from "../../context/AuthContext";
 
@@ -20,7 +19,6 @@ enum loginState {
 function Login() {
     const { login } = useAuth();
     const { t } = useTranslation("Login/Login");
-    const navigate = useNavigate();
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [loginCredentials, setLoginCredentials] = useState<loginCredentials>({
@@ -83,10 +81,11 @@ function Login() {
 
             if (data?.accessToken) {
                 login(data.accessToken);
+            } else {
+                setCurrentLoginState(loginState.invalidCredentials);
             }
-
-            navigate("/resetpassword");
-        } catch {
+        } catch (err) {
+            console.error("---------------------------------------------------------------------------------------------------- Erreur de login:", err);
             setCurrentLoginState(loginState.invalidCredentials)
         } finally {
             setIsLoading(false);
