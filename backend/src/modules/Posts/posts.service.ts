@@ -111,6 +111,10 @@ export class PostsService {
                 continue;
             }
 
+            if (post.irisCode === "all") {
+                continue;
+            }
+
             if (post.irisCode && post.author.irisCode && post.irisCode !== post.author.irisCode) {
                 await this.postRepo.delete(post.id);
             }

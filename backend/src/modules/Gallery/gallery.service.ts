@@ -115,6 +115,10 @@ export class GalleryService {
                 continue;
             }
 
+            if (item.irisCode === "all") {
+                continue;
+            }
+
             if (item.irisCode && item.author.irisCode && item.irisCode !== item.author.irisCode) {
                 await this.galleryRepo.delete(item.id);
             }

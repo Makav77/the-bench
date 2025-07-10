@@ -134,6 +134,10 @@ export class FlashPostsService {
                 continue;
             }
 
+            if (flashPost.irisCode === "all") {
+                continue;
+            }
+
             if (flashPost.irisCode && flashPost.author.irisCode && flashPost.irisCode !== flashPost.author.irisCode) {
                 await this.flashRepo.delete(flashPost.id);
             }

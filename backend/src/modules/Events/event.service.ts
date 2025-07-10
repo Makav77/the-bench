@@ -189,6 +189,10 @@ export class EventService {
                 continue;
             }
 
+            if (event.irisCode === "all") {
+                continue;
+            }
+
             if (event.irisCode && event.author.irisCode && event.irisCode !== event.author.irisCode) {
                 await this.eventRepo.delete(event.id);
             }

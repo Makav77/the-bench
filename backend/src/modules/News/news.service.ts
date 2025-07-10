@@ -226,6 +226,9 @@ export class NewsService {
         const allNews = await this.newsModel.find().lean();
 
         for (const news of allNews) {
+            if (news.irisCode === "all") {
+                continue;
+            }
             const userIris = userIrisById[news.authorId];
             if (userIris && news.irisCode !== userIris) {
                 await this.newsModel.deleteOne({ _id: news._id });

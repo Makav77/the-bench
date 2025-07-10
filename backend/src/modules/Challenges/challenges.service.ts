@@ -308,6 +308,10 @@ export class ChallengesService {
                 continue;
             }
 
+            if (challenge.irisCode === "all") {
+                continue;
+            }
+
             if (challenge.irisCode && challenge.author.irisCode && challenge.irisCode !== challenge.author.irisCode) {
                 await this.challengeRepo.delete(challenge.id);
             }

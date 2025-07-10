@@ -181,6 +181,10 @@ export class PollService {
                 continue;
             }
 
+            if (poll.irisCode === "all") {
+                continue;
+            }
+
             if (poll.irisCode && poll.author.irisCode && poll.irisCode !== poll.author.irisCode) {
                 await this.pollRepo.delete(poll.id);
             }
