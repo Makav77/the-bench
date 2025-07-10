@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { getProfileSummary, ProfileSummaryDTO } from "../../api/userService";
+import { getProfileSummary, ProfileSummaryDTO, deleteMyAccount } from "../../api/userService";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { getFriends, FriendDTO, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, removeFriend } from "../../api/friendService";
@@ -8,11 +8,12 @@ import apiClient from "../../api/apiClient";
 import { Trash2 } from "lucide-react";
 import { getCitiesByPostalCode, resolveIris } from "../../api/irisService";
 import { useTranslation } from "react-i18next";
+import { logoutUser } from "../../api/authService";
 
 export default function UserProfilePage() {
     const { id } = useParams<{ id: string }>();
     const [profile, setProfile] = useState<ProfileSummaryDTO | null>(null);
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const isOwnProfile = user && user.id === id;
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState<File | null>(null);
@@ -172,6 +173,22 @@ export default function UserProfilePage() {
         }
     }
 
+    async function handleDeleteAccount() {
+        if (!window.confirm(t("confirmAlertDeleteAccount"))) {
+            return;
+        }
+
+        try {
+            await deleteMyAccount(user!.id);
+        } catch  {
+            toast.error(t("deletingAccountError"));
+        } finally {
+            logout();
+            localStorage.removeItem('accessToken');
+            navigate("/");
+        }
+    }
+
     async function handlePostalCodeSuggestion() {
         if (address.postalCode.length === 5) {
             try {
@@ -326,6 +343,13 @@ export default function UserProfilePage() {
                             className="px-3 py-3 sm:py-1 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer max-sm:w-full max-sm:text-sm"
                         >
                             {t("showFriends")}
+                        </button>
+
+                        <button
+                            onClick={handleDeleteAccount}
+                            className="px-3 py-3 sm:py-1 bg-red-700 text-white rounded hover:bg-red-800 cursor-pointer max-sm:w-full max-sm:text-sm"
+                        >
+                            {t("deleteAccount")}
                         </button>
                     </div>
                 )}

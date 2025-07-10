@@ -36,10 +36,10 @@ export class Event {
     @Column()
     description: string;
 
-    @ManyToOne(() => User, (user) => user.eventsCreated, { nullable: false })
+    @ManyToOne(() => User, (user) => user.eventsCreated, { nullable: false, onDelete: "CASCADE" })
     author: User;
 
-    @ManyToMany(() => User, (user) => user.eventsParticipating, { nullable: true })
+    @ManyToMany(() => User, (user) => user.eventsParticipating, { nullable: true, onDelete: "CASCADE" })
     @JoinTable({
         name: "event_participants",
         joinColumn: { name: "event_id", referencedColumnName: "id" },

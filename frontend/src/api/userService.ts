@@ -123,3 +123,8 @@ export const getModeratorsAndAdmins = async (): Promise<ModeratorsAndAdminsDTO> 
     const response = await apiClient.get("/users/staff");
     return response.data;
 };
+
+export const deleteMyAccount = async (userId: string): Promise<void> => {
+    console.log("userId : " + userId);
+    await apiClient.delete(`/users/${userId}`);
+}
