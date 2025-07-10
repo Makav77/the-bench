@@ -8,7 +8,6 @@ import apiClient from "../../api/apiClient";
 import { Trash2 } from "lucide-react";
 import { getCitiesByPostalCode, resolveIris } from "../../api/irisService";
 import { useTranslation } from "react-i18next";
-import { logoutUser } from "../../api/authService";
 
 export default function UserProfilePage() {
     const { id } = useParams<{ id: string }>();
