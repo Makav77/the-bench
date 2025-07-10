@@ -17,7 +17,11 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!title || !description) {
+
+        const cleanTitle = title.trim();
+        const cleanDescription = description.trim();
+
+        if (!cleanTitle || !cleanDescription) {
             setError("All field must be completed.");
             return;
         }
@@ -25,7 +29,7 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
         setError(null);
 
         try {
-            await onSubmit({ title, description });
+            await onSubmit({ title: cleanTitle, description: cleanDescription });
         } catch (error) {
             setError("Error : " + error);
         } finally {
@@ -47,7 +51,7 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
                 <input
                     type="text"
                     value={title}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-2 max-sm:py-4 max-sm:text-lg max-sm:mt-2"
                 />
             </div>
@@ -60,7 +64,7 @@ function FlashPostForm({ defaultValues, onSubmit }: FlashPostFormProps) {
                     rows={5}
                     maxLength={10000}
                     value={description}
-                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-2 max-sm:py-4 max-sm:text-lg max-sm:mt-2"
                 />
             </div>

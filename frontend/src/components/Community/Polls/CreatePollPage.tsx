@@ -51,7 +51,9 @@ function CreatePollPage() {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (!question.trim()) {
+        const cleanQuestion = question.trim();
+
+        if (cleanQuestion) {
             toast.error(t("toastQuestionError"));
             return;
         }
@@ -82,7 +84,7 @@ function CreatePollPage() {
 
         try {
             const cleanOptions = options.filter(o => o.trim());
-            await createPoll({ question, options: cleanOptions, type, maxSelections: type === "limited" ? maxSelections: undefined, autoCloseAt });
+            await createPoll({ question: cleanQuestion, options: cleanOptions, type, maxSelections: type === "limited" ? maxSelections: undefined, autoCloseAt });
             toast.success(t("toastPollCreated"));
             navigate("/polls");
         } catch {
@@ -106,7 +108,7 @@ function CreatePollPage() {
                     </label>
                     <input
                         value={question}
-                        onChange={e => setQuestion(e.target.value)}
+                        onChange={e => setQuestion(e.target.value.trimStart())}
                         className="w-full border rounded px-2 py-1 max-sm:py-4 max-sm:text-lg max-sm:px-5"
                     />
                 </div>
@@ -172,7 +174,7 @@ function CreatePollPage() {
                                 value={opt}
                                 onChange={e => {
                                     const newOpts = [...options];
-                                    newOpts[index] = e.target.value;
+                                    newOpts[index] = e.target.value.trimStart();
                                     setOptions(newOpts);
                                 }}
                                 className="w-full border rounded px-2 py-1 mb-1 max-sm:py-4 max-sm:text-lg max-sm:px-5"

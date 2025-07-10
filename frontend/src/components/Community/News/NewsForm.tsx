@@ -30,8 +30,9 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
     const handleTagKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && tagInput.trim()) {
             e.preventDefault();
-            if (!tags.includes(tagInput.trim())) {
-                setTags(prev => [...prev, tagInput.trim()]);
+            const cleanTag = tagInput.trim();
+            if (!tags.includes(cleanTag)) {
+                setTags(prev => [...prev, cleanTag]);
             }
             setTagInput("");
         }
@@ -63,12 +64,17 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setError(null);
-        if (!title || !content) {
+
+        const cleanTitle = title.trim();
+        const cleanContent = content.trim();
+        const cleanTags = tags.map(t => t.trim()).filter(Boolean);
+
+        if (!cleanTitle || !cleanContent) {
             setError("All field must be completed");
             return;
         }
         try {
-            await onSubmit({ title, content, tags, images, removeImages });
+            await onSubmit({ title: cleanTitle, content: cleanContent, tags: cleanTags, images, removeImages });
         } catch (error) {
             setError("Error : " + error);
         }
@@ -88,7 +94,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 <input
                     type="text"
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-1 max-sm:text-base"
                     required
                 />
@@ -101,7 +107,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 <textarea
                     rows={10}
                     value={content}
-                    onChange={e => setContent(e.target.value)}
+                    onChange={e => setContent(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-2"
                     required
                 />
@@ -114,7 +120,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 <input
                     type="text"
                     value={tagInput}
-                    onChange={e => setTagInput(e.target.value)}
+                    onChange={e => setTagInput(e.target.value.trimStart())}
                     onKeyDown={handleTagKeyDown}
                     className="w-full border px-3 py-2 rounded mt-1 max-sm:text-base"
                     placeholder={t("placeholderTag")}

@@ -68,7 +68,7 @@ function DashboardRestrictions() {
             setHours(0);
             setMinutes(0);
             setSelectedPermission(DEFAULT_PERMISSIONS[0].code);
-        } catch (error) {
+        } catch {
             toast.error(t("toastUserRestricted"));
         } finally {
             setIsSubmitting(false);
@@ -115,7 +115,7 @@ function DashboardRestrictions() {
                         name="userSearch"
                         type="text"
                         value={query}
-                        onChange={(e) => setQuery(e.target.value)}
+                        onChange={(e) => setQuery(e.target.value.trim())}
                         className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
                         placeholder={t("userToRestrictPlaceholder")}
                     />

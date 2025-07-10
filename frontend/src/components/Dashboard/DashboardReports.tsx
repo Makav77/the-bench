@@ -29,7 +29,7 @@ function DashboardReports() {
                 const { data, lastPage } = await getReports(page, 10);
                 setReports(data);
                 setLastPage(lastPage);
-            } catch (error) {
+            } catch {
                 toast.error(t("toastLoadReportError"));
             } finally {
                 setLoadingReports(false);
@@ -152,7 +152,7 @@ function DashboardReports() {
                 <input
                     type="text"
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => setSearch(e.target.value.trimStart())}
                     placeholder={t("reportedUserPlaceholder")}
                     className="border rounded px-2 py-1 w-full max-w-xs h-8 max-sm:max-w-none max-sm:w-full max-sm:text-lg max-sm:py-4"
                 />

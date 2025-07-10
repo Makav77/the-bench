@@ -48,7 +48,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
         const { name, value } = e.target;
         setForm(f => ({
             ...f,
-            [name]: value
+            [name]: value.trimStart()
         }));
         setError(null);
     }
@@ -57,12 +57,19 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
         e.preventDefault();
         setError(null);
 
+        const cleanedForm = {
+            ...form,
+            title: form.title.trim(),
+            description: form.description.trim(),
+            successCriteria: form.successCriteria.trim(),
+        };
+
         if (!form.title || !form.description || !form.startDate || !form.endDate || !form.successCriteria) {
             setError("All fields are required.");
             return;
         }
 
-        if (new Date(form.startDate) >= new Date(form.endDate)) {
+        if (new Date(cleanedForm.startDate) >= new Date(cleanedForm.endDate)) {
             setError("Start date must be before end date.");
             return;
         }
@@ -70,7 +77,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
         setIsSubmitting(true);
 
         try {
-            await onSubmit(form);
+            await onSubmit(cleanedForm);
         } catch (error) {
             setError((error instanceof Error && error.message) ? error.message : "Error");
         } finally {

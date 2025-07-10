@@ -32,7 +32,13 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
     const handleRemoveImage = () => {
         setFile(null);
         setPreviewURL(null);
-        if (fileInputRef.current) fileInputRef.current.value = "";
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setText(e.target.value.replace(/^\s+/, ""));
     };
 
     const handleSubmit = async (e: FormEvent) => {
@@ -40,7 +46,7 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
         setError(null);
 
         if (!text.trim() && !file) {
-            setError("Merci de fournir une preuve texte ou image 😊");
+            setError("Text or image must be provided");
             return;
         }
 
@@ -86,7 +92,7 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                         <textarea
                             rows={3}
                             value={text}
-                            onChange={(e) => setText(e.target.value)}
+                            onChange={handleTextChange}
                             className="w-full border rounded px-2 py-1 max-sm:text-base"
                         />
                     </div>
@@ -113,7 +119,7 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                             <div className="mt-3 flex flex-col items-center">
                                 <img
                                     src={previewURL}
-                                    alt="Aperçu"
+                                    alt="Preview"
                                     className="h-40 object-cover rounded max-sm:w-full max-sm:h-32"
                                 />
                                 <button

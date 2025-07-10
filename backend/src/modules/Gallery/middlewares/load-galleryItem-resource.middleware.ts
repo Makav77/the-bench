@@ -10,6 +10,7 @@ export class LoadGalleryItemResourceMiddleware implements NestMiddleware {
 
     async use(
         req: RequestWithResource<GalleryItem>,
+        res: Response,
         next: NextFunction
     ) {
         const id = req.params.id;

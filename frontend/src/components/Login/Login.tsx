@@ -70,22 +70,25 @@ function Login() {
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        if (!loginCredentials.email || !loginCredentials.password) {
+
+        const email = loginCredentials.email.trim();
+        const password = loginCredentials.password.trim();
+
+        if (!email || !password) {
             setCurrentLoginState(loginState.missingCredentials);
             return;
         }
         setCurrentLoginState(loginState.noError);
         setIsLoading(true);
         try {
-            const data = await loginUser(loginCredentials);
+            const data = await loginUser({...loginCredentials, email, password});
 
             if (data?.accessToken) {
                 login(data.accessToken);
             } else {
                 setCurrentLoginState(loginState.invalidCredentials);
             }
-        } catch (err) {
-            console.error("---------------------------------------------------------------------------------------------------- Erreur de login:", err);
+        } catch {
             setCurrentLoginState(loginState.invalidCredentials)
         } finally {
             setIsLoading(false);

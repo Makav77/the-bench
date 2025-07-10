@@ -98,7 +98,7 @@ function Signup() {
         const { name, value } = e.target;
         setRegisterCredentials((prev) => ({ 
             ...prev,
-            [name]: value
+            [name]: value.trimStart()
         }));
         setCurrentRegisterState(registerState.noError);
     }

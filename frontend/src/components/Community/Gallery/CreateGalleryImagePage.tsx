@@ -53,6 +53,10 @@ export default function CreateGalleryItemPage() {
         }
     }
 
+    function handleDescriptionChange(e: ChangeEvent<HTMLTextAreaElement>) {
+        setDescription(e.target.value.replace(/^\s+/, ""));
+    }
+
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
         if (!file) {
@@ -62,7 +66,8 @@ export default function CreateGalleryItemPage() {
         setIsSubmitting(true);
         setError(null);
         try {
-            const item = await createGalleryItem(file, description);
+            const cleanedDescription = description.trim();
+            const item = await createGalleryItem(file, cleanedDescription);
             toast.success(t("toastImageUpload"));
             navigate(`/gallery/${item.id}`);
         } catch {
@@ -120,7 +125,7 @@ export default function CreateGalleryItemPage() {
                     <textarea
                         rows={3}
                         value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        onChange={handleDescriptionChange}
                         className="w-full border rounded px-2 py-1 max-sm:text-base"
                         disabled={isSubmitting}
                     />

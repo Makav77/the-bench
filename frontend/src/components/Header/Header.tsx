@@ -130,7 +130,7 @@ function Header() {
                             <input
                                 type="text"
                                 value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
+                                onChange={e => setSearchQuery(e.target.value.trimStart())}
                                 onBlur={() => {
                                     setTimeout(() => {
                                         setSearchQuery("");
@@ -251,7 +251,7 @@ function Header() {
                                 <input
                                     type="text"
                                     value={searchQuery}
-                                    onChange={e => setSearchQuery(e.target.value)}
+                                    onChange={e => setSearchQuery(e.target.value.trimStart())}
                                     onBlur={() => {
                                         setTimeout(() => {
                                             setSearchQuery("");

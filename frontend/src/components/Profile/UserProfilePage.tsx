@@ -150,9 +150,10 @@ export default function UserProfilePage() {
 
     function handleAddressChange(e: ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
-        setAddress((prev) => ({ ...prev, [name]: value }));
 
-        if (name === "postalCode") {
+        if (name === "street" || name === "city") {
+            setAddress((prev) => ({ ...prev, [name]: value.trimStart() })); // 😁 Ajout trimStart
+        } else if (name === "postalCode") {
             setAddress((prev) => ({
                 ...prev,
                 postalCode: value.replace(/\D/g, ""),
@@ -162,15 +163,12 @@ export default function UserProfilePage() {
             }));
             setAddressCities([]);
             setAddressIrisError("");
+        } else {
+            setAddress((prev) => ({ ...prev, [name]: value }));
         }
 
         if (name === "city") {
-            setAddress((prev) => ({ ...prev, city: value }));
             setAddressIrisError("");
-        }
-
-        if (name === "street") {
-            setAddress((prev) => ({ ...prev, street: value }));
         }
     }
 
@@ -594,6 +592,7 @@ export default function UserProfilePage() {
                                     placeholder={t("city")}
                                     value={address.city}
                                     onChange={handleAddressChange}
+                                    readOnly
                                     autoComplete="off"
                                     onFocus={() => setAddressCities(addressCities.length > 0 ? addressCities : [])}
                                 />
@@ -637,9 +636,9 @@ export default function UserProfilePage() {
                                     setAddressLoading(true);
                                     try {
                                         await apiClient.patch("/users/me/address", {
-                                            street: address.street,
+                                            street: address.street.trim(),
                                             postalCode: address.postalCode,
-                                            city: address.city,
+                                            city: address.city.trim(),
                                         });
                                         toast.success(t("toastAddressUpdated"));
                                         setShowAddressModal(false);

@@ -49,7 +49,7 @@ export default function GalleryItemDetailPage() {
 
     if (!galleryItem) {
         return <p>
-            {t("emprtyGallery")}
+            {t("emptyGallery")}
         </p>;
     }
 

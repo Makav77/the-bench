@@ -45,11 +45,23 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
 
     function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const { name, value } = e.target;
-        setForm((f) => ({
-            ...f,
-            [name]:
-                (name === "price" ? (value === "" ? undefined : parseFloat(value)) : value)
-        }));
+
+        if (name === "price") {
+            setForm((f) => ({
+                ...f,
+                price: value === "" ? undefined : parseFloat(value),
+            }));
+        } else if (name === "title" || name === "contactEmail" || name === "description") {
+            setForm((f) => ({
+                ...f,
+                [name]: value.trimStart(),
+            }));
+        } else {
+            setForm((f) => ({
+                ...f,
+                [name]: value,
+            }));
+        }
         setError(null);
     }
 
@@ -73,14 +85,24 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
         e.preventDefault();
         setError(null);
 
-        if (!form.title || !form.description) {
+        const cleanData: ItemFormData = {
+            ...form,
+            title: form.title.trim(),
+            description: form.description.trim(),
+            contactEmail: form.contactEmail?.trim(),
+            contactPhone: form.contactPhone,
+            price: form.price,
+            images: form.images,
+        };
+
+        if (!cleanData.title || !cleanData.description) {
             setError("Title and description required.");
             return;
         }
         setIsSubmitting(true);
 
         try {
-            onSubmit(form);
+            onSubmit(cleanData);
         } catch (error) {
             setError("Error : " + error);
         } finally {

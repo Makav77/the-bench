@@ -57,7 +57,14 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         setIsSubmitting(true);
         setError(null);
 
-        if (!form.name || !form.startDate || !form.endDate || !form.place || !form.description) {
+        const cleanForm: EventFormData = {
+            ...form,
+            name: form.name.trim(),
+            place: form.place.trim(),
+            description: form.description.trim(),
+        };
+
+        if (!cleanForm.name || !cleanForm.startDate || !cleanForm.endDate || !cleanForm.place || !cleanForm.description) {
             setError("Name, start date, end date, place and description must be fullfiled");
             setIsSubmitting(false);
             return;
@@ -70,7 +77,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         }
 
         try {
-            onSubmit(form);
+            onSubmit(cleanForm);
         } catch (error) {
             setError((error instanceof Error && error.message) ? error.message : "Error");
         } finally {

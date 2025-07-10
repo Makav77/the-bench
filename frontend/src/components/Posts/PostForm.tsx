@@ -17,7 +17,12 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!title || !description) {
+
+        const cleanTitle = title.replace(/\s+/g, ' ').trim();
+        const cleanDescription = description.replace(/\s+/g, ' ').trim();
+
+
+        if (!cleanTitle || !cleanDescription) {
             setError("All field must be completed.");
             return;
         }
@@ -25,7 +30,7 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
         setError(null);
 
         try {
-            await onSubmit({ title, description });
+            await onSubmit({ title: cleanTitle, description: cleanDescription });
         } catch (error) {
             setError("Error : " + error);
         } finally {
@@ -48,7 +53,7 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
                 <input
                     type="text"
                     value={title}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-2 max-sm:py-4 max-sm:text-lg max-sm:mt-2"
                 />
             </div>
@@ -61,7 +66,7 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
                     rows={5}
                     maxLength={10000}
                     value={description}
-                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-2 max-sm:py-4 max-sm:text-lg max-sm:mt-2"
                 />
             </div>
