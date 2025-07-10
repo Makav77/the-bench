@@ -57,7 +57,14 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         setIsSubmitting(true);
         setError(null);
 
-        if (!form.name || !form.startDate || !form.endDate || !form.place || !form.description) {
+        const cleanForm: EventFormData = {
+            ...form,
+            name: form.name.trim(),
+            place: form.place.trim(),
+            description: form.description.trim(),
+        };
+
+        if (!cleanForm.name || !cleanForm.startDate || !cleanForm.endDate || !cleanForm.place || !cleanForm.description) {
             setError("Name, start date, end date, place and description must be fullfiled");
             setIsSubmitting(false);
             return;
@@ -70,7 +77,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
         }
 
         try {
-            onSubmit(form);
+            onSubmit(cleanForm);
         } catch (error) {
             setError((error instanceof Error && error.message) ? error.message : "Error");
         } finally {
@@ -81,12 +88,12 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
+            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow max-sm:max-w-full"
         >
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500 max-sm:text-base">{error}</p>}
 
             <div>
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-base">
                     {t("name")} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -95,13 +102,13 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                     maxLength={100}
                     value={form.name}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-3"
                 />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-sm:gap-2">
                 <div>
-                    <label className="font-semibold">
+                    <label className="font-semibold max-sm:text-base">
                         {t("startDate")} <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -109,12 +116,12 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                         type="datetime-local"
                         value={form.startDate}
                         onChange={handleChange}
-                        className="w-full border rounded px-2 py-1"
+                        className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-3"
                     />
                 </div>
 
                 <div>
-                    <label className="font-semibold">
+                    <label className="font-semibold max-sm:text-base">
                         {t("endDate")} <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -122,13 +129,13 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                         type="datetime-local"
                         value={form.endDate}
                         onChange={handleChange}
-                        className="w-full border rounded px-2 py-1"
+                        className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-3"
                     />
                 </div>
             </div>
 
             <div>
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-base">
                     {t("place")} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -136,12 +143,12 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                     type="text"
                     value={form.place}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-3"
                 />
             </div>
 
             <div>
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-base">
                     {t("maxNumberOfParticipants")}
                 </label>
                 <input
@@ -150,12 +157,12 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                     min={1}
                     value={form.maxNumberOfParticipants ?? ""}
                     onChange={handleChange}
-                    className="w-32 border rounded px-2 py-1 ml-5"
+                    className="w-32 border rounded px-2 py-1 ml-5 max-sm:w-full max-sm:ml-0 max-sm:text-base max-sm:py-3"
                 />
             </div>
 
             <div>
-                <label className="font-semibold">
+                <label className="font-semibold max-sm:text-base">
                     {t("description")} <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -164,22 +171,23 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                     maxLength={5000}
                     value={form.description}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-3"
                 />
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between max-sm:flex-col max-sm:gap-2">
                 <button
                     type="button"
-                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer max-sm:w-full max-sm:py-3 max-sm:text-base"
                     onClick={() => navigate("/events")}
                 >
                     {t("cancel")}
                 </button>
+
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:w-full max-sm:py-3 max-sm:text-base"
                 >
                     {isSubmitting ? t("loading") : defaultValues ? t("update") : t("create")}
                 </button>

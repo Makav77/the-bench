@@ -32,13 +32,21 @@ export default function EditChallengePage() {
     };
 
     if (!challenge) {
-        return <p>{t("loading")}</p>;
+        return <p>
+            {t("loading")}
+        </p>;
     }
 
     return (
         <div className="p-6">
-            <h1 className="text-4xl font-semibold mb-4 max-w-xl mx-auto">{t("editChallenge")}</h1>
-            <ChallengeForm defaultValues={challenge} onSubmit={handleSubmit} />
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">
+                {t("editChallenge")}
+            </h1>
+
+            <ChallengeForm
+                defaultValues={challenge}
+                onSubmit={handleSubmit}
+            />
         </div>
     );
 }

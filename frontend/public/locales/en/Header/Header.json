@@ -4,5 +4,9 @@
     "profile": "Profile",
     "hello": "Hello {{firstname}}",
     "neighborhood": "Neighborhood",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "searchPlaceholder": "Search a user...",
+    "searching": "Searching...",
+    "noUserFound": "No user found",
+    "messages": "Messages"
 }

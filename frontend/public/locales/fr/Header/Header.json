@@ -4,5 +4,9 @@
     "profile": "Profil",
     "hello": "Bonjour {{firstname}}",
     "neighborhood": "Quartier",
-    "dashboard": "Tableau de bord"
+    "dashboard": "Tableau de bord",
+    "searchPlaceholder": "Rechercher un utilisateur...",
+    "searching": "Recherche...",
+    "noUserFound": "Aucun utilisateur trouvé",
+    "messages": "Messages"
 }

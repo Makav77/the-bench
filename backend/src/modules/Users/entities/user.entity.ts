@@ -1,19 +1,19 @@
-import { RefreshToken } from '../../../modules/Auth/entities/refresh-token.entity';
-import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany, OneToOne, JoinTable } from 'typeorm';
-import { Event } from '../../../modules/Events/entities/event.entity';
-import { Posts } from 'src/modules/Posts/entities/post.entity';
-import { MarketItem } from 'src/modules/Market/entities/market.entity';
-import { FlashPost } from 'src/modules/FlashPosts/entities/flash-post.entity';
-import { GalleryItem } from 'src/modules/Gallery/entities/gallery-item.entity';
-import { Poll } from 'src/modules/Polls/entities/poll.entity';
-import { PollVote } from 'src/modules/Polls/entities/poll-vote.entity';
-import { Challenge } from 'src/modules/Challenges/entities/challenge.entity';
-import { ChallengeRegistration } from 'src/modules/Challenges/entities/challenge-registration.entity';
-import { ChallengeCompletion } from 'src/modules/Challenges/entities/challenge-completion.entity';
-import { Permission } from 'src/modules/Permissions/entities/permission.entity';
-import { UserRestriction } from 'src/modules/Permissions/entities/user-restriction.entity';
-import { Report } from 'src/modules/Reports/entities/report.entity';
-import { Message } from 'src/modules/Chat/entities/message.entity';
+import { RefreshToken } from "../../../modules/Auth/entities/refresh-token.entity";
+import { Entity, PrimaryColumn, Column, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import { Event } from "../../../modules/Events/entities/event.entity";
+import { Posts } from "src/modules/Posts/entities/post.entity";
+import { MarketItem } from "src/modules/Market/entities/market.entity";
+import { FlashPost } from "src/modules/FlashPosts/entities/flash-post.entity";
+import { GalleryItem } from "src/modules/Gallery/entities/gallery-item.entity";
+import { Poll } from "src/modules/Polls/entities/poll.entity";
+import { PollVote } from "src/modules/Polls/entities/poll-vote.entity";
+import { Challenge } from "src/modules/Challenges/entities/challenge.entity";
+import { ChallengeRegistration } from "src/modules/Challenges/entities/challenge-registration.entity";
+import { ChallengeCompletion } from "src/modules/Challenges/entities/challenge-completion.entity";
+import { Permission } from "src/modules/Permissions/entities/permission.entity";
+import { UserRestriction } from "src/modules/Permissions/entities/user-restriction.entity";
+import { Report } from "src/modules/Reports/entities/report.entity";
+import { Message } from "src/modules/Chat/entities/message.entity";
 
 export enum Role {
     USER = "user",

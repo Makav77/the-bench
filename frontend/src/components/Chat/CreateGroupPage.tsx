@@ -66,14 +66,14 @@ export default function CreateGroupPage({ user, onCancel, handleGroupCreated }: 
 
       <div className="flex gap-2 mt-4">
         <button
-          className="bg-blue-500 text-white px-4 py-1 rounded"
+          className="bg-blue-500 text-white px-4 py-1 rounded cursor-pointer"
           onClick={handleSubmit}
         >
           Créer
         </button>
         {onCancel && (
           <button
-            className="bg-gray-300 text-black px-4 py-1 rounded"
+            className="bg-gray-300 text-black px-4 py-1 rounded cursor-pointer"
             onClick={onCancel}
           >
             Annuler

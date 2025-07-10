@@ -1,6 +1,6 @@
 {
     "reports": "Reports",
-    "reportedUser": "Reported User :",
+    "reportedUser": "User :",
     "reportedUserPlaceholder": "Firstname or lastname of user...",
     "status": "Status :",
     "all": "All",
@@ -30,7 +30,7 @@
     "rejection": "Rejection...",
     "reject": "Reject",
     "actionPerformed": "Action performed by",
-    "prev": "← Prev",
+    "previous": "← Prev",
     "page": "Page",
     "next": "Next →",
     "toastLoadReportError": "Unable to load reports",

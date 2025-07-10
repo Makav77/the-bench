@@ -23,7 +23,9 @@ function EditItemPage() {
     }, [id]);
 
     const handleSubmit = async (data: ItemFormData) => {
-        if (!id) return;
+        if (!id) {
+            return;
+        }
         const updated = await updateItem(id, data);
         toast.success(t("toastItemUpdated"));
         navigate(`/market/${updated.id}`);
@@ -35,8 +37,14 @@ function EditItemPage() {
 
     return (
         <div className="p-6">
-            <h1 className="w-[40%] mx-auto text-4xl font-semibold mb-4 pl-2">{t("editItem")}</h1>
-            <ItemForm defaultValues={item} onSubmit={handleSubmit} />
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4 max-sm:w-full">
+                {t("editItem")}
+            </h1>
+
+            <ItemForm
+                defaultValues={item} 
+                onSubmit={handleSubmit}
+            />
         </div>
     );
 }

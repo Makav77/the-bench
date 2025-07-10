@@ -38,6 +38,7 @@ function ResetPassword() {
             setCurrentMailState(mailState.missingMail);
             return;
         }
+
         setCurrentMailState(mailState.noError);
         setMailAddress("");
         setIsLoading(true);

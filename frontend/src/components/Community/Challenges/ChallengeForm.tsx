@@ -48,7 +48,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
         const { name, value } = e.target;
         setForm(f => ({
             ...f,
-            [name]: value
+            [name]: value.trimStart()
         }));
         setError(null);
     }
@@ -57,12 +57,19 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
         e.preventDefault();
         setError(null);
 
+        const cleanedForm = {
+            ...form,
+            title: form.title.trim(),
+            description: form.description.trim(),
+            successCriteria: form.successCriteria.trim(),
+        };
+
         if (!form.title || !form.description || !form.startDate || !form.endDate || !form.successCriteria) {
             setError("All fields are required.");
             return;
         }
 
-        if (new Date(form.startDate) >= new Date(form.endDate)) {
+        if (new Date(cleanedForm.startDate) >= new Date(cleanedForm.endDate)) {
             setError("Start date must be before end date.");
             return;
         }
@@ -70,7 +77,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
         setIsSubmitting(true);
 
         try {
-            await onSubmit(form);
+            await onSubmit(cleanedForm);
         } catch (error) {
             setError((error instanceof Error && error.message) ? error.message : "Error");
         } finally {
@@ -81,7 +88,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded-2xl shadow"
+            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded-2xl shadow w-full sm:w-auto"
         >
             {error && <p className="text-red-500">{error}</p>}
 
@@ -95,7 +102,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                     maxLength={100}
                     value={form.title}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 sm:py-1 py-3 text-base"
                 />
             </div>
 
@@ -108,11 +115,11 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                     rows={4}
                     value={form.description}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 sm:py-1 py-3 text-base"
                 />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label className="font-semibold">
                         {t("startDate")}<span className="text-red-500">*</span>
@@ -122,7 +129,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                         type="date"
                         value={form.startDate}
                         onChange={handleChange}
-                        className="w-full border rounded px-2 py-1"
+                        className="w-full border rounded px-2 sm:py-1 py-3 text-base"
                     />
                 </div>
                 <div>
@@ -134,7 +141,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                         type="date"
                         value={form.endDate}
                         onChange={handleChange}
-                        className="w-full border rounded px-2 py-1"
+                        className="w-full border rounded px-2 sm:py-1 py-3 text-base"
                     />
                 </div>
             </div>
@@ -146,14 +153,14 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                     type="text"
                     value={form.successCriteria}
                     onChange={handleChange}
-                    className="w-full border rounded px-2 py-1"
+                    className="w-full border rounded px-2 sm:py-1 py-3 text-base"
                 />
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row justify-between gap-2">
                 <button
                     type="button"
-                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer"
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded cursor-pointer max-sm:w-full max-sm:py-3 max-sm:text-base"
                     onClick={() => navigate("/challenges")}
                 >
                     {t("cancel")}
@@ -161,7 +168,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:w-full max-sm:py-3 max-sm:text-base"
                 >
                     {isSubmitting ? t("loading") : defaultValues ? t("update") : t("create")}
                 </button>

@@ -21,32 +21,36 @@ export default function GalleryItemDetailPage() {
         async function load() {
             setIsLoading(true);
             setError(null);
-
             try {
                 if (id) {
                     const galleryItem = await getGalleryItem(id);
                     setGalleryItem(galleryItem);
                 }
-            } catch (error) {
-                console.error(error);
+            } catch {
                 toast.error(t("toastLoadGalleryError"));
             } finally {
                 setIsLoading(false);
             }
         };
         load();
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">{t("loading")}</p>
+        return <p className="p-6">
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="text-red-500">{error}</p>
+        return <p className="text-red-500">
+            {error}
+        </p>
     }
 
     if (!galleryItem) {
-        return <p>{t("emprtyGallery")}</p>;
+        return <p>
+            {t("emptyGallery")}
+        </p>;
     }
 
     const isAuthor = user?.id === galleryItem.author.id;
@@ -66,7 +70,6 @@ export default function GalleryItemDetailPage() {
         if (!confirmed) {
             return;
         }
-        
         try {
             await deleteGalleryItem(id!);
             toast.success(t("toastImageDeleted"));
@@ -78,7 +81,7 @@ export default function GalleryItemDetailPage() {
 
     return (
         <div
-            className="absolute left-0 top-0 w-full h-full flex items-center justify-center z-50 bg-black/30 backdrop-blur-xl"
+            className="absolute left-0 top-0 w-full h-full flex items-center justify-center z-50 bg-black/30 backdrop-blur-xl max-sm:p-2"
             onClick={() => navigate("/gallery")}
         >
             <div
@@ -87,9 +90,11 @@ export default function GalleryItemDetailPage() {
             >
                 <button 
                     onClick={() => navigate("/gallery")}
-                    className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline">
+                    className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline"
+                >
                         <X className="w-6 h-6 text-gray-600 hover:bg-gray-200 rounded-3xl" />
                 </button>
+
                 <img 
                     src={galleryItem.url} 
                     alt={galleryItem.description} 
@@ -117,7 +122,6 @@ export default function GalleryItemDetailPage() {
                         >
                             {liked ? '💖' : '🤍'} {galleryItem.likedBy.length}
                         </button>
-
 
                         <div>
                             {(isAuthor || user?.role==='admin') && (

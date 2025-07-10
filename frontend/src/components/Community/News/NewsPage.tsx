@@ -16,7 +16,6 @@ function NewsPage() {
         async function load() {
             setLoading(true);
             setError(null);
-
             try {
                 const { data, lastPage } = await getAllNews(page, 5);
                 setNews(data);
@@ -31,61 +30,65 @@ function NewsPage() {
     }, [page]);
 
     return (
-        <div className="w-[30%] mx-auto">
-            <div className="mt-5">
+        <div className="w-[30%] mx-auto px-2 max-sm:w-full max-sm:p-6">
+            <div className="mt-5 max-sm:mt-0">
                 <button
                     type="button"
                     onClick={() => navigate("/community")}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5 w-full sm:w-auto max-sm:h-12 max-sm:text-base max-sm:px-8"
                 >
                     {t("back")}
                 </button>
             </div>
 
-            <div className="flex mb-7 justify-end">
+            <div className="flex justify-end mb-4 h-10 max-sm:h-15">
                 <button
                     type="button"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 max-sm:px-8 rounded w-fit cursor-pointer"
                     onClick={() => navigate("/news/create")}
                 >
                     {t("writeArticle")}
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-5">{t("news")}</h1>
+            <h1 className="text-3xl font-bold mb-5">
+                {t("news")}
+            </h1>
 
-            {loading && <div className="text-center">{t("loading")}</div>}
+            {loading && <div className="text-center max-sm:text-lg">{t("loading")}</div>}
             {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
             {!loading && !error && news.length === 0 && (
-                <div className="text-center text-gray-500">{t("noArticle")}</div>
+                <div className="text-center text-gray-500">
+                    {t("noArticle")}
+                </div>
             )}
 
-            <ul className="space-y-6">
+            <ul className="space-y-6 max-sm:space-y-4">
                 {!loading && !error && news.map(article => (
                     <li
                         key={article.id}
-                        className="bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4 cursor-pointer"
+                        className="bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4 cursor-pointer max-sm:gap-2"
+                        onClick={() => navigate(`/news/${article.id}`)}
                     >
                         {article.images && article.images.length > 0 && (
                             <img
                                 src={article.images[0]}
                                 alt="Main image of the article"
-                                className="w-32 h-32 object-cover rounded"
+                                className="w-32 h-32 object-cover rounded max-sm:w-full max-sm:h-36"
                             />
                         )}
 
-                        <div
-                            className="flex-1 overflow-hidden whitespace-nowrap truncate"
-                            onClick={() => navigate(`/news/${article.id}`)}
-                        >
-                            <h2 className="text-xl font-bold text-blue-700 hover:underline">{article.title}</h2>
+                        <div className="flex-1 overflow-hidden max-sm:whitespace-normal">
+                            <h2 className="text-xl font-bold text-blue-700 hover:underline">
+                                {article.title}
+                            </h2>
 
                             <div className="text-gray-500 text-sm mb-2">
                                 {t("publishedOn")} {new Date(article.createdAt).toLocaleDateString()}
                             </div>
 
-                            <p className="line-clamp-3 text-gray-800">
+                            <p className="line-clamp-3 text-gray-800 max-sm:line-clamp-2">
                                 {article.content}
                             </p>
 
@@ -111,27 +114,27 @@ function NewsPage() {
                 ))}
             </ul>
 
-            <div className="flex justify-center items-center mt-6 gap-4">
+            <div className="flex justify-center items-center mt-6 gap-4 max-sm:mt-10">
                 <button
                     type="button"
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:px-5 max-sm:py-3"
                 >
-                    ← Prev
+                    {t("previous")}
                 </button>
 
-                <span>
-                    Page {page} / {lastPage}
+                <span className="max-sm:text-sm">
+                    {t("page")} {page} / {lastPage}
                 </span>
 
                 <button
                     type="button"
                     disabled={page >= lastPage}
                     onClick={() => setPage((p) => p + 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:px-5 max-sm:py-3"
                 >
-                    Next →
+                    {t("next")}
                 </button>
             </div>
         </div>

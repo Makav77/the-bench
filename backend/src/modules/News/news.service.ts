@@ -26,6 +26,7 @@ export class NewsService {
             status: "APPROVED",
             published: true,
         };
+
         if (user.role !== "admin") {
             filter.irisCode = { $in: [user.irisCode, "all"] };
         }
@@ -70,6 +71,7 @@ export class NewsService {
             irisCode: author.role === "admin" ? "all" : author.irisCode,
             irisName: author.role === "admin" ? "all" : author.irisName,
         });
+
         return news.save();
     }
 
@@ -168,6 +170,7 @@ export class NewsService {
             ...item,
             id: item.id || item._id?.toString(),
         }));
+
         const lastPage = Math.ceil(total / limit);
         return { data: dataWithId, total, page, lastPage };
     }
@@ -195,6 +198,7 @@ export class NewsService {
             news.rejectedReason = validateNewsDTO.rejectedReason;
             news.published = false;
         }
+
         return news.save();
     }
 
@@ -204,6 +208,7 @@ export class NewsService {
             this.newsModel.find({ status: "APPROVED", published: true }).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
             this.newsModel.countDocuments({ status: "APPROVED", published: true }),
         ]);
+
         const lastPage = Math.ceil(total / limit) || 1;
         return { data, total, page, lastPage };
     }
@@ -221,6 +226,9 @@ export class NewsService {
         const allNews = await this.newsModel.find().lean();
 
         for (const news of allNews) {
+            if (news.irisCode === "all") {
+                continue;
+            }
             const userIris = userIrisById[news.authorId];
             if (userIris && news.irisCode !== userIris) {
                 await this.newsModel.deleteOne({ _id: news._id });

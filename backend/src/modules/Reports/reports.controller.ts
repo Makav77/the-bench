@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Param, Body, Req, UseGuards, Delete, Query, DefaultValuePipe, ParseIntPipe, NotFoundException } from "@nestjs/common";
+import { Controller, Post, Get, Patch, Param, Body, Req, UseGuards, Delete, Query, DefaultValuePipe, ParseIntPipe } from "@nestjs/common";
 import { ReportsService } from "./reports.service";
 import { CreateReportDTO } from "./dto/create-report.dto";
 import { UpdateReportStatusDTO } from "./dto/update-status.dto";

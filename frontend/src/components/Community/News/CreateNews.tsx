@@ -11,11 +11,14 @@ function CreateNews() {
     const navigate = useNavigate();
     const { user } = useAuth();
     const { t } = useTranslation("Community/CreateNews");
-
     const { restricted, expiresAt, reason } = usePermission("create_news");
+
     if (restricted === null) {
-        return <p className="p-6 text-center">{t("checkingPermissions")}</p>
+        return <p className="p-6 text-center">
+            {t("checkingPermissions")}
+        </p>
     }
+
     if (restricted) {
         return (
             <div className="p-6 text-center">
@@ -58,10 +61,11 @@ function CreateNews() {
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-semibold mb-4 w-[30%] mx-auto">{t("createNews")}</h1>
-            <NewsForm 
-                onSubmit={handleSubmit}
-            />
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">
+                {t("createNews")}
+            </h1>
+
+            <NewsForm onSubmit={handleSubmit} />
         </div>
     );
 }

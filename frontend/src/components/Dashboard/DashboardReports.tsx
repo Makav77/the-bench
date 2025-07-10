@@ -12,7 +12,6 @@ type ReasonFilter = "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INA
 function DashboardReports() {
     const navigate = useNavigate();
     const { t } = useTranslation("Dashboard/DashboardReports");
-
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [reports, setReports] = useState<ReportDTO[]>([]);
@@ -30,7 +29,7 @@ function DashboardReports() {
                 const { data, lastPage } = await getReports(page, 10);
                 setReports(data);
                 setLastPage(lastPage);
-            } catch (error) {
+            } catch {
                 toast.error(t("toastLoadReportError"));
             } finally {
                 setLoadingReports(false);
@@ -144,26 +143,29 @@ function DashboardReports() {
             <h2 className="text-2xl font-semibold mb-4">
                 {t("reports")}
             </h2>
-
             <div className="border-t-2 h-1 mb-5" />
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">{t("reportedUser")}</span>
+                <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
+                    {t("reportedUser")}
+                </span>
                 <input
                     type="text"
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => setSearch(e.target.value.trimStart())}
                     placeholder={t("reportedUserPlaceholder")}
-                    className="border rounded px-2 py-1 w-full max-w-xs h-8"
+                    className="border rounded px-2 py-1 w-full max-w-xs h-8 max-sm:max-w-none max-sm:w-full max-sm:text-lg max-sm:py-4"
                 />
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">{t("status")}</span>
+                <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
+                    {t("status")}
+                </span>
                 <select
                     value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value as "ALL" | "PENDING" | "VALIDATED" | "REJECTED")}
-                    className="border rounded px-2 py-1 h-8"
+                    onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
+                    className="border rounded px-2 py-1 h-8 max-sm:w-full max-sm:text-lg max-sm:py-4"
                 >
                     <option value="ALL">{t("all")}</option>
                     <option value="PENDING">{t("pending")}</option>
@@ -173,11 +175,13 @@ function DashboardReports() {
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">{t("content")}</span>
+                <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
+                    {t("content")}
+                </span>
                 <select
                     value={filterContentType}
-                    onChange={(e) => setFilterContentType(e.target.value as "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLL" | "CHALLENGE")}
-                    className="border rounded px-2 py-1 h-8"
+                    onChange={(e) => setFilterContentType(e.target.value as ContentFilter)}
+                    className="border rounded px-2 py-1 h-8 max-sm:w-full max-sm:text-lg max-sm:py-4"
                 >
                     <option value="ALL">{t("all")}</option>
                     <option value="POST">{t("post")}</option>
@@ -190,11 +194,13 @@ function DashboardReports() {
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">{t("reason")}</span>
+                <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
+                    {t("reason")}
+                </span>
                 <select
                     value={filterReason}
-                    onChange={(e) => setFilterReason(e.target.value as "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INAPPROPRIATE_CONTENT" | "OTHER")}
-                    className="border rounded px-2 py-1 h-8"
+                    onChange={(e) => setFilterReason(e.target.value as ReasonFilter)}
+                    className="border rounded px-2 py-1 h-8 max-sm:w-full max-sm:text-lg max-sm:py-4"
                 >
                     <option value="ALL">{t("all")}</option>
                     <option value="OFFENSIVE_LANGUAGE">{t("offensiveLanguage")}</option>
@@ -208,9 +214,13 @@ function DashboardReports() {
             <div className="border-t-2 h-1 mb-5" />
 
             {loadingReports ? (
-                <p className="text-center">{t("loading")}</p>
+                <p className="text-center">
+                    {t("loading")}
+                </p>
             ) : filteredReports.length === 0 ? (
-                <p className="text-center">{t("noWaitingReport")}</p>
+                <p className="text-center">
+                    {t("noWaitingReport")}
+                </p>
             ) : (
                 <div className="space-y-4">
                     {filteredReports.map((report) => (
@@ -258,7 +268,7 @@ function DashboardReports() {
 
                                 <p>
                                     <span className="font-semibold">{t("reason")}</span>{" "}
-                                    {report.reason}
+                                    {t(report.reason)}
                                 </p>
 
                                 {report.description && (
@@ -275,7 +285,7 @@ function DashboardReports() {
                                         report.status === "VALIDATED" ? "bg-green-400 px-2 rounded" :
                                         "bg-red-400 px-2 rounded"
                                     }>
-                                        {report.status}
+                                        {t(report.status.toLowerCase())}
                                     </span>
                                 </p>
                             </div>
@@ -289,7 +299,7 @@ function DashboardReports() {
                                                 handleStatusChanged(report.id, "VALIDATED");
                                             }}
                                             disabled={updatingId === report.id}
-                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
+                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto"
                                         >
                                             {updatingId === report.id
                                                 ? t("validation")
@@ -302,10 +312,10 @@ function DashboardReports() {
                                                 handleStatusChanged(report.id, "REJECTED");
                                             }}
                                             disabled={updatingId === report.id}
-                                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer">
-                                                {updatingId === report.id
-                                                    ? t("rejection")
-                                                    : t("reject")}
+                                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto">
+                                            {updatingId === report.id
+                                                ? t("rejection")
+                                                : t("reject")}
                                         </button>
                                     </>
                                 ) : (

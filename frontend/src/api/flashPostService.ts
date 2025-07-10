@@ -1,6 +1,5 @@
 import apiClient from "./apiClient";
 
-
 export interface FlashPostSummary {
     id: string;
     title: string;

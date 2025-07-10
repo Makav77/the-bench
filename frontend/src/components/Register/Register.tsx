@@ -25,6 +25,7 @@ interface registerCredentials {
 enum registerState {
     noError = "noError",
     missingCredentials = "missingCredentials",
+    emailUsed = "emailUsed",
 }
 
 function Signup() {
@@ -55,6 +56,28 @@ function Signup() {
         setIsPasswordVisible((prev) => !prev);
     };
 
+    function formatName(str: string) {
+        return str
+            .trim()
+            .replace(/\s+/g, " ")
+            .split(" ")
+            .map(
+                w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+            )
+            .join(" ");
+    }
+
+    function formatStreet(str: string) {
+        return str
+            .trim()
+            .replace(/\s+/g, " ")
+            .toLowerCase();
+    }
+
+    function cleanTextEmail(str: string) {
+        return str.trim().replace(/\s+/g, " ");
+    }
+
     function handleKeyPress(e: React.KeyboardEvent) {
         if (e.key === "Space") togglePasswordVisibility();
     }
@@ -63,6 +86,8 @@ function Signup() {
         switch (currentRegisterState) {
             case registerState.missingCredentials:
                 return t("missingCredentials");
+            case registerState.emailUsed:
+                return t("emailAlreadyUsed");
             default:
                 return null;
         }
@@ -73,7 +98,7 @@ function Signup() {
         const { name, value } = e.target;
         setRegisterCredentials((prev) => ({ 
             ...prev,
-            [name]: value
+            [name]: value.trimStart()
         }));
         setCurrentRegisterState(registerState.noError);
     }
@@ -97,6 +122,7 @@ function Signup() {
             irisName: "",
         }));
         setIrisError("");
+        setShowCitySuggestions(false);
 
         if (value.length === 5) {
             try {
@@ -113,14 +139,6 @@ function Signup() {
         }
     }
 
-    function handleCityChange(e: ChangeEvent<HTMLInputElement>) {
-        const value = e.target.value;
-        setRegisterCredentials(prev => ({
-            ...prev,
-            city: value,
-        }));
-        setIrisError("");
-    }
 
     function handleSelectCity(city: string) {
         setRegisterCredentials(prev => ({
@@ -181,18 +199,16 @@ function Signup() {
         setCurrentRegisterState(registerState.noError);
         registerCredentials.id = uuidv4();
 
-        const address = `${registerCredentials.street}, ${registerCredentials.postalCode} ${registerCredentials.city}`.trim();
-
         const userToSend = {
             id: registerCredentials.id,
-            firstname: registerCredentials.firstname,
-            lastname: registerCredentials.lastname,
-            email: registerCredentials.email,
+            firstname: formatName(registerCredentials.firstname),
+            lastname: formatName(registerCredentials.lastname),
+            email: cleanTextEmail(registerCredentials.email),
             password: registerCredentials.password,
             dateOfBirth: registerCredentials.dateOfBirth,
             profilePicture: registerCredentials.profilePicture,
             role: registerCredentials.role,
-            address: address,
+            address: `${formatStreet(registerCredentials.street)}, ${registerCredentials.postalCode} ${registerCredentials.city}`,
             irisCode: registerCredentials.irisCode,
             irisName: registerCredentials.irisName,
         };
@@ -200,29 +216,33 @@ function Signup() {
         try {
             await createUser(userToSend);
             navigate("/");
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            if (error?.response?.status === 409) {
+                setCurrentRegisterState(registerState.emailUsed);
+            } else {
+                setCurrentRegisterState(registerState.missingCredentials);
+            }
         }
     }
 
     return (
-        <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6">
-            <h1 className="text-black font-bold text-5xl mt-10 mb-2">
+        <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6 max-sm:w-[92vw] max-sm:rounded-[5vw] max-sm:mt-8 max-sm:p-4">
+            <h1 className="text-black font-bold text-5xl mt-10 mb-2 max-sm:text-4xl max-sm:mt-4 max-sm:mb-2">
                 {t("title")}
             </h1>
-            <h2 className="text-black/38 text-lg font-bold mb-8">
+            <h2 className="text-black/38 text-lg font-bold mb-8 max-sm:text-xl max-sm:mb-6">
                 {t("subtitle")}
             </h2>
 
             <form
-                className="flex flex-col gap-5 w-4/5 mx-auto"
+                className="flex flex-col gap-5 w-4/5 mx-auto max-sm:w-full max-sm:gap-4"
                 onSubmit={handleSubmit}
             >
                 <input
                     name="firstname"
                     type="text"
                     aria-label="firstname-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.firstname || ""}
                     onChange={handleChange}
                     placeholder={t("firstname")}
@@ -232,7 +252,7 @@ function Signup() {
                     name="lastname"
                     type="text"
                     aria-label="lastname-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.lastname || ""}
                     onChange={handleChange}
                     placeholder={t("lastname")}
@@ -242,7 +262,7 @@ function Signup() {
                     name="email"
                     type="email"
                     aria-label="email-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.email || ""}
                     onChange={handleChange}
                     placeholder={t("email")}
@@ -254,7 +274,7 @@ function Signup() {
                         type={isPasswordVisible ? "text" : "password"}
                         autoComplete="off"
                         aria-label="password-field"
-                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.password ? "border-red-500 shake" : "border-gray-500"}`}
+                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.password ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                         value={registerCredentials.password}
                         onChange={handleChange}
                         placeholder={t("password")}
@@ -263,7 +283,7 @@ function Signup() {
                     <button
                         type="button"
                         aria-label="toggle-password-visibility"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer max-sm:right-2"
                         onClick={togglePasswordVisibility}
                         onKeyUp={handleKeyPress}
                     >
@@ -283,7 +303,7 @@ function Signup() {
                     type="date"
                     autoComplete="off"
                     aria-label="dateOfBirth-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.dateOfBirth ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.dateOfBirth ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.dateOfBirth || ""}
                     onChange={handleChange}
                     placeholder={t("dateOfBirth")}
@@ -292,7 +312,7 @@ function Signup() {
                 <input
                     name="street"
                     type="text"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.street ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.street ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.street}
                     onChange={handleStreetChange}
                     placeholder="12 rue Rivoli"
@@ -304,7 +324,7 @@ function Signup() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     maxLength={5}
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.postalCode ? "border-red-500 shake" : "border-gray-500"}`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.postalCode ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.postalCode}
                     onChange={handlePostalCodeChange}
                     placeholder="75010"
@@ -314,9 +334,9 @@ function Signup() {
                     <input
                         name="city"
                         type="text"
-                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.city ? "border-red-500 shake" : "border-gray-500"}`}
+                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.city ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                         value={registerCredentials.city}
-                        onChange={handleCityChange}
+                        readOnly // On empêche l'édition manuelle
                         placeholder="Paris"
                         onFocus={() => setShowCitySuggestions(citySuggestions.length > 0)}
                     />
@@ -338,7 +358,7 @@ function Signup() {
 
                 {registerCredentials.irisName && (
                     <div className="text-sm text-amber-700 italic text-left pl-1">
-                        Neighborhood selected : <span className="font-bold">{registerCredentials.irisName}</span>
+                        {t("neighborhoodSelected")} <span className="font-bold">{registerCredentials.irisName}</span>
                     </div>
                 )}
 
@@ -348,17 +368,17 @@ function Signup() {
 
                 <div>
                     {getErrorMessage() && (
-                        <p className="text-red-500 text-left text-sm -mb-2 -mt-2 shake italic">
+                        <p className="text-red-500 text-left text-sm -mb-2 -mt-2 shake italic max-sm:text-base">
                             {getErrorMessage()}
                         </p>
                     )}
                 </div>
 
-                <div className="flex gap-5">
+                <div className="flex gap-5 max-sm:gap-3">
                     <button
                         type="button"
                         aria-label="cancel-button"
-                        className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                        className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center max-sm:w-2/5 max-sm:text-lg max-sm:py-3 max-sm:rounded-xl"
                         onClick={() => navigate("/")}
                     >
                         {t("cancel")}
@@ -367,7 +387,7 @@ function Signup() {
                     <button
                         type="submit"
                         aria-label="register-button"
-                        className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                        className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center max-sm:w-3/5 max-sm:text-lg max-sm:py-3 max-sm:rounded-xl"
                     >
                         {t("buttonRegister")}
                     </button>

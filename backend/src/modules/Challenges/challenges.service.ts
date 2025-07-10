@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindOptionsWhere, IsNull, MoreThan, Not, Repository } from "typeorm";
+import { FindOptionsWhere, MoreThan, Repository } from "typeorm";
 import { Challenge } from "./entities/challenge.entity";
 import { ChallengeRegistration } from "./entities/challenge-registration.entity";
 import { ChallengeCompletion } from "./entities/challenge-completion.entity";
@@ -78,6 +78,7 @@ export class ChallengesService {
             where: { id },
             relations: ["author", "registrations", "registrations.user", "completions", "completions.user"],
         });
+
         if (!challenge) {
             throw new NotFoundException("Challenge not found.");
         }
@@ -112,6 +113,7 @@ export class ChallengesService {
 
         let irisCode = author.irisCode;
         let irisName = author.irisName;
+
         if (author.role === "admin") {
             irisCode = "all";
             irisName = "all";
@@ -127,6 +129,7 @@ export class ChallengesService {
             irisCode,
             irisName,
         });
+
         return this.challengeRepo.save(challenge);
     }
 
@@ -302,6 +305,10 @@ export class ChallengesService {
         const challenges = await this.challengeRepo.find({ relations: ["author"] });
         for (const challenge of challenges) {
             if (!challenge.author) {
+                continue;
+            }
+
+            if (challenge.irisCode === "all") {
                 continue;
             }
 

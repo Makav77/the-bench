@@ -34,14 +34,18 @@ function PostDetailPage() {
             }
         };
         load()
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">{t("loading")}</p>
+        return <p className="p-6">
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="p-6 text-red-500">{error}</p>
+        return <p className="p-6 text-red-500">
+            {error}
+        </p>
     }
 
     if (!post) {
@@ -68,17 +72,20 @@ function PostDetailPage() {
 
     return (
         <div>
-            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl">
+            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl max-sm:w-[98%] max-sm:space-y-6 max-sm:mt-3">
                 <button
                     type="button"
                     onClick={() => navigate("/bulletinsboard")}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer max-sm:text-lg max-sm:w-full max-sm:py-3 max-sm:mb-2"
                 >
                     {t("back")}
                 </button>
 
-                <h1 className="text-3xl font-bold">{post.title}</h1>
-                <p className="text-sm text-gray-600">
+                <h1 className="text-3xl font-bold max-sm:text-2xl">
+                    {post.title}
+                </h1>
+
+                <p className="text-sm text-gray-600 max-sm:text-base">
                     {t("publishedOn")} {new Date(post.createdAt).toLocaleString()} <br />
                     {t("updatedOn")} {' '} {new Date(post.updatedAt).toLocaleString()} <br />
                     {t("by")} {" "}
@@ -89,21 +96,25 @@ function PostDetailPage() {
                         {post.author.firstname} {post.author.lastname}
                     </span>
                 </p>
-                <p className="whitespace-pre-wrap">{post.description}</p>
+
+                <p className="whitespace-pre-wrap max-sm:text-lg">
+                    {post.description}
+                </p>
 
                 {(isAuthor || isAdminorModerator) && (
-                    <div className="mt-4 flex gap-2 justify-center">
+                    <div className="mt-4 flex gap-2 justify-center max-sm:flex-col max-sm:gap-3">
                         <button
                             type="button"
                             onClick={() => navigate(`/posts/${id}/edit`)}
-                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:text-lg max-sm:w-full max-sm:py-3"
                         >
                             {t("editPost")}
                         </button>
+
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:text-lg max-sm:w-full max-sm:py-3"
                         >
                             {t("deletePost")}
                         </button>
@@ -112,10 +123,10 @@ function PostDetailPage() {
             </div>
 
             {!isAuthor && post.author.role !== "admin" && post.author.role !== "moderator" && (
-                <div className="w-[20%] mx-auto flex justify-end">
+                <div className="w-[20%] mx-auto flex justify-end max-sm:w-full max-sm:justify-center">
                     <button
                         onClick={() => setShowReportModal(true)}
-                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer max-sm:text-lg max-sm:px-6 max-sm:py-3"
                     >
                         {t("reportPost")}
                     </button>

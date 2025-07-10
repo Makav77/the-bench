@@ -17,11 +17,7 @@ export class AuthService {
         private readonly refreshTokenRepo: Repository<RefreshToken>,
     ) {}
 
-    async login(loginUserDTO: LoginUserDTO): Promise<{
-        accessToken: string;
-        refreshToken: string;
-        refreshOptions: CookieOptions;
-    }> {
+    async login(loginUserDTO: LoginUserDTO): Promise<{ accessToken: string; refreshToken: string; refreshOptions: CookieOptions;}> {
         const { email, password, rememberMe } = loginUserDTO;
         const user = await this.userService.findByEmail(email);
         const isMatch = await bcrypt.compare(password, user.password);
@@ -39,9 +35,7 @@ export class AuthService {
             expiresIn: rememberMe ? "30d" : "1d",
         });
 
-        const expiresAt = new Date(
-            Date.now() + (rememberMe ? 30 : 1) * 24 * 60 * 60 * 1000,
-        );
+        const expiresAt = new Date(Date.now() + (rememberMe ? 30 : 1) * 24 * 60 * 60 * 1000);
 
         const rtEntity = this.refreshTokenRepo.create({
             token: refreshToken,

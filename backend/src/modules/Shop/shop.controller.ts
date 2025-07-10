@@ -49,12 +49,15 @@ export class ShopController {
         @Req() req: RequestWithResource<Badge>
     ): Promise<Badge> {
         const user = req.user as User;
+
         if (!file) {
             throw new BadRequestException("Image file required");
         }
+
         if (user.role !== "admin") {
             throw new BadRequestException("Only admins can create badges");
         }
+
         const imageUrl = `/uploads/badges/${file.filename}`;
         return this.shopService.createBadge(dto, imageUrl);
     }
@@ -83,9 +86,11 @@ export class ShopController {
         @Req() req: RequestWithResource<Badge>
     ): Promise<{ success: boolean }> {
         const user = req.user as User;
+
         if (user.role !== "admin") {
             throw new BadRequestException("Only admins can delete badges");
         }
+
         return this.shopService.deleteBadge(id);
     }
 }

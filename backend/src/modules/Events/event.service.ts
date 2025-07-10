@@ -12,7 +12,7 @@ export class EventService {
     constructor(
         @InjectRepository(Event)
         private readonly eventRepo: Repository<Event>
-    ) { }
+    ) {}
 
     async findAllEvents(page = 1, limit = 5, user: User): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
         const offset = (page - 1) * limit;
@@ -24,7 +24,7 @@ export class EventService {
                 { endDate: MoreThan(new Date()), irisCode: "all" }
             ];
         }
-    
+
         const [data, total] = await this.eventRepo.findAndCount({
             where: whereCondition,
             order: { startDate: "ASC" },
@@ -150,13 +150,13 @@ export class EventService {
             throw new BadRequestException("L'auteur ne peut pas s'inscrire à son propre événement.");
         }
 
-    if (
-        event.maxNumberOfParticipants !== undefined &&
-        event.maxNumberOfParticipants !== null &&
-        (event.participantsList ?? []).length >= event.maxNumberOfParticipants
-    ) {
-        throw new BadRequestException("The event is full.")
-    }
+        if (
+            event.maxNumberOfParticipants !== undefined &&
+            event.maxNumberOfParticipants !== null &&
+            (event.participantsList ?? []).length >= event.maxNumberOfParticipants
+        ) {
+            throw new BadRequestException("The event is full.")
+        }
 
         event.participantsList?.push(user);
         return this.eventRepo.save(event);
@@ -186,6 +186,10 @@ export class EventService {
         const events = await this.eventRepo.find({ relations: ["author"] });
         for (const event of events) {
             if (!event.author) {
+                continue;
+            }
+
+            if (event.irisCode === "all") {
                 continue;
             }
 

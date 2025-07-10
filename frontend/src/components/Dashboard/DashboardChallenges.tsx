@@ -44,7 +44,7 @@ function DashboardChallenges() {
             }
         }
         loadPendings();
-    }, [pageChallenge, pageCompletion]);
+    }, [pageChallenge, pageCompletion, t]);
 
     const handleValidateChallenge = async (challengeId: string) => {
         setUpdatingChallengeId(challengeId);
@@ -64,10 +64,13 @@ function DashboardChallenges() {
         if (reason === null) {
             return;
         }
+
         if (reason.trim() === "") {
             toast.error(t("toastRejectedReasonRequired"));
         }
+
         setUpdatingChallengeId(challengeId);
+
         try {
             await validateChallenge(challengeId, { validated: false, rejectedReason: reason.trim() });
             toast.success(t("toastChallengeRejected"));
@@ -99,11 +102,14 @@ function DashboardChallenges() {
         if (reason === null) {
             return;
         }
+
         if (reason.trim() === "") {
             toast.error(t("toastRejectedReasonRequired"));
             return;
         }
+
         setUpdatingCompletionId(completion.id);
+
         try {
             await validateCompletion(completion.challenge.id, completion.id, {
                 validated: false,
@@ -119,14 +125,21 @@ function DashboardChallenges() {
     };
 
     if (loadingChallenges) {
-        return <p className="p-6 text-center">{t("loadingPending")}</p>
+        return <p className="p-6 text-center">
+            {t("loadingPending")}
+        </p>
     }
 
     return (
-        <div className="bg-white p-6 rounded-2xl space-y-8">
-            <h2 className="text-2xl font-semibold">{t("waitingChallenges")}</h2>
+        <div className="bg-white p-6 rounded-2xl space-y-8 max-sm:p-2">
+            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">
+                {t("waitingChallenges")}
+            </h2>
+
             {loadingChallenges ? (
-                <p className="text-center">{t("loadingChallenges")}</p>
+                <p className="text-center">
+                    {t("loadingChallenges")}
+                </p>
             ) : pendingChallenges.length === 0 ? (
                 <p className="text-center text-gray-600">
                     {t("noWaitingChallenge")}
@@ -136,7 +149,7 @@ function DashboardChallenges() {
                     {pendingChallenges.map((challenge) => (
                         <li
                             key={challenge.id}
-                            className="border rounded-lg p-4 shadow-sm space-y-2"
+                            className="border rounded-lg p-4 shadow-sm space-y-2 max-sm:p-2"
                         >
                             <div>
                                 <p>
@@ -152,7 +165,7 @@ function DashboardChallenges() {
                                     </span>
                                 </p>
                                 <p>
-                                <span className="font-semibold">{t("dates")}</span>{" "}
+                                    <span className="font-semibold">{t("dates")}</span>{" "}
                                     {format(new Date(challenge.startDate), "dd/MM/yyyy")}
                                     {" "}–{" "}
                                     {format(new Date(challenge.endDate), "dd/MM/yyyy")}
@@ -163,11 +176,11 @@ function DashboardChallenges() {
                                 </p>
                             </div>
 
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 max-sm:flex-col max-sm:gap-3">
                                 <button
                                     onClick={() => handleValidateChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer max-sm:text-lg max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto"
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? t("validationChallenge")
@@ -177,7 +190,7 @@ function DashboardChallenges() {
                                 <button
                                     onClick={() => handleRejectChallenge(challenge.id)}
                                     disabled={updatingChallengeId === challenge.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer max-sm:text-lg max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto"
                                 >
                                     {updatingChallengeId === challenge.id
                                         ? t("rejectionChallenge")
@@ -189,17 +202,17 @@ function DashboardChallenges() {
                 </ul>
             )}
 
-            <div className="flex justify-center items-center mt-6 gap-4">
+            <div className="flex justify-center items-center mt-6 gap-4 max-sm:gap-2">
                 <button
                     type="button"
                     disabled={pageChallenge <= 1}
                     onClick={() => setPageChallenge((p) => p - 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:py-2 max-sm:px-2"
                 >
                     {t("previous")}
                 </button>
 
-                <span>
+                <span className="max-sm:text-base">
                     {t("page")} {pageChallenge} / {lastPageChallenge}
                 </span>
 
@@ -207,17 +220,22 @@ function DashboardChallenges() {
                     type="button"
                     disabled={pageChallenge >= lastPageChallenge}
                     onClick={() => setPageChallenge((p) => p + 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:py-2 max-sm:px-2"
                 >
                     {t("next")}
                 </button>
             </div>
 
-            <hr className="my-6 border-gray-300" />
+            <hr className="my-6 border-gray-300 max-sm:my-3" />
 
-            <h2 className="text-2xl font-semibold">{t("waitingCompletions")}</h2>
+            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">
+                {t("waitingCompletions")}
+            </h2>
+
             {loadingCompletions ? (
-                <p className="text-center">{t("loadingCompletions")}</p>
+                <p className="text-center">
+                    {t("loadingCompletions")}
+                </p>
             ) : pendingCompletions.length === 0 ? (
                 <p className="text-center text-gray-600">
                     {t("noWaitingCompletion")}
@@ -227,21 +245,24 @@ function DashboardChallenges() {
                     {pendingCompletions.map((completion) => (
                         <li
                             key={completion.id}
-                            className="border rounded-lg p-4 shadow-sm space-y-2"
+                            className="border rounded-lg p-4 shadow-sm space-y-2 max-sm:p-2"
                         >
                             <div>
                                 <p>
                                     <span className="font-semibold">{t("user")}</span>{" "}
                                     {completion.user.firstname} {completion.user.lastname}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("challenge")}</span>{" "}
                                     {completion.challenge.title}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("date")}</span>{" "}
                                     {format(new Date(completion.createdAt), "dd/MM/yyyy 'à' HH:mm")}
                                 </p>
+
                                 {completion.text && (
                                     <p>
                                         <span className="font-semibold">{t("proof")}</span> {completion.text}
@@ -249,42 +270,54 @@ function DashboardChallenges() {
                                 )}
                             </div>
 
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 max-sm:flex-col max-sm:gap-3">
                                 <button
                                     onClick={() => handleValidateCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer max-sm:text-lg max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto"
                                 >
                                     {updatingCompletionId === completion.id
                                         ? t("validationCompletion")
                                         : t("validateCompletion")}
                                 </button>
+
                                 <button
                                     onClick={() => handleRejectCompletion(completion)}
                                     disabled={updatingCompletionId === completion.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer max-sm:text-lg max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto"
                                 >
                                     {updatingCompletionId === completion.id
                                         ? t("rejectionCompletion")
                                         : t("rejectCompletion")}
-                                    </button>
+                                </button>
                             </div>
+
+                            {completion.imageUrl && (
+                                <div className="my-2">
+                                    <img
+                                        src={completion.imageUrl}
+                                        alt="Preuve"
+                                        className="h-32 object-contain rounded cursor-pointer transition-transform hover:scale-105"
+                                        onClick={() => window.open(completion.imageUrl, "_blank")}
+                                    />
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>
             )}
 
-            <div className="flex justify-center items-center mt-6 gap-4">
+            <div className="flex justify-center items-center mt-6 gap-4 max-sm:gap-2">
                 <button
                     type="button"
                     disabled={pageCompletion <= 1}
                     onClick={() => setPageCompletion((p) => p - 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:py-2 max-sm:px-2"
                 >
                     {t("previous")}
                 </button>
 
-                <span>
+                <span className="max-sm:text-base">
                     {t("page")} {pageCompletion} / {lastPageCompletion}
                 </span>
 
@@ -292,7 +325,7 @@ function DashboardChallenges() {
                     type="button"
                     disabled={pageCompletion >= lastPageCompletion}
                     onClick={() => setPageCompletion((p) => p + 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:py-2 max-sm:px-2"
                 >
                     {t("next")}
                 </button>

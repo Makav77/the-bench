@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import apiClient from "../../../api/apiClient";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +9,7 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
     const [previewURL, setPreviewURL] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const { t } = useTranslation("Community/CreateBadgeModal");
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -26,12 +27,15 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
             setError(t("noImageError"));
             return;
         }
+
         if (cost <= 0) {
             setError(t("negativeCostError"));
             return;
         }
+
         setIsSubmitting(true);
         setError(null);
+
         try {
             const formData = new FormData();
             formData.append("image", file);
@@ -52,16 +56,32 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
             <div className="bg-white rounded-lg shadow-lg p-8 w-[350px] relative">
-                <h2 className="text-xl font-bold mb-4 text-center">{t("addBadge")}</h2>
+                <h2 className="text-xl font-bold mb-4 text-center">
+                    {t("addBadge")}
+                </h2>
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {error && <div className="text-red-500">{error}</div>}
                     <div>
-                        <label className="block font-semibold mb-1">{t("image")} <span className="text-red-500">*</span></label>
+                        <label className="block font-semibold mb-1">
+                            {t("image")} <span className="text-red-500">*</span>
+                        </label>
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
+                            disabled={isSubmitting}
+                        >
+                            {t("selectFile")}
+                        </button>
+
                         <input
+                        ref={fileInputRef}
                             type="file"
                             accept="image/*"
                             onChange={handleFileChange}
                             disabled={isSubmitting}
+                            hidden
                         />
                         {previewURL && (
                             <img
@@ -72,12 +92,14 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
                         )}
                     </div>
 
-                    <div>
-                        <label className="block font-semibold mb-1">{t("cost")} <span className="text-red-500">*</span></label>
+                    <div className="max-sm:flex max-sm:items-center max-sm:gap-5">
+                        <label className="block font-semibold mb-1">
+                            {t("cost")} <span className="text-red-500">*</span>
+                        </label>
                         <input
                             type="number"
                             min={1}
-                            className="border px-2 py-1 rounded w-full"
+                            className="border px-2 py-1 rounded w-full max-sm:w-1/2 max-sm:py-2 max-sm:pl-4"
                             value={cost}
                             onChange={e => setCost(Number(e.target.value))}
                             required
@@ -88,16 +110,16 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
                     <div className="flex justify-end gap-3">
                         <button
                             type="button"
-                            className="text-gray-500 text-2xl font-bold absolute top-2 right-4"
+                            className="text-gray-500 text-2xl font-bold absolute top-2 right-4 max-sm:text-5xl"
                             onClick={onClose}
                             disabled={isSubmitting}
                         >
-                            ×
+                            ✕
                         </button>
 
                         <button
                             type="submit"
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded max-sm:w-full max-sm:h-12 max-sm:mt-4"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? t("creation") : t("created")}

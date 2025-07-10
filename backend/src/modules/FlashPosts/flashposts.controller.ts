@@ -4,7 +4,6 @@ import { CreateFlashPostDTO } from './dto/create-flash-post.dto';
 import { UpdateFlashPostDTO } from './dto/update-flash-post.dto';
 import { JwtAuthGuard } from '../Auth/guards/jwt-auth.guard';
 import { FlashPost } from './entities/flash-post.entity';
-import { Request } from 'express';
 import { User } from '../Users/entities/user.entity';
 import { RequiredPermission } from '../Permissions/decorator/require-permission.decorator';
 import { PermissionGuard } from '../Permissions/guards/permission.guard';

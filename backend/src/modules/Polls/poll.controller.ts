@@ -5,7 +5,6 @@ import { User } from "../Users/entities/user.entity";
 import { PollService } from "./poll.service";
 import { CreatePollDTO } from "./dto/create-poll.dto";
 import { VotePollDTO } from "./dto/vote-poll.dto";
-import { Request } from "express";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { IrisGuard } from "../Auth/guards/iris.guard";

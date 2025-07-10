@@ -27,7 +27,7 @@ function DashboardNews() {
             }
         }
         loadPendings();
-    }, [pageNews]);
+    }, [pageNews, t]);
 
     const handleValidateNews = async (newsId: string) => {
         setUpdatingNewsId(newsId);
@@ -47,11 +47,14 @@ function DashboardNews() {
         if (reason === null) {
             return;
         }
+
         if (reason.trim() === "") {
             toast.error(t("toastRejectedReason"));
             return;
         }
+
         setUpdatingNewsId(newsId);
+
         try {
             await validateNews(newsId, { validated: false, rejectedReason: reason.trim() });
             toast.success(t("toastRejectNews"));
@@ -64,10 +67,15 @@ function DashboardNews() {
     };
 
     return (
-        <div className="bg-white p-6 rounded-2xl space-y-8">
-            <h2 className="text-2xl font-semibold">{t("waitingNews")}</h2>
+        <div className="bg-white p-6 rounded-2xl space-y-8 max-sm:p-2">
+            <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">
+                {t("waitingNews")}
+            </h2>
+
             {loadingNews ? (
-                <p className="text-center">{t("loading")}</p>
+                <p className="text-center">
+                    {t("loading")}
+                </p>
             ) : pendingNews.length === 0 ? (
                 <p className="text-center text-gray-600">
                     {t("noWaitingNews")}
@@ -77,12 +85,13 @@ function DashboardNews() {
                     {pendingNews.map((news) => (
                         <li
                             key={news.id}
-                            className="border rounded-lg p-4 shadow-sm space-y-2"
+                            className="border rounded-lg p-4 shadow-sm space-y-2 max-sm:p-2"
                         >
                             <div>
                                 <p>
                                     <span className="font-semibold">{t("title")}</span> {news.title}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("author")}</span>{" "}
                                     <span
@@ -92,20 +101,23 @@ function DashboardNews() {
                                         {news.authorFirstname} {news.authorLastname}
                                     </span>
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("date")}</span>{" "}
                                     {news.createdAt && new Date(news.createdAt).toLocaleString()}
                                 </p>
+
                                 <p>
                                     <span className="font-semibold">{t("preview")}</span>{" "}
                                     {news.content.slice(0, 200)}...
                                 </p>
                             </div>
-                            <div className="flex gap-2">
+
+                            <div className="flex gap-2 max-sm:flex-col max-sm:gap-3">
                                 <button
                                     onClick={() => handleValidateNews(news.id)}
                                     disabled={updatingNewsId === news.id}
-                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer max-sm:text-lg max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto"
                                 >
                                     {updatingNewsId === news.id
                                         ? t("validation")
@@ -115,7 +127,7 @@ function DashboardNews() {
                                 <button
                                     onClick={() => handleRejectNews(news.id)}
                                     disabled={updatingNewsId === news.id}
-                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer max-sm:text-lg max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto"
                                 >
                                     {updatingNewsId === news.id
                                         ? t("rejection")
@@ -127,23 +139,25 @@ function DashboardNews() {
                 </ul>
             )}
 
-            <div className="flex justify-center items-center mt-6 gap-4">
+            <div className="flex justify-center items-center mt-6 gap-4 max-sm:gap-2">
                 <button
                     type="button"
                     disabled={pageNews <= 1}
                     onClick={() => setPageNews((p) => p - 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:py-2 max-sm:px-2"
                 >
                     {t("previous")}
                 </button>
-                <span>
+
+                <span className="max-sm:text-base">
                     {t("page")} {pageNews} / {lastPageNews}
                 </span>
+
                 <button
                     type="button"
                     disabled={pageNews >= lastPageNews}
                     onClick={() => setPageNews((p) => p + 1)}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:py-2 max-sm:px-2"
                 >
                     {t("next")}
                 </button>

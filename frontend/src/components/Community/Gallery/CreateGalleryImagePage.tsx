@@ -18,7 +18,9 @@ export default function CreateGalleryItemPage() {
     const { restricted, expiresAt, reason } = usePermission("publish_gallery");
 
     if (restricted === null) {
-        return <p className="p-6 text-center">{t("checkingPermissions")}</p>;
+        return <p className="p-6 text-center">
+            {t("checkingPermissions")}
+        </p>;
     }
 
     if (restricted) {
@@ -51,6 +53,10 @@ export default function CreateGalleryItemPage() {
         }
     }
 
+    function handleDescriptionChange(e: ChangeEvent<HTMLTextAreaElement>) {
+        setDescription(e.target.value.replace(/^\s+/, ""));
+    }
+
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
         if (!file) {
@@ -60,7 +66,8 @@ export default function CreateGalleryItemPage() {
         setIsSubmitting(true);
         setError(null);
         try {
-            const item = await createGalleryItem(file, description);
+            const cleanedDescription = description.trim();
+            const item = await createGalleryItem(file, cleanedDescription);
             toast.success(t("toastImageUpload"));
             navigate(`/gallery/${item.id}`);
         } catch {
@@ -71,13 +78,16 @@ export default function CreateGalleryItemPage() {
     }
 
     return (
-        <div className="p-6 w-[50%] mx-auto">
-            <h1 className="w-[56%] mx-auto text-4xl font-semibold mb-4">{t("addPicture")}</h1>
+        <div className="p-6 w-[50%] mx-auto max-sm:w-full max-sm:p-2">
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">
+                {t("addPicture")}
+            </h1>
+
             <form
                 onSubmit={handleSubmit}
-                className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow"
+                className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow max-sm:p-4 max-sm:space-y-4"
             >
-                {error && <p className="text-red-500">{error}</p>}
+                {error && <p className="text-red-500 max-sm:text-base">{error}</p>}
 
                 <div>
                     <label className="block font-semibold">
@@ -86,7 +96,7 @@ export default function CreateGalleryItemPage() {
                     <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer"
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
                         disabled={isSubmitting}
                     >
                         {t("selectFile")}
@@ -103,28 +113,28 @@ export default function CreateGalleryItemPage() {
                 {previewURL && (
                     <div>
                         <img
-                        src={previewURL}
-                        alt="Aperçu"
-                        className="h-40 object-cover rounded"
+                            src={previewURL}
+                            alt="Aperçu"
+                            className="h-40 object-cover rounded max-sm:w-full max-sm:h-32"
                         />
                     </div>
                 )}
 
                 <div>
-                    <label className="block font-semibold">{t("description")}</label>
+                    <label className="block font-semibold max-sm:text-base">{t("description")}</label>
                     <textarea
                         rows={3}
                         value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="w-full border rounded px-2 py-1"
+                        onChange={handleDescriptionChange}
+                        className="w-full border rounded px-2 py-1 max-sm:text-base"
                         disabled={isSubmitting}
                     />
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex justify-between max-sm:flex-col max-sm:gap-2">
                     <button
                         type="button"
-                        className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded cursor-pointer"
+                        className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded cursor-pointer max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
                         onClick={() => navigate("/gallery")}
                         disabled={isSubmitting}
                     >
@@ -133,7 +143,7 @@ export default function CreateGalleryItemPage() {
 
                     <button
                         type="submit"
-                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 cursor-pointer"
+                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? t("sending") : t("send")}

@@ -10,5 +10,7 @@
     "buttonRegister": "S'inscrire",
     "missingCredentials": "Tous les champs doivent être renseignés",
     "invalidMailAddress": "L'adresse mail est déjà utilisée",
-    "unknowError": "Erreur inconnue"
+    "unknowError": "Erreur inconnue",
+    "neighborhoodSelected": "Quartier sélectionné : ",
+    "emailAlreadyUsed": "Email déjà utilisé"
 }

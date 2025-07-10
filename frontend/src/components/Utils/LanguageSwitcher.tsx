@@ -18,7 +18,7 @@ function LanguageSwitcher() {
     return (
         <div className="flex gap-3 mt-2 items-center">
             <label className="font-semibold">
-                🌍 Language
+                Language
             </label>
             <select
                 id="lang-select"

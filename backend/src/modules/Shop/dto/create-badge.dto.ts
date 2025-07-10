@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNumber } from "class-validator";
 
 export class CreateBadgeDTO {
     @IsNumber()

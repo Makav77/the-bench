@@ -63,15 +63,21 @@ function NewsDetailPage() {
     };
 
     if (isLoading) {
-        return <div className="text-center p-6">Loading...</div>;
+        return <div className="text-center p-6">
+            {t("loading")}
+        </div>;
     }
 
     if (error) {
-        return <div className="text-center text-red-500 p-6">{error}</div>;
+        return <div className="text-center text-red-500 p-6">
+            {error}
+        </div>;
     }
 
     if (!news) {
-        return <div className="text-center p-6">No article found.</div>;
+        return <div className="text-center p-6">
+            {t("noArticle")}
+        </div>;
     }
 
     const canEditOrDelete = user && news && (
@@ -85,7 +91,7 @@ function NewsDetailPage() {
             return;
         }
 
-        if (!window.confirm("You are about to delete this article. Would you like to confirm?")) {
+        if (!window.confirm(t("confirmAlertArticle"))) {
             return;
         }
 
@@ -102,7 +108,6 @@ function NewsDetailPage() {
         if (!id || !commentInput.trim()) {
             return;
         }
-
         setCommentLoading(true);
         try {
             const comment = await createComment(id, commentInput);
@@ -124,7 +129,6 @@ function NewsDetailPage() {
         if (!id) {
             return;
         }
-
         setCommentLoading(true);
         try {
             const updated = await updateComment(id, commentId, editContent);
@@ -142,7 +146,7 @@ function NewsDetailPage() {
             return;
         }
 
-        if (!window.confirm("You are about to delete this comment. Would you like to confirm ?")) {
+        if (!window.confirm(t("confirmAlertComment"))) {
             return;
         }
 
@@ -151,7 +155,7 @@ function NewsDetailPage() {
             await deleteComment(id, commentId);
             setComments((prev) => prev.filter((c) => c.id !== commentId));
             toast.success(t("toastCommentDeleted"))
-        } catch (error) {
+        } catch {
             setCommentError(t("toastCommentDeletedError"));
         } finally {
             setCommentLoading(false);
@@ -162,7 +166,6 @@ function NewsDetailPage() {
         if (!id) {
             return;
         }
-
         try {
             const res = await toggleCommentLike(id, commentId);
             setComments((prev) =>
@@ -179,30 +182,29 @@ function NewsDetailPage() {
 
     return (
         <div>
-            <div className="w-[30%] mx-auto py-5 px-10 bg-white rounded-xl shadow-lg mt-10">
+            <div className="w-[30%] mx-auto py-5 px-10 bg-white rounded-xl shadow-lg mt-10 max-sm:p-6 max-sm:w-[98%] max-sm:mt-6">
                 <button
                     type="button"
                     onClick={() => navigate("/news")}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5 w-full sm:w-auto max-sm:h-12 max-sm:text-base max-sm:px-8"
                 >
                     {t("back")}
                 </button>
 
-                <h1 className="text-3xl font-bold mb-4 text-center">{news.title}</h1>
+                <h1 className="text-3xl font-bold mb-4">{news.title}</h1>
 
                 {news.images && news.images.length > 0 && (
                     <div className="flex justify-center mb-6">
                         <img
                             src={news.images[0]}
                             alt="Main article"
-                            className="rounded-lg object-cover max-h-72"
-                            style={{ maxWidth: "90%", margin: "0 auto" }}
+                            className="rounded-lg object-cover max-h-72 max-sm:w-full max-sm:h-52"
                             onClick={() => setModalImage(news.images[0])}
                         />
                     </div>
                 )}
 
-                <div className="text-lg text-gray-800 whitespace-pre-line mb-6 px-2 text-justify break-words">
+                <div className="text-lg text-gray-800 whitespace-pre-line mb-6 px-2 text-justify break-words max-sm:text-base max-sm:px-1">
                     {news.content}
                 </div>
 
@@ -220,36 +222,42 @@ function NewsDetailPage() {
                     </div>
                 )}
 
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex items-center gap-3 mb-2 max-sm:gap-2">
                     <button
                         onClick={handleLike}
-                        className={`px-3 py-1 rounded cursor-pointer ${likes.liked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"} hover:bg-blue-600`}
+                        className={`px-3 py-1 rounded cursor-pointer ${likes.liked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"} hover:bg-blue-600 max-sm:text-base max-sm:px-5 max-sm:py-3`}
                         disabled={!user}
                     >
                         {likes.liked ? t("unlike") : t("like")} 👍
                     </button>
-                    <span>{likes.totalLikes} {t("like")}{likes.totalLikes !== 1 ? "s" : ""}</span>
+                    <span className="max-sm:text-xl">
+                        {likes.totalLikes} {t("like")}{likes.totalLikes !== 1 ? "s" : ""}
+                    </span>
                 </div>
 
                 {canEditOrDelete && (
-                    <div className="flex gap-3 mt-10 justify-center">
+                    <div className="flex gap-3 mt-10 justify-center max-sm:mt-6 max-sm:flex-col items-center">
                         <button
                             onClick={() => navigate(`/news/${news.id}/edit`)}
-                            className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500 cursor-pointer"
+                            className="px-4 py-2 rounded bg-yellow-400 text-white hover:bg-yellow-500 cursor-pointer max-sm:w-3/4 max-sm:h-12"
                         >
                             {t("edit")}
                         </button>
+
                         <button
                             onClick={handleDelete}
-                            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 cursor-pointer"
+                            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 cursor-pointer max-sm:w-3/4 max-sm:h-12"
                         >
                             {t("delete")}
                         </button>
                     </div>
                 )}
 
-                <div className="mt-10 border-t pt-6">
-                    <h2 className="text-xl font-bold mb-3">{t("comments")}</h2>
+                <div className="mt-10 border-t pt-6 max-sm:mt-6">
+                    <h2 className="text-xl font-bold mb-3 max-sm:text-lg">
+                        {t("comments")}
+                    </h2>
+
                     {commentError && <p className="text-red-500">{commentError}</p>}
 
                     <div className="space-y-4 mb-4">
@@ -257,17 +265,19 @@ function NewsDetailPage() {
                         {comments.map((c) => (
                             <div
                                 key={c.id}
-                                className="bg-gray-50 p-3 rounded shadow-sm flex gap-3"
+                                className="bg-gray-50 p-3 rounded shadow-sm flex gap-3 max-sm:p-2"
                             >
                                 <img
                                     src={c.authorAvatar ?? "/backend/uploads/profile/default.png"}
                                     alt={c.authorName}
-                                    className="w-10 h-10 rounded-full object-cover"
+                                    className="w-10 h-10 rounded-full object-cover max-sm:w-8 max-sm:h-8"
                                 />
 
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-semibold">{c.authorName}</span>
+                                        <span className="font-semibold">
+                                            {c.authorName}
+                                        </span>
                                         <span className="text-xs text-gray-400">
                                             {new Date(c.createdAt).toLocaleString()}
                                         </span>
@@ -278,30 +288,32 @@ function NewsDetailPage() {
                                             <textarea
                                                 value={editContent}
                                                 onChange={e => setEditContent(e.target.value)}
-                                                className="w-full border rounded px-2 py-1"
+                                                className="w-full border rounded px-2 py-1 max-sm:h-25"
                                             />
-                                            <div className="flex gap-2 mt-1 justify-center">
+                                            <div className="flex gap-2 mt-1 justify-center max-sm:flex-col">
                                                 <button
-                                                    className="bg-green-500 text-white font-semibold border cursor-pointer hover:bg-green-600 px-3 py-1 rounded-2xl"
-                                                    onClick={() => handleUpdateComment(c.id)}
-                                                >
-                                                    {t("validate")}
-                                                </button>
-
-                                                <button
-                                                    className="bg-red-500 text-white font-semibold border cursor-pointer hover:bg-red-600 px-3 py-1 rounded-2xl"
+                                                    className="bg-red-500 text-white font-semibold border cursor-pointer hover:bg-red-600 px-3 py-1 rounded-2xl max-sm:h-12"
                                                     onClick={() => setEditingComment(null)}
                                                 >
                                                     {t("cancel")}
                                                 </button>
+
+                                                <button
+                                                    className="bg-green-500 text-white font-semibold border cursor-pointer hover:bg-green-600 px-3 py-1 rounded-2xl max-sm:h-12"
+                                                    onClick={() => handleUpdateComment(c.id)}
+                                                >
+                                                    {t("validate")}
+                                                </button>
                                             </div>
                                         </div>
                                     ) : (
-                                        <p className="text-gray-800">{c.content}</p>
+                                        <p className="text-gray-800">
+                                            {c.content}
+                                        </p>
                                     )}
-                                    <div className="flex items-center gap-2 mt-1">
+                                    <div className="flex items-center gap-2 mt-1 max-sm:gap-1">
                                         <button
-                                            className={`text-sm ${c.likedBy.includes(user?.id ?? "") ? "text-blue-500" : "text-gray-500"} border px-3 py-1 rounded-3xl cursor-pointer`}
+                                            className={`text-sm ${c.likedBy.includes(user?.id ?? "") ? "text-blue-500" : "text-gray-500"} border px-3 py-1 rounded-3xl cursor-pointer max-sm:w-1/3 max-sm:h-10 max-sm:text-base max-sm:px-2 max-sm:py-1`}
                                             onClick={() => handleToggleCommentLike(c.id)}
                                             disabled={!user}
                                         >
@@ -312,21 +324,21 @@ function NewsDetailPage() {
                                         </span>
 
                                         {(user?.id === c.authorId || user?.role === "admin" || user?.role === "moderator") && (
-                                            <>
+                                            <div>
                                                 <button
-                                                    className="text-xs text-yellow-600 ml-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+                                                    className="text-yellow-600 ml-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
                                                     onClick={() => handleEditComment(c.id, c.content)}
                                                 >
                                                     {t("edit")}
                                                 </button>
 
                                                 <button
-                                                    className="text-xs text-red-500 ml-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
+                                                    className="text-red-500 ml-2 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
                                                     onClick={() => handleDeleteComment(c.id)}
                                                 >
                                                     {t("delete")}
                                                 </button>
-                                            </>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -335,15 +347,15 @@ function NewsDetailPage() {
                     </div>
 
                     {user && (
-                        <div className="flex items-start gap-2 pt-10">
+                        <div className="flex items-start gap-2 pt-10 max-sm:pt-4">
                             <img
                                 src={user.profilePicture ?? "backend/uploads/profile/default.png"}
                                 alt={user.firstname}
-                                className="w-10 h-10 rounded-full object-cover"
+                                className="w-10 h-10 rounded-full object-cover max-sm:w-8 max-sm:h-8"
                             />
                             <div className="flex-1 flex flex-col gap-2">
                                 <textarea
-                                    className="border rounded px-2 py-1 w-full"
+                                    className="border rounded px-2 py-1 w-full max-sm:text-base"
                                     value={commentInput}
                                     onChange={e => setCommentInput(e.target.value)}
                                     rows={3}
@@ -352,7 +364,7 @@ function NewsDetailPage() {
                                     <button
                                         onClick={handleCommentSend}
                                         disabled={commentLoading || !commentInput.trim()}
-                                        className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 disabled:opacity-80 cursor-pointer"
+                                        className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 disabled:opacity-80 cursor-pointer max-sm:text-base max-sm:px-5 max-sm:py-3"
                                     >
                                         {t("publish")}
                                     </button>
@@ -382,7 +394,7 @@ function NewsDetailPage() {
                                 onClick={handleCloseModal}
                                 type="button"
                             >
-                                ×
+                                ✕
                             </button>
                         </div>
                     </div>
@@ -390,10 +402,10 @@ function NewsDetailPage() {
             </div>
 
             {!canEditOrDelete && (
-                <div className="w-[30%] mx-auto flex justify-end">
+                <div className="w-[30%] mx-auto flex justify-end max-sm:w-full max-sm:px-2">
                     <button
                         onClick={() => setShowReportModal(true)}
-                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer max-sm:w-full max-sm:h-12 max-sm:text-base"
                     >
                         {t("report")}
                     </button>
@@ -409,7 +421,7 @@ function NewsDetailPage() {
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default NewsDetailPage;

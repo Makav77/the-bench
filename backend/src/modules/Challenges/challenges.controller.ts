@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Param, Query, Body, Req, DefaultValuePipe, ParseIntPipe, UseGuards, NotFoundException } from "@nestjs/common";
-import { Request } from "express";
+import { Controller, Get, Post, Patch, Delete, Param, Query, Body, Req, DefaultValuePipe, ParseIntPipe, UseGuards, NotFoundException, UseInterceptors, UploadedFile, BadRequestException } from "@nestjs/common";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { Challenge } from "./entities/challenge.entity";
 import { ChallengesService } from "./challenges.service";
@@ -14,6 +13,28 @@ import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
 import { IrisGuard } from "../Auth/guards/iris.guard";
 import { RequestWithResource } from "../Utils/request-with-resource.interface";
 import { Resource } from "../Utils/resource.decorator";
+import { diskStorage } from "multer";
+import { extname } from "path";
+import { FileInterceptor } from "@nestjs/platform-express";
+
+const multerOptions = {
+    storage: diskStorage({
+        destination: "./uploads/challenge_completions",
+        filename: (_req, file, callback) => {
+            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+            const ext = extname(file.originalname);
+            callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+        },
+    }),
+    fileFilter: (_req: any, file: { mimetype: string; }, callback: (arg0: Error | null, arg1: boolean) => void) => {
+        if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Unsupported file type."), false);
+        }
+    },
+    limits: { fileSize: 3 * 1024 * 1024 },
+};
 
 @Controller("challenges")
 export class ChallengesController {
@@ -124,13 +145,32 @@ export class ChallengesController {
 
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Post(":id/complete")
+    @UseInterceptors(FileInterceptor("file", multerOptions))
     async submitCompletion(
         @Resource() challenge: Challenge,
+        @UploadedFile() file: Express.Multer.File,
         @Body() submitCompletionDTO: SubmitCompletionDTO,
         @Req() req: RequestWithResource<Challenge>
     ): Promise<ChallengeCompletion> {
         const user = req.user as User;
-        return this.challengesService.submitCompletion(challenge.id, submitCompletionDTO, user);
+
+        let imageUrl = submitCompletionDTO.imageUrl;
+        if (file) {
+            imageUrl = `/uploads/challenge_completions/${file.filename}`;
+        }
+
+        if (
+            (!submitCompletionDTO.text || submitCompletionDTO.text.trim() === "") &&
+            (!imageUrl || imageUrl.trim() === "")
+        ) {
+            throw new BadRequestException("Merci de fournir une preuve texte ou image 😊");
+        }
+
+        return this.challengesService.submitCompletion(
+            challenge.id,
+            { ...submitCompletionDTO, imageUrl },
+            user
+        );
     }
 
     @UseGuards(JwtAuthGuard, IrisGuard)

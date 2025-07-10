@@ -86,11 +86,11 @@ export const getNewsLikes = async (id: string): Promise<NewsLikesDTO> => {
 };
 
 export const getPendingNews = async (page = 1, limit = 5): Promise<{ data: NewsSummary[]; lastPage: number }> => {
-    const res = await apiClient.get(`/news/pending?page=${page}&limit=${limit}`);
-    return res.data;
+    const response = await apiClient.get(`/news/pending?page=${page}&limit=${limit}`);
+    return response.data;
 };
 
 export const validateNews = async (id: string, dto: ValidateNewsDTO): Promise<NewsSummary> => {
-    const res = await apiClient.patch(`/news/${id}/validate`, dto);
-    return res.data;
+    const response = await apiClient.patch(`/news/${id}/validate`, dto);
+    return response.data;
 };

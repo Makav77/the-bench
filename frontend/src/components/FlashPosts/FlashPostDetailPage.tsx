@@ -20,7 +20,6 @@ function FlashPostDetailPage() {
     useEffect(() => {
         const load = async () => {
             setIsLoading(true);
-
             try {
                 if (id) {
                     const post = await getFlashPost(id);
@@ -35,14 +34,18 @@ function FlashPostDetailPage() {
             }
         };
         load()
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">{t("loading")}</p>
+        return <p className="p-6">
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="p-6 text-red-500">{error}</p>
+        return <p className="p-6 text-red-500">
+            {error}
+        </p>
     }
 
     if (!flashPost) {
@@ -69,16 +72,19 @@ function FlashPostDetailPage() {
 
     return (
         <div>
-            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl">
+            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl max-sm:w-[95%] max-sm:p-3 max-sm:mt-6 max-sm:space-y-6">
                 <button
                     type="button"
                     onClick={() => navigate("/bulletinsboard")}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer mb-5 max-sm:w-full max-sm:mb-3 max-sm:h-12"
                 >
                     {t("back")}
                 </button>
 
-                <h1 className="text-2xl font-bold">{flashPost.title}</h1>
+                <h1 className="text-2xl font-bold">
+                    {flashPost.title}
+                </h1>
+
                 <p className="text-sm text-gray-600">
                     {t("publishedOn")} {new Date(flashPost.createdAt).toLocaleString()} <br />
                     {t("updatedOn")} {' '} {new Date(flashPost.updatedAt).toLocaleString()} <br />
@@ -91,23 +97,28 @@ function FlashPostDetailPage() {
                     </span>
                 </p>
 
-                <CountdownTimer createdAt={flashPost.createdAt} />
+                <div className="max-sm:text-center">
+                    <CountdownTimer createdAt={flashPost.createdAt} />
+                </div>
 
-                <p className="whitespace-pre-wrap">{flashPost.description}</p>
+                <p className="whitespace-pre-wrap max-sm:text-base">
+                    {flashPost.description}
+                </p>
 
                 {(isAuthor || isAdminorModerator) && (
-                    <div className="mt-4 flex gap-2 justify-center">
+                    <div className="mt-4 flex gap-2 justify-center max-sm:flex-col max-sm:gap-3">
                         <button
                             type="button"
                             onClick={() => navigate(`/flashposts/${id}/edit`)}
-                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
                         >
                             {t("editPost")}
                         </button>
+
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto max-sm:h-12"
                         >
                             {t("deletePost")}
                         </button>
@@ -116,10 +127,10 @@ function FlashPostDetailPage() {
             </div>
 
             {!isAuthor && flashPost.author.role !== "admin" && flashPost.author.role !== "moderator" && (
-                <div className="w-[20%] mx-auto flex justify-end">
+                <div className="w-[20%] mx-auto flex justify-end max-sm:w-[95%] max-sm:justify-center">
                     <button
                         onClick={() => setShowReportModal(true)}
-                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer max-sm:w-full max-sm:text-lg max-sm:py-3"
                     >
                         {t("report")}
                     </button>

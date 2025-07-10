@@ -62,7 +62,7 @@ export interface ProfileSummaryDTO {
     requestReceived?: boolean;
 }
 
-const API_URL = "http://localhost:3000/users";
+const API_URL = import.meta.env.VITE_NODE_ENV === 'prod' ? "http://209.38.138.250:3000/users" : "http://localhost:3000/users";
 
 export const getUsers = async () => {
     try {
@@ -88,6 +88,7 @@ export const createUser = async (userData: UserData) => {
         return response.data;
     } catch (error) {
         console.error("createUser error : " + error);
+        throw error;
     }
 }
 
@@ -122,3 +123,8 @@ export const getModeratorsAndAdmins = async (): Promise<ModeratorsAndAdminsDTO> 
     const response = await apiClient.get("/users/staff");
     return response.data;
 };
+
+export const deleteMyAccount = async (userId: string): Promise<void> => {
+    console.log("userId : " + userId);
+    await apiClient.delete(`/users/${userId}`);
+}

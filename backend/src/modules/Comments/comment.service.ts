@@ -37,6 +37,7 @@ export class CommentService {
             irisCode: user.irisCode,
             irisName: user.irisName,
         };
+
         const created = new this.commentModel(commentData);
         return created.save();
     }

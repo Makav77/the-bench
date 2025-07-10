@@ -15,7 +15,7 @@ export class ShopService {
         private userBadgeRepo: Repository<UserBadge>,
         @InjectRepository(User)
         private userRepo: Repository<User>,
-    ) { }
+    ) {}
 
     async getAllBadgesWithUserInfo(userId: string) {
         const badges = await this.badgeRepo.find();
@@ -107,9 +107,11 @@ export class ShopService {
 
     async deleteBadge(id: string): Promise<{ success: boolean }> {
         const badge = await this.badgeRepo.findOne({ where: { id } });
+
         if (!badge) {
             throw new NotFoundException("Badge not found");
         }
+
         await this.userBadgeRepo.delete({ badge: { id } });
         await this.badgeRepo.delete(id);
         return { success: true };

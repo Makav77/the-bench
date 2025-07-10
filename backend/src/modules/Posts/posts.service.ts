@@ -12,7 +12,7 @@ export class PostsService {
     constructor(
         @InjectRepository(Posts)
         private readonly postRepo: Repository<Posts>,
-    ) { }
+    ) {}
 
     async findAllPosts(page = 1, limit = 10, user: User): Promise<{ data: Posts[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
@@ -46,6 +46,7 @@ export class PostsService {
         if (!post) {
             throw new NotFoundException("Post not found.");
         }
+
         return post;
     }
 
@@ -63,6 +64,7 @@ export class PostsService {
             irisCode,
             irisName,
         });
+
         return this.postRepo.save(post);
     }
 
@@ -106,6 +108,10 @@ export class PostsService {
         const posts = await this.postRepo.find({ relations: ["author"] });
         for (const post of posts) {
             if (!post.author) {
+                continue;
+            }
+
+            if (post.irisCode === "all") {
                 continue;
             }
 

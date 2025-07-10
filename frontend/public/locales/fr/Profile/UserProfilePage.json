@@ -54,5 +54,8 @@
     "requestSend": "Demande d'ami envoyée",
     "requestSendError": "Impossible d'envoyer une demande d'ami",
     "toastAddressUpdated": "Adresse mise à jour",
-    "toastErrorLoadingAddress": "Impossible de charger l'adresse"
+    "toastErrorLoadingAddress": "Impossible de charger l'adresse",
+    "deleteAccount": "Supprimer mon compte",
+    "confirmAlertDeleteAccount": "Vous êtes sur le point de supprimer votre compte. Souhaitez-vous confirmer ?",
+    "deletingAccountError": "Impossible de supprimer votre compte"
 }

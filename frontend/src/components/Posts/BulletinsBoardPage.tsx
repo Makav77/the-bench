@@ -33,12 +33,11 @@ function BulletinsBoardPage() {
             }
         };
         load();
-    }, [page]);
+    }, [page, t]);
 
     useEffect(() => {
         const loadFlash = async () => {
             setFlashLoading(true);
-
             try {
                 const { data, lastPage } = await getFlashPosts(flashPage, 5);
                 setFlashPosts(data);
@@ -50,11 +49,11 @@ function BulletinsBoardPage() {
             }
         };
         loadFlash();
-    }, [flashPage]);
+    }, [flashPage, t]);
 
     return (
-        <div className="p-6 w-[30%] mx-auto">
-            <div className="flex justify-end mb-4 h-10 gap-4">
+        <div className="p-6 w-[30%] mx-auto max-sm:w-full max-sm:p-6">
+            <div className="flex justify-end max-sm:justify-between mb-4 h-10 max-sm:h-15 gap-4">
                 <button
                     type="button"
                     onClick={() => navigate("/posts/create")}
@@ -72,32 +71,38 @@ function BulletinsBoardPage() {
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">{t("bulletinsBoard")}</h1>
+            <h1 className="text-3xl font-bold mb-4">
+                {t("bulletinsBoard")}
+            </h1>
 
             <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-2">{t("flashPost")}</h2>
+                <h2 className="text-2xl font-semibold mb-2 max-sm:text-xl">
+                    {t("flashPost")}
+                </h2>
 
                 {flashLoading
-                    ? <p>{t("loading")}</p>
+                    ? <p className="max-sm:text-lg">{t("loading")}</p>
                     : flashPosts.length === 0
-                        ? <p className="italic text-red-500 mb-5">{t("noFlashPost")}</p>
+                        ? <p className="italic text-red-500 mb-5 max-sm:text-lg">{t("noFlashPost")}</p>
                         : (
-                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl">
+                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl max-sm:p-2">
                                 {flashPosts.map((flashpost) => (
                                     <div
                                         key={flashpost.id}
                                         onClick={() => navigate(`/flashposts/${flashpost.id}`)}
-                                        className="p-4 rounded-2xl cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100"
+                                        className="p-4 rounded-2xl cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100 max-sm:p-3"
                                     >
                                         <div className="flex flex-col w-full">
-                                            <h2 className="text-lg font-semibold">{flashpost.title}</h2>
-                                            <div className="flex justify-between">
-                                                <p className="text-sm text-gray-600">
+                                            <h2 className="text-lg font-semibold max-sm:text-lg">{flashpost.title}</h2>
+                                            <div className="flex justify-between max-sm:flex-col max-sm:gap-2">
+                                                <p className="text-sm text-gray-600 max-sm:text-base">
                                                     {t("lastUpdate")} {new Date(flashpost.updatedAt).toLocaleString()}
                                                 </p>
                                                 <CountdownTimer createdAt={flashpost.createdAt} />
                                             </div>
-                                            <p className="text-sm text-gray-600">{t("author")} {" "}
+
+                                            <p className="text-sm text-gray-600 max-sm:text-base">
+                                                {t("author")}{" "}
                                                 <span
                                                     onClick={(e) => {
                                                         e.stopPropagation();
@@ -120,21 +125,23 @@ function BulletinsBoardPage() {
                         )
                 }
 
-                <div className="flex justify-center items-center gap-4">
+                <div className="flex justify-center items-center gap-4 max-sm:gap-2">
                     <button
                         disabled={flashPage <= 1}
                         onClick={() => setFlashPage(p => p - 1)}
-                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:px-4 max-sm:py-3 max-sm:text-lg"
                     >
                         {t("previous")}
                     </button>
 
-                    <span>{t("page")} {flashPage} / {flashLastPage}</span>
+                    <span className="max-sm:text-lg">
+                        {t("page")} {flashPage} / {flashLastPage}
+                    </span>
 
                     <button
                         disabled={flashPage >= flashLastPage}
                         onClick={() => setFlashPage(p => p + 1)}
-                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                        className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:px-4 max-sm:py-3 max-sm:text-lg"
                     >
                         {t("next")}
                     </button>
@@ -142,25 +149,27 @@ function BulletinsBoardPage() {
             </section>
 
             <section className="mb-8">
-                <h2 className="text-2xl font-semibold mb-2">{t("posts")}</h2>
+                <h2 className="text-2xl font-semibold mb-2 max-sm:text-xl">
+                    {t("posts")}
+                </h2>
 
                 {loading
-                    ? <p>{t("loading")}</p>
+                    ? <p className="max-sm:text-lg">{t("loading")}</p>
                     : posts.length === 0
-                        ? <p className="italic text-gray-500">{t("noPost")}</p>
+                        ? <p className="italic text-gray-500 max-sm:text-lg">{t("noPost")}</p>
                         : (
-                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl">
+                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl max-sm:p-2">
                                 {posts.map((post) => (
                                     <div
                                         key={post.id}
                                         onClick={() => navigate(`/posts/${post.id}`)}
-                                        className="p-4 rounded-2xl cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100"
+                                        className="p-4 rounded-2xl cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100 max-sm:p-3"
                                     >
                                         <div className="flex flex-col">
-                                            <h2 className="text-lg font-semibold">{post.title}</h2>
-                                            <p className="text-sm text-gray-600">
+                                            <h2 className="text-lg font-semibold max-sm:text-lg">{post.title}</h2>
+                                            <p className="text-sm text-gray-600 max-sm:text-base">
                                                 {t("lastUpdate")} {new Date(post.updatedAt).toLocaleString()}
-                                                <p className="text-sm text-gray-600">{t("author")} {" "}
+                                                <p className="text-sm text-gray-600 max-sm:text-base">{t("author")} {" "}
                                                     <span
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -184,23 +193,25 @@ function BulletinsBoardPage() {
                         )
                 }
 
-                <div className="flex justify-center items-center mt-6 gap-4">
+                <div className="flex justify-center items-center mt-6 gap-4 max-sm:gap-2">
                     <button
                         type="button"
                         disabled={page <= 1}
                         onClick={() => setPage((p) => p - 1)}
-                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:px-4 max-sm:py-3 max-sm:text-lg"
                     >
                         {t("previous")}
                     </button>
 
-                    <span>{t("page")} {page} / {lastPage}</span>
+                    <span className="max-sm:text-lg">
+                        {t("page")} {page} / {lastPage}
+                    </span>
 
                     <button
                         type="button"
                         disabled={page >= lastPage}
                         onClick={() => setPage((p) => p + 1)}
-                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
+                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:px-4 max-sm:py-3 max-sm:text-lg"
                     >
                         {t("next")}
                     </button>
