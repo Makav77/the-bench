@@ -88,6 +88,7 @@ export const createUser = async (userData: UserData) => {
         return response.data;
     } catch (error) {
         console.error("createUser error : " + error);
+        throw error;
     }
 }
 

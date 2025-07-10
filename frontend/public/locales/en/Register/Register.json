@@ -11,5 +11,6 @@
     "missingCredentials": "All fields must be completed",
     "invalidMailAddress": "Email address is already in use",
     "unknowError": "Unknow Error",
-    "neighborhoodSelected": "Neighborhood selected :"
+    "neighborhoodSelected": "Neighborhood selected : ",
+    "emailAlreadyUsed": "Email already used"
 }

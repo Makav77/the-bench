@@ -25,6 +25,7 @@ interface registerCredentials {
 enum registerState {
     noError = "noError",
     missingCredentials = "missingCredentials",
+    emailUsed = "emailUsed",
 }
 
 function Signup() {
@@ -63,6 +64,8 @@ function Signup() {
         switch (currentRegisterState) {
             case registerState.missingCredentials:
                 return t("missingCredentials");
+            case registerState.emailUsed:
+                return t("emailAlreadyUsed");
             default:
                 return null;
         }
@@ -97,6 +100,7 @@ function Signup() {
             irisName: "",
         }));
         setIrisError("");
+        setShowCitySuggestions(false);
 
         if (value.length === 5) {
             try {
@@ -113,14 +117,6 @@ function Signup() {
         }
     }
 
-    function handleCityChange(e: ChangeEvent<HTMLInputElement>) {
-        const value = e.target.value;
-        setRegisterCredentials(prev => ({
-            ...prev,
-            city: value,
-        }));
-        setIrisError("");
-    }
 
     function handleSelectCity(city: string) {
         setRegisterCredentials(prev => ({
@@ -200,8 +196,12 @@ function Signup() {
         try {
             await createUser(userToSend);
             navigate("/");
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            if (error?.response?.status === 409) {
+                setCurrentRegisterState(registerState.emailUsed);
+            } else {
+                setCurrentRegisterState(registerState.missingCredentials);
+            }
         }
     }
 
@@ -316,7 +316,7 @@ function Signup() {
                         type="text"
                         className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.city ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                         value={registerCredentials.city}
-                        onChange={handleCityChange}
+                        readOnly // On empêche l'édition manuelle
                         placeholder="Paris"
                         onFocus={() => setShowCitySuggestions(citySuggestions.length > 0)}
                     />
