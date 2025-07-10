@@ -6,5 +6,7 @@
     "sending": "Envoi...",
     "send": "Envoyer",
     "toastSendSubmissionError": "Impossible d'envoyer la soumission",
-    "toastSendSubmission": "Soumission envoyée"
+    "toastSendSubmission": "Soumission envoyée",
+    "selectFile": "Selectionner une image",
+    "removeImage": "Retirer l'image"
 }

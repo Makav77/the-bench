@@ -146,7 +146,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                     type="text"
                     value={form.successCriteria}
                     onChange={handleChange}
-                    className="w-full border rounded px-2sm:py-1 py-3 text-base"
+                    className="w-full border rounded px-2 sm:py-1 py-3 text-base"
                 />
             </div>
 

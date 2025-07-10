@@ -6,5 +6,7 @@
     "sending": "Sending...",
     "send": "Send",
     "toastSendSubmissionError": "Unable to send submission",
-    "toastSendSubmission": "Submission send"
+    "toastSendSubmission": "Submission send",
+    "selectFile": "Select image",
+    "removeImage": "Remove image"
 }

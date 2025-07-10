@@ -7,7 +7,7 @@ export class ChallengeCompletion {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column({ type: "text", nullable: false })
+    @Column({ type: "text", nullable: true })
     text?: string;
 
     @Column({ nullable: true })

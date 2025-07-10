@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { submitCompletion } from "../../../api/challengeService";
 import { useTranslation } from "react-i18next";
@@ -11,27 +11,52 @@ interface SubmissionModalProps {
 
 function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalProps) {
     const [text, setText] = useState<string>("");
-    const [imageUrl, setImageUrl] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const { t } = useTranslation("Community/SubmissionModal");
+    const [file, setFile] = useState<File | null>(null);
+    const [previewURL, setPreviewURL] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setFile(file);
+        setError(null);
+        if (file) {
+            setPreviewURL(URL.createObjectURL(file));
+        } else {
+            setPreviewURL(null);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setFile(null);
+        setPreviewURL(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+    };
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setError(null);
 
-        if (!text.trim() && !imageUrl.trim()) {
-            setError("Please provide text or image URL.");
+        if (!text.trim() && !file) {
+            setError("Merci de fournir une preuve texte ou image 😊");
             return;
         }
 
         setLoading(true);
 
         try {
-            await submitCompletion(challengeId, { 
-                text: text.trim() !== "" ? text.trim() : undefined,
-                imageUrl: imageUrl.trim() !== "" ? imageUrl.trim() : undefined,
-            });
+            const formData = new FormData();
+            if (text.trim()) {
+                formData.append("text", text.trim());
+            }
+
+            if (file) {
+                formData.append("file", file);
+            }
+
+            await submitCompletion(challengeId, formData);
             toast.success(t("toastSendSubmission"));
             onSubmitted();
         } catch {
@@ -51,9 +76,7 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                     ✕
                 </button>
 
-                <h2 className="text-2xl font-semibold mb-4 max-sm:text-xl">
-                    {t("validateCompletion")}
-                </h2>
+                <h2 className="text-2xl font-semibold mb-4 max-sm:text-xl">{t("validateCompletion")}</h2>
 
                 {error && <p className="mb-4 text-red-500 max-sm:text-base">{error}</p>}
 
@@ -70,12 +93,38 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
 
                     <div>
                         <label className="block font-medium mb-1 max-sm:text-base">{t("image")}</label>
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded cursor-pointer max-sm:w-3/4 max-sm:mx-auto"
+                            disabled={loading}
+                        >
+                            {t("selectFile")}
+                        </button>
                         <input
-                            type="text"
-                            value={imageUrl}
-                            onChange={(e) => setImageUrl(e.target.value)}
-                            className="w-full border rounded px-2 py-1 max-sm:text-base"
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            onChange={handleFileChange}
                         />
+
+                        {previewURL && (
+                            <div className="mt-3 flex flex-col items-center">
+                                <img
+                                    src={previewURL}
+                                    alt="Aperçu"
+                                    className="h-40 object-cover rounded max-sm:w-full max-sm:h-32"
+                                />
+                                <button
+                                    type="button"
+                                    className="mt-2 text-red-500 hover:underline"
+                                    onClick={handleRemoveImage}
+                                >
+                                    {t("removeImage")}
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex justify-end space-x-2 max-sm:space-x-0 max-sm:flex-col max-sm:gap-2">
@@ -87,7 +136,6 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                         >
                             {t("cancel")}
                         </button>
-
                         <button
                             type="submit"
                             disabled={loading}
@@ -100,7 +148,6 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
             </div>
         </div>
     );
-
 }
 
 export default SubmissionModal;

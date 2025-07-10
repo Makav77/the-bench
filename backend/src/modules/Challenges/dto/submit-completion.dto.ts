@@ -1,11 +1,12 @@
-import { IsString, MaxLength, IsNotEmptyObject, ValidateIf } from "class-validator";
+import { IsOptional, IsString, MaxLength } from "class-validator";
 
 export class SubmitCompletionDTO {
-    @ValidateIf(o => !o.text)
-    @IsNotEmptyObject({ nullable: true })
+    @IsOptional()
+    @IsString()
+    @MaxLength(300)
     imageUrl?: string;
 
-    @ValidateIf(o => !o.imageUrl)
+    @IsOptional()
     @IsString()
     @MaxLength(2000)
     text?: string;

@@ -291,6 +291,17 @@ function DashboardChallenges() {
                                         : t("rejectCompletion")}
                                 </button>
                             </div>
+
+                            {completion.imageUrl && (
+                                <div className="my-2">
+                                    <img
+                                        src={completion.imageUrl}
+                                        alt="Preuve"
+                                        className="h-32 object-contain rounded cursor-pointer transition-transform hover:scale-105"
+                                        onClick={() => window.open(completion.imageUrl, "_blank")}
+                                    />
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>

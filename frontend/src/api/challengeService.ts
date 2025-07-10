@@ -102,9 +102,12 @@ export const unsubscribeChallenge = async (id: string): Promise<ChallengeSummary
     return response.data;
 }
 
-export const submitCompletion = async (id: string, payload: SubmitCompletionPayload): Promise<ChallengeSummary> => {
-    const response = await apiClient.post(`/challenges/${id}/complete`, payload);
-    return response.data;
+export async function submitCompletion(challengeId: string, data: FormData) {
+    return apiClient.post(`/challenges/${challengeId}/complete`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
 }
 
 export const validateChallenge = async (id: string, payload: { validated: boolean; rejectedReason?: string }): Promise<ChallengeSummary> => {
