@@ -56,6 +56,28 @@ function Signup() {
         setIsPasswordVisible((prev) => !prev);
     };
 
+    function formatName(str: string) {
+        return str
+            .trim()
+            .replace(/\s+/g, " ")
+            .split(" ")
+            .map(
+                w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+            )
+            .join(" ");
+    }
+
+    function formatStreet(str: string) {
+        return str
+            .trim()
+            .replace(/\s+/g, " ")
+            .toLowerCase();
+    }
+
+    function cleanTextEmail(str: string) {
+        return str.trim().replace(/\s+/g, " ");
+    }
+
     function handleKeyPress(e: React.KeyboardEvent) {
         if (e.key === "Space") togglePasswordVisibility();
     }
@@ -177,18 +199,16 @@ function Signup() {
         setCurrentRegisterState(registerState.noError);
         registerCredentials.id = uuidv4();
 
-        const address = `${registerCredentials.street}, ${registerCredentials.postalCode} ${registerCredentials.city}`.trim();
-
         const userToSend = {
             id: registerCredentials.id,
-            firstname: registerCredentials.firstname,
-            lastname: registerCredentials.lastname,
-            email: registerCredentials.email,
+            firstname: formatName(registerCredentials.firstname),
+            lastname: formatName(registerCredentials.lastname),
+            email: cleanTextEmail(registerCredentials.email),
             password: registerCredentials.password,
             dateOfBirth: registerCredentials.dateOfBirth,
             profilePicture: registerCredentials.profilePicture,
             role: registerCredentials.role,
-            address: address,
+            address: `${formatStreet(registerCredentials.street)}, ${registerCredentials.postalCode} ${registerCredentials.city}`,
             irisCode: registerCredentials.irisCode,
             irisName: registerCredentials.irisName,
         };
