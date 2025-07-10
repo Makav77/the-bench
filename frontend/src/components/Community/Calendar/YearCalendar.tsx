@@ -14,6 +14,7 @@ const locales: { [lng: string]: Locale } = {
     en: enUS,
     fr: fr,
 };
+
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
 export interface YearItem {
@@ -52,12 +53,14 @@ function CustomToolbar({date, onNavigate, setYear }: ToolbarProps<YearItem, obje
                 >
                     {t("previousMonth")}
                 </button>
+
                 <button
                     onClick={goToToday}
                     className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 w-[50%] max-sm:w-full max-sm:text-base max-sm:h-15"
                 >
                     {t("today")}
                 </button>
+
                 <button
                     onClick={goToNext}
                     className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 w-[50%] max-sm:w-full max-sm:text-base max-sm:h-15"
@@ -66,9 +69,15 @@ function CustomToolbar({date, onNavigate, setYear }: ToolbarProps<YearItem, obje
                 </button>
             </div>
             <div className="mr-12 max-sm:mr-0">
-                <p className="font-bold text-xl text-center max-sm:text-lg max-sm:mt-3">{monthLabel}</p>
+                <p className="font-bold text-xl text-center max-sm:text-lg max-sm:mt-3">
+                    {monthLabel}
+                </p>
             </div>
-            <div className="max-sm:hidden" style={{ width: 445 }} />
+
+            <div
+                className="max-sm:hidden" 
+                style={{ width: 445 }}
+            />
         </div>
     );
 }
@@ -134,7 +143,7 @@ function YearCalendar({ items, year, setYear }: YearCalendarProps) {
             dayPropGetter={dayPropGetter}
             eventPropGetter={eventStyleGetter}
             style={{ height: 700, width: "100%" }}
-            className="max-sm:text-[12px] max-sm:h-[420px]" // ajoute la classe ici !
+            className="max-sm:text-[12px] max-sm:h-[420px]"
         />
     );
 }

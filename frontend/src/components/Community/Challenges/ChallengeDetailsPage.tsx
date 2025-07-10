@@ -26,7 +26,6 @@ function ChallengeDetailPage() {
         async function load() {
             setIsLoading(true);
             setError(null);
-
             try {
                 if (id) {
                     const event = await getChallenge(id);
@@ -39,14 +38,18 @@ function ChallengeDetailPage() {
             }
         };
         load();
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">{t("loading")}</p>;
+        return <p className="p-6">
+            {t("loading")}
+        </p>;
     }
 
     if (error) {
-        return <p className="text-red-500">{error}</p>;
+        return <p className="text-red-500">
+            {error}
+        </p>;
     }
 
     if (!challenge) {
@@ -65,7 +68,7 @@ function ChallengeDetailPage() {
             const updated = await subscribeChallenge(id!);
             setChallenge(updated);
             toast.success(t("toastSuccessfullRegistration"));
-        } catch (error) {
+        } catch {
             toast.error(t("toastRegistrationError"));
         }
     }
@@ -96,7 +99,9 @@ function ChallengeDetailPage() {
     }
 
     if (permLoading) {
-        return <p className="p-6">{t("checkingPermissions")}</p>
+        return <p className="p-6">
+            {t("checkingPermissions")}
+        </p>
     }
 
     if (hasValidatedCompletion) {
@@ -121,14 +126,22 @@ function ChallengeDetailPage() {
                     }
                 </div>
 
-                <h1 className="text-2xl font-bold break-words">{challenge.title}</h1>
-                <p className="whitespace-pre-wrap break-words">{challenge.description}</p>
+                <h1 className="text-2xl font-bold break-words">
+                    {challenge.title}
+                </h1>
+
+                <p className="whitespace-pre-wrap break-words">
+                    {challenge.description}
+                </p>
+
                 <p className="italic text-sm">
                     {t("from")} {new Date(challenge.startDate).toLocaleDateString()} {t("to")} {new Date(challenge.endDate).toLocaleDateString()}
                 </p>
+
                 <p className="-mt-2">
                     <strong>{t("howToWin")}</strong> {challenge.successCriteria}
                 </p>
+
                 <p className="-mt-3">
                     <strong>{t("author")}</strong>{" "}
                     <span
@@ -138,9 +151,11 @@ function ChallengeDetailPage() {
                         {challenge.author.firstname} {challenge.author.lastname}
                     </span>
                 </p>
+
                 <p className="-mt-3">
                     <strong>{t("registeredLength")}</strong> {challenge.registrations.length}
                 </p>
+
                 <p className="-mt-3">
                     <strong>{t("completions")}</strong> {challenge.completions.filter((c) => c.validated).length}
                 </p>
@@ -223,14 +238,22 @@ function ChallengeDetailPage() {
                     }
                 </div>
 
-                <h1 className="text-2xl font-bold break-words">{challenge.title}</h1>
-                <p className="whitespace-pre-wrap break-words">{challenge.description}</p>
+                <h1 className="text-2xl font-bold break-words">
+                    {challenge.title}
+                </h1>
+
+                <p className="whitespace-pre-wrap break-words">
+                    {challenge.description}
+                </p>
+
                 <p className="italic text-sm">
                     {t("from")} {new Date(challenge.startDate).toLocaleDateString()} {t("to")} {new Date(challenge.endDate).toLocaleDateString()}
                 </p>
+
                 <p className="-mt-2">
                     <strong>{t("howToWin")}</strong> {challenge.successCriteria}
                 </p>
+
                 <p className="-mt-3">
                     <strong>{t("author")}</strong>{" "}
                     <span
@@ -240,9 +263,11 @@ function ChallengeDetailPage() {
                         {challenge.author.firstname} {challenge.author.lastname}
                     </span>
                 </p>
+
                 <p className="-mt-3">
                     <strong>{t("registeredLength")}</strong> {challenge.registrations.length}
                 </p>
+
                 <p className="-mt-3">
                     <strong>{t("completions")}</strong> {challenge.completions.filter((c) => c.validated).length}
                 </p>

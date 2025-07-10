@@ -5,12 +5,14 @@ import { useTranslation } from "react-i18next";
 
 function computeDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
     const toRad = (deg: number) => (deg * Math.PI) / 180;
-    const R = 6371e3;
-    const φ1 = toRad(lat1), φ2 = toRad(lat2);
-    const Δφ = toRad(lat2 - lat1), Δλ = toRad(lng2 - lng1);
-    const a = Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+    const earthRadius = 6371e3;
+    const lat1Rad = toRad(lat1);
+    const lat2rad = toRad(lat2);
+    const diffLat = toRad(lat2 - lat1);
+    const diffLon = toRad(lng2 - lng1);
+    const a = Math.sin(diffLat / 2) ** 2 + Math.cos(lat1Rad) * Math.cos(lat2rad) * Math.sin(diffLon / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+    return earthRadius * c;
 }
 
 export default function ArtisansByTypePage() {
@@ -56,11 +58,15 @@ export default function ArtisansByTypePage() {
     }, [userLocation, job]);
 
     if (loading) {
-        return <p className="p-4 text-center">{t("loading")}</p>;
+        return <p className="p-4 text-center">
+            {t("loading")}
+        </p>;
     }
 
     if (error) {
-        return <p className="p-4 text-center text-red-500">{error}</p>;
+        return <p className="p-4 text-center text-red-500">
+            {error}
+        </p>;
     }
 
     return (
@@ -72,9 +78,11 @@ export default function ArtisansByTypePage() {
             >
                 {t("back")}
             </button>
+
             <h2 className="text-2xl font-bold mb-4 max-sm:mb-3">
                 <span className="capitalize">{job}</span> {t("aroundMe")}
             </h2>
+
             {artisans.length > 0 ? (
                 <ul className="space-y-6 max-sm:space-y-4">
                     {artisans.map(a => (
@@ -82,8 +90,13 @@ export default function ArtisansByTypePage() {
                             key={a.place_id}
                             className="rounded-2xl p-6 shadow-xl bg-white max-sm:p-4"
                         >
-                            <h3 className="text-xl font-bold max-sm:text-lg">{a.name}</h3>
-                            <p className="text-gray-700 max-sm:text-base">{a.formatted_address}</p>
+                            <h3 className="text-xl font-bold max-sm:text-lg">
+                                {a.name}
+                            </h3>
+
+                            <p className="text-gray-700 max-sm:text-base">
+                                {a.formatted_address}
+                            </p>
 
                             {a.rating != null && (
                                 <p className="text-sm text-yellow-600 max-sm:text-base">
@@ -130,7 +143,9 @@ export default function ArtisansByTypePage() {
                     ))}
                 </ul>
             ) : (
-                <p className="italic text-gray-500 max-sm:text-base">{t("noArtisans")}</p>
+                <p className="italic text-gray-500 max-sm:text-base">
+                    {t("noArtisans")}
+                </p>
             )}
             <button
                 type="button"

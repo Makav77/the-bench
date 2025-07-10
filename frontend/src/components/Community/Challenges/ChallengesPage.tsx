@@ -45,7 +45,9 @@ function ChallengesPage() {
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-5 ">{t("challenges")}</h1>
+            <h1 className="text-3xl font-bold mb-5 ">
+                {t("challenges")}
+            </h1>
 
             <ul className="grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-sm:gap-2">
                 {challenges.map(challenge => (
@@ -54,10 +56,14 @@ function ChallengesPage() {
                         className="p-4 rounded-2xl hover:shadow cursor-pointer bg-white hover:bg-gray-100"
                         onClick={() => navigate(`/challenges/${challenge.id}`)}
                     >
-                        <h2 className="font-semibold text-lg mb-1">{challenge.title}</h2>
+                        <h2 className="font-semibold text-lg mb-1">
+                            {challenge.title}
+                        </h2>
+
                         <p className="text-sm text-gray-600 mb-1">
                             {t("startFrom")} {new Date(challenge.startDate).toLocaleDateString()} {t("to")} {new Date(challenge.endDate).toLocaleDateString()}
                         </p>
+
                         <p className="text-sm mb-1">
                             {t("author")}{" "}
                             <span
@@ -70,6 +76,7 @@ function ChallengesPage() {
                                 {challenge.author.firstname} {challenge.author.lastname}
                             </span>
                         </p>
+
                         <p className="text-sm">
                             {t("registered")} {challenge.registrations.length} {t("completions")} {challenge.completions.filter((c) => c.validated).length}
                         </p>

@@ -24,7 +24,7 @@ function ShopPage() {
             }
             setLoading(false);
         })();
-    }, []);
+    }, [t]);
 
     const handleBuy = async (badge: BadgeDTO) => {
         if (!user || badge.owned) {
@@ -55,7 +55,9 @@ function ShopPage() {
 
     return (
         <div className="max-w-3xl mx-auto mt-8 max-sm:w-3/4 max-sm:px-2">
-            <h1 className="text-3xl font-bold mb-6 text-center">{t("badgeShop")}</h1>
+            <h1 className="text-3xl font-bold mb-6 text-center">
+                {t("badgeShop")}
+            </h1>
 
             {user?.role === "admin" && (
                 <div className="flex justify-end">
@@ -73,7 +75,9 @@ function ShopPage() {
             </div>
 
             {loading ? (
-                <div className="max-sm:text-lg">{t("loading")}</div>
+                <div className="max-sm:text-lg">
+                    {t("loading")}
+                </div>
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-sm:grid-cols-1 max-sm:gap-3">
                     {badges.map(badge => (
@@ -89,7 +93,9 @@ function ShopPage() {
                                 className="w-16 h-16 mb-2 max-sm:w-20 max-sm:h-20"
                             />
 
-                            <span className="mb-2 max-sm:text-lg">{t("cost")} <b>{badge.cost} {t("points2")}</b></span>
+                            <span className="mb-2 max-sm:text-lg">
+                                {t("cost")} <b>{badge.cost} {t("points2")}</b>
+                            </span>
 
                             <div className="flex flex-row w-full justify-center gap-2 max-sm:flex-col max-sm:gap-2 max-sm:items-center">
                                 <button

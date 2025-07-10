@@ -18,7 +18,6 @@ function GalleryPage() {
     useEffect(() => {
         async function load() {
             setIsLoading(true);
-
             try {
                 const { data, lastPage } = await getGalleryItems(page, 30);
                 setGalleryItems(data);
@@ -63,7 +62,9 @@ function GalleryPage() {
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-4">Gallery</h1>
+            <h1 className="text-3xl font-bold mb-4">
+                {t("gallery")}
+            </h1>
 
             {isLoading ? (
                 <p className="max-sm:text-base">{t("loading")}</p>

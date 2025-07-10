@@ -27,7 +27,11 @@ function ArtisansListPage() {
             >
                 {t("back")}
             </button>
-            <h1 className="text-3xl font-bold mb-4 max-sm:text-2xl">{t("artisans")}</h1>
+    
+            <h1 className="text-3xl font-bold mb-4 max-sm:text-2xl">
+                {t("artisans")}
+            </h1>
+
             <ul className="grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-sm:gap-3 text-center">
                 {CATEGORIES.map((c) => (
                     <li

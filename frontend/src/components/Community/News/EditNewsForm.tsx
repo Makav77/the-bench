@@ -49,12 +49,17 @@ function EditNews() {
     };
 
     if (!defaults) {
-        return <p>{t("loading")}</p>;
+        return <p>
+            {t("loading")}
+        </p>;
     }
 
     return (
         <div className="p-6">
-            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">{t("editArticle")}</h1>
+            <h1 className="max-w-xl mx-auto text-4xl font-semibold mb-4">
+                {t("editArticle")}
+            </h1>
+
             <NewsForm 
                 defaultValues={defaults}
                 onSubmit={handleSubmit}

@@ -16,7 +16,6 @@ function NewsPage() {
         async function load() {
             setLoading(true);
             setError(null);
-
             try {
                 const { data, lastPage } = await getAllNews(page, 5);
                 setNews(data);
@@ -52,13 +51,17 @@ function NewsPage() {
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-5">{t("news")}</h1>
+            <h1 className="text-3xl font-bold mb-5">
+                {t("news")}
+            </h1>
 
             {loading && <div className="text-center max-sm:text-lg">{t("loading")}</div>}
             {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
             {!loading && !error && news.length === 0 && (
-                <div className="text-center text-gray-500">{t("noArticle")}</div>
+                <div className="text-center text-gray-500">
+                    {t("noArticle")}
+                </div>
             )}
 
             <ul className="space-y-6 max-sm:space-y-4">
@@ -77,7 +80,9 @@ function NewsPage() {
                         )}
 
                         <div className="flex-1 overflow-hidden max-sm:whitespace-normal">
-                            <h2 className="text-xl font-bold text-blue-700 hover:underline">{article.title}</h2>
+                            <h2 className="text-xl font-bold text-blue-700 hover:underline">
+                                {article.title}
+                            </h2>
 
                             <div className="text-gray-500 text-sm mb-2">
                                 {t("publishedOn")} {new Date(article.createdAt).toLocaleDateString()}
@@ -116,11 +121,11 @@ function NewsPage() {
                     onClick={() => setPage((p) => p - 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:px-5 max-sm:py-3"
                 >
-                    ← Prev
+                    {t("previous")}
                 </button>
 
                 <span className="max-sm:text-sm">
-                    Page {page} / {lastPage}
+                    {t("page")} {page} / {lastPage}
                 </span>
 
                 <button
@@ -129,7 +134,7 @@ function NewsPage() {
                     onClick={() => setPage((p) => p + 1)}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer max-sm:text-base max-sm:px-5 max-sm:py-3"
                 >
-                    Next →
+                    {t("next")}
                 </button>
             </div>
         </div>

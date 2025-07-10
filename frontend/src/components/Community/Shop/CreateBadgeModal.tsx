@@ -27,12 +27,15 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
             setError(t("noImageError"));
             return;
         }
+
         if (cost <= 0) {
             setError(t("negativeCostError"));
             return;
         }
+
         setIsSubmitting(true);
         setError(null);
+
         try {
             const formData = new FormData();
             formData.append("image", file);
@@ -53,11 +56,16 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
             <div className="bg-white rounded-lg shadow-lg p-8 w-[350px] relative">
-                <h2 className="text-xl font-bold mb-4 text-center">{t("addBadge")}</h2>
+                <h2 className="text-xl font-bold mb-4 text-center">
+                    {t("addBadge")}
+                </h2>
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {error && <div className="text-red-500">{error}</div>}
                     <div>
-                        <label className="block font-semibold mb-1">{t("image")} <span className="text-red-500">*</span></label>
+                        <label className="block font-semibold mb-1">
+                            {t("image")} <span className="text-red-500">*</span>
+                        </label>
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
@@ -66,6 +74,7 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
                         >
                             {t("selectFile")}
                         </button>
+
                         <input
                         ref={fileInputRef}
                             type="file"
@@ -84,7 +93,9 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
                     </div>
 
                     <div className="max-sm:flex max-sm:items-center max-sm:gap-5">
-                        <label className="block font-semibold mb-1">{t("cost")} <span className="text-red-500">*</span></label>
+                        <label className="block font-semibold mb-1">
+                            {t("cost")} <span className="text-red-500">*</span>
+                        </label>
                         <input
                             type="number"
                             min={1}
@@ -103,7 +114,7 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
                             onClick={onClose}
                             disabled={isSubmitting}
                         >
-                            ×
+                            ✕
                         </button>
 
                         <button

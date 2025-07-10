@@ -51,12 +51,11 @@ function CalendarPage() {
                     }));
 
                 setItems([...evs, ...challs]);
-            } catch (error) {
-                console.error("Unable to load events ou challenges : " + error);
+            } catch {
+                throw new Error("Unable to load event or challenge");
             }
         })();
     }, [year]);
-
 
     return (
         <div className="p-6 w-[80%] mx-auto max-sm:w-full max-sm:p-2">
@@ -76,7 +75,9 @@ function CalendarPage() {
                     ← {year - 1}
                 </button>
 
-                <h2 className="text-3xl font-bold max-sm:text-2xl">{year}</h2>
+                <h2 className="text-3xl font-bold max-sm:text-2xl">
+                    {year}
+                </h2>
 
                 <button
                     className="bg-gray-200 px-3 py-1 rounded cursor-pointer hover:bg-gray-300 max-sm:text-lg max-sm:px-10 max-sm:py-3"
@@ -85,7 +86,12 @@ function CalendarPage() {
                     {year + 1} →
                 </button>
             </div>
-            <YearCalendar items={items} year={year} setYear={setYear} />
+
+            <YearCalendar
+                items={items}
+                year={year}
+                setYear={setYear}
+            />
         </div>
     );
 }

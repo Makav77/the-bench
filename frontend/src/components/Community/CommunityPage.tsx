@@ -17,7 +17,9 @@ export default function CommunityPage() {
 
     return (
         <div className="p-6 w-[40%] mx-auto max-sm:w-full max-sm:p-2">
-            <h1 className="text-3xl font-bold mb-8 max-sm:text-2xl max-sm:mb-6">{t("community")}</h1>
+            <h1 className="text-3xl font-bold mb-8 max-sm:text-2xl max-sm:mb-6">
+                {t("community")}
+            </h1>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-sm:grid-cols-1 max-sm:gap-4">
                 {sections.map(({ label, path }) => (
                     <button

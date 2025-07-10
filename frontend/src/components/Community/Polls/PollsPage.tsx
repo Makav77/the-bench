@@ -18,7 +18,6 @@ function PollsPage() {
         async function load() {
             setIsLoading(true);
             setError(null);
-
             try {
                 const { data, lastPage } = await getAllPolls(page, 10);
                 setPolls(data);
@@ -33,11 +32,15 @@ function PollsPage() {
     }, [page]);
 
     if (isLoading) {
-        return <p>{t("loading")}</p>
+        return <p>
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="text-red-500">{error}</p>
+        return <p className="text-red-500">
+            {error}
+        </p>
     }
 
     if (!polls) {
@@ -66,7 +69,9 @@ return (
                 </button>
             </div>
 
-            <h1 className="text-3xl font-bold mb-5">{t("pollList")}</h1>
+            <h1 className="text-3xl font-bold mb-5">
+                {t("pollList")}
+            </h1>
 
             <ul className="grid grid-cols-2 gap-4 max-sm:grid-cols-1 max-sm:gap-2">
                 {polls.map(poll => {
@@ -77,17 +82,26 @@ return (
                             className="p-4 rounded-2xl bg-white hover:shadow cursor-pointer hover:bg-gray-100 max-sm:p-3"
                             onClick={() => navigate(`/polls/${poll.id}`)}
                         >
-                            <strong className="text-lg">{poll.question}</strong>
+                            <strong className="text-lg">
+                                {poll.question}
+                            </strong>
 
                             <div className="flex justify-between mt-2">
-                                <p className="text-sm">{poll.votes.length} {t("votes")}</p>
+                                <p className="text-sm">
+                                    {poll.votes.length} {t("votes")}
+                                </p>
+
                                 <p>
                                     {poll.manualClosed || isExpired ? (
-                                        <span className="text-gray-500 font-semibold text-sm">{t("closed")}</span>
+                                        <span className="text-gray-500 font-semibold text-sm">
+                                            {t("closed")}
+                                        </span>
                                     ) : poll.closesAt ? (
                                         <PollCountdownTimer expiresAt={poll.closesAt} />
                                     ) : (
-                                        <span className="text-green-600 font-semibold text-sm">{t("open")}</span>
+                                        <span className="text-green-600 font-semibold text-sm">
+                                            {t("open")}
+                                        </span>
                                     )}
                                 </p>
                             </div>

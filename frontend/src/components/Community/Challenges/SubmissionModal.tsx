@@ -51,7 +51,9 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                     ✕
                 </button>
 
-                <h2 className="text-2xl font-semibold mb-4 max-sm:text-xl">{t("validateCompletion")}</h2>
+                <h2 className="text-2xl font-semibold mb-4 max-sm:text-xl">
+                    {t("validateCompletion")}
+                </h2>
 
                 {error && <p className="mb-4 text-red-500 max-sm:text-base">{error}</p>}
 
@@ -85,6 +87,7 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
                         >
                             {t("cancel")}
                         </button>
+
                         <button
                             type="submit"
                             disabled={loading}

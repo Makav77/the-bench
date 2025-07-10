@@ -21,14 +21,12 @@ export default function GalleryItemDetailPage() {
         async function load() {
             setIsLoading(true);
             setError(null);
-
             try {
                 if (id) {
                     const galleryItem = await getGalleryItem(id);
                     setGalleryItem(galleryItem);
                 }
-            } catch (error) {
-                console.error(error);
+            } catch {
                 toast.error(t("toastLoadGalleryError"));
             } finally {
                 setIsLoading(false);
@@ -38,15 +36,21 @@ export default function GalleryItemDetailPage() {
     }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">{t("loading")}</p>
+        return <p className="p-6">
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="text-red-500">{error}</p>
+        return <p className="text-red-500">
+            {error}
+        </p>
     }
 
     if (!galleryItem) {
-        return <p>{t("emprtyGallery")}</p>;
+        return <p>
+            {t("emprtyGallery")}
+        </p>;
     }
 
     const isAuthor = user?.id === galleryItem.author.id;
@@ -66,7 +70,6 @@ export default function GalleryItemDetailPage() {
         if (!confirmed) {
             return;
         }
-        
         try {
             await deleteGalleryItem(id!);
             toast.success(t("toastImageDeleted"));
@@ -87,9 +90,11 @@ export default function GalleryItemDetailPage() {
             >
                 <button 
                     onClick={() => navigate("/gallery")}
-                    className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline">
+                    className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline"
+                >
                         <X className="w-6 h-6 text-gray-600 hover:bg-gray-200 rounded-3xl" />
                 </button>
+
                 <img 
                     src={galleryItem.url} 
                     alt={galleryItem.description} 
@@ -117,7 +122,6 @@ export default function GalleryItemDetailPage() {
                         >
                             {liked ? '💖' : '🤍'} {galleryItem.likedBy.length}
                         </button>
-
 
                         <div>
                             {(isAuthor || user?.role==='admin') && (

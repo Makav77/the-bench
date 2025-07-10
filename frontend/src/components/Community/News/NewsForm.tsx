@@ -131,7 +131,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                                 className="ml-2 text-red-500 cursor-pointer"
                                 onClick={() => setTags(tags.filter((_, index) => index !== i))}
                             >
-                                ×
+                                ✕
                             </button>
                         </span>
                     ))}
@@ -178,7 +178,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                                 className="absolute top-1 right-1 bg-white rounded-full text-red-500 px-2 cursor-pointer"
                                 onClick={() => handleRemoveImage(i, true)}
                             >
-                                ×
+                                ✕
                             </button>
                         </div>
                     ))}
@@ -197,7 +197,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                                 className="absolute top-1 right-1 bg-white rounded-full text-red-500 px-2 cursor-pointer"
                                 onClick={() => handleRemoveImage(i, false)}
                             >
-                                ×
+                                ✕
                             </button>
                         </div>
                     ))}

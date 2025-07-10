@@ -15,7 +15,6 @@ function PollDetailPage() {
     const { user } = useAuth();
     const navigate= useNavigate();
     const { t } = useTranslation("Community/PollDetailPage");
-
     const { restricted, expiresAt, reason, loading: permLoading } = usePermission("vote_poll");
     const [poll, setPoll] = useState<PollDetails | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +25,6 @@ function PollDetailPage() {
         async function load() {
             setIsLoading(true);
             setError(null);
-
             try {
                 if (id) {
                     const poll = await getPoll(id);
@@ -39,14 +37,18 @@ function PollDetailPage() {
             }
         }
         load();
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">{t("loading")}</p>
+        return <p className="p-6">
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="text-red-500">{error}</p>
+        return <p className="text-red-500">
+            {error}
+        </p>
     }
 
     if (!poll) {
@@ -66,7 +68,7 @@ function PollDetailPage() {
                     const updated = await votePoll(poll.id, selected);
                     setPoll(updated);
                     toast.success(t("toastVoted"));
-        } catch (error) {
+        } catch {
             toast.error(t("toastVotedError"));
         }
     };
@@ -76,7 +78,6 @@ function PollDetailPage() {
         if (!confirmed) {
             return;
         }
-
         try {
             await closePoll(poll.id);
             setPoll(await getPoll(poll.id));
@@ -91,7 +92,6 @@ function PollDetailPage() {
         if (!confirmed) {
             return;
         }
-
         try {
             await deletePoll(id!);
             toast.success(t("toastPollDeleted"));
@@ -102,7 +102,9 @@ function PollDetailPage() {
     }
 
     if (permLoading) {
-        return <p className="p-6">{t("checkingPermissons")}</p>;
+        return <p className="p-6">
+            {t("checkingPermissons")}
+        </p>;
     }
 
     const isExpired = !!poll.closesAt && new Date(poll.closesAt) < new Date();
@@ -122,17 +124,23 @@ function PollDetailPage() {
                     <div>
                         <p>
                             {poll.manualClosed || isExpired ? (
-                                <span className="text-gray-500 font-semibold text-sm">{t("closed")}</span>
+                                <span className="text-gray-500 font-semibold text-sm">
+                                    {t("closed")}
+                                </span>
                             ) : poll.closesAt ? (
                                 <PollCountdownTimer expiresAt={poll.closesAt} />
                             ) : (
-                                <span className="text-green-600 font-semibold text-sm">{t("open")}</span>
+                                <span className="text-green-600 font-semibold text-sm">
+                                    {t("open")}
+                                </span>
                             )}
                         </p>
                     </div>
                 </div>
 
-                <h1 className="text-2xl font-bold">{poll.question}</h1>
+                <h1 className="text-2xl font-bold">
+                    {poll.question}
+                </h1>
 
                 <p className="text-sm text-gray-500 mb-4 -mt-3">
                     {t("publishedBy")}{" "}
