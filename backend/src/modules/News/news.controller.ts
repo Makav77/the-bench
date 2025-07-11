@@ -52,6 +52,46 @@ export class NewsController {
         return { urls };
     }
 
+    @UseGuards(JwtAuthGuard, IrisGuard)
+    @Get(":id")
+    async findOneNews(@Resource() news: NewsDocument): Promise<NewsDocument> {
+        return news;
+    }
+
+    @UseGuards(JwtAuthGuard, IrisGuard)
+    @Post(":id/like")
+    async toggleLike(
+        @Param("id") newsId: string,
+        @Req() req: RequestWithResource<News>
+    ): Promise<{ liked: boolean; totalLikes: number }> {
+        const news = await this.newsService.findOneNews(newsId);
+
+        if (!news) {
+            throw new NotFoundException("News not found.");
+        }
+
+        req.resource = news;
+        const user = req.user as User;
+        return this.newsService.toggleLike(newsId, user);
+    }
+
+    @UseGuards(JwtAuthGuard, IrisGuard)
+    @Get(":id/likes")
+    async getLikes(
+        @Param("id") newsId: string,
+        @Req() req: RequestWithResource<News>
+    ): Promise<{ totalLikes: number; liked: boolean }> {
+        const news = await this.newsService.findOneNews(newsId);
+
+        if (!news) {
+            throw new NotFoundException("News not found.");
+        }
+
+        req.resource = news;
+        const user = req.user as User;
+        return this.newsService.getLikes(newsId, user);
+    }
+
     @UseGuards(JwtAuthGuard)
     @Get()
     async findAllNews(
@@ -72,12 +112,6 @@ export class NewsController {
     ) {
         const user = req.user as User;
         return this.newsService.findPendingNews(page, limit, user);
-    }
-
-    @UseGuards(JwtAuthGuard, IrisGuard)
-    @Get(":id")
-    async findOneNews(@Resource() news: NewsDocument): Promise<NewsDocument> {
-        return news;
     }
 
     @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -142,39 +176,5 @@ export class NewsController {
         req.resource = news;
         const user = req.user as User;
         return this.newsService.validateNews(id, validateNewsDTO, user);
-    }
-
-    @UseGuards(JwtAuthGuard, IrisGuard)
-    @Post(":id/like")
-    async toggleLike(
-        @Param("id") newsId: string,
-        @Req() req: RequestWithResource<News>
-    ): Promise<{ liked: boolean; totalLikes: number }> {
-        const news = await this.newsService.findOneNews(newsId);
-
-        if (!news) {
-            throw new NotFoundException("News not found.");
-        }
-
-        req.resource = news;
-        const user = req.user as User;
-        return this.newsService.toggleLike(newsId, user);
-    }
-
-    @UseGuards(JwtAuthGuard, IrisGuard)
-    @Get(":id/likes")
-    async getLikes(
-        @Param("id") newsId: string,
-        @Req() req: RequestWithResource<News>
-    ): Promise<{ totalLikes: number; liked: boolean }> {
-        const news = await this.newsService.findOneNews(newsId);
-
-        if (!news) {
-            throw new NotFoundException("News not found.");
-        }
-
-        req.resource = news;
-        const user = req.user as User;
-        return this.newsService.getLikes(newsId, user);
     }
 }

@@ -17,7 +17,7 @@ export class CommentService {
             filter.irisCode = user.irisCode;
         }
 
-        const comments = await this.commentModel.find(filter).sort({ createdAt: 1 }).lean();
+        const comments = await this.commentModel.find(filter).sort({ createdAt: 1 }).lean({ virtuals: true });
         return comments;
     }
 

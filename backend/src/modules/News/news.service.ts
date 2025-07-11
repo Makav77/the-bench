@@ -81,7 +81,7 @@ export class NewsService {
             throw new NotFoundException("News not found.");
         }
 
-        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+        if (user.role !== "admin" && news.irisCode !== user.irisCode && news.irisCode !== "all") {
             throw new ForbiddenException("You are not allowed to edit news from another iris.");
         }
 
@@ -100,7 +100,7 @@ export class NewsService {
             throw new NotFoundException("News not found for removing");
         }
 
-        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+        if (user.role !== "admin" && news.irisCode !== user.irisCode && news.irisCode !== "all") {
             throw new ForbiddenException("Not allowed to remove news from another iris.");
         }
 
@@ -117,7 +117,7 @@ export class NewsService {
             throw new NotFoundException("News not found");
         }
 
-        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+        if (user.role !== "admin" && news.irisCode !== user.irisCode && news.irisCode !== "all") {
             throw new ForbiddenException("Not allowed to like news from another iris.");
         }
 
@@ -139,7 +139,7 @@ export class NewsService {
             throw new NotFoundException("News not found");
         }
 
-        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+        if (user.role !== "admin" && news.irisCode !== user.irisCode && news.irisCode !== "all") {
             throw new ForbiddenException("Not allowed to access likes from another iris.");
         }
 
@@ -181,7 +181,7 @@ export class NewsService {
             throw new NotFoundException("News not found.");
         }
 
-        if (user.role !== "admin" && news.irisCode !== user.irisCode) {
+        if (user.role !== "admin" && news.irisCode !== user.irisCode && news.irisCode !== "all") {
             throw new ForbiddenException("Not allowed to validate news from another iris.");
         }
 

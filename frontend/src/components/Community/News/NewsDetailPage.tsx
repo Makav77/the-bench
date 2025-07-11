@@ -38,6 +38,7 @@ function NewsDetailPage() {
                 const likesData = await getNewsLikes(id);
                 setLikes(likesData);
                 const comms = await getComments(id);
+                console.log("Commentaires récupérés :", comms); // -----------------------------------------------------------------
                 setComments(comms);
             } catch (error) {
                 setError("Unable to load article : " + error);
