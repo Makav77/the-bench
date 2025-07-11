@@ -102,6 +102,12 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get(":id/pending-friend-requests")
+    async getPendingFriendRequests(@Param("id") userId: string) {
+        return this.userService.getPendingFriendRequests(userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post(":id/friend-request")
     async sendFriendRequest(
         @Param("id") toId: string,

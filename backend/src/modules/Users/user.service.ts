@@ -409,4 +409,22 @@ export class UserService {
             }))
         };
     }
+
+    async getPendingFriendRequests(userId: string): Promise<{ id: string; firstname: string; lastname: string; profilePicture: string }[]> {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ["friendRequestsReceived"],
+        });
+
+        if (!user) {
+            throw new NotFoundException("User not found");
+        }
+
+        return user.friendRequestsReceived.map(requester => ({
+            id: requester.id,
+            firstname: requester.firstname,
+            lastname: requester.lastname,
+            profilePicture: requester.profilePicture,
+        }));
+    }
 }

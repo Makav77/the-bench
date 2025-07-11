@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { getProfileSummary, ProfileSummaryDTO, deleteMyAccount } from "../../api/userService";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
-import { getFriends, FriendDTO, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, removeFriend } from "../../api/friendService";
+import { getFriends, FriendDTO, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, removeFriend, getPendingFriendRequests } from "../../api/friendService";
 import apiClient from "../../api/apiClient";
 import { Trash2 } from "lucide-react";
 import { getCitiesByPostalCode, resolveIris } from "../../api/irisService";
@@ -37,6 +37,7 @@ export default function UserProfilePage() {
     const [addressCities, setAddressCities] = useState<string[]>([]);
     const [addressIrisError, setAddressIrisError] = useState<string>("");
     const [addressLoading, setAddressLoading] = useState(false);
+    const [pendingFriendRequests, setPendingFriendRequests] = useState<FriendDTO[]>([]);
 
     const loadProfile = async () => {
         if (!id) {
@@ -62,6 +63,8 @@ export default function UserProfilePage() {
             try {
                 const data = await getFriends(id);
                 setFriends(data);
+                const pendingFriendRequests = await getPendingFriendRequests(id);
+                setPendingFriendRequests(pendingFriendRequests);
             } catch {
                 toast.error(t("toastUnableLoadFriendList"));
             }
@@ -530,39 +533,93 @@ export default function UserProfilePage() {
                             </span>
                         </h2>
 
+                        {isOwnProfile && pendingFriendRequests.length > 0 && (
+                            <>
+                                <div className="mb-2 font-semibold text-amber-700">
+                                    {t("pendingRequests")}
+                                </div>
+                                <ul className="space-y-3 mb-4">
+                                    {pendingFriendRequests.map(requester => (
+                                        <li key={requester.id} className="flex items-center space-x-3">
+                                            <img
+                                                src={requester.profilePicture}
+                                                alt={`${requester.firstname} ${requester.lastname}`}
+                                                className="w-10 h-10 max-sm:w-7 max-sm:h-7 rounded-full object-cover border"
+                                            />
+                                            <Link
+                                                to={`/profile/${requester.id}`}
+                                                className="font-medium cursor-pointer hover:text-gray-800"
+                                                onClick={() => setShowFriendsModal(false)}
+                                            >
+                                                {requester.firstname} {requester.lastname}
+                                            </Link>
+                                            <button
+                                                className="ml-auto p-1 rounded bg-green-500 text-white hover:bg-green-600 px-2 py-1 cursor-pointer"
+                                                onClick={async () => {
+                                                    await acceptFriendRequest(requester.id);
+                                                    toast.success(t("toastRequestAccepted"));
+                                                    await refreshFriends();
+                                                    await loadProfile();
+                                                }}
+                                            >
+                                                {t("acceptRequest")}
+                                            </button>
+
+                                            <button
+                                                className="p-1 rounded bg-red-500 text-white hover:bg-red-600 px-2 py-1 cursor-pointer"
+                                                onClick={async () => {
+                                                    await rejectFriendRequest(requester.id);
+                                                    toast.success(t("toastRequestRejected"));
+                                                    await refreshFriends();
+                                                    await loadProfile();
+                                                }}
+                                            >
+                                                {t("rejectRequest")}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
+
+                        <div className="border-t-1 mb-4" />
+
                         {friends.length === 0 ? (
                             <p className="text-center text-gray-600 italic">{t("noFriends")}</p>
                         ) : (
-                            <ul className="space-y-3 max-h-96 overflow-y-auto">
-                                {friends.map(friend => (
-                                    <li key={friend.id} className="flex items-center space-x-3">
-                                        <img
-                                            src={friend.profilePicture}
-                                            alt={`${friend.firstname} ${friend.lastname}`}
-                                            className="w-10 h-10 max-sm:w-7 max-sm:h-7 rounded-full object-cover border"
-                                        />
-
-                                        <Link
-                                            to={`/profile/${friend.id}`}
-                                            className="font-medium cursor-pointer hover:text-gray-800"
-                                            onClick={() => setShowFriendsModal(false)}
-                                        >
-                                            {friend.firstname} {friend.lastname}
-                                        </Link>
-
-                                        <button
-                                            onClick={() => handleRemoveFriend(friend.id)}
-                                            disabled={removingFriendId === friend.id}
-                                            className="ml-auto p-1 rounded hover:bg-red-100"
-                                        >
-                                            <Trash2
-                                                size={18}
-                                                className="text-red-400 hover:text-red-600 cursor-pointer"
+                            <div>
+                                <p className="mb-2 font-semibold text-amber-700">{t("friends")}</p>
+                                <ul className="space-y-3 max-h-96 overflow-y-auto">
+                                    {friends.map(friend => (
+                                        <li key={friend.id} className="flex items-center space-x-3">
+                                            <img
+                                                src={friend.profilePicture}
+                                                alt={`${friend.firstname} ${friend.lastname}`}
+                                                className="w-10 h-10 max-sm:w-7 max-sm:h-7 rounded-full object-cover border"
                                             />
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
+
+                                            <Link
+                                                to={`/profile/${friend.id}`}
+                                                className="font-medium cursor-pointer hover:text-gray-800"
+                                                onClick={() => setShowFriendsModal(false)}
+                                            >
+                                                {friend.firstname} {friend.lastname}
+                                            </Link>
+
+                                            <button
+                                                onClick={() => handleRemoveFriend(friend.id)}
+                                                disabled={removingFriendId === friend.id}
+                                                className="ml-auto p-1 rounded hover:bg-red-100"
+                                            >
+                                                <Trash2
+                                                    size={18}
+                                                    className="text-red-400 hover:text-red-600 cursor-pointer"
+                                                />
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         )}
 
                         <div className="flex justify-end mt-4 max-sm:flex-col max-sm:gap-3">
