@@ -28,7 +28,12 @@ export interface CommentLikeDTO {
 
 export const getComments = async (newsId: string): Promise<CommentDTO[]> => {
     const response = await apiClient.get(`/news/${newsId}/comments`);
-    return response.data;
+    return response.data.map((comment: any) => ({
+        ...comment,
+        id: comment.id || comment._id,
+        likedBy: comment.likedBy || [],
+        totalLikes: comment.likedBy ? comment.likedBy.length : 0,
+    }));
 };
 
 export const createComment = async (newsId: string, content: string): Promise<CommentDTO> => {

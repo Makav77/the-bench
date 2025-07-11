@@ -57,5 +57,13 @@
     "toastErrorLoadingAddress": "Impossible de charger l'adresse",
     "deleteAccount": "Supprimer mon compte",
     "confirmAlertDeleteAccount": "Vous êtes sur le point de supprimer votre compte. Souhaitez-vous confirmer ?",
-    "deletingAccountError": "Impossible de supprimer votre compte"
+    "deletingAccountError": "Impossible de supprimer votre compte",
+    "pendingRequests": "Demandes d'ami en attente",
+    "friends": "Amis",
+    "rejectRequest": "Refuser",
+    "acceptRequest": "Accepter",
+    "toastRequestCanceled": "Demande annulée",
+    "toastRequestCanceledError": "Impossible d'annuler la demande d'ami",
+    "cancelling": "Annulation...",
+    "cancelRequest": "Annuler la demande"
 }

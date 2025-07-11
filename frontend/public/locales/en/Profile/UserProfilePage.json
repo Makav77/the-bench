@@ -57,5 +57,13 @@
     "toastErrorLoadingAddress": "Unable to load address",
     "deleteAccount": "Delete my account",
     "confirmAlertDeleteAccount": "You are about to delete your account. Do you want to confirm ?",
-    "deletingAccountError": "Unable to delete account"
+    "deletingAccountError": "Unable to delete account",
+    "pendingRequests": "Waiting friend requests",
+    "friends": "Friends",
+    "rejectRequest": "Reject",
+    "acceptRequest": "Accept",
+    "toastRequestCanceled": "Request canceled",
+    "toastRequestCanceledError": "Unable to cancel friend request",
+    "cancelling": "Cancelling...",
+    "cancelRequest": "Cancel request"
 }

@@ -409,4 +409,47 @@ export class UserService {
             }))
         };
     }
+
+    async getPendingFriendRequests(userId: string): Promise<{ id: string; firstname: string; lastname: string; profilePicture: string }[]> {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ["friendRequestsReceived"],
+        });
+
+        if (!user) {
+            throw new NotFoundException("User not found");
+        }
+
+        return user.friendRequestsReceived.map(requester => ({
+            id: requester.id,
+            firstname: requester.firstname,
+            lastname: requester.lastname,
+            profilePicture: requester.profilePicture,
+        }));
+    }
+
+    async cancelFriendRequest(currentUserId: string, targetUserId: string): Promise<void> {
+        const currentUser = await this.userRepository.findOne({
+            where: { id: currentUserId },
+            relations: ["friendRequestsSent"],
+        });
+
+        const targetUser = await this.userRepository.findOne({
+            where: { id: targetUserId },
+            relations: ["friendRequestsReceived"],
+        });
+
+        if (!currentUser || !targetUser) {
+            throw new NotFoundException("User not found");
+        }
+
+        currentUser.friendRequestsSent = currentUser.friendRequestsSent.filter(
+            (u) => u.id !== targetUserId
+        );
+        targetUser.friendRequestsReceived = targetUser.friendRequestsReceived.filter(
+            (u) => u.id !== currentUserId
+        );
+
+        await this.userRepository.save([currentUser, targetUser]);
+    }
 }

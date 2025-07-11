@@ -27,3 +27,12 @@ export const rejectFriendRequest = async (senderId: string): Promise<void> => {
 export const removeFriend = async (friendId: string): Promise<void> => {
     await apiClient.delete(`/users/${friendId}/remove-friend`);
 }
+
+export const getPendingFriendRequests = async (userId: string): Promise<FriendDTO[]> => {
+    const response = await apiClient.get(`users/${userId}/pending-friend-requests`);
+    return response.data;
+}
+
+export const cancelFriendRequest = async (targetUserId: string): Promise<void> => {
+    await apiClient.delete(`/users/${targetUserId}/cancel-friend-request`);
+}
