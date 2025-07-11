@@ -61,5 +61,9 @@
     "pendingRequests": "Demandes d'ami en attente",
     "friends": "Amis",
     "rejectRequest": "Refuser",
-    "acceptRequest": "Accepter"
+    "acceptRequest": "Accepter",
+    "toastRequestCanceled": "Demande annulée",
+    "toastRequestCanceledError": "Impossible d'annuler la demande d'ami",
+    "cancelling": "Annulation...",
+    "cancelRequest": "Annuler la demande"
 }

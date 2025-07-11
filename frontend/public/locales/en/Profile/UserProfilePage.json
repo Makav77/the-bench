@@ -61,5 +61,9 @@
     "pendingRequests": "Waiting friend requests",
     "friends": "Friends",
     "rejectRequest": "Reject",
-    "acceptRequest": "Accept"
+    "acceptRequest": "Accept",
+    "toastRequestCanceled": "Request canceled",
+    "toastRequestCanceledError": "Unable to cancel friend request",
+    "cancelling": "Cancelling...",
+    "cancelRequest": "Cancel request"
 }

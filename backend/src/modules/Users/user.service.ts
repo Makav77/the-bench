@@ -427,4 +427,29 @@ export class UserService {
             profilePicture: requester.profilePicture,
         }));
     }
+
+    async cancelFriendRequest(currentUserId: string, targetUserId: string): Promise<void> {
+        const currentUser = await this.userRepository.findOne({
+            where: { id: currentUserId },
+            relations: ["friendRequestsSent"],
+        });
+
+        const targetUser = await this.userRepository.findOne({
+            where: { id: targetUserId },
+            relations: ["friendRequestsReceived"],
+        });
+
+        if (!currentUser || !targetUser) {
+            throw new NotFoundException("User not found");
+        }
+
+        currentUser.friendRequestsSent = currentUser.friendRequestsSent.filter(
+            (u) => u.id !== targetUserId
+        );
+        targetUser.friendRequestsReceived = targetUser.friendRequestsReceived.filter(
+            (u) => u.id !== currentUserId
+        );
+
+        await this.userRepository.save([currentUser, targetUser]);
+    }
 }

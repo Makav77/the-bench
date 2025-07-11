@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { getProfileSummary, ProfileSummaryDTO, deleteMyAccount } from "../../api/userService";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
-import { getFriends, FriendDTO, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, removeFriend, getPendingFriendRequests } from "../../api/friendService";
+import { getFriends, FriendDTO, sendFriendRequest, acceptFriendRequest, rejectFriendRequest, removeFriend, getPendingFriendRequests, cancelFriendRequest } from "../../api/friendService";
 import apiClient from "../../api/apiClient";
 import { Trash2 } from "lucide-react";
 import { getCitiesByPostalCode, resolveIris } from "../../api/irisService";
@@ -255,12 +255,33 @@ export default function UserProfilePage() {
                                 {friendActionLoading ? t("removing") : t("removingFriend")}
                             </button>
                         ) : profile.requestSent ? (
-                            <button
-                                disabled
-                                className="px-3 py-3 sm:py-1 bg-gray-400 text-white rounded cursor-not-allowed max-sm:w-full max-sm:text-sm"
-                            >
-                                {t("requestSent")}
-                            </button>
+                                <div className="flex flex-col gap-2 items-center max-sm:w-full">
+                                    <button
+                                        disabled
+                                        className="px-3 py-3 sm:py-1 bg-gray-400 text-white rounded cursor-not-allowed max-sm:w-full max-sm:text-sm"
+                                    >
+                                        {t("requestSent")}
+                                    </button>
+
+                                    <button
+                                        onClick={async () => {
+                                            setFriendActionLoading(true);
+                                            try {
+                                                await cancelFriendRequest(profile.id);
+                                                toast.success(t("toastRequestCanceled"));
+                                                await loadProfile();
+                                            } catch {
+                                                toast.error(t("toastRequestCanceledError"));
+                                            } finally {
+                                                setFriendActionLoading(false);
+                                            }
+                                        }}
+                                        disabled={friendActionLoading}
+                                        className="px-3 py-3 sm:py-1 bg-red-400 text-white rounded hover:bg-red-500 cursor-pointer max-sm:w-full max-sm:text-sm"
+                                    >
+                                        {friendActionLoading ? t("cancelling"): t("cancelRequest")}
+                                    </button>
+                                </div>
                         ) : profile.requestReceived ? (
                             <div className="flex space-x-2 max-sm:flex-col max-sm:gap-2 max-sm:w-full">
                                 <button

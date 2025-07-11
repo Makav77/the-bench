@@ -32,3 +32,7 @@ export const getPendingFriendRequests = async (userId: string): Promise<FriendDT
     const response = await apiClient.get(`users/${userId}/pending-friend-requests`);
     return response.data;
 }
+
+export const cancelFriendRequest = async (targetUserId: string): Promise<void> => {
+    await apiClient.delete(`/users/${targetUserId}/cancel-friend-request`);
+}

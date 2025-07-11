@@ -108,6 +108,16 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Delete(":id/cancel-friend-request")
+    async cancelFriendRequest(
+        @Param("id") targetUserId: string,
+        @Req() req: RequestWithUser
+    ): Promise<void> {
+        const currentUserId = req.user.id;
+        return this.userService.cancelFriendRequest(currentUserId, targetUserId);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post(":id/friend-request")
     async sendFriendRequest(
         @Param("id") toId: string,
