@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { NotificationsService } from "./notifications.service";
 
 @Controller("notifications")
@@ -25,5 +25,15 @@ export class NotificationsController {
   @Put("read/all/:userId")
   markAllAsRead(@Param("userId") userId: string) {
     return this.service.markAllAsRead(userId);
+  }
+
+  @Delete(":id")
+  async deleteNotification(@Param("id") id: string) {
+    return this.service.delete(id);
+  }
+
+  @Put(":id/read")
+  async updateReadStatus(@Param("id") id: string, @Body("read") read: boolean) {
+    return this.service.updateReadStatus(id, read);
   }
 }

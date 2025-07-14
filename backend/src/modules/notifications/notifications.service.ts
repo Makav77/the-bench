@@ -20,11 +20,19 @@ export class NotificationsService {
   async markAsRead(id: string) {
     return this.notifModel.findByIdAndUpdate(id, { read: true }, { new: true });
   }
-  
+
   async markAllAsRead(userId: string) {
     return this.notifModel.updateMany(
       { userId, read: false },
       { $set: { read: true } }
     );
+  }
+
+  async delete(id: string) {
+    return this.notifModel.findByIdAndDelete(id);
+  }
+
+  async updateReadStatus(id: string, read: boolean) {
+    return this.notifModel.findByIdAndUpdate(id, { read }, { new: true });
   }
 }
