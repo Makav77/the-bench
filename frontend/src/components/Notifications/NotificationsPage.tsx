@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import { Bell, CheckCircle2, Trash2, EyeOff } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import {
+  getNotifications,
+  markAllAsRead,
+  markAsUnread,
+  deleteNotification,
+  Notification,
+} from "../../api/notificationsSerice";
 
-interface Notification {
-  _id: string;
-  title: string;
-  message?: string;
-  read: boolean;
-  createdAt: string;
-}
+// interface Notification {
+//   _id: string;
+//   title: string;
+//   message?: string;
+//   read: boolean;
+//   createdAt: string;
+// }
 
 const NotificationsPage = () => {
   const { user } = useAuth();
@@ -18,18 +25,12 @@ const NotificationsPage = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:3000/notifications/${user?.id}`
-        );
-        const data = await res.json();
+        if (!user?.id) return;
+
+        const data = await getNotifications(user.id);
         setNotifications(data);
 
-        await fetch(
-          `http://localhost:3000/notifications/read/all/${user?.id}`,
-          {
-            method: "PUT",
-          }
-        );
+        await markAllAsRead(user.id);
       } catch (error) {
         console.error("Erreur de récupération des notifications :", error);
       } finally {
@@ -37,22 +38,16 @@ const NotificationsPage = () => {
       }
     };
 
-    if (user?.id) fetchNotifications();
+    fetchNotifications();
   }, [user?.id]);
 
   const handleDelete = async (id: string) => {
-    await fetch(`http://localhost:3000/notifications/${id}`, {
-      method: "DELETE",
-    });
+    await deleteNotification(id);
     setNotifications((prev) => prev.filter((n) => n._id !== id));
   };
 
   const handleMarkUnread = async (id: string) => {
-    await fetch(`http://localhost:3000/notifications/${id}/read`, {
-      method: "PUT",
-      body: JSON.stringify({ read: false }),
-      headers: { "Content-Type": "application/json" },
-    });
+    await markAsUnread(id);
 
     setNotifications((prev) =>
       prev.map((n) => (n._id === id ? { ...n, read: false } : n))
