@@ -35,4 +35,14 @@ export class NotificationsService {
   async updateReadStatus(id: string, read: boolean) {
     return this.notifModel.findByIdAndUpdate(id, { read }, { new: true });
   }
+
+  async createMany(userIds: string[], title: string, message: string) {
+    const notifs = userIds.map(userId => ({
+      userId,
+      title,
+      message,
+    }));
+
+    return this.notifModel.insertMany(notifs);
+  }
 }
