@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CheckCircle2, Trash2, EyeOff } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { NotificationBell } from "./NotificationBell";
+import { useTranslation } from "react-i18next";
 import {
   getNotifications,
   markAllAsRead,
@@ -20,6 +21,7 @@ import {
 
 const NotificationsPage = () => {
   const { user } = useAuth();
+  const { t } = useTranslation("Notifications/Notifications");
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -68,13 +70,13 @@ const NotificationsPage = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
-        <NotificationBell count={unreadCount} /> Notifications
+        <NotificationBell count={unreadCount} /> {t("notifications")}
       </h1>
 
       {loading ? (
-        <p>Chargement...</p>
+        <p>{t("loading")}</p>
       ) : notifications.length === 0 ? (
-        <p className="text-gray-500">Aucune notification.</p>
+        <p className="text-gray-500">{t("noNotifications")}</p>
       ) : (
         <ul className="space-y-4">
           {notifications.map((n) => (
@@ -85,11 +87,10 @@ const NotificationsPage = () => {
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2" title={n.read ? t("read") : ""}>
                   {n.read && (
                     <CheckCircle2
                       className="text-green-500 w-5 h-5"
-                      //title="Lue"
                     />
                   )}
                   <h2 className="text-lg font-semibold">{n.title}</h2>
@@ -97,20 +98,20 @@ const NotificationsPage = () => {
                 <div className="flex items-center gap-2">
                   {!n.read && (
                     <span className="text-sm text-blue-600 font-medium">
-                      Nouveau
+                      {t("new")}
                     </span>
                   )}
                   <button
                     onClick={() => handleMarkUnread(n._id)}
                     className="text-gray-500 hover:text-yellow-600 transition"
-                    title="Marquer comme non lu"
+                    title={t("markAsUnread")}
                   >
                     <EyeOff className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => handleDelete(n._id)}
                     className="text-gray-500 hover:text-red-600 transition"
-                    title="Supprimer"
+                    title={t("delete")}
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>

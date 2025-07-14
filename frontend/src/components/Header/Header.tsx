@@ -247,7 +247,7 @@ function Header() {
                                 onClick={() => navigate("/notifications", { state: { fromHeader: true } })}
                             >
                                 <NotificationBell count={unreadCount} />
-                                notifications
+                                {t("notifications")}
                             </button>
 
                             <button
