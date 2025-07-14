@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
 
 @Injectable()
 export class NotificationsService {
-  constructor(@InjectModel('Notification') private notifModel: Model<Notification>) {}
+  constructor(
+    @InjectModel("Notification") private notifModel: Model<Notification>
+  ) {}
 
   async findByUser(userId: string) {
     return this.notifModel.find({ userId }).sort({ createdAt: -1 }).exec();
@@ -17,5 +19,12 @@ export class NotificationsService {
 
   async markAsRead(id: string) {
     return this.notifModel.findByIdAndUpdate(id, { read: true }, { new: true });
+  }
+  
+  async markAllAsRead(userId: string) {
+    return this.notifModel.updateMany(
+      { userId, read: false },
+      { $set: { read: true } }
+    );
   }
 }
