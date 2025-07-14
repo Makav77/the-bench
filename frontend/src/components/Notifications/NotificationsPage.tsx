@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Bell, CheckCircle2, Trash2, EyeOff } from "lucide-react";
+import { CheckCircle2, Trash2, EyeOff } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { NotificationBell } from "./NotificationBell";
 import {
   getNotifications,
   markAllAsRead,
@@ -21,6 +22,7 @@ const NotificationsPage = () => {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -29,6 +31,7 @@ const NotificationsPage = () => {
 
         const data = await getNotifications(user.id);
         setNotifications(data);
+        setUnreadCount(data.filter((n) => !n.read).length);
 
         await markAllAsRead(user.id);
       } catch (error) {
@@ -49,6 +52,14 @@ const NotificationsPage = () => {
   const handleMarkUnread = async (id: string) => {
     await markAsUnread(id);
 
+    notifications
+      .filter((n) => n._id === id)
+      .forEach((n) => {
+        if (n.read) {
+          setUnreadCount((prev) => prev + 1);
+        }
+      });
+
     setNotifications((prev) =>
       prev.map((n) => (n._id === id ? { ...n, read: false } : n))
     );
@@ -57,7 +68,7 @@ const NotificationsPage = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
-        <Bell className="w-6 h-6" /> Notifications
+        <NotificationBell count={unreadCount} /> Notifications
       </h1>
 
       {loading ? (
