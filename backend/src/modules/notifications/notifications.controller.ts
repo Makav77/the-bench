@@ -17,11 +17,6 @@ export class NotificationsController {
     return this.service.create(dto.userId, dto.title, dto.message);
   }
 
-  @Put(":id/read")
-  markAsRead(@Param("id") id: string) {
-    return this.service.markAsRead(id);
-  }
-
   @Put("read/all/:userId")
   markAllAsRead(@Param("userId") userId: string) {
     return this.service.markAllAsRead(userId);
