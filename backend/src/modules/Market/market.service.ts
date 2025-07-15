@@ -7,12 +7,17 @@ import { UpdateMarketItemDTO } from './dto/update-market-item.dto';
 import { User, Role } from '../Users/entities/user.entity';
 import { GalleryItem } from '../Gallery/entities/gallery-item.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { NotificationsService } from '../notifications/notifications.service';
+import { UserService } from '../Users/user.service';
 
 @Injectable()
 export class MarketService {
     constructor(
         @InjectRepository(MarketItem)
         private readonly marketRepo: Repository<MarketItem>,
+
+        private readonly notificationsService: NotificationsService,
+        private readonly userService: UserService,
     ) {}
 
     async findAllItems(page = 1, limit = 10, user: User): Promise<{ data: MarketItem[]; total: number; page: number; lastPage: number; }> {
@@ -65,6 +70,22 @@ export class MarketService {
             irisCode,
             irisName,
         });
+
+        await this.notificationsService.create(
+            user.id,
+            "Your item was posted",
+            `Your item "${item.title}" is now visible to your neighborhood.`
+        );
+
+        const neighbors = await this.userService.getUsersByIris(user.irisCode);
+
+        const neighborsToNotify = neighbors.filter(u => u.id !== user.id);
+
+        await this.notificationsService.createMany(
+            neighborsToNotify.map(u => u.id),
+            "New item for sale in your neighborhood",
+            `${user.firstname} ${user.lastname} just posted: "${item.title}"`
+        );
 
         return this.marketRepo.save(item);
     }

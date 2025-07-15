@@ -5,11 +5,14 @@ import { MarketService } from './market.service';
 import { MarketController } from './market.controller';
 import { createInjectServiceMiddleware } from '../Utils/inject-resource-service.middleware';
 import { LoadMarketItemResourceMiddleware } from './middlewares/load-marketItem-resource.middleware';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { UserModule } from '../Users/user.module';
+import { forwardRef } from '@nestjs/common';
 
 const InjectMarketServiceMiddleware = createInjectServiceMiddleware("marketService", MarketService);
 
 @Module({
-    imports: [TypeOrmModule.forFeature([MarketItem])],
+    imports: [forwardRef(() =>UserModule), NotificationsModule, TypeOrmModule.forFeature([MarketItem])],
     controllers: [MarketController],
     providers: [MarketService],
     exports: [MarketService],
