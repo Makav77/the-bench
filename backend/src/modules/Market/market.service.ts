@@ -104,6 +104,12 @@ export class MarketService {
             throw new ForbiddenException("You are not allowed to edit this item.");
         }
 
+        await this.notificationsService.create(
+            user.id,
+            "Your item was updated",
+            `Your item "${item.title}" has been successfully updated.`
+        );
+
         const updated = this.marketRepo.merge(item, updateItemDTO);
         return this.marketRepo.save(updated);
     }
