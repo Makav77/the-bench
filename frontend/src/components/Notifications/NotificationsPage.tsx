@@ -70,7 +70,7 @@ const NotificationsPage = () => {
       ) : notifications.length === 0 ? (
         <p className="text-gray-500">{t("noNotifications")}</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
           {notifications.map((n) => (
             <li
               key={n._id}
