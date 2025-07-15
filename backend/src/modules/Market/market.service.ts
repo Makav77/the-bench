@@ -128,6 +128,12 @@ export class MarketService {
             throw new ForbiddenException("You are not allowed to delete this item.");
         }
 
+        await this.notificationsService.create(
+            user.id,
+            "Your item was removed",
+            `Your item "${item.title}" has been removed from the marketplace.`
+        );
+
         await this.marketRepo.delete(id);
     }
 
