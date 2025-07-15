@@ -28,7 +28,7 @@ import { PermissionsModule } from '../Permissions/permissions.module';
 import { PermissionsController } from '../Permissions/permissions.controller';
 import { ReportsModule } from '../Reports/reports.module';
 import { ReportsController } from '../Reports/reports.controller';
-import { ChatModule } from '../Chat/chat.module';
+import { ChatModule } from '../chat/chat.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MONGO_URI } from 'src/database/mongo-database-config';
 import { NewsModule } from '../News/news.module';
@@ -39,6 +39,8 @@ import { IrisController } from '../Iris/iris.controller';
 import { IrisModule } from '../Iris/iris.module';
 import { ShopModule } from '../Shop/shop.module';
 import { ShopController } from '../Shop/shop.controller';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationsController } from '../notifications/notifications.controller';
 
 @Module({
     imports: [
@@ -72,6 +74,7 @@ import { ShopController } from '../Shop/shop.controller';
         CommentModule,
         IrisModule,
         ShopModule,
+        NotificationsModule,
     ],
     controllers: [
         ChallengesController,
@@ -89,6 +92,7 @@ import { ShopController } from '../Shop/shop.controller';
         CommentController,
         IrisController,
         ShopController,
+        NotificationsController,
     ],
     providers: [AppService],
 })

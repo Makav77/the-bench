@@ -11,14 +11,6 @@ import {
   Notification,
 } from "../../api/notificationsSerice";
 
-// interface Notification {
-//   _id: string;
-//   title: string;
-//   message?: string;
-//   read: boolean;
-//   createdAt: string;
-// }
-
 const NotificationsPage = () => {
   const { user } = useAuth();
   const { t } = useTranslation("Notifications/Notifications");
