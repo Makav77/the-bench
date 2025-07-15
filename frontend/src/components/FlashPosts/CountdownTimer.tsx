@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { addHours, differenceInMinutes } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 interface CountdownTimerProps {
     createdAt: string;
@@ -10,6 +11,7 @@ function CountdownTimer({ createdAt }: CountdownTimerProps) {
         const expire = addHours(new Date(createdAt), 24);
         return Math.max(0, differenceInMinutes(expire, new Date()));
     });
+    const { t } = useTranslation("FlashPosts/CountdownTimer");
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -26,7 +28,7 @@ function CountdownTimer({ createdAt }: CountdownTimerProps) {
 
     return (
         <p className="text-sm text-red-500">
-            End in {hours}h{minutes.toString().padStart(2, "0")}
+            {t("endIn")} {hours}h{minutes.toString().padStart(2, "0")}
         </p>
     );
 }

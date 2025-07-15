@@ -27,7 +27,6 @@ export class AuthController {
     ) {
         const oldToken = req.cookies["refreshToken"];
         const { accessToken } = await this.authService.refresh(oldToken);
-        // (Optionnel) : on pourrait ici poser un nouveau refreshToken lors de la rotation
 
         return { accessToken };
     }

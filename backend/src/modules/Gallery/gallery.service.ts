@@ -1,22 +1,32 @@
 import { Injectable, NotFoundException, ForbiddenException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThan } from "typeorm";
+import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { GalleryItem } from "./entities/gallery-item.entity";
-import { CreateGalleryItemDTO } from "./dto/create-gallery-item.dto";
 import { User, Role } from "../Users/entities/user.entity";
 import { join } from "path";
 import { unlink } from "fs/promises";
+import { Cron, CronExpression } from "@nestjs/schedule";
 
 @Injectable()
 export class GalleryService {
     constructor(
         @InjectRepository(GalleryItem)
         private readonly galleryRepo: Repository<GalleryItem>,
-    ) { }
+    ) {}
 
-    async findAllGalleryItems(page = 1, limit = 30): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
+    async findAllGalleryItems(page = 1, limit = 30, user: User): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
         const offset = (page - 1) * limit;
+
+        let whereCondition: FindOptionsWhere<GalleryItem>[] | FindOptionsWhere<GalleryItem> = {};
+        if (user.role !== Role.ADMIN) {
+            whereCondition = [
+                { irisCode: user.irisCode },
+                { irisCode: "all" }
+            ];
+        }
+
         const [data, total] = await this.galleryRepo.findAndCount({
+            where: whereCondition,
             order: { createdAt: "DESC" },
             skip: offset,
             take: limit,
@@ -36,19 +46,26 @@ export class GalleryService {
         if (!galleryItem) {
             throw new NotFoundException("Gallery item not found.");
         }
+
         return galleryItem;
     }
 
-    async createGalleryItem(
-        description: string | undefined,
-        url: string,
-        user: User
-    ): Promise<GalleryItem> {
+    async createGalleryItem(description: string | undefined, url: string, user: User): Promise<GalleryItem> {
+        let irisCode = user.irisCode;
+        let irisName = user.irisName;
+        if (user.role === Role.ADMIN) {
+            irisCode = "all";
+            irisName = "all";
+        }
+
         const galleryItem = this.galleryRepo.create({
             url,
             description,
             author: user,
+            irisCode,
+            irisName,
         });
+
         return this.galleryRepo.save(galleryItem);
     }
 
@@ -60,11 +77,13 @@ export class GalleryService {
         }
 
         const index = galleryItem.likedBy.findIndex(u => u.id === user.id);
+
         if (index !== -1) {
             galleryItem.likedBy.splice(index, 1);
         } else {
             galleryItem.likedBy.push(user)
         }
+
         return this.galleryRepo.save(galleryItem);
     }
 
@@ -84,12 +103,25 @@ export class GalleryService {
 
         const filePath = join(process.cwd(), "uploads", "gallery", galleryItem.url.split("/").pop()!);
 
-        try {
-            await unlink(filePath);
-        } catch (error) {
-            console.error("Could not delete file.");
-        }
-
+        await unlink(filePath);
         await this.galleryRepo.delete(id);
+    }
+
+    @Cron(CronExpression.EVERY_HOUR)
+    async cleanItemsGalleryOfFormersUsers() {
+        const items = await this.galleryRepo.find({ relations: ["author"] });
+        for (const item of items) {
+            if (!item.author) {
+                continue;
+            }
+
+            if (item.irisCode === "all") {
+                continue;
+            }
+
+            if (item.irisCode && item.author.irisCode && item.irisCode !== item.author.irisCode) {
+                await this.galleryRepo.delete(item.id);
+            }
+        }
     }
 }

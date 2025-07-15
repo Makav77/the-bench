@@ -1,9 +1,10 @@
+import { Badge } from "src/modules/Shop/entities/badge.entity";
+
 export interface ProfileSummaryDTO {
     id: string;
     firstname: string;
     lastname: string;
     profilePictureUrl: string;
-    badges: string[];
     points: number;
     events: {
         id: string;
@@ -23,4 +24,15 @@ export interface ProfileSummaryDTO {
         updatedAt: Date;
         images: string[];
     }[];
+
+    badges: {
+        id: string;
+        imageUrl: string;
+        cost: number;
+        available: boolean;
+    }[];
+
+    isFriend?: boolean;
+    requestSent?: boolean;
+    requestReceived?: boolean; 
 }

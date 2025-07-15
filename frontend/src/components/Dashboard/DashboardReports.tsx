@@ -3,14 +3,15 @@ import { getReports, updateReport, ReportDTO } from "../../api/reportService";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type StatusFilter = "ALL" | "PENDING" | "VALIDATED" | "REJECTED";
-type ContentFilter = "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLLS" | "CHALLENGES";
+type ContentFilter = "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLL" | "CHALLENGE";
 type ReasonFilter = "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INAPPROPRIATE_CONTENT" | "OTHER";
 
 function DashboardReports() {
     const navigate = useNavigate();
-
+    const { t } = useTranslation("Dashboard/DashboardReports");
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [reports, setReports] = useState<ReportDTO[]>([]);
@@ -28,14 +29,34 @@ function DashboardReports() {
                 const { data, lastPage } = await getReports(page, 10);
                 setReports(data);
                 setLastPage(lastPage);
-            } catch (error) {
-                console.error("getReports error : " + error);
-                toast.error("Unable to load reports.");
+            } catch {
+                toast.error(t("toastLoadReportError"));
             } finally {
                 setLoadingReports(false);
             }
         })();
     }, [page]);
+
+    const contentTypeLabel = (type: string) => {
+        switch (type) {
+            case "POST":
+                return "Post";
+            case "FLASHPOST":
+                return "Flashpost";
+            case "EVENT":
+                return "Event";
+            case "GALLERY":
+                return "Gallery";
+            case "POLL":
+                return "Poll";
+            case "CHALLENGE":
+                return "Challenge";
+            case "NEWS":
+                return "News";
+            default:
+                return type;
+        }
+    }
 
     const handleStatusChanged = async (reportId: string, newStatus: "VALIDATED" | "REJECTED") => {
         setUpdatingId(reportId);
@@ -45,9 +66,8 @@ function DashboardReports() {
             setLoadingReports(true);
             const { data } = await getReports(page, 10);
             setReports(data);
-        } catch (error) {
-            console.error("Update report error : " + error);
-            toast.error("Unable to update report.");
+        } catch {
+            toast.error(t("toastUpdateReportError"));
         } finally {
             setUpdatingId(null);
             setLoadingReports(false);
@@ -74,11 +94,14 @@ function DashboardReports() {
             case "CHALLENGE":
                 navigate(`/challenges/${reportedContentId}`);
                 break;
+            case "NEWS":
+                navigate(`/news/${reportedContentId}`);
+                break;
             case "report":
                 navigate("/homepage");
                 break;
             default:
-                toast.error("No report.");
+                navigate("/");
         }
     }
 
@@ -118,75 +141,86 @@ function DashboardReports() {
     return (
         <div className="bg-white p-6 rounded-2xl">
             <h2 className="text-2xl font-semibold mb-4">
-                Reports
+                {t("reports")}
             </h2>
-
-            <div className="border-t-2 h-1 mb-5"></div>
+            <div className="border-t-2 h-1 mb-5" />
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">Reported user : </span>
+                <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
+                    {t("reportedUser")}
+                </span>
                 <input
                     type="text"
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Firstname or lastname of user..."
-                    className="border rounded px-2 py-1 w-full max-w-xs h-8"
+                    onChange={(e) => setSearch(e.target.value.trimStart())}
+                    placeholder={t("reportedUserPlaceholder")}
+                    className="border rounded px-2 py-1 w-full max-w-xs h-8 max-sm:max-w-none max-sm:w-full max-sm:text-lg max-sm:py-4"
                 />
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">Status :</span>
+                <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
+                    {t("status")}
+                </span>
                 <select
                     value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value as "ALL" | "PENDING" | "VALIDATED" | "REJECTED")}
-                    className="border rounded px-2 py-1 h-8"
+                    onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
+                    className="border rounded px-2 py-1 h-8 max-sm:w-full max-sm:text-lg max-sm:py-4"
                 >
-                    <option value="ALL">All</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="VALIDATED">Validated</option>
-                    <option value="REJECTED">Rejected</option>
+                    <option value="ALL">{t("all")}</option>
+                    <option value="PENDING">{t("pending")}</option>
+                    <option value="VALIDATED">{t("validated")}</option>
+                    <option value="REJECTED">{t("rejected")}</option>
                 </select>
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">Content :</span>
+                <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
+                    {t("content")}
+                </span>
                 <select
                     value={filterContentType}
-                    onChange={(e) => setFilterContentType(e.target.value as "ALL" | "POST" | "FLASHPOST" | "EVENT" | "GALLERY" | "POLLS" | "CHALLENGES")}
-                    className="border rounded px-2 py-1 h-8"
+                    onChange={(e) => setFilterContentType(e.target.value as ContentFilter)}
+                    className="border rounded px-2 py-1 h-8 max-sm:w-full max-sm:text-lg max-sm:py-4"
                 >
-                    <option value="ALL">All</option>
-                    <option value="POST">Post</option>
-                    <option value="FLASHPOST">Flashpost</option>
-                    <option value="EVENT">Event</option>
-                    <option value="GALLERY">Gallery</option>
-                    <option value="POLL">Poll</option>
-                    <option value="CHALLENGE">Challenge</option>
+                    <option value="ALL">{t("all")}</option>
+                    <option value="POST">{t("post")}</option>
+                    <option value="FLASHPOST">{t("flashpost")}</option>
+                    <option value="EVENT">{t("event")}</option>
+                    <option value="GALLERY">{t("gallery")}</option>
+                    <option value="POLL">{t("poll")}</option>
+                    <option value="CHALLENGE">{t("challenge")}</option>
                 </select>
             </div>
 
             <div className="mb-4 flex items-center space-x-2">
-                <span className="font-semibold w-[25%] text-end">Reason :</span>
+                <span className="font-semibold w-[25%] text-end max-sm:w-auto max-sm:text-base max-sm:min-w-[110px]">
+                    {t("reason")}
+                </span>
                 <select
                     value={filterReason}
-                    onChange={(e) => setFilterReason(e.target.value as "ALL" | "OFFENSIVE_LANGUAGE" | "HATE_SPEECH" | "SPAM" | "INAPPROPRIATE_CONTENT" | "OTHER")}
-                    className="border rounded px-2 py-1 h-8"
+                    onChange={(e) => setFilterReason(e.target.value as ReasonFilter)}
+                    className="border rounded px-2 py-1 h-8 max-sm:w-full max-sm:text-lg max-sm:py-4"
                 >
-                    <option value="ALL">All</option>
-                    <option value="OFFENSIVE_LANGUAGE">Offensive language</option>
-                    <option value="HATE_SPEECH">Hate speech</option>
-                    <option value="SPAM">Spam</option>
-                    <option value="INAPPROPRIATE_CONTENT">Inappropriate content</option>
-                    <option value="OTHER">Other</option>
+                    <option value="ALL">{t("all")}</option>
+                    <option value="OFFENSIVE_LANGUAGE">{t("offensiveLanguage")}</option>
+                    <option value="HATE_SPEECH">{t("hateSpeech")}</option>
+                    <option value="SPAM">{t("spam")}</option>
+                    <option value="INAPPROPRIATE_CONTENT">{t("inappropriateContent")}</option>
+                    <option value="OTHER">{t("other")}</option>
                 </select>
             </div>
 
-            <div className="border-t-2 h-1 mb-5"></div>
+            <div className="border-t-2 h-1 mb-5" />
 
             {loadingReports ? (
-                <p className="text-center">Report loading...</p>
+                <p className="text-center">
+                    {t("loading")}
+                </p>
             ) : filteredReports.length === 0 ? (
-                <p className="text-center">No report waiting</p>
+                <p className="text-center">
+                    {t("noWaitingReport")}
+                </p>
             ) : (
                 <div className="space-y-4">
                     {filteredReports.map((report) => (
@@ -197,35 +231,62 @@ function DashboardReports() {
                         >
                             <div className="flex-1 space-y-1">
                                 <p>
-                                    <span className="font-semibold">Report by :</span>{" "}
-                                    {report.reporter.firstname} {report.reporter.lastname}
+                                    <span className="font-semibold">{t("reportedBy")}</span>{" "}
+                                    <span
+                                        className="text-blue-600 hover:underline cursor-pointer"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/profile/${report.reporter.id}`);
+                                        }}
+                                    >
+                                        {report.reporter.firstname} {report.reporter.lastname}
+                                    </span>
                                 </p>
 
                                 <p>
-                                    <span className="font-semibold">Reported user :</span>{" "}
-                                    {report.reportedUser.firstname} {report.reportedUser.lastname}
+                                    <span className="font-semibold">{t("reportedUser")}</span>{" "}
+                                    <span
+                                        className="text-blue-600 hover:underline cursor-pointer"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/profile/${report.reportedUser.id}`);
+                                        }}
+                                    >
+                                        {report.reportedUser.firstname} {report.reportedUser.lastname}
+                                    </span>
                                 </p>
 
                                 <p>
-                                    <span className="font-semibold">Date :</span>{" "}
+                                    <span className="font-semibold">{t("content")}</span>{" "}
+                                    <span>{contentTypeLabel(report.reportedContentType)}</span>
+                                </p>
+
+                                <p>
+                                    <span className="font-semibold">{t("date")}</span>{" "}
                                     {format(new Date(report.createdAt), "dd/MM/yyyy 'at' HH:mm")}
                                 </p>
 
                                 <p>
-                                    <span className="font-semibold">Reason :</span>{" "}
-                                    {report.reason}
+                                    <span className="font-semibold">{t("reason")}</span>{" "}
+                                    {t(report.reason)}
                                 </p>
 
                                 {report.description && (
                                     <p>
-                                        <span className="font-semibold">Description :</span>{" "}
+                                        <span className="font-semibold">{t("description")}</span>{" "}
                                         {report.description}
                                     </p>
                                 )}
 
                                 <p>
-                                    <span className="font-semibold">Statut :</span>{" "}
-                                    {report.status}
+                                    <span className="font-semibold">{t("status")}</span>{" "}
+                                    <span className={
+                                        report.status === "PENDING" ? "bg-yellow-400 px-2 rounded" :
+                                        report.status === "VALIDATED" ? "bg-green-400 px-2 rounded" :
+                                        "bg-red-400 px-2 rounded"
+                                    }>
+                                        {t(report.status.toLowerCase())}
+                                    </span>
                                 </p>
                             </div>
 
@@ -238,11 +299,11 @@ function DashboardReports() {
                                                 handleStatusChanged(report.id, "VALIDATED");
                                             }}
                                             disabled={updatingId === report.id}
-                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer"
+                                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300 cursor-pointer max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto"
                                         >
                                             {updatingId === report.id
-                                                ? "Validation..."
-                                                : "Validate"}
+                                                ? t("validation")
+                                                : t("validate")}
                                         </button>
 
                                         <button
@@ -251,10 +312,10 @@ function DashboardReports() {
                                                 handleStatusChanged(report.id, "REJECTED");
                                             }}
                                             disabled={updatingId === report.id}
-                                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer">
-                                                {updatingId === report.id
-                                                    ? "Rejection..."
-                                                    : "Reject"}
+                                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-red-300 cursor-pointer max-sm:py-2 max-sm:w-3/4 max-sm:mx-auto">
+                                            {updatingId === report.id
+                                                ? t("rejection")
+                                                : t("reject")}
                                         </button>
                                     </>
                                 ) : (
@@ -276,11 +337,11 @@ function DashboardReports() {
                             onClick={() => setPage((p) => p - 1)}
                             className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            ← Prev
+                            {t("previous")}
                         </button>
 
                         <span>
-                            Page {page} / {lastPage}
+                            {t("page")} {page} / {lastPage}
                         </span>
 
                         <button
@@ -289,7 +350,7 @@ function DashboardReports() {
                             onClick={() => setPage((p) => p + 1)}
                             className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 cursor-pointer"
                         >
-                            Next →
+                            {t("next")}
                         </button>
                     </div>
                 </div>

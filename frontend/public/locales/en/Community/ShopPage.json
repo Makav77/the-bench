@@ -1,0 +1,20 @@
+{
+    "toastLoadBadgeError": "Unable to load badges",
+    "toastNotEnoughPoints": "Not enough points",
+    "toastBadgePurchased": "Badge purchased",
+    "toastBadgePurchaseError": "Unable to purchase badge",
+    "badgeShop": "Badge shop",
+    "addBadge": "Create badge",
+    "points": "Points :",
+    "loading": "Loading...",
+    "cost": "Cost :",
+    "points2": "points",
+    "alreadyPurchased": "Already purchased",
+    "purchase": "Purchase...",
+    "buy": "Buy",
+    "unavailable": "Unavailable",
+    "deleteBadgeAlert": "You are about to delete this badge. Would you like to confirm?",
+    "toastBadgeDeleted": "Badge deleted",
+    "toastBadgeDeletedError": "Unable to delete this badge",
+    "delete": "Delete"
+}

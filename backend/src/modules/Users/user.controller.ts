@@ -11,29 +11,57 @@ import { ProfileSummaryDTO } from "./dto/profile-summary.dto";
 import fs from "fs";
 import path from "path";
 
-@Controller('users')
+interface RequestWithUser extends Request {
+    user: User;
+}
+
+@Controller("users")
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
+    @UseGuards(JwtAuthGuard)
+    @Get("staff")
+    async getStaff(@Req() req: RequestWithUser) {
+        const userId = req.user.id;
+        return this.userService.getStaff(userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAll(): Promise<User[]> {
         return this.userService.findAll();
     }
 
-    @Get("search")
     @UseGuards(JwtAuthGuard)
-    async searchUsers(@Query("query") query: string): Promise<{ id: string; firstname: string; lastname: string; }[]> {
-        return this.userService.searchUsers(query);
+    @Get("search")
+    async searchUsers(
+        @Query("query") query: string,
+        @Req() req: RequestWithUser
+    ): Promise<{ id: string; firstname: string; lastname: string; }[]> {
+        const user = req.user;
+        return this.userService.searchUsers(query, user.irisCode, user.role);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     async findOne(@Param("id") id: string): Promise<User> {
         return this.userService.findOne(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id/profile")
-    async getProfileSummary(@Param("id") id: string): Promise<ProfileSummaryDTO> {
-        return this.userService.getProfileSummary(id);
+    async getProfileSummary(
+        @Param("id") id: string,
+        @Req() req: RequestWithUser
+    ): Promise<ProfileSummaryDTO> {
+        const currentUserId = req.user?.id;
+        return this.userService.getProfileSummary(id, currentUserId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(":id/friends")
+    async getFriends(@Param("id") userId: string): Promise<{ id: string; firstname: string; lastname: string; profilePicture: string }[]> {
+        return this.userService.getFriends(userId);
     }
 
     @Post()
@@ -41,18 +69,8 @@ export class UserController {
         return this.userService.create(createUserDTO);
     }
 
-    @Patch(":id")
-    update(@Param("id") id: string, @Body() updateUserDTO: UpdateUserDTO): Promise <User> {
-        return this.userService.update(id, updateUserDTO);
-    }
-
-    @Delete(":id")
-    remove(@Param("id") id: string): Promise<void> {
-        return this.userService.remove(id);
-    }
-
-    @Post("upload-profile")
     @UseGuards(JwtAuthGuard)
+    @Post("upload-profile")
     @UseInterceptors(FileInterceptor("file", {
         storage: diskStorage({
             destination: "./uploads/profile",
@@ -75,15 +93,99 @@ export class UserController {
             const oldFilename = path.basename(user.profilePicture);
             const oldPath = path.join(__dirname, "../../../uploads/profile", oldFilename);
 
-            try {
-                if (fs.existsSync(oldPath)) {
-                    fs.unlinkSync(oldPath);
-                }
-            } catch (error) {
-                console.error("Erreur lors de la suppression de l'ancienne photo :", error);
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
             }
         }
 
         return this.userService.setProfilePicture(userId, imagePath);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(":id/pending-friend-requests")
+    async getPendingFriendRequests(@Param("id") userId: string) {
+        return this.userService.getPendingFriendRequests(userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(":id/cancel-friend-request")
+    async cancelFriendRequest(
+        @Param("id") targetUserId: string,
+        @Req() req: RequestWithUser
+    ): Promise<void> {
+        const currentUserId = req.user.id;
+        return this.userService.cancelFriendRequest(currentUserId, targetUserId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post(":id/friend-request")
+    async sendFriendRequest(
+        @Param("id") toId: string,
+        @Req() req: RequestWithUser
+    ): Promise<void> {
+        const fromId = req.user.id;
+        return this.userService.sendFriendRequest(fromId, toId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post(":id/accept-friend")
+    async acceptFriendRequest(
+        @Param("id") requesterId: string,
+        @Req() req: RequestWithUser,
+    ): Promise<void> {
+        const currentUserId = req.user.id;
+        return this.userService.acceptFriendRequest(currentUserId, requesterId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch(":id")
+    update(@Param("id") id: string, @Body() updateUserDTO: UpdateUserDTO): Promise <User> {
+        return this.userService.update(id, updateUserDTO);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(":id")
+    remove(@Param("id") id: string): Promise<void> {
+        return this.userService.remove(id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(":id/reject-friend")
+    async rejectFriendRequest(
+        @Param("id") senderId: string,
+        @Req() req: RequestWithUser
+    ): Promise<void> {
+        const currentUserId = req.user.id;
+        return this.userService.rejectFriendRequest(currentUserId, senderId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(":id/remove-friend")
+    async removeFriend(
+        @Param("id") friendId: string,
+        @Req() req: RequestWithUser
+    ): Promise<void> {
+        const currentUserId = req.user.id;
+        return this.userService.removeFriend(currentUserId, friendId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(":id/friend-status")
+    async getFriendStatus(
+        @Param("id") targetUserId: string,
+        @Req() req: RequestWithUser
+    ): Promise<{ areFriends: boolean; requestSent: boolean; requestReceived: boolean; }> {
+        const currentUserId = req.user.id;
+        return this.userService.getFriendStatus(currentUserId, targetUserId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch("me/address")
+    async updateAddress(
+        @Req() req: RequestWithUser,
+        @Body() body: { street: string; postalCode: string; city: string }
+    ) {
+        const userId = req.user.id;
+        return this.userService.updateAddress(userId, body.street, body.postalCode, body.city);
     }
 }

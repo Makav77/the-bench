@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { differenceInMinutes } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 interface PollCountdownTimerProps {
     expiresAt: string;
@@ -10,6 +11,7 @@ export default function PollCountdownTimer({ expiresAt }: PollCountdownTimerProp
         const mins = Math.max(0, differenceInMinutes(new Date(expiresAt), new Date()));
         return mins;
     });
+    const { t } = useTranslation("Community/PollCountdownTimer");
 
     useEffect(() => {
         const updateRemaining = () => {
@@ -27,7 +29,7 @@ export default function PollCountdownTimer({ expiresAt }: PollCountdownTimerProp
 
     return (
         <p className="text-red-500 font-semibold text-sm">
-            Expired in {hours}h{minutes.toString().padStart(2, "0")}m
+            {t("expiredIn")} {hours}h{minutes.toString().padStart(2, "0")}m
         </p>
     );
 }

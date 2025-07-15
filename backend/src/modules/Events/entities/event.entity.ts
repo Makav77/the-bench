@@ -7,6 +7,12 @@ export class Event {
     id: string;
 
     @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
+
+    @Column()
     name: string;
 
     @Column({ type: "timestamp" })
@@ -25,15 +31,15 @@ export class Event {
     place: string;
 
     @Column({ type: "int", nullable: true })
-    maxNumberOfParticipants?: number;
+    maxNumberOfParticipants?: number | null;
 
     @Column()
     description: string;
 
-    @ManyToOne(() => User, (user) => user.eventsCreated, { nullable: false })
+    @ManyToOne(() => User, (user) => user.eventsCreated, { nullable: false, onDelete: "CASCADE" })
     author: User;
 
-    @ManyToMany(() => User, (user) => user.eventsParticipating, { nullable: true })
+    @ManyToMany(() => User, (user) => user.eventsParticipating, { nullable: true, onDelete: "CASCADE" })
     @JoinTable({
         name: "event_participants",
         joinColumn: { name: "event_id", referencedColumnName: "id" },

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, ManyToMany, JoinTable } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, ManyToMany, JoinTable } from "typeorm";
 import { User } from "../../Users/entities/user.entity";
 
 @Entity("gallery_items")
@@ -8,6 +8,12 @@ export class GalleryItem {
 
     @Column()
     url: string;
+
+    @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
 
     @Column({ type: "text", nullable: true })
     description?: string;

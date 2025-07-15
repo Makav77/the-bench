@@ -1,0 +1,17 @@
+{
+    "addRestriction": "Add a restriction to a user",
+    "restrictionChoice": "Action to restrict",
+    "userToRestrict": "User to restrict",
+    "userToRestrictPlaceholder": "User identity",
+    "searching": "Searching...",
+    "noUserFound": "No user found",
+    "reason": "Reason",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "inProgress": "In progres...",
+    "restrict": "Restrict",
+    "toastEmptyUserOrReason": "User ID and reason must be entered",
+    "toastUserRestricted": "User successfully restricted",
+    "toastUserRestrictedError": "Unable to restrict user"
+}

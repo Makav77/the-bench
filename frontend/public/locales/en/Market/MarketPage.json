@@ -1,0 +1,13 @@
+{
+    "sellItem": "Sell item",
+    "market": "Market",
+    "loading": "Loading...",
+    "noItem": "No item to show",
+    "price": "Price :",
+    "lastUpdate": "Last update on",
+    "sellBy": "Sell by",
+    "previous": "← Prev",
+    "page": "Page",
+    "next": "Next →",
+    "toastLoadMarketError": "Unable to load market"
+}

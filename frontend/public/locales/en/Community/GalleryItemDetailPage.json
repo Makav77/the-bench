@@ -1,0 +1,13 @@
+{
+    "loading": "Loading...",
+    "emptyGallery": "No image to show.",
+    "confirmAlert": "You are about to delete an image. Would you like to confirm?",
+    "publishedBy": "Published by",
+    "on": "on",
+    "delete": "Delete",
+    "report": "Report",
+    "toastLoadGalleryError": "Unable to load gallery item",
+    "toastLikeUnlikeError": "Unable to like/unlike",
+    "toastImageDeleted": "Image successfully deleted",
+    "toastImageDeletedError": "Unable to delete image"
+}

@@ -3,12 +3,18 @@ import { format } from "date-fns/format";
 import { parse } from "date-fns/parse";
 import { startOfWeek } from "date-fns/startOfWeek";
 import { getDay } from "date-fns/getDay";
-import { enUS } from "date-fns/locale";
+import { enUS, fr } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useNavigate } from "react-router-dom";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { Locale } from "date-fns";
 
-const locales = { en: enUS };
+const locales: { [lng: string]: Locale } = {
+    en: enUS,
+    fr: fr,
+};
+
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
 export interface YearItem {
@@ -33,51 +39,58 @@ function CustomToolbar({date, onNavigate, setYear }: ToolbarProps<YearItem, obje
         onNavigate("DATE", today);
         setYear(today.getFullYear());
     }
-
-    const monthLabel = format(date, "LLLL", { locale: enUS });
+    const { t, i18n } = useTranslation("Community/YearCalendar");
+    const currentLocale = locales[i18n.language] ?? enUS;
+    const rawMonth = format(date, "LLLL", { locale: currentLocale });
+    const monthLabel = rawMonth.charAt(0).toUpperCase() + rawMonth.slice(1);
 
     return (
-        <div className="flex items-center justify-between mb-4">
-            <div className="flex space-x-2 items-center w-[30%]">
+        <div className="flex items-center justify-between mb-4 max-sm:flex-col max-sm:gap-3 max-sm:mb-2 max-sm:mt-5">
+            <div className="flex space-x-2 items-center w-[30%] max-sm:w-1/1">
                 <button
                     onClick={goToBack}
-                    className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 w-[50%]"
+                    className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 w-[50%] max-sm:w-full max-sm:text-base max-sm:h-15"
                 >
-                    Previous month
+                    {t("previousMonth")}
                 </button>
 
                 <button
                     onClick={goToToday}
-                    className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 w-[50%]"
+                    className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 w-[50%] max-sm:w-full max-sm:text-base max-sm:h-15"
                 >
-                    Today
+                    {t("today")}
                 </button>
 
                 <button
                     onClick={goToNext}
-                    className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 w-[50%]"
+                    className="px-3 py-1 bg-gray-200 rounded cursor-pointer hover:bg-gray-300 w-[50%] max-sm:w-full max-sm:text-base max-sm:h-15"
                 >
-                    Next month
+                    {t("nextMonth")}
                 </button>
             </div>
-
-            <div>
-                <p className="font-bold text-xl">{monthLabel}</p>
+            <div className="mr-12 max-sm:mr-0">
+                <p className="font-bold text-xl text-center max-sm:text-lg max-sm:mt-3">
+                    {monthLabel}
+                </p>
             </div>
-            <div style={{ width: 445 }} />
+
+            <div
+                className="max-sm:hidden" 
+                style={{ width: 445 }}
+            />
         </div>
     );
 }
 
 function YearCalendar({ items, year, setYear }: YearCalendarProps) {
     const navigate = useNavigate();
+    const { i18n } = useTranslation("Community/YearCalendar")
     const today = new Date();
     const isCurrentYear = today.getFullYear() === year;
     const [date, setDate] = useState<Date>(isCurrentYear ? today : new Date(year, 0, 1));
 
     useEffect(() => {
         setDate(isCurrentYear ? today : new Date(year, 0, 1));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [year]);
 
     const dayPropGetter = (dateCell: Date) => {
@@ -115,6 +128,7 @@ function YearCalendar({ items, year, setYear }: YearCalendarProps) {
             defaultView={Views.MONTH as View}
             views={[Views.MONTH]}
             date={date}
+            culture={i18n.language}
             onNavigate={(newDate) => setDate(newDate)}
             components={{ toolbar: (toolbarProps: any) => (
                 <CustomToolbar
@@ -128,7 +142,8 @@ function YearCalendar({ items, year, setYear }: YearCalendarProps) {
             }}
             dayPropGetter={dayPropGetter}
             eventPropGetter={eventStyleGetter}
-            style={{ height: 700 }}
+            style={{ height: 700, width: "100%" }}
+            className="max-sm:text-[12px] max-sm:h-[420px]"
         />
     );
 }

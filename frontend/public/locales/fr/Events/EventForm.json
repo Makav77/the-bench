@@ -1,0 +1,12 @@
+{
+    "name": "Nom",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "place": "Lieu",
+    "maxNumberOfParticipants": "Nombre max de participant",
+    "description": "Description",
+    "cancel": "Annuler",
+    "loading": "Chargement...",
+    "update": "Modifier",
+    "create": "Créer"
+}

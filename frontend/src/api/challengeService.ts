@@ -30,7 +30,7 @@ export interface SubmitCompletionPayload {
 
 export interface ValidateCompletionPayload {
     validated: boolean;
-    rejectionReason?: string;
+    rejectedReason?: string;
 }
 
 export interface PendingCompletion {
@@ -42,7 +42,7 @@ export interface PendingCompletion {
     reviewedAt?: string | null;
     user: { id: string; firstname: string; lastname: string };
     challenge: { id: string; title: string };
-    rejectionReason?: string | null;
+    rejectedReason?: string | null;
 }
 
 export const getChallenges = async (page = 1, limit = 10): Promise<{ data: ChallengeSummary[]; total: number; page: number; lastPage: number; }> => {
@@ -76,7 +76,7 @@ export const createChallenge = async (payload: {
     return response.data;
 }
 
-export const updateChallenge = async (id: string, payload: { 
+export const updateChallenge = async (id: string, payload: {
     title: string;
     description: string;
     startDate: string;
@@ -102,17 +102,24 @@ export const unsubscribeChallenge = async (id: string): Promise<ChallengeSummary
     return response.data;
 }
 
-export const submitCompletion = async (id: string, payload: SubmitCompletionPayload): Promise<ChallengeSummary> => {
-    const response = await apiClient.post(`/challenges/${id}/complete`, payload);
-    return response.data;
+export async function submitCompletion(challengeId: string, data: FormData) {
+    return apiClient.post(`/challenges/${challengeId}/complete`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
 }
 
-export const validateChallenge = async (id: string, payload: { validated: boolean; rejectionReason?: string }): Promise<ChallengeSummary> => {
+export const validateChallenge = async (id: string, payload: { validated: boolean; rejectedReason?: string }): Promise<ChallengeSummary> => {
     const response = await apiClient.patch(`/challenges/${id}/validate`, payload);
     return response.data;
 }
 
 export const validateCompletion = async (challengeId: string, completionId: string, payload: ValidateCompletionPayload): Promise<PendingCompletion> => {
-    const response = await apiClient.patch(`/challenges/${challengeId}/complete/${completionId}`, payload);
+    const cleanPayload: ValidateCompletionPayload = { ...payload };
+    if (cleanPayload.validated) {
+        delete cleanPayload.rejectedReason;
+    }
+    const response = await apiClient.patch(`/challenges/${challengeId}/complete/${completionId}`, cleanPayload);
     return response.data;
 }

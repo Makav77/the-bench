@@ -4,6 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { toast } from "react-toastify";
 import ReportModal from "../../Utils/ReportModal";
+import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function GalleryItemDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -13,37 +15,42 @@ export default function GalleryItemDetailPage() {
     const navigate = useNavigate();
     const { user } = useAuth();
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
+    const { t } = useTranslation("Community/GalleryItemDetailPage");
 
     useEffect(() => {
         async function load() {
             setIsLoading(true);
             setError(null);
-
             try {
                 if (id) {
                     const galleryItem = await getGalleryItem(id);
                     setGalleryItem(galleryItem);
                 }
-            } catch (error) {
-                console.error(error);
-                toast.error("Unable to load gallery item");
+            } catch {
+                toast.error(t("toastLoadGalleryError"));
             } finally {
                 setIsLoading(false);
             }
         };
         load();
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>
+        return <p className="p-6">
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="text-red-500">{error}</p>
+        return <p className="text-red-500">
+            {error}
+        </p>
     }
 
     if (!galleryItem) {
-        return <p>Loading...</p>;
+        return <p>
+            {t("emptyGallery")}
+        </p>;
     }
 
     const isAuthor = user?.id === galleryItem.author.id;
@@ -54,33 +61,40 @@ export default function GalleryItemDetailPage() {
             const updated = await toggleLikeGalleryItem(galleryItem.id);
             setGalleryItem(updated);
         } catch {
-            toast.error("Unable to like/unlike");
+            toast.error(t("toastLikeUnlikeError"));
         }
     };
 
     const handleDelete = async () => {
-        const confirmed = window.confirm("You are about to delete an image. Would you like to confirm ?");
+        const confirmed = window.confirm(t("confirmAlert"));
         if (!confirmed) {
             return;
         }
-        
         try {
             await deleteGalleryItem(id!);
-            toast.success("Image successfully deleted!");
+            toast.success(t("toastImageDeleted"));
             navigate("/gallery");
-        } catch (error) {
-            toast.error("Unable to delete image : " + error);
+        } catch {
+            toast.error(t("toastImageDeletedError"));
         }
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded shadow max-w-lg w-full">
+        <div
+            className="absolute left-0 top-0 w-full h-full flex items-center justify-center z-50 bg-black/30 backdrop-blur-xl max-sm:p-2"
+            onClick={() => navigate("/gallery")}
+        >
+            <div
+                className="bg-white p-6 rounded-2xl shadow max-w-lg w-full"
+                onClick={(e => e.stopPropagation())}
+            >
                 <button 
                     onClick={() => navigate("/gallery")}
-                    className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline">
-                        X Close
+                    className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline"
+                >
+                        <X className="w-6 h-6 text-gray-600 hover:bg-gray-200 rounded-3xl" />
                 </button>
+
                 <img 
                     src={galleryItem.url} 
                     alt={galleryItem.description} 
@@ -90,31 +104,33 @@ export default function GalleryItemDetailPage() {
                 {galleryItem.description && <p className="mb-4">{galleryItem.description}</p>}
 
                 <p className="text-sm text-gray-500 mb-4">
-                    Published by{" "}
+                    {t("publishedBy")}{" "}
                     <span
                         onClick={() => navigate(`/profile/${galleryItem.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
                     >
                         {galleryItem.author.firstname} {galleryItem.author.lastname}
                     </span>{" "}
-                    on {new Date(galleryItem.createdAt).toLocaleString()}
+                    {t("on")} {new Date(galleryItem.createdAt).toLocaleString()}
                 </p>
 
                 <div className="flex justify-between items-center space-x-4">
                     <div className="flex space-x-4">
                         <button 
                             onClick={handleToggleLike} 
-                            className="flex items-center"
+                            className="flex items-center cursor-pointer"
                         >
                             {liked ? '💖' : '🤍'} {galleryItem.likedBy.length}
                         </button>
-
 
                         <div>
                             {(isAuthor || user?.role==='admin') && (
                                 <button 
                                     onClick={handleDelete} 
-                                    className="text-red-600 cursor-pointer hover:underline px-2 py-1">Delete</button>
+                                    className="text-red-600 cursor-pointer hover:underline px-2 py-1"
+                                >
+                                    {t("delete")}
+                                </button>
                             )}
                         </div>
                     </div>
@@ -125,7 +141,7 @@ export default function GalleryItemDetailPage() {
                                 onClick={() => setShowReportModal(true)}
                                 className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
                             >
-                                Report image
+                                {t("report")}
                             </button>
 
                             {showReportModal && (

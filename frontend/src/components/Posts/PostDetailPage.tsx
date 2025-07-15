@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import ReportModal from "../Utils/ReportModal";
+import { useTranslation } from "react-i18next";
 
 function PostDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -11,6 +12,7 @@ function PostDetailPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Posts/PostDetailPage");
     const { user } = useAuth();
     const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
@@ -25,21 +27,25 @@ function PostDetailPage() {
                 } else {
                     setError("Invalid ID")
                 }
-            } catch (error) {
-                toast.error("Unable to load post : " + error);
+            } catch {
+                toast.error(t("toastLoadPostError"));
             } finally {
                 setIsLoading(false);
             }
         };
         load()
-    }, [id]);
+    }, [id, t]);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>
+        return <p className="p-6">
+            {t("loading")}
+        </p>
     }
 
     if (error) {
-        return <p className="p-6 text-red-500">{error}</p>
+        return <p className="p-6 text-red-500">
+            {error}
+        </p>
     }
 
     if (!post) {
@@ -50,35 +56,39 @@ function PostDetailPage() {
     const isAdminorModerator = user && (user.role === "admin" || user.role === "moderator");
 
     const handleDelete = async () => {
-        const confirmed = window.confirm("You are about to delete a post. Would you like to confirm?");
+        const confirmed = window.confirm(t("confirmAlert"));
         if (!confirmed) {
             return;
         }
 
         try {
             await deletePost(id!);
-            toast.success("Post successfully deleted!");
+            toast.success(t("toastPostDeleted"));
             navigate("/bulletinsboard");
-        } catch (error) {
-            toast.error("Unable to delete post : " + error);
+        } catch {
+            toast.error(t("toastPostDeleted"));
         }
     };
 
     return (
-        <>
-            <div className="p-6 space-y-4 border mt-10 w-[20%] mx-auto">
+        <div>
+            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl max-sm:w-[98%] max-sm:space-y-6 max-sm:mt-3">
                 <button
                     type="button"
                     onClick={() => navigate("/bulletinsboard")}
-                    className="text-blue-600 underline cursor-pointer border rounded px-2 py-1 bg-white"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-1 px-4 rounded transition-colors duration-150 cursor-pointer max-sm:text-lg max-sm:w-full max-sm:py-3 max-sm:mb-2"
                 >
-                    ← Back
+                    {t("back")}
                 </button>
 
-                <h1 className="text-2xl font-bold">{post.title}</h1>
-                <p className="text-sm text-gray-600">
-                Published on {new Date(post.createdAt).toLocaleString()} (update on{' '}
-                    {new Date(post.updatedAt).toLocaleString()}) by{" "}
+                <h1 className="text-3xl font-bold max-sm:text-2xl">
+                    {post.title}
+                </h1>
+
+                <p className="text-sm text-gray-600 max-sm:text-base">
+                    {t("publishedOn")} {new Date(post.createdAt).toLocaleString()} <br />
+                    {t("updatedOn")} {' '} {new Date(post.updatedAt).toLocaleString()} <br />
+                    {t("by")} {" "}
                     <span
                         onClick={() => navigate(`/profile/${post.author.id}`)}
                         className="text-blue-600 hover:underline cursor-pointer"
@@ -86,35 +96,39 @@ function PostDetailPage() {
                         {post.author.firstname} {post.author.lastname}
                     </span>
                 </p>
-                <p className="whitespace-pre-wrap">{post.description}</p>
+
+                <p className="whitespace-pre-wrap max-sm:text-lg">
+                    {post.description}
+                </p>
 
                 {(isAuthor || isAdminorModerator) && (
-                    <div className="mt-4 flex gap-2 justify-center">
+                    <div className="mt-4 flex gap-2 justify-center max-sm:flex-col max-sm:gap-3">
                         <button
                             type="button"
                             onClick={() => navigate(`/posts/${id}/edit`)}
-                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:text-lg max-sm:w-full max-sm:py-3"
                         >
-                            Edit post
+                            {t("editPost")}
                         </button>
+
                         <button
                             type="button"
                             onClick={handleDelete}
-                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer"
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded disabled:opacity-50 cursor-pointer max-sm:text-lg max-sm:w-full max-sm:py-3"
                         >
-                            Delete post
+                            {t("deletePost")}
                         </button>
                     </div>
                 )}
             </div>
 
             {!isAuthor && post.author.role !== "admin" && post.author.role !== "moderator" && (
-                <div className="w-[20%] mx-auto flex justify-end">
+                <div className="w-[20%] mx-auto flex justify-end max-sm:w-full max-sm:justify-center">
                     <button
                         onClick={() => setShowReportModal(true)}
-                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer"
+                        className="mt-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer max-sm:text-lg max-sm:px-6 max-sm:py-3"
                     >
-                        Report post
+                        {t("reportPost")}
                     </button>
 
                     {showReportModal && (
@@ -127,7 +141,7 @@ function PostDetailPage() {
                     )}
                 </div>
             )}
-        </>
+        </div>
     );
 }
 

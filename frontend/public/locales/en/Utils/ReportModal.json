@@ -1,0 +1,9 @@
+{
+    "reportTitle": "Report a content",
+    "reason": "Reason for reporting",
+    "description": "Description",
+    "descriptionPlaceholder": "Provide more details if necessary",
+    "cancel": "Cancel",
+    "sending": "Sending...",
+    "send": "Send"
+}

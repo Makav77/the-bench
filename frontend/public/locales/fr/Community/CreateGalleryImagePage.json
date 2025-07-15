@@ -1,0 +1,15 @@
+{
+    "checkingPermissions": "Vérification des persmissions",
+    "restrictionMessage": "Vous n'êtes plus autorisé à publier d'image jusqu'au",
+    "reason": "Raison :",
+    "contactMessage": "Contactez un modérateur ou un administrateur pour plus d'information.",
+    "addPicture": "Ajouter une image",
+    "image": "Image",
+    "selectFile": "Sélectionner un fichier",
+    "description": "Description",
+    "cancel": "Annuler",
+    "sending": "Envoi...",
+    "send": "Ajouter l'image",
+    "toastImageUpload": "Image téléchargé",
+    "toastImageUploadError": "Impossible de télécharger l'image"
+}

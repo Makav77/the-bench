@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPosts, PostSummary } from "../../../api/postService";
+import { useTranslation } from "react-i18next";
 
 function LatestPostCard() {
     const [post, setPost] = useState<PostSummary | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Homepage/LatestPostCard");
 
     useEffect(() => {
         async function load() {
@@ -15,10 +17,10 @@ function LatestPostCard() {
                 if (data.length > 0) {
                     setPost(data[0]);
                 } else {
-                    setError("No post available.");
+                    setError(t("noPostAvailable"));
                 }
-            } catch (error) {
-                setError("Unable to load latest post: " + error);
+            } catch {
+                setError(t("loadPostError"));
             } finally {
                 setIsLoading(false);
             }
@@ -27,31 +29,40 @@ function LatestPostCard() {
     }, []);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>;
+        return <p className="p-6">
+            {t("loading")}
+        </p>;
     }
 
     if (error) {
-        return <p className="p-6 text-red-500">{error}</p>
+        return <p className="p-6 text-red-500">
+            {error}
+        </p>
     }
 
     if (!post) {
-        return <p className="p-6">No post available</p>
+        return <p className="p-6">
+            {t("noPostAvailable")}
+        </p>
     }
 
     return (
         <div
             onClick={() => navigate(`/posts/${post.id}`)}
-            className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-lg shadow hover:cursor-pointer hover:shadow-md transition h-25 px-5 mb-10"
+            className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5 mb-10"
         >
             <div className="pr-4">
-                <h4 className="text-lg font-bold">{post.title}</h4>
+                <h4 className="text-lg font-bold">
+                    {post.title}
+                </h4>
+
                 <p className="text-sm text-gray-500">
-                    Last update {new Date(post.updatedAt).toLocaleDateString()}
+                    {t("lastUpdate")} {new Date(post.updatedAt).toLocaleDateString()}
                 </p>
             </div>
 
             <div>
-                <p>Author :{" "}
+                <p>{t("author")}{" "}
                     <span
                         onClick={(e) => {
                             e.stopPropagation();

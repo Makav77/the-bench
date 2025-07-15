@@ -1,0 +1,17 @@
+{
+    "addRestriction": "Ajouter une restriction à un utilisateur",
+    "restrictionChoice": "Ajouter une restriction",
+    "userToRestrict": "Utilisateur à restreindre",
+    "userToRestrictPlaceholder": "Identité de l'utilisateur",
+    "searching": "Recherche...",
+    "noUserFound": "Aucun utilisateur trouvé",
+    "reason": "Raison",
+    "days": "Jours",
+    "hours": "Heures",
+    "minutes": "Minutes",
+    "inProgress": "En cours...",
+    "restrict": "Restreindre",
+    "toastEmptyUserOrReason": "L'ID de l'utilisateur et la raison doivent être renseigné",
+    "toastUserRestricted": "Utilisateur restreint avec succès",
+    "toastUserRestrictedError": "Impossible de restreindre l'utilisateur"
+}

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateFlashPostDTO {
     @IsNotEmpty()
@@ -8,4 +8,12 @@ export class CreateFlashPostDTO {
     @IsNotEmpty()
     @IsString()
     description: string;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }

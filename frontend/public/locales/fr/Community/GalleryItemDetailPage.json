@@ -1,0 +1,13 @@
+{
+    "loading": "Chargement...",
+    "emptyGallery": "Aucune image dans la galerie.",
+    "confirmAlert": "Vous êtes sur le point de supprimer une image. Souhaitez-vous confirmer ?",
+    "publishedBy": "Publié par",
+    "on": "le",
+    "delete": "Supprimer",
+    "report": "Signaler",
+    "toastLoadGalleryError": "Impossible de charger les images de la galerie",
+    "toastLikeUnlikeError": "Impossible d'aimer/ne pas aimer",
+    "toastImageDeleted": "Image supprimée",
+    "toastImageDeletedError": "Impossible de supprimer l'image"
+}

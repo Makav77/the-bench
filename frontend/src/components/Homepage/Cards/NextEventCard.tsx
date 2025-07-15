@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getEvents, EventSummary } from "../../../api/eventService";
+import { useTranslation } from "react-i18next";
 
 function NextEventCard() {
     const [event, setEvent] = useState<EventSummary | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { t } = useTranslation("Homepage/NextEventCard");
 
     useEffect(() => {
         async function load() {
@@ -19,10 +21,10 @@ function NextEventCard() {
                 if (futureEvents.length > 0) {
                     setEvent(futureEvents[0]);
                 } else {
-                    setError("No future event.");
+                    setError(t("noEventAvailable"));
                 }
-            } catch (error) {
-                setError("Unable to load next event : " + error);
+            } catch {
+                setError(t("loadPostError"));
             } finally {
                 setIsLoading(false);
             }
@@ -31,31 +33,40 @@ function NextEventCard() {
     }, []);
 
     if (isLoading) {
-        return <p className="p-6">Loading...</p>;
+        return <p className="p-6">
+            {t("loading")}
+        </p>;
     }
 
     if (error) {
-        return <p className="p-6 text-red-500">{error}</p>
+        return <p className="p-6 text-red-500">
+            {error}
+        </p>
     }
 
     if (!event) {
-        return <p className="p-6">No item available</p>
+        return <p className="p-6">
+            {t("noEventAvailable")}
+        </p>
     }
 
     return (
         <div
             onClick={() => navigate(`/events/${event.id}`)}
-            className="mb-10 flex justify-between items-center w-3/4 mx-auto bg-white rounded-lg shadow hover:cursor-pointer hover:shadow-md transition h-25 px-5"
+            className="mb-10 flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5"
         >
             <div className="pr-4">
-                <h4 className="text-lg font-bold">{event.name}</h4>
+                <h4 className="text-lg font-bold">
+                    {event.name}
+                </h4>
+
                 <p className="text-sm text-gray-500">
-                    Start on {new Date(event.startDate).toLocaleDateString()} at {new Date(event.startDate).toLocaleTimeString()}
+                    {t("startOn")} {new Date(event.startDate).toLocaleDateString()} {t("at")} {new Date(event.startDate).toLocaleTimeString()}
                 </p>
             </div>
 
             <div>
-                Organized by{" "}
+                {t("organizedBy")}{" "}
                 <span
                     onClick={(e) => {
                         e.stopPropagation();

@@ -1,9 +1,9 @@
 import apiClient from "./apiClient";
 
-
 export interface FlashPostSummary {
     id: string;
     title: string;
+    createdAt: string;
     updatedAt: string;
     author: { id: string; firstname: string; lastname: string; role: string; };
 }

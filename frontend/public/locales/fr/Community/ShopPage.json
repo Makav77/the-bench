@@ -1,0 +1,21 @@
+{
+    "toastLoadBadgeError": "Impossible de charger les badges",
+    "toastNotEnoughPoints": "Pas assez de points",
+    "toastBadgePurchased": "Badge acheté",
+    "toastBadgePurchaseError": "Impossible d'acheter le badge",
+    "badgeShop": "Boutique de badge",
+    "addBadge": "Créer un badge",
+    "points": "Points :",
+    "loading": "Chargement...",
+    "cost": "Coût :",
+    "points2": "points",
+    "alreadyPurchased": "Déjà acheté",
+    "purchase": "Achat...",
+    "buy": "Acheter",
+    "unavailable": "Indisponible",
+    "deleteBadgeAlert": "Vous êtes sur le point de supprimer ce badge. Souhaitez-vous confirmer ?",
+    "toastBadgeDeleted": "Badge supprimé",
+    "toastBadgeDeletedError": "Impossible de supprimer ce badge",
+    "delete": "Supprimer"
+}
+

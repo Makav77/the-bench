@@ -20,4 +20,10 @@ export class Posts {
 
     @ManyToOne(() => User, (user) => user.posts, { nullable: false })
     author: User;
+
+    @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
 }

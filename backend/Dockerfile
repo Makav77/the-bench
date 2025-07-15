@@ -6,8 +6,7 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
+COPY .env .env
 COPY . .
 
-EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start:dev"]

@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, IsDateString } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString, IsDateString, IsOptional } from "class-validator";
 import { Role } from "../entities/user.entity";
 
 export class CreateUserDTO {
@@ -14,6 +14,18 @@ export class CreateUserDTO {
     @IsString()
     lastname: string
 
+    @IsNotEmpty()
+    @IsString()
+    address: string;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
+
     @IsEmail()
     email: string;
 
@@ -25,7 +37,7 @@ export class CreateUserDTO {
     dateOfBirth: Date;
 
     @IsString()
-    profilePicture?: string;
+    profilePicture: string;
 
     @IsEnum(Role)
     role: Role;

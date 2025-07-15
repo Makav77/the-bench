@@ -47,6 +47,7 @@ export class PermissionsService implements OnModuleInit {
                 expiresAt: MoreThan(new Date()),
             },
         });
+
         if (alreadyRestricted > 0) {
             throw new BadRequestException("User already restricted.");
         }
@@ -83,7 +84,7 @@ export class PermissionsService implements OnModuleInit {
             relations: ["permission"],
         });
 
-        return { 
+        return {
             restricted: !!restriction,
             expiresAt: restriction?.expiresAt ?? null,
             reason: restriction?.reason ?? null

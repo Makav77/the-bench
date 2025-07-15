@@ -5,4 +5,12 @@ export class CreateGalleryItemDTO {
     @IsString()
     @MaxLength(200)
     description?: string;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }

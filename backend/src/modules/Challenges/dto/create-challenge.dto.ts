@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsDateString, MaxLength } from "class-validator";
+import { IsNotEmpty, IsString, IsDateString, MaxLength, IsOptional } from "class-validator";
 
 export class CreateChallengeDTO {
     @IsNotEmpty()
@@ -23,4 +23,12 @@ export class CreateChallengeDTO {
     @IsString()
     @MaxLength(500)
     successCriteria: string;
+
+    @IsOptional()
+    @IsString()
+    irisCode?: string;
+
+    @IsOptional()
+    @IsString()
+    irisName?: string;
 }

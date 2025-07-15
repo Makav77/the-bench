@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Param, Query, Body, Req, DefaultValuePipe, ParseIntPipe, UseGuards } from "@nestjs/common";
-import { Request } from "express";
+import { Controller, Get, Post, Patch, Delete, Param, Query, Body, Req, DefaultValuePipe, ParseIntPipe, UseGuards, NotFoundException, UseInterceptors, UploadedFile, BadRequestException } from "@nestjs/common";
 import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { Challenge } from "./entities/challenge.entity";
 import { ChallengesService } from "./challenges.service";
@@ -11,42 +10,73 @@ import { ValidateCompletionDTO } from "./dto/validate-completion.dto";
 import { RequiredPermission } from "../Permissions/decorator/require-permission.decorator";
 import { PermissionGuard } from "../Permissions/guards/permission.guard";
 import { ValidateChallengeDTO } from "./dto/validate-challenge.dto";
+import { IrisGuard } from "../Auth/guards/iris.guard";
+import { RequestWithResource } from "../Utils/request-with-resource.interface";
+import { Resource } from "../Utils/resource.decorator";
+import { diskStorage } from "multer";
+import { extname } from "path";
+import { FileInterceptor } from "@nestjs/platform-express";
+
+const multerOptions = {
+    storage: diskStorage({
+        destination: "./uploads/challenge_completions",
+        filename: (_req, file, callback) => {
+            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+            const ext = extname(file.originalname);
+            callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+        },
+    }),
+    fileFilter: (_req: any, file: { mimetype: string; }, callback: (arg0: Error | null, arg1: boolean) => void) => {
+        if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Unsupported file type."), false);
+        }
+    },
+    limits: { fileSize: 3 * 1024 * 1024 },
+};
 
 @Controller("challenges")
 export class ChallengesController {
-    constructor(private readonly challengesService: ChallengesService) {}
+    constructor(private readonly challengesService: ChallengesService) { }
 
     @UseGuards(JwtAuthGuard)
     @Get("pending")
     async findPendingChallenges(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number }> {
-        return this.challengesService.findPendingChallenges(page, limit);
+        const user = req.user as User;
+        return this.challengesService.findPendingChallenges(page, limit, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get()
     async findAllChallenges(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<{ data: Challenge[]; total: number; page: number; lastPage: number; }> {
-        return this.challengesService.findAllChallenges(page, limit);
+        const user = req.user as User;
+        return this.challengesService.findAllChallenges(page, limit, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
-    async findOneChallenge(@Param("id") id: string): Promise<Challenge> {
-        return this.challengesService.findOneChallenge(id);
+    async findOneChallenge(@Resource() challenge: Challenge): Promise<Challenge> {
+        return challenge;
     }
 
     @UseGuards(JwtAuthGuard)
     @Get("completions/pending")
     async findPendingCompletions(
         @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<{ data: ChallengeCompletion[]; total: number; page: number; lastPage: number }> {
-        return this.challengesService.findPendingCompletions();
+        const user = req.user as User;
+        return this.challengesService.findPendingCompletions(page, limit, user);
     }
 
     @RequiredPermission("create_challenge")
@@ -54,85 +84,104 @@ export class ChallengesController {
     @Post()
     async createChallenge(
         @Body() createChallengeDTO: CreateChallengeDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const user = req.user as User;
         return this.challengesService.createChallenge(createChallengeDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id")
     async updateChallenge(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Body() createChallengeDTO: CreateChallengeDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const user = req.user as User;
-        return this.challengesService.updateChallenge(id, createChallengeDTO, user);
+        return this.challengesService.updateChallenge(challenge.id, createChallengeDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id/validate")
     async validateChallenge(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Body() validateChallengeDTO: ValidateChallengeDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const user = req.user as User;
-        return this.challengesService.validateChallenge(id, validateChallengeDTO, user);
+        return this.challengesService.validateChallenge(challenge.id, validateChallengeDTO, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id")
     async removeChallenge(
-        @Param("id") id: string,
-        @Req() req: Request,
+        @Resource() challenge: Challenge,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<void> {
         const user = req.user as User;
-        return this.challengesService.removeChallenge(id, user);
+        return this.challengesService.removeChallenge(challenge.id, user);
     }
 
     @RequiredPermission("register_challenge")
-    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard, PermissionGuard)
     @Post(":id/subscribe")
     async subscribe(
-        @Param("id") id: string,
-        @Req() req: Request,
+        @Resource() challenge: Challenge,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const user = req.user as User;
-        return this.challengesService.subscribe(id, user);
+        return this.challengesService.subscribe(challenge.id, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Delete(":id/subscribe")
     async unsubscribe(
-        @Param("id") id: string,
-        @Req() req: Request,
+        @Resource() challenge: Challenge,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<Challenge> {
         const user = req.user as User;
-        return this.challengesService.unsubscribe(id, user);
+        return this.challengesService.unsubscribe(challenge.id, user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Post(":id/complete")
+    @UseInterceptors(FileInterceptor("file", multerOptions))
     async submitCompletion(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
+        @UploadedFile() file: Express.Multer.File,
         @Body() submitCompletionDTO: SubmitCompletionDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<ChallengeCompletion> {
         const user = req.user as User;
-        return this.challengesService.submitCompletion(id, submitCompletionDTO, user);
+
+        let imageUrl = submitCompletionDTO.imageUrl;
+        if (file) {
+            imageUrl = `/uploads/challenge_completions/${file.filename}`;
+        }
+
+        if (
+            (!submitCompletionDTO.text || submitCompletionDTO.text.trim() === "") &&
+            (!imageUrl || imageUrl.trim() === "")
+        ) {
+            throw new BadRequestException("Merci de fournir une preuve texte ou image 😊");
+        }
+
+        return this.challengesService.submitCompletion(
+            challenge.id,
+            { ...submitCompletionDTO, imageUrl },
+            user
+        );
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, IrisGuard)
     @Patch(":id/complete/:completionId")
     async validateCompletion(
-        @Param("id") id: string,
+        @Resource() challenge: Challenge,
         @Param("completionId") completionId: string,
         @Body() validateCompletionDTO: ValidateCompletionDTO,
-        @Req() req: Request,
+        @Req() req: RequestWithResource<Challenge>
     ): Promise<ChallengeCompletion> {
         const user = req.user as User;
-        return this.challengesService.validateCompletion(id, completionId, validateCompletionDTO, user);
+        return this.challengesService.validateCompletion(challenge.id, completionId, validateCompletionDTO, user);
     }
 }

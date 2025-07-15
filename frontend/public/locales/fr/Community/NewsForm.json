@@ -1,0 +1,10 @@
+{
+    "title": "Titre",
+    "content": "Contenu",
+    "tags": "Tags",
+    "placeholderTag": "Appuyez sur Entrée pour ajouter le tag",
+    "addImage": "Ajouter image",
+    "cancel": "Annuler",
+    "loading": "Chargement...",
+    "validate": "Valider"
+}

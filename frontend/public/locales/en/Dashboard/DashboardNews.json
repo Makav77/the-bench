@@ -1,0 +1,23 @@
+{
+    "confirmAlert": "Please enter a reason for rejecting this news :",
+    "waitingNews": "Waiting news",
+    "loading": "Loading news...",
+    "noWaitingNews": "No waiting news",
+    "title": "Title :",
+    "author": "Author :",
+    "date": "Date :",
+    "preview": "Preview :",
+    "validation": "Validation...",
+    "validate": "Validate",
+    "rejection": "Rejection...",
+    "reject": "Reject",
+    "previous": "← Prev",
+    "page": "Page",
+    "next": "Next →",
+    "toastLoadPendingNewsError": "Unable to load pendings news",
+    "toastNewsValidated": "News validated",
+    "toastNewsValidatedError": "Unable to validate news",
+    "toastRejectedReason": "Rejected reason is required",
+    "toastRejectNews": "News rejected",
+    "toastRejectNewsError": "Unable to reject news"
+}

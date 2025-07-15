@@ -10,6 +10,12 @@ export class Challenge {
     id: string;
 
     @Column()
+    irisCode: string;
+
+    @Column()
+    irisName: string;
+
+    @Column()
     title: string;
 
     @Column({ type: "text" })

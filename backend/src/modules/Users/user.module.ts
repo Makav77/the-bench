@@ -10,13 +10,17 @@ import { MarketModule } from "../Market/market.module";
 import { ChallengeRegistration } from "../Challenges/entities/challenge-registration.entity";
 import { MarketItem } from "../Market/entities/market.entity";
 import { Event } from "../Events/entities/event.entity";
+import { IrisModule } from "../Iris/iris.module";
+import { Badge } from "../Shop/entities/badge.entity";
+import { UserBadge } from "../Shop/entities/user-badge.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([User, UserRestriction, Event, ChallengeRegistration, MarketItem]),
+        TypeOrmModule.forFeature([User, UserRestriction, Event, ChallengeRegistration, MarketItem, Badge, UserBadge]),
         EventModule,
         ChallengesModule,
         MarketModule,
+        IrisModule,
     ],
     controllers: [UserController],
     providers: [UserService],

@@ -47,8 +47,7 @@ export class PlacesService {
                 })
                 .pipe(map(r => r.data.results as Place[]));
             return await firstValueFrom(response);
-        } catch (error) {
-            console.error("Google Places search error:", error);
+        } catch {
             throw new InternalServerErrorException("Places lookup failed");
         }
     }
@@ -77,9 +76,9 @@ export class PlacesService {
                     },
                 })
                 .pipe(map(r => (r.data.result as PlaceDetails)));
+
             return await firstValueFrom(response);
-        } catch (error) {
-            console.error("Google Places details error:", error);
+        } catch {
             throw new InternalServerErrorException("Place details lookup failed");
         }
     }

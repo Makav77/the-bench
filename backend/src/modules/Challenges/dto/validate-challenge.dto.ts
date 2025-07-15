@@ -7,5 +7,5 @@ export class ValidateChallengeDTO {
     @ValidateIf(o => o.validated === false)
     @IsString()
     @MaxLength(1000)
-    rejectionReason?: string;
+    rejectedReason?: string;
 }
