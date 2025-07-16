@@ -144,10 +144,31 @@ export class FlashPostsService {
         }
 
         await this.flashRepo.delete(id);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your flash post was removed",
+            `Your flash post "${flashPost.title}" has been deleted.`
+        );
     }
 
     async purgeExpired(): Promise<void> {
         const limit = subHours(new Date(), 24);
+        const expiredPosts = await this.flashRepo.find({
+            where: { createdAt: LessThan(limit) },
+            relations: ["author"],
+        });
+
+        for (const post of expiredPosts) {
+            if (post.author) {
+                await this.notificationsService.create(
+                    post.author.id,
+                    "Your flash post has expired",
+                    `Your flash post "${post.title}" has been automatically removed after 24 hours.`
+                );
+            }
+        }
+
         await this.flashRepo.delete({ createdAt: LessThan(limit) });
     }
 

@@ -109,7 +109,7 @@ export class PostsService {
         await this.notificationsService.create(
             user.id,
             "Your post was updated",
-            `Your post "${post.title}" has been successfully updated.`
+            `Your post "${updated.title}" has been successfully updated.`
         );
 
         return this.postRepo.save(updated);
@@ -127,15 +127,15 @@ export class PostsService {
 
         if (post.author.id !== user.id && user.role !== Role.ADMIN && user.role !== Role.MODERATOR) {
             throw new ForbiddenException("You are not allowed to delete this post.")
-        }
+        }  
+
+        await this.postRepo.delete(id);
 
         await this.notificationsService.create(
             user.id,
             "Your post was removed",
             `Your post "${post.title}" has been deleted.`
         );
-
-        await this.postRepo.delete(id);
     }
 
     @Cron(CronExpression.EVERY_HOUR)
