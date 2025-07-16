@@ -103,7 +103,13 @@ export class GalleryService {
         if (index !== -1) {
             galleryItem.likedBy.splice(index, 1);
         } else {
-            galleryItem.likedBy.push(user)
+            galleryItem.likedBy.push(user);
+            
+            await this.notificationsService.create(
+                galleryItem.author.id,
+                "Your photo was liked",
+                `${user.firstname} ${user.lastname} liked your photo.`
+            );
         }
 
         return this.galleryRepo.save(galleryItem);
@@ -144,6 +150,13 @@ export class GalleryService {
         } else{
             console.warn(`Le fichier ${filePath} n'a pas été trouvé`);
         }
+
+        await this.notificationsService.create(
+            user.id,
+            "Your gallery item was deleted",
+            `Your photo${galleryItem.description ? ` "${galleryItem.description}"` : ""} has been removed.`
+        );
+
         await this.galleryRepo.delete(id);
     }
 
