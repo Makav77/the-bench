@@ -199,6 +199,12 @@ export class PollService {
         }
 
         await this.pollRepo.delete(id);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your poll has been deleted",
+            `Your poll "${poll.question}" has been successfully deleted.`,
+        );
     }
 
     @Cron(CronExpression.EVERY_HOUR)
