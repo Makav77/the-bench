@@ -117,6 +117,12 @@ export class EventService {
         }
 
         const updated = this.eventRepo.merge(event, updateEventDTO);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your event has been updated",
+            `Your event "${updated.name}" has been successfully updated.`
+        );
         return this.eventRepo.save(updated);
     }
 
