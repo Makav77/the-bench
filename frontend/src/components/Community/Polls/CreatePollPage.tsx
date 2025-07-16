@@ -53,7 +53,7 @@ function CreatePollPage() {
 
         const cleanQuestion = question.trim();
 
-        if (cleanQuestion) {
+        if (!cleanQuestion) {
             toast.error(t("toastQuestionError"));
             return;
         }
