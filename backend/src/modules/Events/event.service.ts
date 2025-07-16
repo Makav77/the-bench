@@ -141,6 +141,12 @@ export class EventService {
         }
 
         await this.eventRepo.delete(id);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your event has been deleted",
+            `Your event "${event.name}" has been deleted.`
+        );
     }
 
     async removeParticipant(eventId: string, userIdToRemove: string, user: User): Promise<Event> {
