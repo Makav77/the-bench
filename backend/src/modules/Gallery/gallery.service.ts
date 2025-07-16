@@ -6,12 +6,17 @@ import { User, Role } from "../Users/entities/user.entity";
 import { join } from "path";
 import { unlink } from "fs/promises";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { UserService } from "../Users/user.service";
+import { NotificationsService } from "../notifications/notifications.service";
 
 @Injectable()
 export class GalleryService {
     constructor(
         @InjectRepository(GalleryItem)
         private readonly galleryRepo: Repository<GalleryItem>,
+
+        private readonly userService: UserService,
+        private readonly notificationsService: NotificationsService,
     ) {}
 
     async findAllGalleryItems(page = 1, limit = 30, user: User): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
@@ -65,6 +70,22 @@ export class GalleryService {
             irisCode,
             irisName,
         });
+
+        await this.notificationsService.create(
+            user.id,
+            "Your photo was published",
+            "Your gallery item is now visible to your neighborhood."
+        );
+
+        const neighbors = await this.userService.getUsersByIris(irisCode);
+        const others = neighbors.filter(u => u.id !== user.id);
+
+        await this.notificationsService.createMany(
+            others.map(u => u.id),
+            "New gallery post in your neighborhood",
+            `${user.firstname} ${user.lastname} has shared a new photo.`
+        );
+
 
         return this.galleryRepo.save(galleryItem);
     }
