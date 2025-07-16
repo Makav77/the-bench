@@ -182,6 +182,13 @@ export class PollService {
         }
 
         poll.manualClosed = true;
+        
+        await this.notificationsService.create(
+            user.id,
+            "You closed your poll",
+            `Your poll "${poll.question}" has been manually closed.`,
+        );
+        
         return this.pollRepo.save(poll);
     }
 
