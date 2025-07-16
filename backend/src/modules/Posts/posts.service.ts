@@ -6,12 +6,17 @@ import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { User, Role } from '../Users/entities/user.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { UserService } from '../Users/user.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class PostsService {
     constructor(
         @InjectRepository(Posts)
         private readonly postRepo: Repository<Posts>,
+
+        private readonly notificationsService: NotificationsService,
+        private readonly userService: UserService,
     ) {}
 
     async findAllPosts(page = 1, limit = 10, user: User): Promise<{ data: Posts[]; total: number; page: number; lastPage: number }> {
@@ -64,6 +69,23 @@ export class PostsService {
             irisCode,
             irisName,
         });
+
+        await this.notificationsService.create(
+            author.id,
+            "Your post is now visible to your neighborhood",
+            `Your post "${post.title}" has been published.`
+        );
+
+        if (irisCode !== "all") {
+            const neighbors = await this.userService.getUsersByIris(irisCode);
+            const others = neighbors.filter(u => u.id !== author.id);
+
+            await this.notificationsService.createMany(
+                others.map(u => u.id),
+                "New post in your neighborhood",
+                `${author.firstname} ${author.lastname} posted: "${post.title}"`
+            );
+        }
 
         return this.postRepo.save(post);
     }
