@@ -8,6 +8,7 @@ import { User, Role } from "../Users/entities/user.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { UserService } from "../Users/user.service";
 import { NotificationsService } from "../notifications/notifications.service";
+import { EmbeddedMetadata } from "typeorm/metadata/EmbeddedMetadata";
 
 @Injectable()
 export class EventService {
@@ -194,6 +195,22 @@ export class EventService {
         }
 
         event.participantsList?.push(user);
+
+        await this.notificationsService.create(
+            user.id,
+            "You have joined an event",
+            `You have successfully registered for the event "${event.name}"`
+        );
+
+        if(event.author){
+            await this.notificationsService.create(
+                event.author.id,
+                "New participant",
+                `${user.firstname} ${user.lastname} has joined your event "${event.name}".`
+            );
+        }
+        
+
         return this.eventRepo.save(event);
     }
 
