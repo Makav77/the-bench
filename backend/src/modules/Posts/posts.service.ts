@@ -129,6 +129,12 @@ export class PostsService {
             throw new ForbiddenException("You are not allowed to delete this post.")
         }
 
+        await this.notificationsService.create(
+            user.id,
+            "Your post was removed",
+            `Your post "${post.title}" has been deleted.`
+        );
+
         await this.postRepo.delete(id);
     }
 
