@@ -6,12 +6,17 @@ import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
 import { User, Role } from "../Users/entities/user.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { UserService } from "../Users/user.service";
+import { NotificationsService } from "../notifications/notifications.service";
 
 @Injectable()
 export class EventService {
     constructor(
         @InjectRepository(Event)
-        private readonly eventRepo: Repository<Event>
+        private readonly eventRepo: Repository<Event>,
+
+        private readonly userService: UserService,
+        private readonly notificationsService: NotificationsService
     ) {}
 
     async findAllEvents(page = 1, limit = 5, user: User): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
@@ -64,6 +69,24 @@ export class EventService {
             irisCode,
             irisName,
         });
+
+        await this.notificationsService.create(
+            author.id,
+            "Your event is now visible to your neighborhood",
+            `Your event "${event.name}" has been published.`
+        );
+
+        if (irisCode !== "all") {
+            const neighbors = await this.userService.getUsersByIris(irisCode);
+            const others = neighbors.filter(u => u.id !== author.id);
+
+            await this.notificationsService.createMany(
+                others.map(u => u.id),
+                "New event in your neighborhood",
+                `${author.firstname} ${author.lastname} created an event: "${event.name}"`
+            );
+        }
+
         return this.eventRepo.save(event);
     }
 
