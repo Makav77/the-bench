@@ -4,10 +4,11 @@ import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { GalleryItem } from "./entities/gallery-item.entity";
 import { User, Role } from "../Users/entities/user.entity";
 import { join } from "path";
-import { unlink } from "fs/promises";
+import { unlink, access } from "fs/promises";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { UserService } from "../Users/user.service";
 import { NotificationsService } from "../notifications/notifications.service";
+import { constants } from "fs";
 
 @Injectable()
 export class GalleryService {
@@ -108,6 +109,16 @@ export class GalleryService {
         return this.galleryRepo.save(galleryItem);
     }
 
+
+    async fileExists(path: string): Promise<boolean> {
+        try {
+            await access(path, constants.F_OK);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
     async removeGalleryItem(id: string, user: User): Promise<void> {
         const galleryItem = await this.galleryRepo.findOne({
             where: { id },
@@ -124,7 +135,15 @@ export class GalleryService {
 
         const filePath = join(process.cwd(), "uploads", "gallery", galleryItem.url.split("/").pop()!);
 
-        await unlink(filePath);
+        if(await this.fileExists(filePath)){
+            try{
+                await unlink(filePath);
+            } catch (err){
+                console.error("Erreur lors de la suppression du fichier :", err.message);
+            }
+        } else{
+            console.warn(`Le fichier ${filePath} n'a pas été trouvé`);
+        }
         await this.galleryRepo.delete(id);
     }
 
