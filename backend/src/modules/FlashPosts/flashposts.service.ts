@@ -119,6 +119,13 @@ export class FlashPostsService {
         }
 
         const updated = this.flashRepo.merge(flashPost, updateFlashPostDTO);
+        
+        await this.notificationsService.create(
+            user.id,
+            "Your flash post was updated",
+            `Your flash post "${updated.title}" has been successfully updated.`
+        );
+        
         return this.flashRepo.save(updated);
     }
 
