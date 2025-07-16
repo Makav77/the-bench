@@ -105,6 +105,13 @@ export class PostsService {
         }
 
         const updated = this.postRepo.merge(post, updatePostDTO);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your post was updated",
+            `Your post "${post.title}" has been successfully updated.`
+        );
+
         return this.postRepo.save(updated);
     }
 
