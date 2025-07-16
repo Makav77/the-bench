@@ -165,6 +165,21 @@ export class EventService {
         }
 
         event.participantsList = event.participantsList?.filter((user) => user.id !== userIdToRemove);
+
+        await this.notificationsService.create(
+            userIdToRemove,
+            "You were removed from an event",
+            `You have been removed from the event "${event.name}" by the organizer.`
+        );
+
+        if(event.author){
+            await this.notificationsService.create(
+                event.author.id,
+                "Participant removed",
+                `You have removed a participant from your event "${event.name}".`
+            );
+        }
+        
         return this.eventRepo.save(event);
     }
 
