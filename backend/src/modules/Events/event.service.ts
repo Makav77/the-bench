@@ -230,6 +230,21 @@ export class EventService {
         }
 
         (event.participantsList ?? []).splice(index, 1);
+
+        await this.notificationsService.create(
+            user.id,
+            "You have left the event",
+            `You are no longer registered for the event "${event.name}".`
+        );
+
+        if(event.author){
+            await this.notificationsService.create(
+                event.author.id,
+                "A participant left",
+                `${user.firstname} ${user.lastname} has left your event "${event.name}".`
+            );
+        }
+
         return this.eventRepo.save(event);
     }
 
