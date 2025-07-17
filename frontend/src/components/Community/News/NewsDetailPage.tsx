@@ -222,6 +222,14 @@ function NewsDetailPage() {
                     </div>
                 )}
 
+                {news.tags && news.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                        {news.tags.map((tag, i) => (
+                        <span key={i} className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-xs">#{tag}</span>
+                        ))}
+                    </div>
+                )}
+
                 <div className="flex items-center gap-3 mb-2 max-sm:gap-2">
                     <button
                         onClick={handleLike}
