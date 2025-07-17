@@ -61,12 +61,11 @@ function MarketPage() {
                     {items.map((item) => (
                         <div
                             key={item.id}
-                            className="p-4 bg-white rounded-2xl cursor-pointer hover:shadow flex justify-between items-center hover:bg-gray-100
-                            max-sm:flex-col max-sm:items-stretch max-sm:gap-4 max-sm:p-4 max-sm:text-lg"
+                            className="p-4 bg-white rounded cursor-pointer hover:shadow flex justify-between items-center hover:bg-gray-100 max-sm:flex-col max-sm:items-stretch max-sm:gap-4 max-sm:p-4 max-sm:text-lg"
                             onClick={() => navigate(`/market/${item.id}`)}
                         >
-                            <div className="flex flex-col flex-1 max-sm:mb-2 max-sm:text-lg">
-                                <h2 className="text-lg font-semibold max-sm:text-2xl max-sm:mb-2">
+                            <div className="flex flex-col flex-1 min-w-0 overflow-hidden max-sm:mb-2 max-sm:text-lg">
+                                <h2 className="text-lg font-semibold max-sm:text-2xl max-sm:mb-2 truncate whitespace-nowrap w-full">
                                     {item.title}
                                 </h2>
 
@@ -98,7 +97,7 @@ function MarketPage() {
                                 <img
                                     src={item.images[0]}
                                     alt={item.title}
-                                    className="w-24 h-24 object-cover rounded-2xl max-sm:w-full max-sm:h-44 max-sm:rounded-lg max-sm:mt-2 max-sm:mb-2"
+                                    className="w-24 h-24 object-cover rounded max-sm:w-full max-sm:h-44 max-sm:rounded max-sm:mt-2 max-sm:mb-2"
                                 />
                             )}
                         </div>

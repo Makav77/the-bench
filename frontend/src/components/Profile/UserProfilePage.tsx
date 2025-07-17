@@ -208,7 +208,7 @@ export default function UserProfilePage() {
     }
 
     return (
-        <div className="p-6 w-[40%] max-sm:w-[97vw] max-sm:p-2 max-sm:rounded-lg mx-auto space-y-6 max-sm:space-y-3 bg-white rounded-2xl mt-10 shadow">
+        <div className="p-6 w-[40%] max-sm:w-[97vw] max-sm:p-2 max-sm:rounded mx-auto space-y-6 max-sm:space-y-3 bg-white rounded mt-10 shadow">
             <button
                 type="button"
                 onClick={() => navigate("/homepage")}
@@ -421,7 +421,7 @@ export default function UserProfilePage() {
                 ) : (
                     <ul className="space-y-1 max-sm:text-sm">
                         {profile.events.map(event => (
-                            <li key={event.id} className="border-b py-1">
+                            <li key={event.id} className="border-b py-1 break-words">
                                 {event.name} - {new Date(event.startDate).toLocaleDateString()}
                             </li>
                         ))}
@@ -439,7 +439,7 @@ export default function UserProfilePage() {
                 ) : (
                     <ul className="space-y-1 max-sm:text-sm">
                         {profile.challenges.map(challenge => (
-                            <li key={challenge.id} className="border-b py-1">
+                            <li key={challenge.id} className="border-b py-1 break-words">
                                 {challenge.title} - {new Date(challenge.startDate).toLocaleDateString()}
                             </li>
                         ))}
@@ -455,7 +455,7 @@ export default function UserProfilePage() {
                 {profile.marketItems.length === 0 ? (
                     <p className="text-gray-600 italic">{t("noItemOnSell")}</p>
                 ) : (
-                    <ul className="space-y-2">
+                    <ul className="space-y-2 min-w-0 overflow-hidden">
                         {profile.marketItems.map(item => (
                             <li 
                                 key={item.id}
@@ -465,7 +465,7 @@ export default function UserProfilePage() {
                                     navigate(`/market/${item.id}`)
                                 }}
                             >
-                                <p className="font-semibold">{item.title}</p>
+                                <p className="font-semibold truncate whitespace-nowrap">{item.title}</p>
                                 <p className="text-sm text-gray-500">
                                     {t("lastUpdate")} {new Date(item.updatedAt).toLocaleDateString()}
                                 </p>
@@ -484,7 +484,7 @@ export default function UserProfilePage() {
 
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
-                    <div className="bg-white p-6 max-sm:p-2 rounded-lg shadow-lg w-[90%] max-w-md">
+                    <div className="bg-white p-6 max-sm:p-2 rounded shadow-lg w-[90%] max-w-md">
                         {preview && (
                             <div className="mb-4 flex flex-col items-center justify-center">
                                 <p className="text-sm text-gray-500 mb-1">{t("preview")}</p>
@@ -546,7 +546,7 @@ export default function UserProfilePage() {
 
             {showFriendsModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
-                    <div className="bg-white p-6 max-sm:p-2 rounded-lg shadow-lg w-[90%] max-w-md">
+                    <div className="bg-white p-6 max-sm:p-2 rounded shadow-lg w-[90%] max-w-md">
                         <h2 className="text-lg font-bold mb-4 text-center">
                             {t("friendsList")}
                             <span className="ml-2 text-sm text-gray-500">
@@ -657,7 +657,7 @@ export default function UserProfilePage() {
 
             {showAddressModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
-                    <div className="bg-white p-6 max-sm:p-2 rounded-lg shadow-lg w-[90%] max-w-md">
+                    <div className="bg-white p-6 max-sm:p-2 rounded shadow-lg w-[90%] max-w-md">
                         <h2 className="text-lg font-bold mb-3">{t("changeAddress")}</h2>
 
                         <p className="text-red-500 text-sm mb-2">

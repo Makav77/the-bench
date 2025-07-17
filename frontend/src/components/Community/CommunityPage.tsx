@@ -25,7 +25,7 @@ export default function CommunityPage() {
                     <button
                         key={path}
                         onClick={() => navigate(path)}
-                        className="p-6 bg-white rounded-lg shadow hover:shadow-md transition flex items-center justify-center font-semibold text-lg cursor-pointer hover:bg-gray-200 max-sm:w-full max-sm:text-xl max-sm:py-8 max-sm:px-2"
+                        className="p-6 bg-white rounded shadow hover:shadow-md transition flex items-center justify-center font-semibold text-lg cursor-pointer hover:bg-gray-200 max-sm:w-full max-sm:text-xl max-sm:py-8 max-sm:px-2"
                     >
                         {label}
                     </button>

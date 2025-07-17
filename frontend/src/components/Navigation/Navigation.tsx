@@ -67,7 +67,7 @@ function Navigation() {
 
             <div className="hidden max-sm:block w-[90%] h-[2px] bg-black mx-auto rounded-full" />
 
-            <div className="hidden max-sm:flex items-center justify-center w-full px-4 mt-0 relative bg-[#00c6ff] min-h-[56px] rounded-xl">
+            <div className="hidden max-sm:flex items-center justify-center w-full px-4 mt-0 relative bg-[#00c6ff] min-h-[56px] rounded">
                 <span className="font-bold text-lg text-white mx-auto">
                     {currentLabel}
                 </span>

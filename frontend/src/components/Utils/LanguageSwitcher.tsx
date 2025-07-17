@@ -24,7 +24,7 @@ function LanguageSwitcher() {
                 id="lang-select"
                 value={i18n.language}
                 onChange={changeLanguage}
-                className="border px-3 py-1 rounded-xl cursor-pointer"
+                className="border px-3 py-1 rounded cursor-pointer"
             >
                 {languages.map((lang) => (
                     <option key={lang.language} value={lang.language}>

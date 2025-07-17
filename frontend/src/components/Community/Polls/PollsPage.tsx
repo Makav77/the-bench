@@ -79,10 +79,10 @@ return (
                     return (
                         <li
                             key={poll.id}
-                            className="p-4 rounded-2xl bg-white hover:shadow cursor-pointer hover:bg-gray-100 max-sm:p-3"
+                            className="p-4 min-w-0 rounded bg-white hover:shadow cursor-pointer hover:bg-gray-100 max-sm:p-3"
                             onClick={() => navigate(`/polls/${poll.id}`)}
                         >
-                            <strong className="text-lg">
+                            <strong className="block text-lg truncate">
                                 {poll.question}
                             </strong>
 

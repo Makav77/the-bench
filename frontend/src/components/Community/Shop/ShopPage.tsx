@@ -83,7 +83,7 @@ function ShopPage() {
                     {badges.map(badge => (
                         <div
                             key={badge.id}
-                            className={`flex flex-col items-center border rounded-xl p-4 shadow ${
+                            className={`flex flex-col items-center border rounded p-4 shadow ${
                                 badge.owned ? "opacity-40 grayscale" : ""
                             } max-sm:p-3`}
                         >

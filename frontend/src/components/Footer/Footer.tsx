@@ -180,7 +180,7 @@ function Footer() {
 
             {showModeratorsModal && user && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
-                    <div className="bg-white rounded-lg shadow-lg p-8 w-[400px] relative max-sm:w-[92vw] max-sm:p-4">
+                    <div className="bg-white rounded shadow-lg p-8 w-[400px] relative max-sm:w-[92vw] max-sm:p-4">
                         <h2 className="text-xl font-bold mb-4 text-center max-sm:text-lg max-sm:mb-2">
                             Contact the staff
                         </h2>

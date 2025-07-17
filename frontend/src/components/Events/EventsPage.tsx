@@ -92,11 +92,11 @@ function EventsPage() {
                             return (
                                 <div
                                     key={event.id}
-                                    className="p-4 cursor-pointer hover:shadow flex justify-between items-center bg-white rounded-2xl hover:bg-gray-100 max-sm:p-2 max-sm:pr-4"
+                                    className="p-4 cursor-pointer hover:shadow flex justify-between items-center bg-white rounded hover:bg-gray-100 max-sm:p-2 max-sm:pr-4"
                                     onClick={() => navigate(`/events/${event.id}`)}
                                 >
-                                    <div className="flex flex-col max-sm:gap-1 max-sm:p-3">
-                                        <h2 className="text-lg font-semibold max-sm:text-base">
+                                    <div className="flex flex-col min-w-0 overflow-hidden max-sm:gap-1 max-sm:p-3">
+                                        <h2 className="text-lg font-semibold max-sm:text-base truncate whitespace-nowrap">
                                             {event.name}
                                         </h2>
 
@@ -106,7 +106,7 @@ function EventsPage() {
                                     </div>
 
                                     {isAuthor ? (
-                                        <span className="text-purple-700 font-semibold max-sm:text-sm">
+                                        <span className="text-purple-700 font-semibold max-sm:text-sm text-right w-[70%]">
                                             {t("yourEvent")}
                                         </span>
                                     ) : isSubscribed ? (
@@ -116,11 +116,11 @@ function EventsPage() {
                                     ) : (
                                         <>
                                             {(typeof event.maxNumberOfParticipants !== "number" || event.maxNumberOfParticipants <= 0) ? (
-                                                <span className="text-green-700 font-semibold max-sm:text-sm">
+                                                <span className="text-green-700 font-semibold max-sm:text-sm text-right w-[70%]">
                                                     {t("openEvent")}
                                                 </span>
                                             ) : isFull ? (
-                                                <span className="text-red-500 font-semibold max-sm:text-sm">
+                                                <span className="text-red-500 font-semibold max-sm:text-sm text-right w-[70%]">
                                                     {t("eventFull")}
                                                 </span>
                                             ) : (
@@ -129,7 +129,7 @@ function EventsPage() {
                                                         e.stopPropagation();
                                                         handleSubscribe(event.id);
                                                     }}
-                                                    className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700 cursor-pointer max-sm:text-base max-sm:h-12"
+                                                    className="bg-green-600 text-white px-4 h-10 border rounded hover:bg-green-700 cursor-pointer max-sm:text-base max-sm:h-12 text-right"
                                                 >
                                                     {t("register")}
                                                 </button>

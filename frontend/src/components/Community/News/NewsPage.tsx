@@ -59,7 +59,7 @@ function NewsPage() {
             {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
             {!loading && !error && news.length === 0 && (
-                <div className="text-center text-gray-500">
+                <div className="text-center text-red-700">
                     {t("noArticle")}
                 </div>
             )}
@@ -68,7 +68,7 @@ function NewsPage() {
                 {!loading && !error && news.map(article => (
                     <li
                         key={article.id}
-                        className="bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4 cursor-pointer max-sm:gap-2"
+                        className="bg-white rounded shadow p-4 flex flex-col md:flex-row gap-4 cursor-pointer max-sm:gap-2"
                         onClick={() => navigate(`/news/${article.id}`)}
                     >
                         {article.images && article.images.length > 0 && (

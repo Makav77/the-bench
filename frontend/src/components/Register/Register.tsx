@@ -242,7 +242,7 @@ function Signup() {
                     name="firstname"
                     type="text"
                     aria-label="firstname-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.firstname ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.firstname || ""}
                     onChange={handleChange}
                     placeholder={t("firstname")}
@@ -252,7 +252,7 @@ function Signup() {
                     name="lastname"
                     type="text"
                     aria-label="lastname-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.lastname ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.lastname || ""}
                     onChange={handleChange}
                     placeholder={t("lastname")}
@@ -262,7 +262,7 @@ function Signup() {
                     name="email"
                     type="email"
                     aria-label="email-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.email ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.email || ""}
                     onChange={handleChange}
                     placeholder={t("email")}
@@ -274,7 +274,7 @@ function Signup() {
                         type={isPasswordVisible ? "text" : "password"}
                         autoComplete="off"
                         aria-label="password-field"
-                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.password ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                        className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 w-1/1 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.password ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                         value={registerCredentials.password}
                         onChange={handleChange}
                         placeholder={t("password")}
@@ -303,7 +303,7 @@ function Signup() {
                     type="date"
                     autoComplete="off"
                     aria-label="dateOfBirth-field"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.dateOfBirth ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.dateOfBirth ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.dateOfBirth || ""}
                     onChange={handleChange}
                     placeholder={t("dateOfBirth")}
@@ -312,7 +312,7 @@ function Signup() {
                 <input
                     name="street"
                     type="text"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.street ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.street ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.street}
                     onChange={handleStreetChange}
                     placeholder="12 rue Rivoli"
@@ -324,7 +324,7 @@ function Signup() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     maxLength={5}
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.postalCode ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.postalCode ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={registerCredentials.postalCode}
                     onChange={handlePostalCodeChange}
                     placeholder="75010"
@@ -334,7 +334,7 @@ function Signup() {
                     <input
                         name="city"
                         type="text"
-                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.city ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                        className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.city ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                         value={registerCredentials.city}
                         readOnly // On empêche l'édition manuelle
                         placeholder="Paris"
@@ -378,7 +378,7 @@ function Signup() {
                     <button
                         type="button"
                         aria-label="cancel-button"
-                        className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center max-sm:w-2/5 max-sm:text-lg max-sm:py-3 max-sm:rounded-xl"
+                        className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded cursor-pointer transition-all duration-300 flex justify-center items-center max-sm:w-2/5 max-sm:text-lg max-sm:py-3 max-sm:rounded"
                         onClick={() => navigate("/")}
                     >
                         {t("cancel")}
@@ -387,7 +387,7 @@ function Signup() {
                     <button
                         type="submit"
                         aria-label="register-button"
-                        className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center max-sm:w-3/5 max-sm:text-lg max-sm:py-3 max-sm:rounded-xl"
+                        className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded cursor-pointer transition-all duration-300 flex justify-center items-center max-sm:w-3/5 max-sm:text-lg max-sm:py-3 max-sm:rounded"
                     >
                         {t("buttonRegister")}
                     </button>

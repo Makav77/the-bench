@@ -69,7 +69,7 @@ function ItemDetailsPage() {
     };
 
     return (
-        <div className="px-10 py-8 space-y-4 mt-10 w-[30%] mx-auto bg-white rounded-3xl max-sm:w-[96%] max-sm:mt-3 max-sm:px-2 max-sm:py-4 max-sm:rounded-2xl">
+        <div className="px-10 py-8 space-y-4 mt-10 w-[30%] mx-auto bg-white rounded max-sm:w-[96%] max-sm:mt-3 max-sm:px-2 max-sm:py-4 max-sm:rounded">
             <div>
                 <button
                     type="button"
@@ -79,7 +79,7 @@ function ItemDetailsPage() {
                     {t("back")}
                 </button>
 
-                <h1 className="text-5xl font-bold mb-4 max-sm:text-3xl max-sm:text-center">
+                <h1 className="text-3xl font-bold mb-4 max-sm:text-3xl max-sm:text-center break-words">
                     {item.title}
                 </h1>
 
@@ -98,7 +98,7 @@ function ItemDetailsPage() {
                     </p>
                 )}
 
-                <p className="whitespace-pre-wrap max-sm:text-lg">
+                <p className="whitespace-pre-wrap max-sm:text-lg break-words">
                     {item.description}
                 </p>
 
@@ -109,7 +109,7 @@ function ItemDetailsPage() {
                                 key={index}
                                 src={url}
                                 alt={`Item image ${index + 1}`}
-                                className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80 max-sm:h-52 max-sm:rounded-xl"
+                                className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80 max-sm:h-52 max-sm:rounded"
                                 onClick={() => {
                                     setSelectedImage(url);
                                     setShowImageModal(true);
@@ -177,7 +177,7 @@ function ItemDetailsPage() {
                         <img
                             src={selectedImage}
                             alt="Selected item"
-                            className="w-full h-auto rounded-lg object-contain mt-8 max-sm:rounded-xl"
+                            className="w-full h-auto rounded object-contain mt-8 max-sm:rounded"
                         />
                     </div>
                 </div>
