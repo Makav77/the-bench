@@ -77,7 +77,6 @@ describe("FlashPostsService", () => {
     it("createFlashPost happy et erreur si actif existant", async () => {
         const dto = { title: "T", description: "D" } as any;
         const user = { id: "u1", role: Role.USER, irisCode: "IC", irisName: "IN" } as any;
-        // pas de post actif -> count = 0
         flashRepo.count.mockResolvedValue(0);
         const created = { id: "f2", ...dto, irisCode: "IC", irisName: "IN", author: user } as any;
         flashRepo.create.mockReturnValue(created);
@@ -93,7 +92,6 @@ describe("FlashPostsService", () => {
         expect(flashRepo.save).toHaveBeenCalledWith(created);
         expect(res).toBe(created);
 
-        // post actif existant -> count > 0
         flashRepo.count.mockResolvedValue(1);
         await expect(service.createFlashPost(dto, user))
             .rejects.toThrow("You already have an active flash post.");

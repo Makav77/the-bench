@@ -18,7 +18,6 @@ describe('ReportsService', () => {
             save: jest.fn(),
             delete: jest.fn(),
         };
-        // make save() echo back its argument by default
         reportRepo.save.mockImplementation((r: any) => Promise.resolve(r));
         userRepo = { findOneBy: jest.fn() };
         const module: TestingModule = await Test.createTestingModule({

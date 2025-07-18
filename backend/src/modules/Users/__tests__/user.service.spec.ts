@@ -102,7 +102,6 @@ describe('UserService', () => {
         it('updates address with iris resolution', async () => {
             const existing = { ...mockUser };
             userRepo.findOneBy.mockResolvedValue(existing);
-            // mock the internal getIrisFromAddress, not irisService.resolveIris
             jest.spyOn(service, 'getIrisFromAddress').mockResolvedValue({ irisCode: 'Y', irisName: 'New' });
             userRepo.merge.mockImplementation((u, dto) => ({ ...u, ...dto }));
             userRepo.save.mockResolvedValue({ ...existing, irisCode: 'Y', irisName: 'New', address: '456 rue ABC' });

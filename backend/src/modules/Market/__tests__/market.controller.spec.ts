@@ -1,4 +1,3 @@
-// backend/src/modules/Market/__tests__/market.controller.spec.ts
 import { Test, TestingModule } from "@nestjs/testing";
 import { MarketController } from "../market.controller";
 import { MarketService } from "../market.service";
@@ -41,7 +40,6 @@ describe("MarketController", () => {
 
     it("GET /market/:id returns resource", async () => {
         const mi = { id: "m1" } as any;
-        // await the async controller method
         await expect(controller.findOneItem(mi)).resolves.toBe(mi);
     });
 

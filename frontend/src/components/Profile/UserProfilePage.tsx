@@ -155,7 +155,7 @@ export default function UserProfilePage() {
         const { name, value } = e.target;
 
         if (name === "street" || name === "city") {
-            setAddress((prev) => ({ ...prev, [name]: value.trimStart() })); // 😁 Ajout trimStart
+            setAddress((prev) => ({ ...prev, [name]: value.trimStart() }));
         } else if (name === "postalCode") {
             setAddress((prev) => ({
                 ...prev,

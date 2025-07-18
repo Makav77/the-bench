@@ -98,7 +98,7 @@ describe("MarketService", () => {
             const orig = { id: "i", author: user } as any;
             const merged = { ...orig, title: "new" } as any;
             repo.findOne.mockResolvedValue(orig);
-            repo.merge.mockReturnValue(merged);      // now works
+            repo.merge.mockReturnValue(merged);
             repo.save.mockResolvedValue(merged);
             const res = await service.updateItem("i", { title: "new" } as any, user);
             expect(repo.merge).toHaveBeenCalledWith(orig, { title: "new" });
