@@ -336,7 +336,7 @@ function Signup() {
                         type="text"
                         className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentRegisterState === registerState.missingCredentials && !registerCredentials.city ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                         value={registerCredentials.city}
-                        readOnly // On empêche l'édition manuelle
+                        readOnly
                         placeholder="Paris"
                         onFocus={() => setShowCitySuggestions(citySuggestions.length > 0)}
                     />

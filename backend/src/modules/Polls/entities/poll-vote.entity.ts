@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from "typeorm";
-import { User } from "src/modules/Users/entities/user.entity";
+import { User } from "../../../modules/Users/entities/user.entity";
 import { Poll } from "./poll.entity";
 import { PollOption } from "./poll-option.entity";
 
