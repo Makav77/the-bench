@@ -1,0 +1,8 @@
+{
+  "leftGroup": "Vous avez quitté le groupe.",
+  "cannotLeaveGroup": "Impossible de quitter le groupe.",
+  "errorLoadingMessages": "Erreur lors du chargement des messages.",
+  "leaveGroup": "Quitter le groupe",
+  "send": "Envoyer",
+  "group": "Groupe"
+}

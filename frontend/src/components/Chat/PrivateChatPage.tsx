@@ -3,8 +3,11 @@ import { User } from "../../../../backend/src/modules/Users/entities/user.entity
 import { useSocket } from "../../context/SocketContext";
 import { getUserById } from "../../api/userService";
 import { getRoomMessages } from "../../api/chatService";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function PrivateChatPage({ user, userId } : { user: User | null, userId: string }) {
+    const { t } = useTranslation("Chat/PrivateChat");
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
     const [friend, setFriend] = useState<{id: string; firstname: string; lastname: string}>();
@@ -17,6 +20,7 @@ export default function PrivateChatPage({ user, userId } : { user: User | null, 
             setFriend(friend);
           } catch (err) {
             console.error("Failed to fetch friend:", err);
+            toast.error(t("errorLoadingFriends"));
           }
         }
         fetchFriend();
@@ -29,9 +33,10 @@ export default function PrivateChatPage({ user, userId } : { user: User | null, 
 
       getRoomMessages(`private-${room}`)
         .then(setMessages)
-        .catch((err) =>
-          console.error("Erreur lors du chargement des messages :", err)
-        );
+        .catch((err) => {
+          console.error("Erreur lors du chargement des messages :", err);
+          toast.error(t("errorLoadingMessages"));
+        });
     }, [user?.id, userId]);
     
     useEffect(() => {
@@ -104,7 +109,7 @@ export default function PrivateChatPage({ user, userId } : { user: User | null, 
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
         <button onClick={sendMessage} className="bg-blue-500 text-white px-4 py-1 rounded">
-          Envoyer
+          { t("send") }
         </button>
       </div>
     </div>
