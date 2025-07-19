@@ -109,12 +109,17 @@ export class RecommendationService {
       }
 
       for (const participant of event.participantsList) {
+        if (!participant || !event.author) {
+          continue;
+        }
         if (participant.id === event.author.id) {
           continue;
         }
         incr(participant.id, weights.event);
       }
-      incr(event.author.id, weights.event);
+      if (event.author) {
+        incr(event.author.id, weights.event);
+      }
     }
 
     const votes = await this.pollVoteRepo.find({
@@ -191,7 +196,10 @@ export class RecommendationService {
 
     const recommendedUsers = await this.userRepo.findBy({ id: In(userIds) });
 
+    const friendIds = new Set(user.friends.map((f) => f.id));
+
     let result = Array.from(scores.entries())
+      .filter(([id]) => !friendIds.has(id) && id !== user.id)
       .map(([id, score]) => {
         const user = recommendedUsers.find((u) => u.id === id);
         return user ? { user, score } : null;
