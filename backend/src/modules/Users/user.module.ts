@@ -17,6 +17,9 @@ import { forwardRef } from "@nestjs/common";
 import { RecommendationService } from "./recommendation.service";
 import { PollVote } from "../Polls/entities/poll-vote.entity";
 import { Group } from "../chat/entities/group.entity";
+import { GalleryItem } from "../Gallery/entities/gallery-item.entity";
+import { MongooseModule } from "@nestjs/mongoose";
+import { News, NewsSchema } from "../News/news.schema";
 
 @Module({
     imports: [
@@ -29,8 +32,10 @@ import { Group } from "../chat/entities/group.entity";
             Badge, 
             UserBadge, 
             PollVote, 
-            Group
+            Group,
+            GalleryItem
         ]),
+        MongooseModule.forFeature([{ name: News.name, schema: NewsSchema }]),
         EventModule,
         ChallengesModule,
         forwardRef(()=> MarketModule),

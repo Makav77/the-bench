@@ -6,6 +6,10 @@ import { PollVote } from "../Polls/entities/poll-vote.entity";
 import { Group } from "../chat/entities/group.entity";
 import { Event } from "../Events/entities/event.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { GalleryItem } from "../Gallery/entities/gallery-item.entity";
+import { InjectModel } from "@nestjs/mongoose";
+import { News, NewsDocument } from "../News/news.schema";
+import { Model } from "mongoose";
 
 @Injectable()
 export class RecommendationService {
@@ -23,7 +27,13 @@ export class RecommendationService {
     private readonly pollVoteRepo: Repository<PollVote>,
 
     @InjectRepository(Group)
-    private readonly groupRepo: Repository<Group>
+    private readonly groupRepo: Repository<Group>,
+
+    @InjectRepository(GalleryItem)
+    private readonly galleryRepo: Repository<GalleryItem>,
+
+    @InjectModel(News.name)
+    private newsModel: Model<NewsDocument>
   ) {}
 
   async getRecommendationsForUser(
@@ -34,6 +44,7 @@ export class RecommendationService {
       group: 5,
       event: 5,
       challenge: 4,
+      like: 4,
       poll: 2,
       survey: 1,
     };
@@ -70,14 +81,15 @@ export class RecommendationService {
         "challenge.registrations.user",
       ],
     });
+
     for (const reg of challengeRegs) {
       for (const other of reg.challenge.registrations) {
-        if(other.user.id === reg.challenge.author.id){
-            continue;
+        if (other.user.id === reg.challenge.author.id) {
+          continue;
         }
         incr(other.user.id, weights.challenge);
       }
-      incr(reg.challenge.author.id, weights.challenge)
+      incr(reg.challenge.author.id, weights.challenge);
     }
 
     const events = await this.eventRepo
@@ -97,22 +109,23 @@ export class RecommendationService {
       }
 
       for (const participant of event.participantsList) {
-        if(participant.id === event.author.id){
-            continue;
+        if (participant.id === event.author.id) {
+          continue;
         }
         incr(participant.id, weights.event);
       }
-      incr(event.author.id, weights.event)
+      incr(event.author.id, weights.event);
     }
 
     const votes = await this.pollVoteRepo.find({
       where: { voter: { id: userId } },
       relations: ["poll", "poll.votes", "poll.votes.voter"],
     });
+
     for (const vote of votes) {
       for (const other of vote.poll.votes) {
-        if (other.voter.id === vote.poll.author.id){
-            continue;
+        if (other.voter.id === vote.poll.author.id) {
+          continue;
         }
         incr(other.voter.id, weights.poll);
       }
@@ -123,15 +136,59 @@ export class RecommendationService {
       where: { members: { id: userId } },
       relations: ["members"],
     });
+
     for (const group of groups) {
       for (const member of group.members) {
         incr(member.id, weights.group);
       }
     }
 
+    const galleryItems = await this.galleryRepo.find({
+      where: [{ likedBy: { id: userId } }, { author: { id: userId } }],
+      relations: ["author", "likedBy"],
+    });
+
+    for (const item of galleryItems) {
+      if (item.likedBy.find((u) => u.id === userId)) {
+        if (item.author.id !== userId) {
+          incr(item.author.id, weights.like);
+        }
+      }
+
+      if (item.author.id === userId) {
+        for (const liker of item.likedBy) {
+          if (liker.id !== userId) {
+            incr(liker.id, weights.like);
+          }
+        }
+      }
+    }
+
+    const newsArticles = await this.newsModel
+      .find({
+        $or: [{ authorId: userId }, { likedBy: userId }],
+        published: true,
+      })
+      .lean();
+
+    for (const article of newsArticles) {
+      if (article.authorId === userId) {
+        for (const likerId of article.likedBy || []) {
+          if (likerId !== userId) {
+            incr(likerId, weights.like);
+          }
+        }
+      } else if ((article.likedBy || []).includes(userId)) {
+        if (article.authorId !== userId) {
+          incr(article.authorId, weights.like);
+        }
+      }
+    }
+
     const userIds = Array.from(scores.entries())
       .sort((a, b) => b[1] - a[1])
       .map(([id]) => id);
+
     const recommendedUsers = await this.userRepo.findBy({ id: In(userIds) });
 
     let result = Array.from(scores.entries())
