@@ -10,6 +10,7 @@ import { JwtAuthGuard } from "../Auth/guards/jwt-auth.guard";
 import { ProfileSummaryDTO } from "./dto/profile-summary.dto";
 import fs from "fs";
 import path from "path";
+import { RecommendationService } from "./recommendation.service";
 
 interface RequestWithUser extends Request {
     user: User;
@@ -17,7 +18,10 @@ interface RequestWithUser extends Request {
 
 @Controller("users")
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly recommendationService: RecommendationService,
+    ) {}
 
     @UseGuards(JwtAuthGuard)
     @Get("staff")
@@ -187,5 +191,11 @@ export class UserController {
     ) {
         const userId = req.user.id;
         return this.userService.updateAddress(userId, body.street, body.postalCode, body.city);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(":id/recommendations")
+    async getRecommendations(@Param('id') userId: string){
+        return this.recommendationService.getRecommendationsForUser(userId);
     }
 }
