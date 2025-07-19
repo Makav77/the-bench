@@ -194,7 +194,7 @@ function Header() {
                 </div>
 
                 <div className="flex flex-col items-end justify-end">
-                    {isAuthenticated && user ? 
+                    {isAuthenticated && user ? (
                         <div className="flex items-center w-[110%]">
                             <span className="mr-4">{t("hello", { firstname: user.firstname })}</span>
                             <button
