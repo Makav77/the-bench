@@ -51,10 +51,10 @@ function LatestMarketItemCard() {
     return (
         <div
             onClick={() => navigate(`/market/${item.id}`)}
-            className="mb-10 flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5"
+            className="mb-10 flex justify-between items-center w-3/4 min-w-0 mx-auto bg-white rounded shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5"
         >
-            <div className=" pr-4">
-                <h4 className="text-lg font-bold">
+            <div className=" pr-4 flex-1 min-w-0 overflow-hidden">
+                <h4 className="text-lg font-bold truncate w-full">
                     {item.title}
                 </h4>
 

@@ -141,6 +141,7 @@ function EventForm({ defaultValues, onSubmit }: EventFormProps) {
                 <input
                     name="place"
                     type="text"
+                    maxLength={200}
                     value={form.place}
                     onChange={handleChange}
                     className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-3"

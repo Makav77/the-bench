@@ -88,7 +88,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded-2xl shadow w-full sm:w-auto"
+            className="max-w-xl mx-auto space-y-4 p-4 bg-white rounded shadow w-full sm:w-auto"
         >
             {error && <p className="text-red-500">{error}</p>}
 
@@ -113,6 +113,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                 <textarea
                     name="description"
                     rows={4}
+                    maxLength={3000}
                     value={form.description}
                     onChange={handleChange}
                     className="w-full border rounded px-2 sm:py-1 py-3 text-base"
@@ -152,6 +153,7 @@ function ChallengeForm({ defaultValues, onSubmit }: ChallengeFormProps) {
                     name="successCriteria"
                     type="text"
                     value={form.successCriteria}
+                    maxLength={200}
                     onChange={handleChange}
                     className="w-full border rounded px-2 sm:py-1 py-3 text-base"
                 />

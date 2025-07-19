@@ -38,7 +38,6 @@ function NewsDetailPage() {
                 const likesData = await getNewsLikes(id);
                 setLikes(likesData);
                 const comms = await getComments(id);
-                console.log("Commentaires récupérés :", comms); // -----------------------------------------------------------------
                 setComments(comms);
             } catch (error) {
                 setError("Unable to load article : " + error);
@@ -183,7 +182,7 @@ function NewsDetailPage() {
 
     return (
         <div>
-            <div className="w-[30%] mx-auto py-5 px-10 bg-white rounded-xl shadow-lg mt-10 max-sm:p-6 max-sm:w-[98%] max-sm:mt-6">
+            <div className="w-[30%] mx-auto py-5 px-10 bg-white rounded shadow-lg mt-10 max-sm:p-6 max-sm:w-[98%] max-sm:mt-6">
                 <button
                     type="button"
                     onClick={() => navigate("/news")}
@@ -192,14 +191,14 @@ function NewsDetailPage() {
                     {t("back")}
                 </button>
 
-                <h1 className="text-3xl font-bold mb-4">{news.title}</h1>
+                <h1 className="text-3xl font-bold mb-4 break-words">{news.title}</h1>
 
                 {news.images && news.images.length > 0 && (
                     <div className="flex justify-center mb-6">
                         <img
                             src={news.images[0]}
                             alt="Main article"
-                            className="rounded-lg object-cover max-h-72 max-sm:w-full max-sm:h-52"
+                            className="rounded object-cover max-h-72 max-sm:w-full max-sm:h-52"
                             onClick={() => setModalImage(news.images[0])}
                         />
                     </div>
@@ -216,9 +215,17 @@ function NewsDetailPage() {
                                 key={i}
                                 src={src}
                                 alt={`Image additionnelle ${i + 2}`}
-                                className="w-32 h-32 object-cover rounded-lg cursor-pointer hover:scale-105 transition"
+                                className="w-32 h-32 object-cover rounded cursor-pointer hover:scale-105 transition"
                                 onClick={() => setModalImage(src)}
                             />
+                        ))}
+                    </div>
+                )}
+
+                {news.tags && news.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                        {news.tags.map((tag, i) => (
+                        <span key={i} className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-xs">#{tag}</span>
                         ))}
                     </div>
                 )}
@@ -293,14 +300,14 @@ function NewsDetailPage() {
                                             />
                                             <div className="flex gap-2 mt-1 justify-center max-sm:flex-col">
                                                 <button
-                                                    className="bg-red-500 text-white font-semibold border cursor-pointer hover:bg-red-600 px-3 py-1 rounded-2xl max-sm:h-12"
+                                                    className="bg-red-500 text-white font-semibold border cursor-pointer hover:bg-red-600 px-3 py-1 rounded max-sm:h-12"
                                                     onClick={() => setEditingComment(null)}
                                                 >
                                                     {t("cancel")}
                                                 </button>
 
                                                 <button
-                                                    className="bg-green-500 text-white font-semibold border cursor-pointer hover:bg-green-600 px-3 py-1 rounded-2xl max-sm:h-12"
+                                                    className="bg-green-500 text-white font-semibold border cursor-pointer hover:bg-green-600 px-3 py-1 rounded max-sm:h-12"
                                                     onClick={() => handleUpdateComment(c.id)}
                                                 >
                                                     {t("validate")}
@@ -314,7 +321,7 @@ function NewsDetailPage() {
                                     )}
                                     <div className="flex items-center gap-2 mt-1 max-sm:gap-1">
                                         <button
-                                            className={`text-sm ${c.likedBy.includes(user?.id ?? "") ? "text-blue-500" : "text-gray-500"} border px-3 py-1 rounded-3xl cursor-pointer max-sm:w-1/3 max-sm:h-10 max-sm:text-base max-sm:px-2 max-sm:py-1`}
+                                            className={`text-sm ${c.likedBy.includes(user?.id ?? "") ? "text-blue-500" : "text-gray-500"} border px-3 py-1 rounded cursor-pointer max-sm:w-1/3 max-sm:h-10 max-sm:text-base max-sm:px-2 max-sm:py-1`}
                                             onClick={() => handleToggleCommentLike(c.id)}
                                             disabled={!user}
                                         >

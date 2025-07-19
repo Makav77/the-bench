@@ -52,6 +52,17 @@ export class NewsController {
         return { urls };
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get("pending")
+    async findPendingNews(
+        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+        @Req() req: RequestWithResource<News>
+    ) {
+        const user = req.user as User;
+        return this.newsService.findPendingNews(page, limit, user);
+    }
+
     @UseGuards(JwtAuthGuard, IrisGuard)
     @Get(":id")
     async findOneNews(@Resource() news: NewsDocument): Promise<NewsDocument> {
@@ -101,17 +112,6 @@ export class NewsController {
     ): Promise<{ data: (News & { totalLikes: number })[]; total: number; page: number; lastPage: number; }> {
         const user = req.user as User;
         return this.newsService.findAllNews(page, limit, user);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get("pending")
-    async findPendingNews(
-        @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
-        @Query("limit", new DefaultValuePipe(5), ParseIntPipe) limit: number,
-        @Req() req: RequestWithResource<News>
-    ) {
-        const user = req.user as User;
-        return this.newsService.findPendingNews(page, limit, user);
     }
 
     @UseGuards(JwtAuthGuard, PermissionGuard)

@@ -67,7 +67,7 @@ function DashboardNews() {
     };
 
     return (
-        <div className="bg-white p-6 rounded-2xl space-y-8 max-sm:p-2">
+        <div className="bg-white p-6 rounded space-y-8 max-sm:p-2">
             <h2 className="text-2xl font-semibold max-sm:text-3xl max-sm:text-center">
                 {t("waitingNews")}
             </h2>
@@ -85,10 +85,10 @@ function DashboardNews() {
                     {pendingNews.map((news) => (
                         <li
                             key={news.id}
-                            className="border rounded-lg p-4 shadow-sm space-y-2 max-sm:p-2"
+                            className="border rounded p-4 shadow-sm space-y-2 max-sm:p-2"
                         >
                             <div>
-                                <p>
+                                <p className="break-words">
                                     <span className="font-semibold">{t("title")}</span> {news.title}
                                 </p>
 
@@ -107,9 +107,9 @@ function DashboardNews() {
                                     {news.createdAt && new Date(news.createdAt).toLocaleString()}
                                 </p>
 
-                                <p>
+                                <p className="break-words line-clamp-5">
                                     <span className="font-semibold">{t("preview")}</span>{" "}
-                                    {news.content.slice(0, 200)}...
+                                    {news.content}
                                 </p>
                             </div>
 

@@ -86,7 +86,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="profile-button"
-                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate(`/profile/${user.id}`)}
                             >
                                 {t("profile")}
@@ -95,7 +95,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="message-button"
-                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate("/chat")}
                             >
                                 {t("messages")}
@@ -104,7 +104,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="logout-button"
-                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={handleLogout}
                             >
                                 {t("logout")}
@@ -114,7 +114,7 @@ function Header() {
                                 <button
                                     type="button"
                                     aria-label="dashboard-button"
-                                    className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                    className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                     onClick={() => navigate("/dashboard")}
                                 >
                                     {t("dashboard")}
@@ -137,7 +137,7 @@ function Header() {
                                         setSearchResults([]);
                                     }, 100);
                                 }}
-                                className="w-full px-3 py-2 border rounded-2xl focus:outline-none focus:ring bg-gray-100 text-sm"
+                                className="w-full px-3 py-2 border rounded focus:outline-none focus:ring bg-gray-100 text-sm"
                                 placeholder={t("searchPlaceholder")}
                             />
 
@@ -200,7 +200,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="profile-button"
-                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate(`/profile/${user.id}`)}
                             >
                                 {t("profile")}
@@ -209,7 +209,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="message-button"
-                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate("/chat")}
                             >
                                 {t("messages")}
@@ -218,7 +218,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="logout-button"
-                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={handleLogout}
                             >
                                 {t("logout")}
@@ -227,18 +227,18 @@ function Header() {
                             {user && (user.role === "admin" || user.role === "moderator") && (
                                 <button
                                     type="button"
-                                    className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                    className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                     onClick={() => navigate("/dashboard")}
                                 >
                                     {t("dashboard")}
                                 </button>
                             )}
                         </div>
-                    ) : (
+                     : (
                         <button
                             type="button"
                             aria-label="login-button"
-                            className="border-1 text-[#488ACF] text-1xl font-bold pt-1 pb-1 pr-3 pl-3 mr-4 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                            className="border-1 text-[#488ACF] text-1xl font-bold pt-1 pb-1 pr-3 pl-3 mr-4 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                             onClick={() => navigate("/")}
                         >
                             {t("login")}
@@ -258,7 +258,7 @@ function Header() {
                                             setSearchResults([]);
                                         }, 100);
                                     }}
-                                    className="w-full px-3 py-1 border rounded-2xl focus:outline-none focus:ring bg-gray-100"
+                                    className="w-full px-3 py-1 border rounded focus:outline-none focus:ring bg-gray-100"
                                     placeholder={t("searchPlaceholder")}
                                 />
 

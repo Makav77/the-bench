@@ -85,14 +85,14 @@ export default function GalleryItemDetailPage() {
             onClick={() => navigate("/gallery")}
         >
             <div
-                className="bg-white p-6 rounded-2xl shadow max-w-lg w-full"
+                className="bg-white p-6 rounded shadow max-w-lg w-full"
                 onClick={(e => e.stopPropagation())}
             >
                 <button 
                     onClick={() => navigate("/gallery")}
                     className="mb-4 text-blue-600 cursor-pointer text-2xl hover:underline"
                 >
-                        <X className="w-6 h-6 text-gray-600 hover:bg-gray-200 rounded-3xl" />
+                        <X className="w-6 h-6 text-gray-600 hover:bg-gray-200 rounded" />
                 </button>
 
                 <img 

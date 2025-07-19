@@ -69,7 +69,7 @@ function ResetPassword() {
                             type="email"
                             aria-label="email-field"
                             autoComplete="off"
-                            className={`w-2/3 bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 mb-5 border-gray-500 hover:border-black ${currentMailState === mailState.missingMail && !mailAddress ? "border-red-500 shake" : "border-gray-500"}`}
+                            className={`w-2/3 bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 mb-5 border-gray-500 hover:border-black ${currentMailState === mailState.missingMail && !mailAddress ? "border-red-500 shake" : "border-gray-500"}`}
                             onChange={handleChange}
                             placeholder={t("enterEmail")}
                         />
@@ -83,7 +83,7 @@ function ResetPassword() {
                         <div className="flex justify-center w-3/4 gap-5 mx-auto">
                             <button
                                 type="button"
-                                className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                                className="border-none bg-[#488ACF] text-1xl font-bold w-1/3 mx-auto mt-7 mb-2 p-2 text-white rounded cursor-pointer transition-all duration-300 flex justify-center items-center"
                                 aria-label="cancel-button"
                                 onClick={() => navigate("/")}
                                 disabled={isLoading}
@@ -93,7 +93,7 @@ function ResetPassword() {
 
                             <button
                                 type="submit"
-                                className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 flex justify-center items-center"
+                                className="border-none bg-[#488ACF] text-1xl font-bold w-2/3 mx-auto mt-7 mb-2 p-2 text-white rounded cursor-pointer transition-all duration-300 flex justify-center items-center"
                                 aria-label="send-button"
                                 disabled={isLoading}
                             >

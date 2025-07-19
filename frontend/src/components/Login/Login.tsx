@@ -96,7 +96,7 @@ function Login() {
     }
 
     return (
-        <div className="bg-white w-[384px] mx-auto mt-20 rounded-[2vw] text-center p-6 max-sm:w-[92vw] max-sm:rounded-[5vw] max-sm:mt-8 max-sm:p-4">
+        <div className="bg-white w-[384px] mx-auto mt-20 rounded-xl text-center p-6 max-sm:w-[92vw] max-sm:rounded-[5vw] max-sm:mt-8 max-sm:p-4">
             <h1 className="text-black font-bold text-5xl mt-10 mb-2 max-sm:text-4xl max-sm:mt-4 max-sm:mb-2">
                 {t("title")}
             </h1>
@@ -113,7 +113,7 @@ function Login() {
                     type="email"
                     aria-label="email-field"
                     autoComplete="off"
-                    className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.email ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                    className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.email ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                     value={loginCredentials.email || ""}
                     onChange={handleChange}
                     placeholder={t("mailAddress")}
@@ -125,7 +125,7 @@ function Login() {
                         type={isPasswordVisible ? "text" : "password"}
                         aria-label="password-field"
                         autoComplete="off"
-                        className={`bg-[#F2EBDC] text-black border-2 rounded-xl h-8 pl-5 w-1/1 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.password ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
+                        className={`bg-[#F2EBDC] text-black border-2 rounded h-8 pl-5 w-1/1 hover:border-black ${currentLoginState === loginState.missingCredentials && !loginCredentials.password ? "border-red-500 shake" : "border-gray-500"} max-sm:h-12 max-sm:text-lg`}
                         value={loginCredentials.password || ""}
                         onChange={handleChange}
                         placeholder={t("password")}
@@ -179,7 +179,7 @@ function Login() {
                 <button
                     type="submit"
                     aria-label="login-button"
-                    className="border-none bg-[#488ACF] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded-lg cursor-pointer transition-all duration-300 max-sm:w-full max-sm:text-2xl max-sm:py-3 max-sm:rounded-xl"
+                    className="border-none bg-[#488ACF] text-1xl font-bold w-1/2 mx-auto mt-7 mb-2 p-2 text-white rounded cursor-pointer transition-all duration-300 max-sm:w-full max-sm:text-2xl max-sm:py-3 max-sm:rounded"
                     disabled={isLoading}
                 >
                     {isLoading ? (

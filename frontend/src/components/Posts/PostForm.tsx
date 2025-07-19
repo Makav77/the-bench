@@ -53,6 +53,7 @@ function PostForm({ defaultValues, onSubmit }: PostFormProps) {
                 <input
                     type="text"
                     value={title}
+                    maxLength={100}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-2 max-sm:py-4 max-sm:text-lg max-sm:mt-2"
                 />

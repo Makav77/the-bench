@@ -106,7 +106,7 @@ function ChallengeDetailPage() {
 
     if (hasValidatedCompletion) {
         return (
-            <div className="p-6 w-full sm:w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10">
+            <div className="p-6 w-full sm:w-[30%] mx-auto space-y-4 bg-white rounded shadow mt-10">
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
                     <button
                         type="button"
@@ -138,7 +138,7 @@ function ChallengeDetailPage() {
                     {t("from")} {new Date(challenge.startDate).toLocaleDateString()} {t("to")} {new Date(challenge.endDate).toLocaleDateString()}
                 </p>
 
-                <p className="-mt-2">
+                <p className="-mt-2 break-words">
                     <strong>{t("howToWin")}</strong> {challenge.successCriteria}
                 </p>
 
@@ -218,7 +218,7 @@ function ChallengeDetailPage() {
 
     return (
         <div>
-            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl max-sm:w-[98%] max-sm:space-y-6 max-sm:mt-3">
+            <div className="p-6 space-y-4 mt-10 w-[30%] mx-auto bg-white rounded max-sm:w-[98%] max-sm:space-y-6 max-sm:mt-3">
                 <div className="flex justify-between gap-4 max-sm:flex-col max-sm:gap-2">
                     <button
                         type="button"
@@ -250,7 +250,7 @@ function ChallengeDetailPage() {
                     {t("from")} {new Date(challenge.startDate).toLocaleDateString()} {t("to")} {new Date(challenge.endDate).toLocaleDateString()}
                 </p>
 
-                <p className="-mt-2">
+                <p className="-mt-2 break-words">
                     <strong>{t("howToWin")}</strong> {challenge.successCriteria}
                 </p>
 

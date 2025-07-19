@@ -50,20 +50,14 @@ function LatestFlashPostCard() {
     return (
         <div
             onClick={() => navigate(`/flashposts/${flashPost.id}`)}
-            className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5 mb-10"
+            className="mb-10 flex justify-between items-center w-3/4 min-w-0 mx-auto bg-white rounded shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5"
         >
-            <div className="pr-4">
-                <h4 className="text-lg font-bold">
+            <div className="pr-4 overflow-hidden">
+                <h4 className="text-lg font-bold truncate">
                     {flashPost.title}
                 </h4>
 
-                <p className="text-sm text-gray-500">
-                    {t("lastUpdate")} {new Date(flashPost.updatedAt).toLocaleDateString()}
-                </p>
-            </div>
-
-            <div>
-                <p>{t("author")}{" "}
+                <p className="truncate whitespace-nowrap w-full">{t("author")}{" "}
                     <span
                         onClick={(e) => {
                             e.stopPropagation();
@@ -74,9 +68,21 @@ function LatestFlashPostCard() {
                         {flashPost.author.firstname} {flashPost.author.lastname}
                     </span>
                 </p>
-                <div className="text-center">
-                    <CountdownTimer createdAt={flashPost.updatedAt} />
+
+                <div className="flex justify-between">
+                    <p className="text-sm text-gray-500">
+                        {t("lastUpdate")} {new Date(flashPost.updatedAt).toLocaleDateString()}
+                    </p>
+
+                    <div className="text-right w-30">
+                        <CountdownTimer createdAt={flashPost.updatedAt} />
+                    </div>
                 </div>
+            </div>
+
+            <div>
+
+
             </div>
         </div>
     );

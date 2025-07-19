@@ -49,19 +49,13 @@ function LatestPostCard() {
     return (
         <div
             onClick={() => navigate(`/posts/${post.id}`)}
-            className="flex justify-between items-center w-3/4 mx-auto bg-white rounded-2xl shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5 mb-10"
+            className="mb-10 flex justify-between items-center w-3/4 min-w-0 mx-auto bg-white rounded shadow hover:bg-gray-100 cursor-pointer transition h-25 px-5"
         >
-            <div className="pr-4">
-                <h4 className="text-lg font-bold">
+            <div className="pr-4 overflow-hidden">
+                <h4 className="text-lg font-bold truncate">
                     {post.title}
                 </h4>
 
-                <p className="text-sm text-gray-500">
-                    {t("lastUpdate")} {new Date(post.updatedAt).toLocaleDateString()}
-                </p>
-            </div>
-
-            <div>
                 <p>{t("author")}{" "}
                     <span
                         onClick={(e) => {
@@ -72,6 +66,10 @@ function LatestPostCard() {
                     >
                         {post.author.firstname} {post.author.lastname}
                     </span>
+                </p>
+
+                <p className="text-sm text-gray-500">
+                    {t("lastUpdate")} {new Date(post.updatedAt).toLocaleDateString()}
                 </p>
             </div>
         </div>

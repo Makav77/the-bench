@@ -1,0 +1,214 @@
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+SITE WEB
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+CONNEXION
+- L'utilisateur peut se connecter (token classique ou refresh token avec l'option "Se souvenir de moi")
+- L'utilisateur peut se créer un compte
+- L'utilisateur se voit attribuer un quartier prédéfini (IRIS) selon son adresse renseignée à la création du compte
+
+HOMEPAGE
+- L'utilisateur voit sur la page d'accueil une suggestion d'tilisateur, la météo en temps réél, la dernière annonce de troc ou de vente, la dernière annonce postée, le prochain événement, la dernière annonce flash postée
+
+HEADER
+- L'utilisateur voit un message "Hello + son prénom"
+- L'utilisateur peut se rendre sur sa page de profil, vers la messagerie, se déconnecter, et accéder au dashboard s'il est administrateur ou modérateur
+- L'utilisateur peut naviguer à travers la navbar vers la page d'accueil, la section achat/vente/troc, la section annonce, la section événement et la section communauté
+- L'utilisateur voit à quel quartier il est rattaché
+- L'utilisateur peut chercher d'autres utilisateurs de son quartier et se rendre sur leur page de profil via un champ de recherche
+
+FOOTER
+- L'utilisateur peut naviguer vers la page d'accueil, la section achat/vente/troc, la section annonce, la section événement et la section communauté
+- L'utilisateur peut ouvrir une modal listant les modérateurs de son quartiers et les administrateurs
+- L'utilisateur peut accéder aux conditions d'utilisations du site
+- L'utilisateur peut accéder au compte GitHub des 3 membres du projet
+- L'utilisateur peut changer la langue du site
+
+MARKETPLACE
+- L'utilisateur voit la liste des objets mise en vente ou à troquer, avec leur titre, leur prix s'il y a en a un, la date de mise à jour de l'annonce, le vendeur et la première image de l'annonce si elle en a
+- L'utilisateur peut accéder aux détails d'une annonce
+- L'utilisateur peut créer une annonce pour échanger ou mettre en vente des objets
+- L'utilisateur (ou un administrateur/modérateur) peut modifier ou supprimer une annonce qu'il a créé
+- L'utilisateur peut signaler une annonce qu'il juge problématique
+- Si une ou plusieurs images sont ajoutés à une annonce, elle sont visible dans l'annonce, et la première l'est dans la liste des annonces
+- L'uilisateur peut voir davantage d'annonce en changeant de page s'il y a suffisament d'annonce
+- L'utilisateur ne voit que les annonces postés par des utilisateurs de son quartier
+
+BULLETINS BOARD
+- L'utilisateur voit la liste des annonces et des annonces flashs
+- L'utilisateur peut accéder aux détails d'une annonce
+- L'utilisateur peut créer des annonces
+- L'utilisateur ne peut créer qu'une seule annonce flash simultanément
+- L'utilisateur (ou un administrateur/modérateur) peut modifier ou supprimer une annonce qu'il a créé
+- L'utilisateur peut signaler une annonce qu'il juge problématique
+- Les annonces flashs se supprimment automatiquement après 24h
+- Une indication du temps restant avant la suppression de l'annonce est affichée
+- Les annonces publiés par un administrateur ou modérateur sont notifiés
+- L'utilisateur ne voit que les annonces postés par des utilisateurs de son quartier
+
+EVENTS
+- L'utilisateur peut accéder à la liste des prochains événements
+- L'utilisateur peut accéder aux détails d'un événement
+- L'utilisateur peut créer un événement
+- L'utilisateur (ou un administrateur/modérateur) peut modifier ou supprimer un événement qu'il a créé
+- L'utilisateur peut signaler un événement qu'il juge problématique
+- L'utilisateur peut s'inscrire à un événement
+- L'utilisateur peut se désinscrire d'un événement
+- L'utilisateur (ou un administrateur/modérateur) peut voir la liste des utilisateurs inscrits à son événement
+- L'utilisateur (ou un administrateur/modérateur) peut désincrire un utilisateur inscrit à son événement
+- Les événements complets affichent Événement complet, les événements sans restrictions de participant affichent Événement ouvert, les événement pour lesquels l'utilisateur est déjà inscrit affichent Vous êtes inscrit
+- L'utilisateur ne voit que les événements en cours ou les événements futurs
+- L'utilisateur ne voit que les événements publiés par des utilisateurs de son quartier
+
+COMMUNITY/GALLERY
+- L'utilisateur peut poster une image dans la galerie, avec une description optionnelle
+- L'utilisateur (ou un administrateur/modérateur) peut supprimer une image qu'il a posté
+- L'utilisateur peut mettre un "J'aime" sur une image
+- L'utilisateur peut signaler une image qu'il juge problématique
+- L'utilisateur peut accéder aux images posté par les utilisateurs sous forme de mosaïque
+- L'utilisateur peut accéder aux détails d'une image, en plus de la voir en plus grande
+- Un compteur de j'aime est affiché sur chaque image
+- L'utilisateur ne voit que les images publiées par des utilisateurs de son quartier
+
+COMMUNITY/POLLS
+- L'utilisateur peut voir la liste des sondages
+- L'utilisateur peut accéder aux détails d'un sondage
+- L'utilisateur peut voter pour un sondage
+- L'utilisateur peut créer un sondage
+- L'utilisateur (ou un administrateur/modérateur) peut supprimer un sondage qu'il a créé (mais pas le modifier !)
+- L'utilisateur (ou un administrateur/modérateur) peut clôturer un sondage qu'il a créé
+- L'utilisateur peut signaler un sondage qu'il juge problématique
+- L'utilisateur créant un sondage a le choix d'un sondage à réponse unique, réponses multiples, réponses limités (X choix max), peut le clôturer automatiquement après une durée qu'il définit, proposer de 2 à 10 réponses
+- Un sondage terminé est annoté Closed
+- Un sondage terminé affiche les résultats du sondage
+- Un sondage créé doit en premier lieu être validé par un modérateur ou un administrateur dans le dashboard avant d'apparaitre aux utilisateurs
+- L'utilisateur ne voit que les sondages publiées par des utilisateurs de son quartier
+
+COMMUNITY/CHALLENGES
+- L'utilisateur peut voir la liste des challenges en cours
+- L'utilisateur peut accéder aux détails d'un challenge
+- L'utilisateur peut s'inscrire à un challenge
+- L'utilisateur peut se désinscrire d'un challenge
+- L'utilisateur peut créer un challenge
+- L'utilisateur (ou un administrateur/modérateur) peut modifier ou supprimer les challenges qu'il a créé
+- L'utilisateur peut signaler un challenge qu'il juge problématique
+- L'utilisateur peut soumettre la complétion d'un challenge
+- Un challenge créé est en attente de validation d'un administrateur avant d'être disponible aux utilisateurs
+- Un challenge validé par un utilisateur est en attente de validation par un administrateur
+- L'utilsateur peut fournir du texte ou une image pour justifier sa réalisation du challenge
+- Un challenge affiche le nombre d'inscrit et le nombre d'utilisateur l'ayant validé
+- L'utilisateur ne voit que les challenges proposés par des utilisateurs de son quartier
+
+COMMUNITY/CALENDAR
+- L'utilisateur peut voir le calendrier
+- L'utilisateur peut naviguer entre les mois et les années
+- Le calendrier affiche le mois en cours
+- Le calendrier affiche les événements et les challenges
+- Le calendrier affiche le jour actuel, ainsi qu'un bouton pour revenir au mois en cours
+- Le calendrier redirige vers le challenge ou l'événement en cours quand on clique sur ceux-ci
+- Le calendrier n'affiche les événements et challenges qu'en lien avec le quartier de l'utilisateur connecté
+
+COMMUNITY/ARTISANS
+- L'utilisateur voit une liste de métier d'artisans
+- L'utilisateur, en cliquant sur un métier, voit la liste des 3 artisans de ce type le plus proche de lui
+- Les artisans proposés, issu du scrapping Google, affiche (si disponible) le nom de la société de l'artisan, son adresse, sa note ainsi que le nombre de reviews associées, ses horaires d'ouvertures, son numéro de téléphone ainsi qu'un lien vers son site web
+
+COMMUNITY/NEWS
+- L'utilisateur voit la liste des articles (journal) publiés
+- L'utilisateur peut afficher le détail d'un article
+- L'utilisateur (ou un administrateur/modérateur) peut modifier ou supprimer ses articles
+- L'utilisateur peut mettre un j'aime et le retirer sur un article
+- L'utilisateur peut poster un commentaire sous un article
+- L'utilisateur peut mettre un j'aime et le retirer sur un commentaire sous les articles
+- L'utilisateur (ou un administrateur/modérateur) peut modifier ou supprimer un commentaire sous un article
+
+COMMUNITY/SHOP
+- L'utilisateur peut voir la liste des badges disponibles à l'achat (en points)
+- L'utilisateur voit les badges qu'il possède grisé, il ne peut intéragir avec
+- L'utilisateur voit son nombre de points, et acheter un badge s'il possède suffisament de point
+- Les administrateurs et modérateurs peuvent créer un bage en renseignant une image et un coût
+- Les administrateurs et modérateurs peuvent supprimer un badge
+
+HEADER/DASHBOARD (accessible uniquement aux modérateurs et administrateurs)
+--- Section Reports
+- L'administrateur peut voir la liste des signalements de tous les quartiers
+- Le modérateur peut voir la liste des signalements de son quartier uniquement
+- L'administrateur peut valider ou rejeter un signalement de tous les quartiers
+- Le modérateur peut valider ou rejeter un signalement de son quartier uniquement
+- L'administrateur et le modérateur peut filtrer la liste des signalement par : status (en attente, validé, rejeté, tous), par type de contenu (annonce, annonce flash, image, challenge, sondage, événement, tous), par raison du signalement (langage offensant, spam, contenu inapproprié, haine, autres) ou par nom de l'utilisateur signalé.
+- L'administrateur est redirigé vers le contenu signalé en cliquant sur celui-ci dans la liste
+
+--- Section Restrictions
+- L'administrateur peut mettre une restriction d'action à n'importe quel utilisateur
+- Le modérateur peut mettre une restriction d'action à n'importe quel utilisateur de son quartier
+- L'administrateur et le modérateur possède une liste de restriction (publier une annonce, publier une annonce flash, créer un événement, s'inscrire à un événement, publier une image dans la gallerie, créer un sondage, voter à un sondage, créer un challenge, s'inscrire à un challenge, signaler)
+- L'administrateuret le modérateur doivent justifier une restriction
+- L'administrateur ou le modérateur doivent saisir une durée de restriction (jours, heures, minutes disponible)
+ 
+--- Section Challenges
+- L'administrateur peut voir la liste de tous les challenges en attente de validation pour création
+- Le modérateur peut voir la liste de tous les challenges de son quartier uniquement en attente de validation pour création
+- L'administrateur peut voir la liste de toutes les complétions de challenge en attente de validation
+- Le modérateur peut voir la liste des complétion de challenge de son quartier en attente de validation
+- L'administrateur peut valider ou rejeter n'importe quelle création de challenge en attente
+- L'administrateur peut valider ou rejeter une création de challenge en attente de son quartier uniquement
+- L'administrateur peut valider ou rejeter n'importe quelle complétion de challenge en attente
+- Le modérateur peut valider ou rejeter une complétion de challenge en attente de son quartier uniquement
+
+--- Section News
+- L'administrateur peut voir la liste de toutes les news en attente de validation pour création
+- Le modérateur peut voir la liste de toutes les news de son quartier uniquement en attente de validation pour création
+- L'administrateur peut valider ou rejeter n'importe quelle création de news en attente
+- Le modérateur peut valider ou rejeter une création de news en attente de son quartier uniquement
+
+PROFIL
+- Sur son profil, l'utilisateur peut modifier sa photo de profil, changer son adresse, voir sa lste d'amis et sa liste de demande d'amis en atente et supprimer son compte
+- Sur son profil, l'utilisateur peut voir son nombre de point
+- Sur le profil d'un autre utilisateur, l'utilisateur peut lui envoyer une demande d'ami s'ils ne le sont pas, annuler une demande d'ami en attente, ou supprimer l'utilisateur autre de sa liste d'ami s'ils sont déjà amis
+- Sur toute les pages de profil, l'utilisateur peut voir la liste des badges possédés par l'utilisateur, les événements auquels il a participé, les challenges auquels il a participé, ainsi que les articles actuellement en ligne dans le magasin posté par cet utilisateur (ainsi qu'une redirection vers quand on clique dessus)
+
+GLOBAL
+- L'utilisateur peut gagner des points en créant des challenges, en complétant des challenges, et en créant des sondages
+- Toutes les mentions d'un utilisateur à travers le site renvoi vers sa page de profil
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+
+
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Technos utilisées :
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Frontend
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+React
+TypeScript
+
+TailwindCSS (framework CSS)
+React-Router (navigation)
+Axios (requêtes HTTP)
+React-i18next (gestion des traductions)
+
+react-toastify
+react-datepicker
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Backend
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+NestJS
+TypeScript
+
+PostgreSQL
+MongoDB
+
+JWT Auth (authentification via tokens)
+Docker
+Adminer
+mongo-express
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Tâches réalisées
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Brice : Toute la partie Frontend + Backend, sauf partie notification, chat et mise en ligne du site
