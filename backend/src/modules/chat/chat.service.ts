@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { Message } from "./entities/message.entity";
 import { User } from "../Users/entities/user.entity";
 import { Group } from './entities/group.entity';
+import { NotificationsService } from "../notifications/notifications.service";
 
 @Injectable()
 export class ChatService {
@@ -14,6 +15,8 @@ export class ChatService {
     private readonly groupRepo: Repository<Group>,
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async saveMessage(data: {
@@ -39,6 +42,7 @@ export class ChatService {
     if (members.length !== memberIds.length) {
       throw new NotFoundException("Some users do not exist");
     }
+    this.notificationsService.createMany(memberIds, "Added to a group chat", `You have been added to the group ${name}.`);
     const group = this.groupRepo.create({ name, members });
     return this.groupRepo.save(group);
   }
@@ -73,5 +77,31 @@ export class ChatService {
 
     await this.groupRepo.save(group);
     return { deleted: false };
+  }
+
+  async getGroupMembers(groupId: string): Promise<User[]> {
+    const group = await this.groupRepo.findOne({
+      where: { id: groupId },
+      relations: ['members'],
+    });
+
+    if (!group) {
+      throw new Error(`Group with ID ${groupId} not found`);
+    }
+
+    return group.members;
+  }
+
+  async getGroupName(groupId: string): Promise<string>{
+    const group = await this.groupRepo.findOne({
+      where: { id: groupId },
+      relations: ['members'],
+    });
+
+    if (!group) {
+      throw new Error(`Group with ID ${groupId} not found`);
+    }
+
+    return group.name;
   }
 }

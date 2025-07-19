@@ -2,8 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
 import { useSocket } from "../../context/SocketContext";
 import { getRoomMessages } from "../../api/chatService";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function GeneralChatPage({ user }: { user: User | null }) {
+  const { t } = useTranslation("Chat/GeneralChat");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
   const socket = useSocket();
@@ -15,6 +18,7 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
         setMessages(data);
       } catch (err) {
         console.error("Erreur lors du chargement des messages :", err);
+        toast.error(t("errorLoadingMessages"));
       }
     };
     fetchHistory();
@@ -26,7 +30,6 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
     }
 
     socket.on("general-message", (msg: { content: string; userId: string; username: string }) => {
-      console.log("Received message:", msg);
       setMessages(prev => [...prev, msg]);
     });
     return () => {
@@ -57,7 +60,7 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-2">Messagerie Générale</h1>
+      <h1 className="text-xl font-bold mb-2">{t("generalMessaging")}</h1>
       <div ref={scrollContainerRef} className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
         {messages.map((msg, i) => {
           const isMine = msg.userId === user?.id;
@@ -82,7 +85,7 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
         <button onClick={sendMessage} className="bg-blue-500 text-white px-4 py-1 rounded">
-          Envoyer
+          {t("send")}
         </button>
       </div>
     </div>

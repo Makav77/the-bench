@@ -8,6 +8,8 @@ import { CreatePollDTO, PollType } from "./dto/create-poll.dto";
 import { VotePollDTO } from "./dto/vote-poll.dto";
 import { User, Role } from "../Users/entities/user.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { UserService } from "../Users/user.service";
+import { NotificationsService } from "../notifications/notifications.service";
 
 @Injectable()
 export class PollService {
@@ -20,6 +22,9 @@ export class PollService {
         private readonly voteRepo: Repository<PollVote>,
         @InjectRepository(User)
         private readonly userRepo: Repository<User>,
+
+        private readonly userService: UserService,
+        private readonly notificationsService: NotificationsService,
     ) {}
 
     async findAllPolls(page = 1, limit = 10, user: User): Promise<{ data: Poll[]; total: number; page: number; lastPage: number; }> {
@@ -104,6 +109,22 @@ export class PollService {
         );
 
         await this.optionRepo.save(opts);
+
+        await this.notificationsService.create(
+            author.id,
+            "Your poll was published",
+            `Your poll "${poll.question}" has been created and is visible to your neighborhood.`,
+        );
+
+        const neighbors = await this.userService.getUsersByIris(irisCode);
+        const others = neighbors.filter(u => u.id !== author.id);
+
+        await this.notificationsService.createMany(
+            others.map(u => u.id),
+            "New poll in your neighborhood",
+            `${author.firstname} ${author.lastname} created a new poll: "${poll.question}"`
+        );
+
         return this.findOnePoll(saved.id);
     }
 
@@ -161,6 +182,13 @@ export class PollService {
         }
 
         poll.manualClosed = true;
+        
+        await this.notificationsService.create(
+            user.id,
+            "You closed your poll",
+            `Your poll "${poll.question}" has been manually closed.`,
+        );
+        
         return this.pollRepo.save(poll);
     }
 
@@ -171,6 +199,12 @@ export class PollService {
         }
 
         await this.pollRepo.delete(id);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your poll has been deleted",
+            `Your poll "${poll.question}" has been successfully deleted.`,
+        );
     }
 
     @Cron(CronExpression.EVERY_HOUR)

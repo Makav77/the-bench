@@ -6,12 +6,18 @@ import { CreateEventDTO } from "./dto/create-event.dto";
 import { UpdateEventDTO } from "./dto/update-event.dto";
 import { User, Role } from "../Users/entities/user.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { UserService } from "../Users/user.service";
+import { NotificationsService } from "../notifications/notifications.service";
+import { EmbeddedMetadata } from "typeorm/metadata/EmbeddedMetadata";
 
 @Injectable()
 export class EventService {
     constructor(
         @InjectRepository(Event)
-        private readonly eventRepo: Repository<Event>
+        private readonly eventRepo: Repository<Event>,
+
+        private readonly userService: UserService,
+        private readonly notificationsService: NotificationsService
     ) {}
 
     async findAllEvents(page = 1, limit = 5, user: User): Promise<{ data: Event[]; total: number; page: number; lastPage: number; }> {
@@ -64,6 +70,24 @@ export class EventService {
             irisCode,
             irisName,
         });
+
+        await this.notificationsService.create(
+            author.id,
+            "Your event is now visible to your neighborhood",
+            `Your event "${event.name}" has been published.`
+        );
+
+        if (irisCode !== "all") {
+            const neighbors = await this.userService.getUsersByIris(irisCode);
+            const others = neighbors.filter(u => u.id !== author.id);
+
+            await this.notificationsService.createMany(
+                others.map(u => u.id),
+                "New event in your neighborhood",
+                `${author.firstname} ${author.lastname} created an event: "${event.name}"`
+            );
+        }
+
         return this.eventRepo.save(event);
     }
 
@@ -94,6 +118,12 @@ export class EventService {
         }
 
         const updated = this.eventRepo.merge(event, updateEventDTO);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your event has been updated",
+            `Your event "${updated.name}" has been successfully updated.`
+        );
         return this.eventRepo.save(updated);
     }
 
@@ -112,6 +142,12 @@ export class EventService {
         }
 
         await this.eventRepo.delete(id);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your event has been deleted",
+            `Your event "${event.name}" has been deleted.`
+        );
     }
 
     async removeParticipant(eventId: string, userIdToRemove: string, user: User): Promise<Event> {
@@ -129,6 +165,21 @@ export class EventService {
         }
 
         event.participantsList = event.participantsList?.filter((user) => user.id !== userIdToRemove);
+
+        await this.notificationsService.create(
+            userIdToRemove,
+            "You were removed from an event",
+            `You have been removed from the event "${event.name}" by the organizer.`
+        );
+
+        if(event.author){
+            await this.notificationsService.create(
+                event.author.id,
+                "Participant removed",
+                `You have removed a participant from your event "${event.name}".`
+            );
+        }
+        
         return this.eventRepo.save(event);
     }
 
@@ -159,6 +210,22 @@ export class EventService {
         }
 
         event.participantsList?.push(user);
+
+        await this.notificationsService.create(
+            user.id,
+            "You have joined an event",
+            `You have successfully registered for the event "${event.name}"`
+        );
+
+        if(event.author){
+            await this.notificationsService.create(
+                event.author.id,
+                "New participant",
+                `${user.firstname} ${user.lastname} has joined your event "${event.name}".`
+            );
+        }
+        
+
         return this.eventRepo.save(event);
     }
 
@@ -178,6 +245,21 @@ export class EventService {
         }
 
         (event.participantsList ?? []).splice(index, 1);
+
+        await this.notificationsService.create(
+            user.id,
+            "You have left the event",
+            `You are no longer registered for the event "${event.name}".`
+        );
+
+        if(event.author){
+            await this.notificationsService.create(
+                event.author.id,
+                "A participant left",
+                `${user.firstname} ${user.lastname} has left your event "${event.name}".`
+            );
+        }
+
         return this.eventRepo.save(event);
     }
 

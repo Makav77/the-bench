@@ -1,0 +1,9 @@
+{
+    "loading": "Chargement...",
+    "notifications": "Notifications",
+    "noNotifications": "Aucune notification.",
+    "new": "Nouveau",
+    "read": "lue",
+    "markAsUnread": "Marquer comme non lu",
+    "delete": "Supprimer la notification"
+}
