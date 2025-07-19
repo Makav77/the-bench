@@ -76,14 +76,24 @@ export class RecommendationService {
       }
     }
 
-    const events = await this.eventRepo.find({
-      where: { participantsList: { id: userId } },
-      relations: ["participantsList"],
-    });
+    const events = await this.eventRepo
+      .createQueryBuilder("event")
+      .innerJoin(
+        "event.participantsList",
+        "participant",
+        "participant.id = :userId",
+        { userId }
+      )
+      .leftJoinAndSelect("event.participantsList", "allParticipants")
+      .getMany();
+
     for (const event of events) {
-      const participant = event.participantsList ?? [];
-      for (const p of participant) {
-        incr(p.id, weights.event);
+      if (!event.participantsList || event.participantsList.length === 0) {
+        continue;
+      }
+
+      for (const participant of event.participantsList) {
+        incr(participant.id, weights.event);
       }
     }
 
@@ -112,18 +122,22 @@ export class RecommendationService {
       .map(([id]) => id);
     const recommendedUsers = await this.userRepo.findBy({ id: In(userIds) });
 
-    let result = recommendedUsers.map((user) => ({
-      user,
-      score: scores.get(user.id) || 0,
-    }));
+    let result = Array.from(scores.entries())
+      .map(([id, score]) => {
+        const user = recommendedUsers.find((u) => u.id === id);
+        return user ? { user, score } : null;
+      })
+      .filter((item): item is { user: User; score: number } => item !== null);
 
-    if(result.length < 3){
-        const others = await this.getFallbackRecommendations(user);
+    console.warn("Scored users:", Array.from(scores.entries()));
 
-        const existingIds = new Set(result.map(r => r.user.id));
-        const filteredOthers = others.filter(o => !existingIds.has(o.user.id));
+    if (result.length < 3) {
+      const others = await this.getFallbackRecommendations(user);
 
-        result = result.concat(filteredOthers)
+      const existingIds = new Set(result.map((r) => r.user.id));
+      const filteredOthers = others.filter((o) => !existingIds.has(o.user.id));
+
+      result = result.concat(filteredOthers);
     }
 
     result = result.sort((a, b) => b.score - a.score).slice(0, 3);
@@ -134,7 +148,7 @@ export class RecommendationService {
   async getFallbackRecommendations(
     user: User
   ): Promise<{ user: User; score: number }[]> {
-    const friendIds = user.friends?.map(f => f.id) || [];
+    const friendIds = user.friends?.map((f) => f.id) || [];
 
     const fallbackUsers = await this.userRepo.find({
       where: {
