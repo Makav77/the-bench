@@ -31,9 +31,9 @@ export class RecommendationService {
   ): Promise<{ user: User; score: number }[]> {
     const weights = {
       friendOfFriend: 6,
+      group: 5,
       event: 5,
       challenge: 4,
-      group: 3,
       poll: 2,
       survey: 1,
     };
@@ -112,9 +112,41 @@ export class RecommendationService {
       .map(([id]) => id);
     const recommendedUsers = await this.userRepo.findBy({ id: In(userIds) });
 
-    return recommendedUsers.map((user) => ({
+    let result = recommendedUsers.map((user) => ({
       user,
       score: scores.get(user.id) || 0,
     }));
+
+    if(result.length < 3){
+        const others = await this.getFallbackRecommendations(user);
+
+        const existingIds = new Set(result.map(r => r.user.id));
+        const filteredOthers = others.filter(o => !existingIds.has(o.user.id));
+
+        result = result.concat(filteredOthers)
+    }
+
+    result = result.sort((a, b) => b.score - a.score).slice(0, 3);
+
+    return result;
+  }
+
+  async getFallbackRecommendations(
+    user: User
+  ): Promise<{ user: User; score: number }[]> {
+    const friendIds = user.friends?.map(f => f.id) || [];
+
+    const fallbackUsers = await this.userRepo.find({
+      where: {
+        irisCode: user.irisCode,
+        id: Not(In([user.id, ...friendIds])),
+      },
+      order: {
+        points: "DESC",
+      },
+      take: 10,
+    });
+
+    return fallbackUsers.map((u) => ({ user: u, score: 1 }));
   }
 }
