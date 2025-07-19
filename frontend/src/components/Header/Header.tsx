@@ -195,7 +195,7 @@ function Header() {
 
                 <div className="flex flex-col items-end justify-end">
                     {isAuthenticated && user ? (
-                        <div className="flex items-center w-[110%]">
+                        <div className="flex items-center">
                             <span className="mr-4">{t("hello", { firstname: user.firstname })}</span>
                             <button
                                 type="button"
@@ -234,7 +234,7 @@ function Header() {
                                 </button>
                             )}
                         </div>
-                     : (
+                    ) : (
                         <button
                             type="button"
                             aria-label="login-button"
