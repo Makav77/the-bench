@@ -1,0 +1,133 @@
+paths:
+  /chat/messages/{room}:
+    get:
+      summary: Get messages from a chat room
+      tags: [Chat]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: room
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of messages in the room
+          content:
+            application/json:
+              example:
+                - id: "1"
+                  content: "Hello everyone!"
+                  createdAt: "2025-07-15T14:00:00.000Z"
+                  author:
+                    id: "1"
+                    firstname: "Johnny"
+                    lastname: "Doe"
+                - id: "2"
+                  content: "Hi Johnny!"
+                  createdAt: "2025-07-15T14:01:00.000Z"
+                  author:
+                    id: "2"
+                    firstname: "Jane"
+                    lastname: "Smith"
+
+  /chat/groups:
+    post:
+      summary: Create a new chat group
+      tags:
+        - Chat
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                members:
+                  type: array
+                  items:
+                    type: string
+            example:
+              name: "Book Club"
+              members:
+                - "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+      responses:
+        '201':
+          description: Group created successfully
+          content:
+            application/json:
+              example:
+                id: "a3aa8ac4-dc58-4089-beca-53bb7230b0a4"
+                name: "Book Club"
+                members:
+                  - id: "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                    firstname: "admin"
+                    lastname: "admin"
+                    address: "3 Cité Voltaire, 75011 Paris"
+                    irisCode: "751114409"
+                    irisName: "Sainte-Marguerite 9"
+                    email: "admin@admin.com"
+                    password: "$2b$10$IKiKwogRtaL9ZEIeztdgke.j1COgSC9fdbs6pRuOOw3xtv/iJXJGq"
+                    dateOfBirth: "2000-10-12"
+                    profilePicture: "/uploads/profile/file-1751798230726-528270244.jpg"
+                    points: 0
+                    role: "admin"
+
+  /chat/groups/{userId}:
+    get:
+      summary: Get all groups a user belongs to
+      tags: [Chat]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of groups for user
+          content:
+            application/json:
+              example:
+                id: "a3aa8ac4-dc58-4089-beca-53bb7230b0a4"
+                name: "Book Club"
+                members:
+                  - id: "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                    firstname: "admin"
+                    lastname: "admin"
+                    address: "3 Cité Voltaire, 75011 Paris"
+                    irisCode: "751114409"
+                    irisName: "Sainte-Marguerite 9"
+                    email: "admin@admin.com"
+                    password: "$2b$10$IKiKwogRtaL9ZEIeztdgke.j1COgSC9fdbs6pRuOOw3xtv/iJXJGq"
+                    dateOfBirth: "2000-10-12"
+                    profilePicture: "/uploads/profile/file-1751798230726-528270244.jpg"
+                    points: 0
+                    role: "admin"
+
+  /chat/groups/{id}/leave:
+    delete:
+      summary: Leave a group
+      tags: [Chat]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully left the group
+          content:
+            application/json:
+              example:
+                deleted: "true"

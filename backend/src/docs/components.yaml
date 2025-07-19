@@ -419,3 +419,85 @@ components:
         - events
         - challenges
         - marketItems
+    CreateCommentDTO:
+      type: object
+      required:
+        - newsId
+        - authorId
+        - authorName
+        - authorAvatar
+        - content
+      properties:
+        newsId:
+          type: string
+        authorId:
+          type: string
+        authorName:
+          type: string
+        authorAvatar:
+          type: string
+        content:
+          type: string
+        irisCode:
+          type: string
+          nullable: true
+        irisName:
+          type: string
+          nullable: true
+    UpdateCommentDTO:
+      allOf:
+        - $ref: '#/components/schemas/CreateCommentDTO'
+        - type: object
+          required: []
+    CreateNewsDTO:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        authorId:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        published:
+          type: boolean
+        images:
+          type: array
+          items:
+            type: string
+        irisCode:
+          type: string
+        irisName:
+          type: string
+      required:
+        - title
+        - content
+        - authorId
+    UpdateNewsDTO:
+      allOf:
+        - $ref: '#/components/schemas/CreateNewsDTO'
+    ValidateNewsDTO:
+      type: object
+      properties:
+        validated:
+          type: boolean
+        rejectedReason:
+          type: string
+          maxLength: 1000
+      required:
+        - validated
+    CreateBadgeDTO:
+      type: object
+      properties:
+        cost:
+          type: number
+          example: 100
+        available:
+          type: boolean
+          example: true
+      required:
+        - cost
+        - available

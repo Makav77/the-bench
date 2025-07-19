@@ -77,25 +77,30 @@ paths:
           content:
             application/json:
               example:
-                id: "869da343-3899-4983-b15b-62fe0b048b9e"
-                title: "Park cleaning Challenge"
-                description: "Clean up the park"
+                id: "921a2636-1fed-4172-ad9c-44f8bd9ff774"
+                irisCode: "all"
+                irisName: "all"
+                title: "Running Challenge"
+                description: "Run at least 2 km every day for 30 days."
                 status: "PENDING"
                 rejectedReason: null
                 reviewedAt: null
-                createdAt: "2025-06-18T09:02:02.122Z"
-                updatedAt: "2025-06-18T09:02:02.122Z"
+                createdAt: "2025-07-15T14:10:52.347Z"
+                updatedAt: "2025-07-15T14:10:52.347Z"
                 startDate: "2025-07-01T00:00:00.000Z"
                 endDate: "2025-07-30T23:59:59.000Z"
-                successCriteria: "Send a photo of a bag of trash you collected"
+                successCriteria: "Submit a screenshot of your running log"
                 author:
-                  id: "1"
-                  firstname: "Johnny"
-                  lastname: "Doe"
-                  email: "user@example.com"
-                  password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
-                  dateOfBirth: "2000-12-09T23:00:00.000Z"
-                  profilePicture: ""
+                  id: "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                  firstname: "admin"
+                  lastname: "admin"
+                  address: "3 Cité Voltaire, 75011 Paris"
+                  irisCode: "751114409"
+                  irisName: "Sainte-Marguerite 9"
+                  email: "admin@admin.com"
+                  password: "$2b$10$IKiKwogRtaL9ZEIeztdgke.j1COgSC9fdbs6pRuOOw3xtv/iJXJGq"
+                  dateOfBirth: "2000-10-12"
+                  profilePicture: "/uploads/profile/file-1751798230726-528270244.jpg"
                   points: 0
                   role: "admin"
                   permissions: []

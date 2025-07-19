@@ -102,6 +102,45 @@ paths:
   /users/upload-profile:
     $ref: './users.yaml#/paths/~1users~1upload-profile'
 
+  /chat/messages/{room}:
+    $ref: './chat.yaml#/paths/~1chat~1messages~1{room}'
+  /chat/groups:
+    $ref: './chat.yaml#/paths/~1chat~1groups'
+  /chat/groups/{userId}:
+    $ref: './chat.yaml#/paths/~1chat~1groups~1{userId}'
+  /chat/groups/{id}/leave:
+    $ref: './chat.yaml#/paths/~1chat~1groups~1{id}~1leave'
+
+  /news/{newsId}/comments:
+    $ref: './comments.yaml#/paths/~1news~1{newsId}~1comments'
+  /news/{newsId}/comments/{commentId}:
+    $ref: './comments.yaml#/paths/~1news~1{newsId}~1comments~1{commentId}'
+  /news/{newsId}/comments/{commentId}/like:
+    $ref: './comments.yaml#/paths/~1news~1{newsId}~1comments~1{commentId}~1like'
+  
+  /news:
+    $ref: './news.yaml#/paths/~1news'
+  /news/upload-images:
+    $ref: './news.yaml#/paths/~1news~1upload-images'
+  /news/pending:
+    $ref: './news.yaml#/paths/~1news~1pending'
+  /news/{id}:
+    $ref: './news.yaml#/paths/~1news~1{id}'
+  /news/{id}/like:
+    $ref: './news.yaml#/paths/~1news~1{id}~1like'
+  /news/{id}/likes:
+    $ref: './news.yaml#/paths/~1news~1{id}~1likes'
+  /news/{id}/validate:
+    $ref: './news.yaml#/paths/~1news~1{id}~1validate'
+  /shop/badges:
+    $ref: "./shop.yaml#/paths/~1shop~1badges"
+  /shop/user-badges:
+    $ref: "./shop.yaml#/paths/~1shop~1user-badges"
+  /shop/buy/{badgeId}:
+    $ref: "./shop.yaml#/paths/~1shop~1buy~1{badgeId}"
+  /shop/badges/{id}:
+    $ref: "./shop.yaml#/paths/~1shop~1badges~1{id}"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -152,3 +191,15 @@ components:
       $ref: './components.yaml#/components/schemas/UpdateUserDTO'
     ProfileSummaryDTO:
       $ref: './components.yaml#/components/schemas/ProfileSummaryDTO'
+    CreateCommentDTO:
+      $ref: './components.yaml#/components/schemas/CreateCommentDTO'
+    UpdateCommentDTO:
+      $ref: './components.yaml#/components/schemas/UpdateCommentDTO'
+    CreateNewsDTO:
+      $ref: './components.yaml#/components/schemas/CreateNewsDTO'
+    UpdateNewsDTO:
+      $ref: './components.yaml#/components/schemas/UpdateNewsDTO'
+    ValidateNewsDTO:
+      $ref: './components.yaml#/components/schemas/ValidateNewsDTO'
+    CreateBadgeDTO:
+      $ref: './components.yaml#/components/schemas/CreateBadgeDTO'

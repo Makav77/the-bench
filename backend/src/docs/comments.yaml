@@ -1,0 +1,167 @@
+paths:
+  /news/{newsId}/comments:
+    get:
+      summary: Get all comments for a news post
+      tags: [Comments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of comments for the news
+          content:
+            application/json:
+              example:
+                - _id: "686d93f120c49a6cbf769ad2"
+                  newsId: "686d93d720c49a6cbf769ab2"
+                  authorId: "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                  authorName: "admin admin"
+                  authorAvatar: "/uploads/profile/file-1751798230726-528270244.jpg"
+                  content: "bravo a toi"
+                  likedBy:
+                    - "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                  irisCode: "751114409"
+                  irisName: "Sainte-Marguerite 9"
+                  createdAt: "2025-07-08T21:56:01.443Z"
+                  updatedAt: "2025-07-08T21:56:03.282Z"
+                  __v: 1
+
+    post:
+      summary: Create a comment on a news post
+      tags: [Comments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+            example:
+              content: "Looking forward to this event!"
+      responses:
+        '201':
+          description: Comment created
+          content:
+            application/json:
+              example:
+                - _id: "686d93f120c49a6cbf769ad2"
+                  newsId: "686d93d720c49a6cbf769ab2"
+                  authorId: "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                  authorName: "admin admin"
+                  authorAvatar: "/uploads/profile/file-1751798230726-528270244.jpg"
+                  content: "bravo a toi"
+                  likedBy:
+                    - "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                  irisCode: "751114409"
+                  irisName: "Sainte-Marguerite 9"
+                  createdAt: "2025-07-08T21:56:01.443Z"
+                  updatedAt: "2025-07-08T21:56:03.282Z"
+                  __v: 1
+
+  /news/{newsId}/comments/{commentId}:
+    patch:
+      summary: Update a comment
+      tags: [Comments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/UpdateCommentDTO'
+      responses:
+        '200':
+          description: Comment updated
+          content:
+            application/json:
+              example:
+                - _id: "686d93f120c49a6cbf769ad2"
+                  newsId: "686d93d720c49a6cbf769ab2"
+                  authorId: "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                  authorName: "admin admin"
+                  authorAvatar: "/uploads/profile/file-1751798230726-528270244.jpg"
+                  content: "bravo a toi"
+                  likedBy:
+                    - "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                  irisCode: "751114409"
+                  irisName: "Sainte-Marguerite 9"
+                  createdAt: "2025-07-08T21:56:01.443Z"
+                  updatedAt: "2025-07-08T21:56:03.282Z"
+                  __v: 1
+
+    delete:
+      summary: Delete a comment
+      tags: [Comments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comment deleted
+          content:
+            application/json:
+              example:
+                deleted: true
+
+  /news/{newsId}/comments/{commentId}/like:
+    post:
+      summary: Toggle like on a comment
+      tags: [Comments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: newsId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Like toggled
+          content:
+            application/json:
+              example:
+                liked: true
+                totalLikes: 7

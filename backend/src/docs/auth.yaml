@@ -10,9 +10,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './components.yaml#/components/schemas/LoginUserDTO'
+              $ref: "./components.yaml#/components/schemas/LoginUserDTO"
       responses:
-        '200':
+        "200":
           description: Login successful
           content:
             application/json:
@@ -26,7 +26,7 @@ paths:
                   summary: Example access token response
                   value:
                     accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzUwMjQzMzU0LCJleHAiOjE3NTAyNDQyNTR9.bVmSRkVwVKGwehd-M-MY8pr342rUo3AJysI8qFz2Y2c
-        '401':
+        "401":
           description: Incorrect password
           content:
             application/json:
@@ -46,7 +46,7 @@ paths:
                     message: Incorrect password
                     error: Unauthorized
                     statusCode: 401
-        '404':
+        "404":
           description: User not found
           content:
             application/json:
@@ -74,7 +74,7 @@ paths:
         - Auth
       description: Returns a new access token using the refresh token from the cookie.
       responses:
-        '200':
+        "200":
           description: New access token
           content:
             application/json:
@@ -98,7 +98,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Logout successful
           content:
             application/json:
@@ -122,7 +122,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Current user info
           content:
             application/json:
@@ -154,16 +154,19 @@ paths:
                     items:
                       type: string
               examples:
-                userInfo:
-                  summary: Logged-in user info
+                updatedUserInfo:
+                  summary: Logged-in user info (updated)
                   value:
-                    id: "1"
-                    firstname: "Johnny"
-                    lastname: "Doe"
-                    email: "user@example.com"
-                    password: "$2b$10$u71m0c00UZBL5u9gnaaE5umWCatSON2tj.TJVh6Vtdd0SbVYFvYdu"
-                    dateOfBirth: "2000-12-09T23:00:00.000Z"
-                    profilePicture: ""
+                    id: "24bc9a0a-585d-4650-ac66-4bfb350d58db"
+                    firstname: "admin"
+                    lastname: "admin"
+                    address: "3 Cité Voltaire, 75011 Paris"
+                    irisCode: "751114409"
+                    irisName: "Sainte-Marguerite 9"
+                    email: "admin@admin.com"
+                    password: "$2b$10$IKiKwogRtaL9ZEIeztdgke.j1COgSC9fdbs6pRuOOw3xtv/iJXJGq"
+                    dateOfBirth: "2000-10-12"
+                    profilePicture: "/uploads/profile/file-1751798230726-528270244.jpg"
                     points: 0
                     role: "admin"
                     permissions: []
