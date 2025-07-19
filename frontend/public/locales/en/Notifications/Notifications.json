@@ -1,0 +1,9 @@
+{
+    "loading": "Loading...",
+    "notifications": "Notifications",
+    "noNotifications": "No notifications.",
+    "new": "New",
+    "read": "read",
+    "markAsUnread": "Mark as unread",
+    "delete": "Delete notification"
+}

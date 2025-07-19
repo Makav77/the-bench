@@ -8,5 +8,6 @@
     "searchPlaceholder": "Rechercher un utilisateur...",
     "searching": "Recherche...",
     "noUserFound": "Aucun utilisateur trouvé",
-    "messages": "Messages"
+    "messages": "Messages",
+    "notifications": "Notifications"
 }

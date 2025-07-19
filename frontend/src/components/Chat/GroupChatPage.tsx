@@ -2,8 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
 import { useSocket } from "../../context/SocketContext";
 import { getRoomMessages, leaveGroup } from "../../api/chatService";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function GroupChatPage({ user, groupId, groupName, onLeave}: { user: User | null, groupId: string, groupName: string, onLeave: () => void }) {
+    const { t } = useTranslation("Chat/GroupChat");
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
     const socket = useSocket();
@@ -11,12 +14,12 @@ export default function GroupChatPage({ user, groupId, groupName, onLeave}: { us
     const handleLeaveGroup = async () => {
         try {
             const res = await leaveGroup(groupId);
-            alert("Vous avez quitté le groupe.");
+            toast.success(t("leftGroup"));
 
             onLeave();
         } catch (err) {
             console.error("Erreur lors de la sortie du groupe :", err);
-            alert("Impossible de quitter le groupe.");
+            toast.error(t("cannotLeaveGroup"));
         }
     };
 
@@ -27,6 +30,7 @@ export default function GroupChatPage({ user, groupId, groupName, onLeave}: { us
                 setMessages(data);
             } catch (err) {
                 console.error("Erreur lors du chargement des messages :", err);
+                toast.error(t("errorLoadingMessages"));
             }
         };
 
@@ -80,13 +84,13 @@ export default function GroupChatPage({ user, groupId, groupName, onLeave}: { us
     return (
         <div className="p-4">
             <div className="flex items-center justify-between mb-2">
-                <h1 className="text-xl font-bold">Groupe {groupName}</h1>
+                <h1 className="text-xl font-bold">{t("group")} {groupName}</h1>
                 <button
                     type="button"
                     onClick={handleLeaveGroup}
                     className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded w-fit cursor-pointer"
                 >
-                    Quitter le groupe
+                    {t("leaveGroup")}
                 </button>
             </div>
             <div ref={scrollContainerRef} className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
@@ -113,7 +117,7 @@ export default function GroupChatPage({ user, groupId, groupName, onLeave}: { us
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 />
                 <button onClick={sendMessage} className="bg-blue-500 text-white px-4 py-1 rounded">
-                    Envoyer
+                    {t("send")}
                 </button>
             </div>
         </div>
