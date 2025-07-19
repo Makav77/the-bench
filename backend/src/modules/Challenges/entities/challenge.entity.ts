@@ -2,7 +2,6 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { User } from "../../../modules/Users/entities/user.entity";
 import { ChallengeRegistration } from "./challenge-registration.entity";
 import { ChallengeCompletion } from "./challenge-completion.entity";
-import { ChallengeSubmission } from "./challenge-submission.entity";
 
 @Entity({ name: "challenges" })
 export class Challenge {
@@ -53,7 +52,4 @@ export class Challenge {
 
     @OneToMany(() => ChallengeCompletion, (completion) => completion.challenge, { cascade: true })
     completions: ChallengeCompletion[];
-
-    @OneToMany(() => ChallengeSubmission, (submission) => submission.challenge, { onDelete: "CASCADE" })
-    submissions: ChallengeSubmission[];
 }
