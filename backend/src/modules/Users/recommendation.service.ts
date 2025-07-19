@@ -72,8 +72,12 @@ export class RecommendationService {
     });
     for (const reg of challengeRegs) {
       for (const other of reg.challenge.registrations) {
+        if(other.user.id === reg.challenge.author.id){
+            continue;
+        }
         incr(other.user.id, weights.challenge);
       }
+      incr(reg.challenge.author.id, weights.challenge)
     }
 
     const events = await this.eventRepo
@@ -93,8 +97,12 @@ export class RecommendationService {
       }
 
       for (const participant of event.participantsList) {
+        if(participant.id === event.author.id){
+            continue;
+        }
         incr(participant.id, weights.event);
       }
+      incr(event.author.id, weights.event)
     }
 
     const votes = await this.pollVoteRepo.find({
@@ -103,8 +111,12 @@ export class RecommendationService {
     });
     for (const vote of votes) {
       for (const other of vote.poll.votes) {
+        if (other.voter.id === vote.poll.author.id){
+            continue;
+        }
         incr(other.voter.id, weights.poll);
       }
+      incr(vote.poll.author.id, weights.poll);
     }
 
     const groups = await this.groupRepo.find({
