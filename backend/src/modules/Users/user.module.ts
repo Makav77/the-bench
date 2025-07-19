@@ -13,13 +13,14 @@ import { Event } from "../Events/entities/event.entity";
 import { IrisModule } from "../Iris/iris.module";
 import { Badge } from "../Shop/entities/badge.entity";
 import { UserBadge } from "../Shop/entities/user-badge.entity";
+import { forwardRef } from "@nestjs/common";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([User, UserRestriction, Event, ChallengeRegistration, MarketItem, Badge, UserBadge]),
         EventModule,
         ChallengesModule,
-        MarketModule,
+        forwardRef(()=> MarketModule),
         IrisModule,
     ],
     controllers: [UserController],

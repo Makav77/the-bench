@@ -6,6 +6,8 @@ import { FlashPost } from './entities/flash-post.entity';
 import { PermissionsModule } from '../Permissions/permissions.module';
 import { createInjectServiceMiddleware } from '../Utils/inject-resource-service.middleware';
 import { LoadFlashPostResourceMiddleware } from './middlewares/load-flashpost-resource.middleware';
+import { UserModule } from '../Users/user.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 const InjectFlashPostServiceMiddleware = createInjectServiceMiddleware("flashPostsService", FlashPostsService);
 
@@ -13,6 +15,8 @@ const InjectFlashPostServiceMiddleware = createInjectServiceMiddleware("flashPos
     imports: [
         TypeOrmModule.forFeature([FlashPost]),
         PermissionsModule,
+        UserModule,
+        NotificationsModule
     ],
     controllers: [FlashPostsController],
     providers: [FlashPostsService],

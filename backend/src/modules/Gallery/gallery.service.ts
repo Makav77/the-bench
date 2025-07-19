@@ -4,14 +4,20 @@ import { Repository, MoreThan, FindOptionsWhere } from "typeorm";
 import { GalleryItem } from "./entities/gallery-item.entity";
 import { User, Role } from "../Users/entities/user.entity";
 import { join } from "path";
-import { unlink } from "fs/promises";
+import { unlink, access } from "fs/promises";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { UserService } from "../Users/user.service";
+import { NotificationsService } from "../notifications/notifications.service";
+import { constants } from "fs";
 
 @Injectable()
 export class GalleryService {
     constructor(
         @InjectRepository(GalleryItem)
         private readonly galleryRepo: Repository<GalleryItem>,
+
+        private readonly userService: UserService,
+        private readonly notificationsService: NotificationsService,
     ) {}
 
     async findAllGalleryItems(page = 1, limit = 30, user: User): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
@@ -66,6 +72,22 @@ export class GalleryService {
             irisName,
         });
 
+        await this.notificationsService.create(
+            user.id,
+            "Your photo was published",
+            "Your gallery item is now visible to your neighborhood."
+        );
+
+        const neighbors = await this.userService.getUsersByIris(irisCode);
+        const others = neighbors.filter(u => u.id !== user.id);
+
+        await this.notificationsService.createMany(
+            others.map(u => u.id),
+            "New gallery post in your neighborhood",
+            `${user.firstname} ${user.lastname} has shared a new photo.`
+        );
+
+
         return this.galleryRepo.save(galleryItem);
     }
 
@@ -81,10 +103,26 @@ export class GalleryService {
         if (index !== -1) {
             galleryItem.likedBy.splice(index, 1);
         } else {
-            galleryItem.likedBy.push(user)
+            galleryItem.likedBy.push(user);
+            
+            await this.notificationsService.create(
+                galleryItem.author.id,
+                "Your photo was liked",
+                `${user.firstname} ${user.lastname} liked your photo.`
+            );
         }
 
         return this.galleryRepo.save(galleryItem);
+    }
+
+
+    async fileExists(path: string): Promise<boolean> {
+        try {
+            await access(path, constants.F_OK);
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     async removeGalleryItem(id: string, user: User): Promise<void> {
@@ -103,7 +141,22 @@ export class GalleryService {
 
         const filePath = join(process.cwd(), "uploads", "gallery", galleryItem.url.split("/").pop()!);
 
-        await unlink(filePath);
+        if(await this.fileExists(filePath)){
+            try{
+                await unlink(filePath);
+            } catch (err){
+                console.error("Erreur lors de la suppression du fichier :", err.message);
+            }
+        } else{
+            console.warn(`Le fichier ${filePath} n'a pas été trouvé`);
+        }
+
+        await this.notificationsService.create(
+            user.id,
+            "Your gallery item was deleted",
+            `Your photo${galleryItem.description ? ` "${galleryItem.description}"` : ""} has been removed.`
+        );
+
         await this.galleryRepo.delete(id);
     }
 

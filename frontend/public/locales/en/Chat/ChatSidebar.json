@@ -1,0 +1,9 @@
+{
+  "errorLoadingFriends": "Error loading friends.",
+  "failedToFetchGroups": "Failed to fetch groups.",
+  "messaging": "Messaging",
+  "general": "General",
+  "friends": "Friends",
+  "groups": "Groups",
+  "addGroup": "Add group"
+}

@@ -5,6 +5,9 @@ import { useAuth } from "../../context/AuthContext";
 import { logoutUser } from "../../api/authService";
 import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
+import { getNotifications } from "../../api/notificationsSerice";
+import { NotificationBell } from "../Notifications/NotificationBell";
+import  { useLocation } from "react-router-dom";
 
 function capitalize(str: string) {
     if (!str) {
@@ -14,12 +17,14 @@ function capitalize(str: string) {
 }
 
 function Header() {
+    const location = useLocation();
     const { t } = useTranslation("Header/Header");
     const navigate = useNavigate();
     const { isAuthenticated, user, logout } = useAuth();
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchResults, setSearchResults] = useState<{ id: string; firstname: string; lastname: string; }[]>([]);
     const [isSearching, setIsSearching] = useState<boolean>(false);
+    const [unreadCount, setUnreadCount] = useState<number>(0);
 
     const handleLogout = async () => {
         await logoutUser();
@@ -49,6 +54,26 @@ function Header() {
         }, 300);
         return () => clearTimeout(delayDebounceFn);
     }, [searchQuery]);
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            if (isAuthenticated && user?.id) {
+                try {
+                    const response = await getNotifications(user.id);
+                    const unreadCount = response.filter((n: any) => !n.read).length;
+                    setUnreadCount(unreadCount);
+                } catch (error) {
+                    console.error("Error fetching notifications:", error);
+                }
+            }
+        }
+
+        if (location.state?.refreshNotifications) {
+            window.history.replaceState({}, "");
+        }
+        fetchNotifications();
+
+    }, [user?.id, location.state]);
 
     return (
         <div
@@ -213,6 +238,16 @@ function Header() {
                                 onClick={() => navigate("/chat")}
                             >
                                 {t("messages")}
+                            </button>
+
+                            <button
+                                type="button"
+                                aria-label="message-button"
+                                className="flex gap-2 items-center border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                onClick={() => navigate("/notifications", { state: { fromHeader: true } })}
+                            >
+                                <NotificationBell count={unreadCount} />
+                                {t("notifications")}
                             </button>
 
                             <button

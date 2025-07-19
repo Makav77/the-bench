@@ -1,0 +1,125 @@
+import { useEffect, useState } from "react";
+import { CheckCircle2, Trash2, EyeOff } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { NotificationBell } from "./NotificationBell";
+import { useTranslation } from "react-i18next";
+import {
+  getNotifications,
+  markAllAsRead,
+  markAsUnread,
+  deleteNotification,
+  Notification,
+} from "../../api/notificationsSerice";
+
+const NotificationsPage = () => {
+  const { user } = useAuth();
+  const { t } = useTranslation("Notifications/Notifications");
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        if (!user?.id) return;
+
+        const data = await getNotifications(user.id);
+        setNotifications(data);
+        setUnreadCount(data.filter((n) => !n.read).length);
+
+        await markAllAsRead(user.id);
+      } catch (error) {
+        console.error("Erreur de récupération des notifications :", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, [user?.id]);
+
+  const handleDelete = async (id: string) => {
+    await deleteNotification(id);
+    setNotifications((prev) => prev.filter((n) => n._id !== id));
+  };
+
+  const handleMarkUnread = async (id: string) => {
+    await markAsUnread(id);
+
+    notifications
+      .filter((n) => n._id === id)
+      .forEach((n) => {
+        if (n.read) {
+          setUnreadCount((prev) => prev + 1);
+        }
+      });
+
+    setNotifications((prev) =>
+      prev.map((n) => (n._id === id ? { ...n, read: false } : n))
+    );
+  };
+
+  return (
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
+        <NotificationBell count={unreadCount} /> {t("notifications")}
+      </h1>
+
+      {loading ? (
+        <p>{t("loading")}</p>
+      ) : notifications.length === 0 ? (
+        <p className="text-gray-500">{t("noNotifications")}</p>
+      ) : (
+        <ul className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+          {notifications.map((n) => (
+            <li
+              key={n._id}
+              className={`p-4 rounded-lg border shadow-sm relative ${
+                n.read ? "bg-white" : "bg-blue-50 border-blue-300"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2" title={n.read ? t("read") : ""}>
+                  {n.read && (
+                    <CheckCircle2
+                      className="text-green-500 w-5 h-5"
+                    />
+                  )}
+                  <h2 className="text-lg font-semibold">{n.title}</h2>
+                </div>
+                <div className="flex items-center gap-2">
+                  {!n.read && (
+                    <span className="text-sm text-blue-600 font-medium">
+                      {t("new")}
+                    </span>
+                  )}
+                  <button
+                    onClick={() => handleMarkUnread(n._id)}
+                    className="text-gray-500 hover:text-yellow-600 transition"
+                    title={t("markAsUnread")}
+                  >
+                    <EyeOff className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(n._id)}
+                    className="text-gray-500 hover:text-red-600 transition"
+                    title={t("delete")}
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {n.message && <p className="text-gray-700">{n.message}</p>}
+              <p className="text-sm text-gray-400 mt-2">
+                {new Date(n.createdAt).toLocaleString()}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default NotificationsPage;
