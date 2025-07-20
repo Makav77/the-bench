@@ -27,7 +27,7 @@ import { PermissionsModule } from '../Permissions/permissions.module';
 import { PermissionsController } from '../Permissions/permissions.controller';
 import { ReportsModule } from '../Reports/reports.module';
 import { ReportsController } from '../Reports/reports.controller';
-import { ChatModule } from '../chat/chat.module';
+import { ChatModule } from '../Chat/chat.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MONGO_URI } from 'src/database/mongo-database-config';
 import { NewsModule } from '../News/news.module';

@@ -50,41 +50,37 @@ export default function ChatSidebar({ onSelect, user, onlineUsers, refreshTrigge
   }, [refreshTrigger, user?.id]);
 
   return (
-    <div className="w-64 bg-[#4A93C9] p-4 space-y-4 overflow-y-auto">
-      <h2 className="font-bold text-lg">{t("messaging")}</h2>
-      <button onClick={() => onSelect({ type: 'general' })} className="block w-full text-left px-2 py-1 hover:bg-gray-200 rounded flex items-center gap-2">
-       <Megaphone size={18} />
-       {t("general")}
+    <div className="w-64 bg-[#4A93C9] p-4 space-y-4 overflow-y-auto max-sm:w-full max-sm:order-1 max-sm:rounded-b-2xl max-sm:p-5 max-sm:space-y-6">
+      <h2 className="font-bold text-lg max-sm:text-2xl">{t("messaging")}</h2>
+      <button onClick={() => onSelect({ type: 'general' })} className="block w-full text-left px-2 py-1 hover:bg-gray-200 rounded flex items-center gap-2 max-sm:text-lg max-sm:py-4">
+        <Megaphone size={18} />
+        {t("general")}
       </button>
 
       <div>
-        <h3 className="text-sm font-semibold mt-4 flex items-center gap-2"><HeartHandshake size={16} /> {t("friends")}</h3>
+        <h3 className="text-sm font-semibold mt-4 flex items-center gap-2 max-sm:text-lg"><HeartHandshake size={16} /> {t("friends")}</h3>
         {friends
           .filter(friend => friend.id !== user?.id)
           .map(friend => (
             <button
               key={friend.id}
               onClick={() => onSelect({ type: 'private', targetId: friend.id })}
-              className="flex items-center gap-2 w-full text-left px-2 py-1 hover:bg-gray-200 rounded"
+              className="flex items-center gap-2 w-full text-left px-2 py-1 hover:bg-gray-200 rounded max-sm:text-lg max-sm:py-4"
             >
-            <span
-              className={`inline-block w-2 h-2 rounded-full ${
-                onlineUsers.includes(friend.id) ? '	bg-lime-500' : 'bg-gray-400'
-              }`}
-            />
-            {friend.firstname} {friend.lastname}
-          </button>
-        ))}
+              <span className={`inline-block w-2 h-2 rounded-full ${onlineUsers.includes(friend.id) ? '	bg-lime-500' : 'bg-gray-400'}`} />
+              {friend.firstname} {friend.lastname}
+            </button>
+          ))}
       </div>
 
       <div>
-        <h3 className="text-sm font-semibold mt-4 flex items-center gap-2"><Users size={16} /> {t("groups")}</h3>
-        <button onClick={() => onSelect({ type: 'create-group' })} className="text-white font-bold cursor-pointer hover:text-gray-200 flex items-center gap-2"><UserPlus size={16} /> {t("addGroup")}</button>
+        <h3 className="text-sm font-semibold mt-4 flex items-center gap-2 max-sm:text-lg"><Users size={16} /> {t("groups")}</h3>
+        <button onClick={() => onSelect({ type: 'create-group' })} className="text-white font-bold cursor-pointer hover:text-gray-200 flex mt-5 items-center gap-2 max-sm:text-lg">{<UserPlus size={16} />} {t("addGroup")}</button>
         {groups.map(group => (
           <button
             key={group.id}
             onClick={() => onSelect({ type: 'group', targetId: group.id, groupName: group.name })}
-            className="block w-full text-left px-2 py-1 hover:bg-gray-200 rounded"
+            className="block w-full text-left px-2 py-1 hover:bg-gray-200 rounded max-sm:text-lg max-sm:py-4"
           >
             {group.name}
           </button>
