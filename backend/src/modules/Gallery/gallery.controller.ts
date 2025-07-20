@@ -15,7 +15,7 @@ import {
   BadRequestException,
   Res,
 } from "@nestjs/common";
-import { Response } from 'express';
+import { Response } from "express";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { GalleryService } from "./gallery.service";
 import { CreateGalleryItemDTO } from "./dto/create-gallery-item.dto";
@@ -72,11 +72,13 @@ export class GalleryController {
     @UploadedFile() file: S3File,
     @Body() createGalleryItemDTO: CreateGalleryItemDTO,
     @Req() req: RequestWithResource<GalleryItem>,
-    @Res() res: Response,
+    @Res() res: Response
   ): Promise<void> {
     const user = req.user as User;
-    
-    const multerUpload = this.uploadService.getMulterUploader().single("url");
+
+    const multerUpload = this.uploadService
+      .getMulterUploader({ folder: "gallery" })
+      .single("url");
 
     multerUpload(req, res, async (err: any) => {
       if (err) {

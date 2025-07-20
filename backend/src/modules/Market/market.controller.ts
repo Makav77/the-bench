@@ -71,7 +71,7 @@ export class MarketController {
     @Res() res: Response
   ): Promise<void> {
     const user = req.user as User;
-    const upload = this.uploadService.getMulterUploader().array("images", 5);
+    const upload = this.uploadService.getMulterUploader({ folder: "market" }).array("images", 5);
 
     upload(req, res, async (err) => {
       if (err) {
@@ -151,7 +151,9 @@ export class MarketController {
     @Res() res: Response
   ): Promise<void> {
     const user = req.user as User;
-    const upload = this.uploadService.getMulterUploader().array("images", 5);
+    const upload = this.uploadService
+      .getMulterUploader({ folder: "market" })
+      .array("images", 5);
 
     upload(req, res, async (err) => {
       if (err) {

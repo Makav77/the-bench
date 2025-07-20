@@ -20,6 +20,7 @@ import { Group } from "../chat/entities/group.entity";
 import { GalleryItem } from "../Gallery/entities/gallery-item.entity";
 import { MongooseModule } from "@nestjs/mongoose";
 import { News, NewsSchema } from "../News/news.schema";
+import { UploadModule } from "../Upload/upload.module";
 
 @Module({
     imports: [
@@ -33,13 +34,14 @@ import { News, NewsSchema } from "../News/news.schema";
             UserBadge, 
             PollVote, 
             Group,
-            GalleryItem
+            GalleryItem,
         ]),
         MongooseModule.forFeature([{ name: News.name, schema: NewsSchema }]),
         EventModule,
         ChallengesModule,
         forwardRef(()=> MarketModule),
         IrisModule,
+        UploadModule
     ],
     controllers: [UserController],
     providers: [UserService, RecommendationService],

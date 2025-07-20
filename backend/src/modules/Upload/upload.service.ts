@@ -3,7 +3,6 @@ import * as AWS from "aws-sdk";
 import multer from "multer";
 import multerS3 from "multer-s3";
 
-
 @Injectable()
 export class UploadService {
   private s3: AWS.S3;
@@ -19,7 +18,8 @@ export class UploadService {
     });
   }
 
-  getMulterUploader() {
+  getMulterUploader(options?: { folder?: string; maxCount?: number }) {
+    const folder = options?.folder ? `${options.folder}/` : "";
     return multer({
       storage: multerS3({
         s3: this.s3,
@@ -28,7 +28,7 @@ export class UploadService {
         contentType: multerS3.AUTO_CONTENT_TYPE,
         key: (req, file, cb) => {
           const ext = file.originalname.split(".").pop();
-          const filename = `${Date.now()}-${Math.round(
+          const filename = `${folder}${Date.now()}-${Math.round(
             Math.random() * 1e5
           )}.${ext}`;
           cb(null, filename);
