@@ -2,6 +2,8 @@ services:
   postgres:
     image: postgres:latest
     container_name: postgres_database
+    networks:
+      - bench-net
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
@@ -11,38 +13,47 @@ services:
 
   adminer:
     image: adminer
-    ports:
-      - '8080:8080'
+    # ports:
+    #   - '8080:8080'
+    networks:
+      - bench-net
     depends_on:
       - postgres
 
   mongo:
-    image: mongo:latest
-    container_name: mongo_database
+    image: mongo:6.0
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
       MONGO_INITDB_DATABASE: thebench_news
+    networks:
+      - bench-net
     volumes:
       - mongodata:/data/db
 
   mongo-express:
     image: mongo-express
     container_name: mongo_express
-    ports:
-      - '8081:8081'  
+    # ports:
+    #   - '8081:8081'  
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongo
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=admin
       - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+    networks:
+      - bench-net
     depends_on:
       - mongo
 
   backend:
     build: ./backend
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - '3000:3000' 
+    networks:
+      - bench-net
     depends_on:
       - postgres
       - mongo
@@ -51,8 +62,16 @@ services:
     build: ./frontend
     ports:
       - '80:80'
+      - '443:443'
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - bench-net
     restart: unless-stopped
 
 volumes:
   pgdata:
   mongodata:
+
+networks:
+  bench-net:

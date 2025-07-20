@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders, HeadersDefaults, AxiosHeaderValue } from 'axios';
 
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_NODE_ENV === 'prod' ? 'http://209.38.138.250:3000/' : 'http://localhost:3000/',
+    baseURL: import.meta.env.VITE_NODE_ENV === 'prod' ? 'https://the-bench.app:3000/' : 'http://localhost:3000/api',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
