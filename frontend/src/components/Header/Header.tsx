@@ -91,7 +91,7 @@ function Header() {
 
                 <div className="flex items-center justify-center gap-2 w-full">
                     <img
-                        src="assets/bench-logo.png"
+                        src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/bench-logo.png"
                         alt="logo"
                         className="h-8 w-8 cursor-pointer"
                         onClick={() => navigate("/homepage")}
@@ -199,7 +199,7 @@ function Header() {
             <div className="grid grid-cols-3 h-10 mb-15 mx-auto w-[75%] max-sm:hidden">
                 <div className="flex items-center">
                     <img
-                        src="assets/bench-logo.png"
+                        src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/bench-logo.png"
                         alt="logo"
                         className="h-10 cursor-pointer"
                         onClick={() => navigate("/homepage")}

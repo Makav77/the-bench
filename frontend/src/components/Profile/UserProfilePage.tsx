@@ -252,9 +252,10 @@ export default function UserProfilePage() {
         {profile.profilePictureUrl ? (
           <img
             src={
-              profile.profilePictureUrl
+              profile.profilePictureUrl &&
+              profile.profilePictureUrl !== "/uploads/profile/default.png"
                 ? `${profile.profilePictureUrl}?t=${Date.now()}`
-                : "/uploads/profile/default.png"
+                : "https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/default_pp.jpg"
             }
             alt={t("profilePicture")}
             className="w-64 h-64 max-sm:w-48 max-sm:h-48 rounded-full object-cover border"
@@ -836,7 +837,10 @@ export default function UserProfilePage() {
                 >
                   <img
                     src={
-                      rec.profilePictureUrl || "/uploads/profile/default.png"
+                      rec.profilePictureUrl &&
+                      rec.profilePictureUrl !== "/uploads/profile/default.png"
+                        ? rec.profilePictureUrl
+                        : "https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/default_pp.jpg"
                     }
                     alt={`${rec.firstname} ${rec.lastname}`}
                     className="w-12 h-12 rounded-full object-cover border"
