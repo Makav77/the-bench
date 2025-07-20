@@ -99,12 +99,6 @@ function Header() {
                     <span className="text-4xl font-bold">The Bench</span>
                 </div>
 
-                {isAuthenticated && user && (
-                    <span className="font-semibold mt-1 text-center text-xl">
-                        {t("hello", { firstname: user.firstname })}
-                    </span>
-                )}
-
                 <div className="flex flex-wrap gap-2 justify-center mt-2">
                     {isAuthenticated && user && (
                         <>
@@ -221,7 +215,6 @@ function Header() {
                 <div className="flex flex-col items-end justify-end">
                     {isAuthenticated && user ? (
                         <div className="flex items-center">
-                            <span className="mr-4">{t("hello", { firstname: user.firstname })}</span>
                             <button
                                 type="button"
                                 aria-label="profile-button"
@@ -243,7 +236,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="message-button"
-                                className="flex gap-2 items-center border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="flex gap-2 items-center border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate("/notifications", { state: { fromHeader: true } })}
                             >
                                 <NotificationBell count={unreadCount} />

@@ -8,10 +8,15 @@ import { join } from "path";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 
-const allowedOrigins = ["http://localhost", "https://the-bench.app"];
+const allowedOrigins = [
+  "http://localhost",
+  "https://the-bench.app",
+  "https://www.the-bench.app",
+];
 
 async function bootstrap() {
-    const httpsOptions = {
+  console.log("debug 1");
+  const httpsOptions = {
     key: fs.readFileSync("/etc/letsencrypt/live/the-bench.app/privkey.pem"),
     cert: fs.readFileSync("/etc/letsencrypt/live/the-bench.app/fullchain.pem"),
   };
@@ -21,17 +26,8 @@ async function bootstrap() {
     httpsOptions,
   });
   const port = 3000;
-
   app.use(cookieParser());
-
   dotenv.config();
-
-  //const origin = process.env.NODE_ENV === 'prod' ? process.env.FRONTEND_ORIGIN_PROD : process.env.FRONTEND_ORIGIN_DEV;
-
-  // app.enableCors({
-  //     origin: origin,
-  //     credentials: true,
-  // });
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -51,14 +47,11 @@ async function bootstrap() {
       transform: true,
     })
   );
-
   app.useStaticAssets(join(__dirname, "..", "uploads"), {
     prefix: "/uploads/",
   });
-
   await app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
   });
 }
-
 bootstrap();
