@@ -19,9 +19,9 @@ export default function ChatPage() {
 
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen max-sm:flex-col max-sm:h-auto">
       <ChatSidebar onSelect={setActiveChat} user={user} onlineUsers={onlineUsers} refreshTrigger={refreshSidebar} />
-      <div className="flex-1 border-l">
+      <div className="flex-1 border-l max-sm:border-l-0">
         {activeChat.type === 'general' && <GeneralChatPage key="general" user={user} />}
         {activeChat.type === 'private' && <PrivateChatPage key={`private-${activeChat.targetId}`} user={user} userId={activeChat.targetId!} />}
         {activeChat.type === 'group' && <GroupChatPage onLeave={() => { setActiveChat({ type: 'general' }); handleGroupCreated()}} key={`group-${activeChat.targetId}`} user={user} groupId={activeChat.targetId!} groupName={activeChat.groupName?activeChat.groupName:""} />}

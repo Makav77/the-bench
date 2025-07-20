@@ -8,6 +8,7 @@ import { LoadNewsResourceMiddleware } from "./middlewares/load-news-resource.mid
 import { UserModule } from "../Users/user.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../Users/entities/user.entity";
+import { UploadModule } from "../Upload/upload.module";
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { User } from "../Users/entities/user.entity";
         TypeOrmModule.forFeature([User]),
         PermissionsModule,
         UserModule,
+        UploadModule,
     ],
     controllers: [NewsController],
     providers: [NewsService],

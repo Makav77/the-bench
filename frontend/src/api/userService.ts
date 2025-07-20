@@ -62,7 +62,16 @@ export interface ProfileSummaryDTO {
     requestReceived?: boolean;
 }
 
-const API_URL = import.meta.env.VITE_NODE_ENV === 'prod' ? "http://209.38.138.250:3000/users" : "http://localhost:3000/users";
+export interface RecommendationDTO {
+    userId: string;
+    firstname: string;
+    lastname: string;
+    profilePictureUrl?: string;
+    score: number;
+}
+
+
+const API_URL = import.meta.env.VITE_NODE_ENV === 'prod' ? "https://the-bench.app:3000/users/" : "http://localhost:3000/users";
 
 export const getUsers = async () => {
     try {
@@ -127,4 +136,16 @@ export const getModeratorsAndAdmins = async (): Promise<ModeratorsAndAdminsDTO> 
 export const deleteMyAccount = async (userId: string): Promise<void> => {
     console.log("userId : " + userId);
     await apiClient.delete(`/users/${userId}`);
+}
+
+export async function getFriendRecommendations(userId: string): Promise<RecommendationDTO[]> {
+  const response = await apiClient.get(`/users/${userId}/recommendations`);
+
+  return response.data.map((item: any) => ({
+    userId: item.user.id,
+    firstname: item.user.firstname,
+    lastname: item.user.lastname,
+    profilePictureUrl: item.user.profilePicture,
+    score: item.score,
+  }));
 }

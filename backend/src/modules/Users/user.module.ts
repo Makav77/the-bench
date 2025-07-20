@@ -14,17 +14,37 @@ import { IrisModule } from "../Iris/iris.module";
 import { Badge } from "../Shop/entities/badge.entity";
 import { UserBadge } from "../Shop/entities/user-badge.entity";
 import { forwardRef } from "@nestjs/common";
+import { RecommendationService } from "./recommendation.service";
+import { PollVote } from "../Polls/entities/poll-vote.entity";
+import { Group } from "../chat/entities/group.entity";
+import { GalleryItem } from "../Gallery/entities/gallery-item.entity";
+import { MongooseModule } from "@nestjs/mongoose";
+import { News, NewsSchema } from "../News/news.schema";
+import { UploadModule } from "../Upload/upload.module";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([User, UserRestriction, Event, ChallengeRegistration, MarketItem, Badge, UserBadge]),
+        TypeOrmModule.forFeature([
+            User, 
+            UserRestriction, 
+            Event, 
+            ChallengeRegistration, 
+            MarketItem, 
+            Badge, 
+            UserBadge, 
+            PollVote, 
+            Group,
+            GalleryItem,
+        ]),
+        MongooseModule.forFeature([{ name: News.name, schema: NewsSchema }]),
         EventModule,
         ChallengesModule,
         forwardRef(()=> MarketModule),
         IrisModule,
+        UploadModule
     ],
     controllers: [UserController],
-    providers: [UserService],
+    providers: [UserService, RecommendationService],
     exports: [UserService],
 })
 export class UserModule {}

@@ -9,6 +9,7 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { UserService } from "../Users/user.service";
 import { NotificationsService } from "../notifications/notifications.service";
 import { constants } from "fs";
+import { UploadService } from "../Upload/upload.service";
 
 @Injectable()
 export class GalleryService {
@@ -18,6 +19,7 @@ export class GalleryService {
 
         private readonly userService: UserService,
         private readonly notificationsService: NotificationsService,
+        private readonly uploadService: UploadService,
     ) {}
 
     async findAllGalleryItems(page = 1, limit = 30, user: User): Promise<{ data: GalleryItem[]; total: number; page: number; lastPage: number }> {
@@ -141,14 +143,9 @@ export class GalleryService {
 
         const filePath = join(process.cwd(), "uploads", "gallery", galleryItem.url.split("/").pop()!);
 
-        if(await this.fileExists(filePath)){
-            try{
-                await unlink(filePath);
-            } catch (err){
-                console.error("Erreur lors de la suppression du fichier :", err.message);
-            }
-        } else{
-            console.warn(`Le fichier ${filePath} n'a pas été trouvé`);
+        const filename = galleryItem.url.split("/").pop();
+        if (filename) {
+            await this.uploadService.deleteFile(filename);
         }
 
         await this.notificationsService.create(

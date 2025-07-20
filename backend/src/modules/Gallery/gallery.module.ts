@@ -8,6 +8,7 @@ import { createInjectServiceMiddleware } from '../Utils/inject-resource-service.
 import { LoadGalleryItemResourceMiddleware } from './middlewares/load-galleryItem-resource.middleware';
 import { UserModule } from '../Users/user.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { UploadCoreModule } from '../Upload/upload-core.module';
 
 const InjectGalleryItemServiceMiddleware = createInjectServiceMiddleware("galleryService", GalleryService);
 
@@ -17,6 +18,7 @@ const InjectGalleryItemServiceMiddleware = createInjectServiceMiddleware("galler
         PermissionsModule,
         UserModule,
         NotificationsModule,
+        UploadCoreModule,
     ],
     controllers: [GalleryController],
     providers: [GalleryService],

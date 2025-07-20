@@ -290,8 +290,8 @@ function Signup() {
                         <img
                             src={
                                 isPasswordVisible
-                                    ? "assets/password/show-password-32.png"
-                                    : "assets/password/hide-password-32.png"
+                                    ? "https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/password/show-password-32.png"
+                                    : "https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/password/hide-password-32.png"
                             }
                             alt="Toggle password visibility"
                         />
