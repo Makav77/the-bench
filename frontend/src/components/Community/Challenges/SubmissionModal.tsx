@@ -74,7 +74,7 @@ function SubmissionModal({ challengeId, onClose, onSubmitted }: SubmissionModalP
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 max-sm:p-2">
-            <div className="relative w-[90%] max-w-md bg-white rounded-2xl p-6 max-sm:p-3 max-sm:w-full">
+            <div className="relative w-[90%] max-w-md bg-white rounded p-6 max-sm:p-3 max-sm:w-full">
                 <button
                     onClick={onClose}
                     className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 cursor-pointer max-sm:text-lg"

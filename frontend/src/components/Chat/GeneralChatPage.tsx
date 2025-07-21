@@ -2,8 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { User } from "../../../../backend/src/modules/Users/entities/user.entity";
 import { useSocket } from "../../context/SocketContext";
 import { getRoomMessages } from "../../api/chatService";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function GeneralChatPage({ user }: { user: User | null }) {
+  const { t } = useTranslation("Chat/GeneralChat");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<{content: string; userId: string; username: string}[]>([]);
   const socket = useSocket();
@@ -15,6 +18,7 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
         setMessages(data);
       } catch (err) {
         console.error("Erreur lors du chargement des messages :", err);
+        toast.error(t("errorLoadingMessages"));
       }
     };
     fetchHistory();
@@ -26,7 +30,6 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
     }
 
     socket.on("general-message", (msg: { content: string; userId: string; username: string }) => {
-      console.log("Received message:", msg);
       setMessages(prev => [...prev, msg]);
     });
     return () => {
@@ -56,17 +59,15 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-2">Messagerie Générale</h1>
-      <div ref={scrollContainerRef} className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1">
+    <div className="p-4 max-sm:p-4 max-sm:pt-8">
+      <h1 className="text-xl font-bold mb-2 max-sm:text-2xl max-sm:text-center">{t("generalMessaging")}</h1>
+      <div ref={scrollContainerRef} className="border p-2 h-64 overflow-y-auto mb-2 flex flex-col gap-1 max-sm:h-[50vh] max-sm:p-4 max-sm:mb-4">
         {messages.map((msg, i) => {
           const isMine = msg.userId === user?.id;
           return (
             <div
               key={i}
-              className={`max-w-[70%] rounded px-3 py-2 ${
-                isMine ? 'ml-auto bg-blue-100 text-right' : 'mr-auto bg-gray-100 text-left'
-              }`}
+              className={`max-w-[70%] rounded px-3 py-2 ${isMine ? 'ml-auto bg-blue-100 text-right' : 'mr-auto bg-gray-100 text-left'} max-sm:max-w-full max-sm:text-lg`}
             >
               <div className="text-xs text-gray-500 mb-1">{msg.username}</div>
               <div className="text-sm">{msg.content}</div>
@@ -74,15 +75,15 @@ export default function GeneralChatPage({ user }: { user: User | null }) {
           );
         })}
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 max-sm:flex-col">
         <input
-          className="border flex-1 px-2"
+          className="border flex-1 px-2 max-sm:py-4 max-sm:text-lg"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
-        <button onClick={sendMessage} className="bg-blue-500 text-white px-4 py-1 rounded">
-          Envoyer
+        <button onClick={sendMessage} className="bg-blue-500 text-white px-4 py-1 rounded max-sm:py-4 max-sm:text-lg max-sm:w-full">
+          {t("send")}
         </button>
       </div>
     </div>

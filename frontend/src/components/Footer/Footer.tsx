@@ -103,7 +103,7 @@ function Footer() {
                                 onClick={() => window.open("https://github.com/NabilBoubekri", "_blank")}
                             >
                                 <img
-                                    src="../../../public/assets/github-logo.png"
+                                    src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/github-logo.png"
                                     alt="github-logo" className="h-5 max-sm:h-6"
                                 />
                                 NabilBoubekri
@@ -113,7 +113,7 @@ function Footer() {
                                 onClick={() => window.open("https://github.com/ksarlary", "_blank")}
                             >
                                 <img
-                                    src="../../../public/assets/github-logo.png"
+                                    src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/github-logo.png"
                                     alt="github-logo" className="h-5 max-sm:h-6"
                                 />
                                 ksarlary
@@ -123,7 +123,7 @@ function Footer() {
                                 onClick={() => window.open("https://github.com/Makav77", "_blank")}
                             >
                                 <img
-                                    src="../../../public/assets/github-logo.png"
+                                    src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/github-logo.png"
                                     alt="github-logo" className="h-5 max-sm:h-6"
                                 />
                                 Makav77
@@ -142,7 +142,7 @@ function Footer() {
                             onClick={() => window.open("https://github.com/NabilBoubekri", "_blank")}
                         >
                             <img
-                                src="../../../public/assets/github-logo.png"
+                                src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/github-logo.png"
                                 alt="github-logo" className="h-5"
                             />
                             NabilBoubekri
@@ -152,7 +152,7 @@ function Footer() {
                             onClick={() => window.open("https://github.com/ksarlary", "_blank")}
                         >
                             <img
-                                src="../../../public/assets/github-logo.png"
+                                src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/github-logo.png"
                                 alt="github-logo" className="h-5"
                             />
                             ksarlary
@@ -162,7 +162,7 @@ function Footer() {
                             onClick={() => window.open("https://github.com/Makav77", "_blank")}
                         >
                             <img
-                                src="../../../public/assets/github-logo.png"
+                                src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/github-logo.png"
                                 alt="github-logo" className="h-5"
                             />
                             Makav77
@@ -180,7 +180,7 @@ function Footer() {
 
             {showModeratorsModal && user && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
-                    <div className="bg-white rounded-lg shadow-lg p-8 w-[400px] relative max-sm:w-[92vw] max-sm:p-4">
+                    <div className="bg-white rounded shadow-lg p-8 w-[400px] relative max-sm:w-[92vw] max-sm:p-4">
                         <h2 className="text-xl font-bold mb-4 text-center max-sm:text-lg max-sm:mb-2">
                             Contact the staff
                         </h2>

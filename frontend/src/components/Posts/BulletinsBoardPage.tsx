@@ -85,15 +85,17 @@ function BulletinsBoardPage() {
                     : flashPosts.length === 0
                         ? <p className="italic text-red-500 mb-5 max-sm:text-lg">{t("noFlashPost")}</p>
                         : (
-                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl max-sm:p-2">
+                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded max-sm:p-2">
                                 {flashPosts.map((flashpost) => (
                                     <div
                                         key={flashpost.id}
                                         onClick={() => navigate(`/flashposts/${flashpost.id}`)}
-                                        className="p-4 rounded-2xl cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100 max-sm:p-3"
+                                        className="p-4 rounded cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100 max-sm:p-3"
                                     >
-                                        <div className="flex flex-col w-full">
-                                            <h2 className="text-lg font-semibold max-sm:text-lg">{flashpost.title}</h2>
+                                        <div className="flex flex-col w-full min-w-0 overflow-hidden">
+                                            <h2 className="text-lg font-semibold max-sm:text-lg truncate whitespace-nowrap w-full">
+                                                {flashpost.title}
+                                            </h2>
                                             <div className="flex justify-between max-sm:flex-col max-sm:gap-2">
                                                 <p className="text-sm text-gray-600 max-sm:text-base">
                                                     {t("lastUpdate")} {new Date(flashpost.updatedAt).toLocaleString()}
@@ -158,15 +160,17 @@ function BulletinsBoardPage() {
                     : posts.length === 0
                         ? <p className="italic text-gray-500 max-sm:text-lg">{t("noPost")}</p>
                         : (
-                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded-2xl max-sm:p-2">
+                            <div className="grid grid-cols-1 gap-4 border p-4 mb-4 rounded max-sm:p-2">
                                 {posts.map((post) => (
                                     <div
                                         key={post.id}
                                         onClick={() => navigate(`/posts/${post.id}`)}
-                                        className="p-4 rounded-2xl cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100 max-sm:p-3"
+                                        className="p-4 rounded cursor-pointer hover:shadow flex justify-between items-center bg-white hover:bg-gray-100 max-sm:p-3"
                                     >
-                                        <div className="flex flex-col">
-                                            <h2 className="text-lg font-semibold max-sm:text-lg">{post.title}</h2>
+                                        <div className="flex flex-col min-w-0 overflow-hidden">
+                                            <h2 className="text-lg font-semibold max-sm:text-lg truncate whitespace-nowrap w-full">
+                                                {post.title}
+                                            </h2>
                                             <p className="text-sm text-gray-600 max-sm:text-base">
                                                 {t("lastUpdate")} {new Date(post.updatedAt).toLocaleString()}
                                                 <p className="text-sm text-gray-600 max-sm:text-base">{t("author")} {" "}

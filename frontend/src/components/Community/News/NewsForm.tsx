@@ -83,7 +83,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="w-[30%] mx-auto space-y-4 p-6 bg-white rounded-2xl shadow max-sm:w-full"
+            className="w-[30%] mx-auto space-y-4 p-6 bg-white rounded shadow max-sm:w-full"
         >
             {error && <p className="text-red-500">{error}</p>}
 
@@ -94,6 +94,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 <input
                     type="text"
                     value={title}
+                    maxLength={150}
                     onChange={e => setTitle(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-1 max-sm:text-base"
                     required
@@ -107,6 +108,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 <textarea
                     rows={10}
                     value={content}
+                    maxLength={30000}
                     onChange={e => setContent(e.target.value.trimStart())}
                     className="w-full border rounded px-2 py-1 max-sm:text-base max-sm:py-2"
                     required
@@ -120,6 +122,7 @@ function NewsForm({ defaultValues, onSubmit, isLoading }: NewsFormProps) {
                 <input
                     type="text"
                     value={tagInput}
+                    maxLength={10}
                     onChange={e => setTagInput(e.target.value.trimStart())}
                     onKeyDown={handleTagKeyDown}
                     className="w-full border px-3 py-2 rounded mt-1 max-sm:text-base"

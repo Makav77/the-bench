@@ -7,12 +7,17 @@ import { UpdateFlashPostDTO } from './dto/update-flash-post.dto';
 import { User, Role } from '../Users/entities/user.entity';
 import { subHours } from "date-fns";
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { NotificationsService } from '../notifications/notifications.service';
+import { UserService } from '../Users/user.service';
 
 @Injectable()
 export class FlashPostsService {
     constructor(
         @InjectRepository(FlashPost)
         private readonly flashRepo: Repository<FlashPost>,
+
+        private readonly notificationsService: NotificationsService,
+        private readonly userService: UserService,
     ) {}
 
     async findAllFlashPosts(page = 1, limit = 5, user: User): Promise<{ data: FlashPost[]; total: number; page: number; lastPage: number; }> {
@@ -78,6 +83,24 @@ export class FlashPostsService {
             irisCode,
             irisName,
         });
+
+        await this.notificationsService.create(
+            author.id,
+            "Your flash post is now visible to your neighborhood",
+            `Your flash post "${post.title}" has been published.`
+        );
+
+        if (irisCode !== "all") {
+            const neighbors = await this.userService.getUsersByIris(irisCode);
+            const others = neighbors.filter(u => u.id !== author.id);
+
+            await this.notificationsService.createMany(
+                others.map(u => u.id),
+                "New flash post in your neighborhood",
+                `${author.firstname} ${author.lastname} posted: "${post.title}"`
+            );
+        }
+
         return this.flashRepo.save(post);
     }
 
@@ -96,6 +119,13 @@ export class FlashPostsService {
         }
 
         const updated = this.flashRepo.merge(flashPost, updateFlashPostDTO);
+        
+        await this.notificationsService.create(
+            user.id,
+            "Your flash post was updated",
+            `Your flash post "${updated.title}" has been successfully updated.`
+        );
+        
         return this.flashRepo.save(updated);
     }
 
@@ -114,10 +144,31 @@ export class FlashPostsService {
         }
 
         await this.flashRepo.delete(id);
+
+        await this.notificationsService.create(
+            user.id,
+            "Your flash post was removed",
+            `Your flash post "${flashPost.title}" has been deleted.`
+        );
     }
 
     async purgeExpired(): Promise<void> {
         const limit = subHours(new Date(), 24);
+        const expiredPosts = await this.flashRepo.find({
+            where: { createdAt: LessThan(limit) },
+            relations: ["author"],
+        });
+
+        for (const post of expiredPosts) {
+            if (post.author) {
+                await this.notificationsService.create(
+                    post.author.id,
+                    "Your flash post has expired",
+                    `Your flash post "${post.title}" has been automatically removed after 24 hours.`
+                );
+            }
+        }
+
         await this.flashRepo.delete({ createdAt: LessThan(limit) });
     }
 

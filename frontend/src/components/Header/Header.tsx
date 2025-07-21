@@ -5,6 +5,9 @@ import { useAuth } from "../../context/AuthContext";
 import { logoutUser } from "../../api/authService";
 import { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
+import { getNotifications } from "../../api/notificationsSerice";
+import { NotificationBell } from "../Notifications/NotificationBell";
+import  { useLocation } from "react-router-dom";
 
 function capitalize(str: string) {
     if (!str) {
@@ -14,12 +17,14 @@ function capitalize(str: string) {
 }
 
 function Header() {
+    const location = useLocation();
     const { t } = useTranslation("Header/Header");
     const navigate = useNavigate();
     const { isAuthenticated, user, logout } = useAuth();
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchResults, setSearchResults] = useState<{ id: string; firstname: string; lastname: string; }[]>([]);
     const [isSearching, setIsSearching] = useState<boolean>(false);
+    const [unreadCount, setUnreadCount] = useState<number>(0);
 
     const handleLogout = async () => {
         await logoutUser();
@@ -50,6 +55,26 @@ function Header() {
         return () => clearTimeout(delayDebounceFn);
     }, [searchQuery]);
 
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            if (isAuthenticated && user?.id) {
+                try {
+                    const response = await getNotifications(user.id);
+                    const unreadCount = response.filter((n: any) => !n.read).length;
+                    setUnreadCount(unreadCount);
+                } catch (error) {
+                    console.error("Error fetching notifications:", error);
+                }
+            }
+        }
+
+        if (location.state?.refreshNotifications) {
+            window.history.replaceState({}, "");
+        }
+        fetchNotifications();
+
+    }, [user?.id, location.state]);
+
     return (
         <div
             data-testid="header"
@@ -66,7 +91,7 @@ function Header() {
 
                 <div className="flex items-center justify-center gap-2 w-full">
                     <img
-                        src="assets/bench-logo.png"
+                        src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/bench-logo.png"
                         alt="logo"
                         className="h-8 w-8 cursor-pointer"
                         onClick={() => navigate("/homepage")}
@@ -74,19 +99,13 @@ function Header() {
                     <span className="text-4xl font-bold">The Bench</span>
                 </div>
 
-                {isAuthenticated && user && (
-                    <span className="font-semibold mt-1 text-center text-xl">
-                        {t("hello", { firstname: user.firstname })}
-                    </span>
-                )}
-
                 <div className="flex flex-wrap gap-2 justify-center mt-2">
                     {isAuthenticated && user && (
                         <>
                             <button
                                 type="button"
                                 aria-label="profile-button"
-                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate(`/profile/${user.id}`)}
                             >
                                 {t("profile")}
@@ -95,7 +114,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="message-button"
-                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate("/chat")}
                             >
                                 {t("messages")}
@@ -104,7 +123,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="logout-button"
-                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={handleLogout}
                             >
                                 {t("logout")}
@@ -114,7 +133,7 @@ function Header() {
                                 <button
                                     type="button"
                                     aria-label="dashboard-button"
-                                    className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                    className="text-[#488ACF] bg-white text-lg font-bold px-4 py-2 rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                     onClick={() => navigate("/dashboard")}
                                 >
                                     {t("dashboard")}
@@ -137,7 +156,7 @@ function Header() {
                                         setSearchResults([]);
                                     }, 100);
                                 }}
-                                className="w-full px-3 py-2 border rounded-2xl focus:outline-none focus:ring bg-gray-100 text-sm"
+                                className="w-full px-3 py-2 border rounded focus:outline-none focus:ring bg-gray-100 text-sm"
                                 placeholder={t("searchPlaceholder")}
                             />
 
@@ -174,7 +193,7 @@ function Header() {
             <div className="grid grid-cols-3 h-10 mb-15 mx-auto w-[75%] max-sm:hidden">
                 <div className="flex items-center">
                     <img
-                        src="assets/bench-logo.png"
+                        src="https://the-bench-media.sfo3.cdn.digitaloceanspaces.com/assets/bench-logo.png"
                         alt="logo"
                         className="h-10 cursor-pointer"
                         onClick={() => navigate("/homepage")}
@@ -196,11 +215,10 @@ function Header() {
                 <div className="flex flex-col items-end justify-end">
                     {isAuthenticated && user ? (
                         <div className="flex items-center">
-                            <span className="mr-4">{t("hello", { firstname: user.firstname })}</span>
                             <button
                                 type="button"
                                 aria-label="profile-button"
-                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate(`/profile/${user.id}`)}
                             >
                                 {t("profile")}
@@ -209,7 +227,7 @@ function Header() {
                             <button
                                 type="button"
                                 aria-label="message-button"
-                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={() => navigate("/chat")}
                             >
                                 {t("messages")}
@@ -217,8 +235,18 @@ function Header() {
 
                             <button
                                 type="button"
+                                aria-label="message-button"
+                                className="flex gap-2 items-center border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                onClick={() => navigate("/notifications", { state: { fromHeader: true } })}
+                            >
+                                <NotificationBell count={unreadCount} />
+                                {t("notifications")}
+                            </button>
+
+                            <button
+                                type="button"
                                 aria-label="logout-button"
-                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                 onClick={handleLogout}
                             >
                                 {t("logout")}
@@ -227,7 +255,7 @@ function Header() {
                             {user && (user.role === "admin" || user.role === "moderator") && (
                                 <button
                                     type="button"
-                                    className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                                    className="border-1 text-[#488ACF] text-1xl font-bold p-1 m-1 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                                     onClick={() => navigate("/dashboard")}
                                 >
                                     {t("dashboard")}
@@ -238,7 +266,7 @@ function Header() {
                         <button
                             type="button"
                             aria-label="login-button"
-                            className="border-1 text-[#488ACF] text-1xl font-bold pt-1 pb-1 pr-3 pl-3 mr-4 bg-white rounded-lg cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
+                            className="border-1 text-[#488ACF] text-1xl font-bold pt-1 pb-1 pr-3 pl-3 mr-4 bg-white rounded cursor-pointer transition-all duration-300 hover:text-white hover:bg-[#488ACF]"
                             onClick={() => navigate("/")}
                         >
                             {t("login")}
@@ -258,7 +286,7 @@ function Header() {
                                             setSearchResults([]);
                                         }, 100);
                                     }}
-                                    className="w-full px-3 py-1 border rounded-2xl focus:outline-none focus:ring bg-gray-100"
+                                    className="w-full px-3 py-1 border rounded focus:outline-none focus:ring bg-gray-100"
                                     placeholder={t("searchPlaceholder")}
                                 />
 

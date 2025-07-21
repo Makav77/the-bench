@@ -1,4 +1,4 @@
-import { Badge } from "src/modules/Shop/entities/badge.entity";
+import { Badge } from "../../../modules/Shop/entities/badge.entity";
 
 export interface ProfileSummaryDTO {
     id: string;
@@ -34,5 +34,5 @@ export interface ProfileSummaryDTO {
 
     isFriend?: boolean;
     requestSent?: boolean;
-    requestReceived?: boolean; 
+    requestReceived?: boolean;
 }

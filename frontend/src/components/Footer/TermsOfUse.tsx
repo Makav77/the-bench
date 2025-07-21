@@ -5,7 +5,7 @@ function TermsOfUse() {
 
     return (
         <div>
-            <div className="relative w-[50%] mx-auto bg-white rounded-3xl p-10 my-10 max-sm:w-[90%] max-sm:p-4">
+            <div className="relative w-[50%] mx-auto bg-white rounded p-10 my-10 max-sm:w-[90%] max-sm:p-4">
                 <h1 className="text-3xl mb-5 font-bold">Terms of Use of "The Bench"</h1>
                 <p>This document governs</p>
                 <ul className="list-disc pl-15">

@@ -88,7 +88,7 @@ export default function ArtisansByTypePage() {
                     {artisans.map(a => (
                         <li 
                             key={a.place_id}
-                            className="rounded-2xl p-6 shadow-xl bg-white max-sm:p-4"
+                            className="rounded p-6 shadow-xl bg-white max-sm:p-4"
                         >
                             <h3 className="text-xl font-bold max-sm:text-lg">
                                 {a.name}

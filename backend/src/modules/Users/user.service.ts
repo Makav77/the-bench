@@ -452,4 +452,11 @@ export class UserService {
 
         await this.userRepository.save([currentUser, targetUser]);
     }
+    
+    async getUsersByIris(irisCode: string): Promise<User[]> {
+        return this.userRepository.find({
+            where: { irisCode },
+            select: ['id', 'firstname', 'lastname'],
+        });
+    }
 }

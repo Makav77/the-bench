@@ -17,7 +17,6 @@ import { UserModule } from "../Users/user.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { EventModule } from "../Events/event.module";
 import { EventController } from '../Events/event.controller';
-import { MulterModule } from '@nestjs/platform-express';
 import { PollController } from '../Polls/poll.controller';
 import { PollModule } from '../Polls/poll.module';
 import { PlacesModule } from '../Places/places.module';
@@ -28,7 +27,7 @@ import { PermissionsModule } from '../Permissions/permissions.module';
 import { PermissionsController } from '../Permissions/permissions.controller';
 import { ReportsModule } from '../Reports/reports.module';
 import { ReportsController } from '../Reports/reports.controller';
-import { ChatModule } from '../Chat/chat.module';
+import { ChatModule } from '../chat/chat.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MONGO_URI } from 'src/database/mongo-database-config';
 import { NewsModule } from '../News/news.module';
@@ -39,6 +38,12 @@ import { IrisController } from '../Iris/iris.controller';
 import { IrisModule } from '../Iris/iris.module';
 import { ShopModule } from '../Shop/shop.module';
 import { ShopController } from '../Shop/shop.controller';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationsController } from '../notifications/notifications.controller';
+import { UploadModule } from '../Upload/upload.module';
+import { UploadController } from '../Upload/upload.controller';
+import { HangmanController } from '../Hangman/hangman.controller';
+import { HangmanModule } from '../Hangman/hangman.module';
 
 @Module({
     imports: [
@@ -52,9 +57,6 @@ import { ShopController } from '../Shop/shop.controller';
             logger: "advanced-console",
         }),
         MongooseModule.forRoot(MONGO_URI, {}),
-        MulterModule.register({
-            dest: "./uploads",
-        }),
         UserModule,
         AuthModule,
         EventModule,
@@ -72,6 +74,9 @@ import { ShopController } from '../Shop/shop.controller';
         CommentModule,
         IrisModule,
         ShopModule,
+        NotificationsModule,
+        UploadModule,
+        HangmanModule
     ],
     controllers: [
         ChallengesController,
@@ -89,6 +94,9 @@ import { ShopController } from '../Shop/shop.controller';
         CommentController,
         IrisController,
         ShopController,
+        NotificationsController,
+        UploadController,
+        IrisController
     ],
     providers: [AppService],
 })

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { User } from "src/modules/Users/entities/user.entity";
+import { User } from "../../../modules/Users/entities/user.entity";
 import { Permission } from "./permission.entity";
 
 @Entity({ name: "user_restrictions" })

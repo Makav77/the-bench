@@ -65,5 +65,7 @@
     "toastRequestCanceled": "Request canceled",
     "toastRequestCanceledError": "Unable to cancel friend request",
     "cancelling": "Cancelling...",
-    "cancelRequest": "Cancel request"
+    "cancelRequest": "Cancel request",
+    "suggestedFriends": "Suggested Friends",
+    "toastUnableLoadRecommendations": "Unable to load friend suggestions"
 }

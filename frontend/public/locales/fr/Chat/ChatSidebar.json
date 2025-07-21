@@ -1,0 +1,9 @@
+{
+  "errorLoadingFriends": "Erreur lors du chargement des amis.",
+  "failedToFetchGroups": "Échec du chargement des groupes.",
+  "messaging": "Messagerie",
+  "general": "Général",
+  "friends": "Amis",
+  "groups": "Groupes",
+  "addGroup": "Ajouter un groupe"
+}

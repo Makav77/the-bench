@@ -83,7 +83,7 @@ function DashboardRestrictions() {
 
             <form
                 onSubmit={handleSubmit}
-                className="space-y-4 bg-white p-6 rounded-2xl shadow"
+                className="space-y-4 bg-white p-6 rounded shadow"
             >
                 <div>
                     <label className="block font-semibold mb-1 max-sm:text-lg">

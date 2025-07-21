@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
-import { User } from "src/modules/Users/entities/user.entity";
+import { User } from "../../../modules/Users/entities/user.entity";
 
 @Entity("posts")
 export class Posts {
@@ -18,7 +18,7 @@ export class Posts {
     @UpdateDateColumn({ type: "timestamp" })
     updatedAt: Date;
 
-    @ManyToOne(() => User, (user) => user.posts, { nullable: false })
+    @ManyToOne(() => User, (user) => user.posts, { nullable: false, onDelete: "CASCADE" })
     author: User;
 
     @Column()

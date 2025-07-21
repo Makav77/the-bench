@@ -65,5 +65,7 @@
     "toastRequestCanceled": "Demande annulée",
     "toastRequestCanceledError": "Impossible d'annuler la demande d'ami",
     "cancelling": "Annulation...",
-    "cancelRequest": "Annuler la demande"
+    "cancelRequest": "Annuler la demande",
+    "suggestedFriends": "Suggestions d'amis",
+    "toastUnableLoadRecommendations": "Impossible de charger les suggestions d'amis"
 }

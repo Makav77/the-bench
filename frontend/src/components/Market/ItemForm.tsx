@@ -138,6 +138,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                 <textarea
                     name="description"
                     rows={5}
+                    maxLength={3000}
                     value={form.description}
                     onChange={handleChange}
                     className="w-full border rounded px-2 py-1 max-sm:text-lg max-sm:py-3"
@@ -190,7 +191,7 @@ function ItemForm({ defaultValues, onSubmit }: ItemFormProps) {
                                 key={index}
                                 src={url}
                                 alt={`Preview ${index + 1}`}
-                                className="h-20 object-cover rounded max-sm:h-44 max-sm:w-full max-sm:rounded-xl"
+                                className="h-20 object-cover rounded max-sm:h-44 max-sm:w-full max-sm:rounded"
                             />
                         ))}
                     </div>

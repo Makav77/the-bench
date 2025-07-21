@@ -72,7 +72,7 @@ function FlashPostDetailPage() {
 
     return (
         <div>
-            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl max-sm:w-[95%] max-sm:p-3 max-sm:mt-6 max-sm:space-y-6">
+            <div className="p-6 space-y-4 mt-10 w-[50%] mx-auto bg-white rounded max-sm:w-[95%] max-sm:p-3 max-sm:mt-6 max-sm:space-y-6">
                 <button
                     type="button"
                     onClick={() => navigate("/bulletinsboard")}
@@ -81,7 +81,7 @@ function FlashPostDetailPage() {
                     {t("back")}
                 </button>
 
-                <h1 className="text-2xl font-bold">
+                <h1 className="text-2xl font-bold break-words">
                     {flashPost.title}
                 </h1>
 
@@ -101,7 +101,7 @@ function FlashPostDetailPage() {
                     <CountdownTimer createdAt={flashPost.createdAt} />
                 </div>
 
-                <p className="whitespace-pre-wrap max-sm:text-base">
+                <p className="whitespace-pre-wrap max-sm:text-base break-words">
                     {flashPost.description}
                 </p>
 

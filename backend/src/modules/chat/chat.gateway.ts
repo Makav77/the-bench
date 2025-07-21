@@ -2,6 +2,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Socket, Server } from 'socket.io';
 import { UserService } from "../Users/user.service";
 import { ChatService } from './chat.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @WebSocketGateway({cors: {origin: '*'}})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -12,6 +13,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     constructor(
         private readonly userService: UserService,
         private readonly chatService: ChatService,
+        private readonly notificationsService: NotificationsService,
     ){}
 
     @SubscribeMessage('auth')
@@ -66,6 +68,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         let normalizedRoom = data.room;
         if (type === 'private') {
             const ids = data.room.replace('private-', '').split('_').sort();
+            const receiverId = ids.find(id => id !== data.userId);
+            if (receiverId) {
+                await this.notificationsService.create(
+                    receiverId,
+                    'New private message',
+                    `Message from ${user.firstname} ${user.lastname}: ${data.content}`
+                );
+            }
             normalizedRoom = `private-${ids.join('_')}`;
         }
 
@@ -86,6 +96,25 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.server.to(data.room).emit('general-message', payload);
         } else if(data.room.startsWith('group')){
             const groupId = data.room.split("group-")[1];
+            try{
+                const members = await this.chatService.getGroupMembers(groupId);
+                const groupName = await this.chatService.getGroupName(groupId);
+                const receivers = members.filter(m => m.id !== data.userId);
+
+                await Promise.all(
+                    receivers.map(member =>
+                        this.notificationsService.create(
+                            member.id,
+                            'New group message',
+                            `New message in group ${groupName} from ${user.firstname} ${user.lastname}`
+                        )
+                    )
+                );
+            }
+            catch(err){
+                console.error(`Failed to notify group members for group ${groupId}:`, err);
+            }
+            
             this.server.to(data.room).emit(`group-message-${groupId}`, payload);
         } else {
             this.server.to(data.room).emit(`private-message-${data.room}`, payload);

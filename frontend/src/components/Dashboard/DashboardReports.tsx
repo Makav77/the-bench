@@ -229,7 +229,7 @@ function DashboardReports() {
                             className="border rounded-lg p-4 shadow-sm flex flex-col md:flex-row justify-between cursor-pointer hover:bg-blue-200"
                             onClick={() => goToReportedContent(report.reportedContentId, report.reportedContentType)}
                         >
-                            <div className="flex-1 space-y-1">
+                            <div className="flex-1 space-y-1 min-w-0">
                                 <p>
                                     <span className="font-semibold">{t("reportedBy")}</span>{" "}
                                     <span
@@ -272,7 +272,7 @@ function DashboardReports() {
                                 </p>
 
                                 {report.description && (
-                                    <p>
+                                    <p className="whitespace-normal break-words">
                                         <span className="font-semibold">{t("description")}</span>{" "}
                                         {report.description}
                                     </p>

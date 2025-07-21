@@ -72,7 +72,7 @@ function PostDetailPage() {
 
     return (
         <div>
-            <div className="p-6 space-y-4 mt-10 w-[20%] mx-auto bg-white rounded-2xl max-sm:w-[98%] max-sm:space-y-6 max-sm:mt-3">
+            <div className="p-6 space-y-4 mt-10 w-[50%] mx-auto bg-white rounded max-sm:w-[98%] max-sm:space-y-6 max-sm:mt-3">
                 <button
                     type="button"
                     onClick={() => navigate("/bulletinsboard")}
@@ -81,7 +81,7 @@ function PostDetailPage() {
                     {t("back")}
                 </button>
 
-                <h1 className="text-3xl font-bold max-sm:text-2xl">
+                <h1 className="text-3xl font-bold max-sm:text-2xl break-words">
                     {post.title}
                 </h1>
 
@@ -97,7 +97,7 @@ function PostDetailPage() {
                     </span>
                 </p>
 
-                <p className="whitespace-pre-wrap max-sm:text-lg">
+                <p className="whitespace-pre-wrap max-sm:text-lg break-words">
                     {post.description}
                 </p>
 

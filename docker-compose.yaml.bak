@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_database
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: thebench
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo_database
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: thebench_news
+    volumes:
+      - mongodata:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo_express
+    ports:
+      - '8081:8081'  
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_USER}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_PASSWORD}
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGO_USER}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGO_PASSWORD}
+    depends_on:
+      - mongo
+
+  backend:
+    build: ./backend
+    ports:
+      - '3000:3000' 
+    depends_on:
+      - postgres
+      - mongo
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '80:80'
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  mongodata:

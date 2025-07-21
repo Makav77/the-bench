@@ -1,54 +1,67 @@
-import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { AppModule } from './modules/App/app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { AppModule } from "./modules/App/app.module";
+import { ValidationPipe } from "@nestjs/common";
 import cookieParser from "cookie-parser";
 import { join } from 'path';
 import * as swaggerUi from 'swagger-ui-express';
 import * as fs from 'fs';
+import * as dotenv from "dotenv";
 
-import * as dotenv from 'dotenv';
+dotenv.config();
 
 const allowedOrigins = [
-    'http://localhost:5173',
-    'http://209.38.138.250',
+  "http://localhost",
+  "https://the-bench.app",
+  "https://www.the-bench.app",
 ];
 
 async function bootstrap() {
-    const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: ["error", "warn", "log", "debug", "verbose"] });
-    const port = 3000;
+  const isProduction = process.env.NODE_ENV === "prod";
+  const port = 3000;
 
-    app.use(cookieParser());
+  let app: NestExpressApplication;
 
-    dotenv.config();
+  if (isProduction) {
+    const httpsOptions = {
+      key: fs.readFileSync("/etc/letsencrypt/live/the-bench.app/privkey.pem"),
+      cert: fs.readFileSync("/etc/letsencrypt/live/the-bench.app/fullchain.pem"),
+    };
 
-    //const origin = process.env.NODE_ENV === 'prod' ? process.env.FRONTEND_ORIGIN_PROD : process.env.FRONTEND_ORIGIN_DEV;
-
-    // app.enableCors({
-    //     origin: origin,
-    //     credentials: true,
-    // });
-
-    app.enableCors({
-        origin: (origin, callback) => {
-            if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-                callback(null, true);
-            } else {
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        credentials: true,
+    app = await NestFactory.create<NestExpressApplication>(AppModule, {
+      logger: ["error", "warn", "log", "debug", "verbose"],
+      httpsOptions,
     });
-
-    app.useGlobalPipes(new ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-    }));
-
-    app.useStaticAssets(join(__dirname, "..", "uploads"), {
-        prefix: "/uploads/",
+  } else {
+    app = await NestFactory.create<NestExpressApplication>(AppModule, {
+      logger: ["error", "warn", "log", "debug", "verbose"],
     });
+  }
+
+  app.use(cookieParser());
+
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    })
+  );
+
+  app.useStaticAssets(join(__dirname, "..", "uploads"), {
+    prefix: "/uploads/",
+  });
 
     const swaggerPath = join(__dirname, 'docs', 'openapi.json');
     if (fs.existsSync(swaggerPath)) {
@@ -58,10 +71,12 @@ async function bootstrap() {
     } else {
         console.warn("Swagger docs not found. Did you run npm run build:docs?");
     }
-
-    await app.listen(port, () => {
-        console.log(`Server running on http://localhost:${port}`);
-    });
+  
+  await app.listen(port, () => {
+    console.log(
+      `Server running on ${isProduction ? "https" : "http"}://localhost:${port}`
+    );
+  });
 }
 
 bootstrap();

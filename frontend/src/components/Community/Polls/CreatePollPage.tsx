@@ -53,7 +53,7 @@ function CreatePollPage() {
 
         const cleanQuestion = question.trim();
 
-        if (cleanQuestion) {
+        if (!cleanQuestion) {
             toast.error(t("toastQuestionError"));
             return;
         }
@@ -100,7 +100,7 @@ function CreatePollPage() {
 
             <form
                 onSubmit={handleSubmit}
-                className="space-y-4 bg-white p-4 rounded-2xl shadow relative z-0"
+                className="space-y-4 bg-white p-4 rounded shadow relative z-0"
             >
                 <div>
                     <label className="font-semibold max-sm:text-lg">
@@ -108,6 +108,7 @@ function CreatePollPage() {
                     </label>
                     <input
                         value={question}
+                        maxLength={100}
                         onChange={e => setQuestion(e.target.value.trimStart())}
                         className="w-full border rounded px-2 py-1 max-sm:py-4 max-sm:text-lg max-sm:px-5"
                     />
@@ -145,7 +146,7 @@ function CreatePollPage() {
                             selected={autoCloseDate}
                             onChange={(date: Date | null) => setAutoCloseDate(date)}
                             dateFormat="dd/MM/yyyy"
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 bg-white cursor-pointer hover:border-blue-400 transition w-auto max-w-[150px] max-sm:w-full max-sm:py-4 max-sm:text-lg max-sm:px-5"
+                            className="border border-gray-300 rounded px-3 py-2 text-gray-700 bg-white cursor-pointer hover:border-blue-400 transition w-auto max-w-[150px] max-sm:w-full max-sm:py-4 max-sm:text-lg max-sm:px-5"
                             isClearable
                         />
                     </div>
@@ -158,7 +159,7 @@ function CreatePollPage() {
                             type="time"
                             value={autoCloseTime || ""}
                             onChange={(e) => setAutoCloseTime(e.target.value)}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 bg-white cursor-pointer hover:border-blue-400 transition w-auto max-w-[100px] max-sm:w-full max-sm:py-4 max-sm:text-lg max-sm:px-5"
+                            className="border border-gray-300 rounded px-3 py-2 text-gray-700 bg-white cursor-pointer hover:border-blue-400 transition w-auto max-w-[100px] max-sm:w-full max-sm:py-4 max-sm:text-lg max-sm:px-5"
                         />
                     </div>
                 </div>
@@ -172,6 +173,7 @@ function CreatePollPage() {
                         <div key={index} className="flex items-center gap-2 max-sm:gap-6">
                             <input
                                 value={opt}
+                                maxLength={50}
                                 onChange={e => {
                                     const newOpts = [...options];
                                     newOpts[index] = e.target.value.trimStart();

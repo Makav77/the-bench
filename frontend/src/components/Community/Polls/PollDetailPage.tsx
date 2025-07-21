@@ -111,7 +111,7 @@ function PollDetailPage() {
 
     return (
         <div>
-            <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded-2xl shadow mt-10 max-sm:w-[95%] max-sm:p-6">
+            <div className="p-6 w-[30%] mx-auto space-y-4 bg-white rounded shadow mt-10 max-sm:w-[95%] max-sm:p-6">
                 <div className="flex justify-between items-center gap-10">
                     <button
                         type="button"
@@ -138,7 +138,7 @@ function PollDetailPage() {
                     </div>
                 </div>
 
-                <h1 className="text-2xl font-bold">
+                <h1 className="text-2xl font-bold break-words">
                     {poll.question}
                 </h1>
 
@@ -163,22 +163,24 @@ function PollDetailPage() {
                         {poll.options.map(o => (
                             <label
                                 key={o.id}
-                                className="block text-2xl"
+                                className="flex items-start w-full"
                             >
                                 <input
                                     type={poll.type === "single" ? "radio":"checkbox"}
                                     name="opt"
                                     value={o.id}
                                     disabled={!!(isClosed || hasVoted || isAdminorModerator)}
-                                    className="mr-2"
+                                    className="self-start mr-2 mt-2 flex-shrink-0"
                                 />{" "}
-                                {o.label}
+                                <span className="break-all flex-1">
+                                    {o.label}
+                                </span>
                             </label>
                         ))}
                     </div>
                 ) : (
                     <div>
-                        <div className="mt-4 p-4 bg-white rounded-2xl shadow w-[60%] mx-auto max-sm:w-full">
+                        <div className="mt-4 p-4 bg-white rounded shadow w-[60%] mx-auto max-sm:w-full">
                             <h2 className="text-xl font-semibold mb-2">{t("results")}</h2>
                             {(() => {
                                 const totalVotes = poll.options.reduce((sum, o) => sum + o.votesCount, 0);
@@ -191,7 +193,7 @@ function PollDetailPage() {
 
                                     return (
                                         <p key={o.id} className="text-sm">
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex justify-between items-center break-words">
                                                 {o.label}
                                                 <span className="px-1 my-1 bg-blue-400 rounded">{pct}%</span>
                                             </div>

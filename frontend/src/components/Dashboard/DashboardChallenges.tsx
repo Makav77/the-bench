@@ -149,10 +149,10 @@ function DashboardChallenges() {
                     {pendingChallenges.map((challenge) => (
                         <li
                             key={challenge.id}
-                            className="border rounded-lg p-4 shadow-sm space-y-2 max-sm:p-2"
+                            className="border rounded p-4 shadow-sm space-y-2 max-sm:p-2"
                         >
                             <div>
-                                <p>
+                                <p className="break-words">
                                     <span className="font-semibold">{t("title")}</span> {challenge.title}
                                 </p>
                                 <p>
@@ -170,7 +170,7 @@ function DashboardChallenges() {
                                     {" "}–{" "}
                                     {format(new Date(challenge.endDate), "dd/MM/yyyy")}
                                 </p>
-                                <p>
+                                <p className="break-words">
                                     <span className="font-semibold">{t("successCriteria")}</span>{" "}
                                     {challenge.successCriteria}
                                 </p>
@@ -245,7 +245,7 @@ function DashboardChallenges() {
                     {pendingCompletions.map((completion) => (
                         <li
                             key={completion.id}
-                            className="border rounded-lg p-4 shadow-sm space-y-2 max-sm:p-2"
+                            className="border rounded p-4 shadow-sm space-y-2 max-sm:p-2"
                         >
                             <div>
                                 <p>
@@ -253,7 +253,7 @@ function DashboardChallenges() {
                                     {completion.user.firstname} {completion.user.lastname}
                                 </p>
 
-                                <p>
+                                <p className="break-words">
                                     <span className="font-semibold">{t("challenge")}</span>{" "}
                                     {completion.challenge.title}
                                 </p>
@@ -264,7 +264,7 @@ function DashboardChallenges() {
                                 </p>
 
                                 {completion.text && (
-                                    <p>
+                                    <p className="break-words">
                                         <span className="font-semibold">{t("proof")}</span> {completion.text}
                                     </p>
                                 )}

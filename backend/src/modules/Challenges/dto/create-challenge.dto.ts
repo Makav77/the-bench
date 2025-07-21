@@ -21,7 +21,7 @@ export class CreateChallengeDTO {
 
     @IsNotEmpty()
     @IsString()
-    @MaxLength(500)
+    @MaxLength(200)
     successCriteria: string;
 
     @IsOptional()

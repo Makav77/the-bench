@@ -55,7 +55,7 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
-            <div className="bg-white rounded-lg shadow-lg p-8 w-[350px] relative">
+            <div className="bg-white rounded shadow-lg p-8 w-[350px] relative">
                 <h2 className="text-xl font-bold mb-4 text-center">
                     {t("addBadge")}
                 </h2>
@@ -99,6 +99,7 @@ export function AddBadgeModal({ onClose, onBadgeCreated }: { onClose: () => void
                         <input
                             type="number"
                             min={1}
+                            max={5000}
                             className="border px-2 py-1 rounded w-full max-sm:w-1/2 max-sm:py-2 max-sm:pl-4"
                             value={cost}
                             onChange={e => setCost(Number(e.target.value))}

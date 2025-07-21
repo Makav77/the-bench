@@ -56,9 +56,11 @@ function ChallengesPage() {
                         className="p-4 rounded-2xl hover:shadow cursor-pointer bg-white hover:bg-gray-100"
                         onClick={() => navigate(`/challenges/${challenge.id}`)}
                     >
-                        <h2 className="font-semibold text-lg mb-1">
-                            {challenge.title}
-                        </h2>
+                        <div className="min-w-0 overflow-hidden">
+                            <h2 className="font-semibold text-lg mb-1 truncate whitespace-nowrap">
+                                {challenge.title}
+                            </h2>
+                        </div>
 
                         <p className="text-sm text-gray-600 mb-1">
                             {t("startFrom")} {new Date(challenge.startDate).toLocaleDateString()} {t("to")} {new Date(challenge.endDate).toLocaleDateString()}

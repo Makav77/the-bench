@@ -47,7 +47,7 @@ function ReportModal({ reportedUserId, reportedContentId, reportedContentType, o
 
     return (
         <div className="fixed inset-0 flex items-center justify-center backdrop-brightness-30">
-            <div className="w-[50%] bg-white rounded-2xl p-6 max-w-md">
+            <div className="w-[50%] bg-white rounded p-6 max-w-md">
                 <h2 className="text-2xl font-semibold mb-4">{t("reportTitle")}</h2>
                 <form onSubmit={handleSubmit}>
 
@@ -86,6 +86,7 @@ function ReportModal({ reportedUserId, reportedContentId, reportedContentType, o
                             className="w-full border rounded p-2"
                             rows={4}
                             value={description}
+                            maxLength={500}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder={t("descriptionPlaceholder")}
                         />

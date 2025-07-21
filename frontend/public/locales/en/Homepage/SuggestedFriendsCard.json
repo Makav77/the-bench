@@ -1,0 +1,5 @@
+{
+  "loading": "Loading suggestions...",
+  "loadError": "Error while loading suggestions",
+  "noSuggestions": "No suggestions at the moment"
+}

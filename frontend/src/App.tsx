@@ -63,6 +63,11 @@ import EditNews from "./components/Community/News/EditNewsForm";
 
 import TermsOfUse from "./components/Footer/TermsOfUse";
 import ShopPage from "./components/Community/Shop/ShopPage";
+import NotificationsPage from "./components/Notifications/NotificationsPage";
+
+import HangmanPage from "./components/Hangman/HangmanGame";
+import MultiplayerHangmanGame from "./components/Hangman/HangmanMultiplayer";
+
 
 export default function App() {
     return (
@@ -117,6 +122,9 @@ export default function App() {
                                 <Route path="/news/:id/edit" element={<EditNews />} />
                                 <Route path="/termsofuse" element={<TermsOfUse />} />
                                 <Route path="/shop" element={<ShopPage />} />
+                                <Route path="/notifications" element={<NotificationsPage />} />
+                                <Route path="/hangman" element={<HangmanPage/>} />
+                                <Route path="/hangman/game/:inviteId" element={<MultiplayerHangmanGame />} />
                             </Route>
                         </Route>
                     </Routes>
