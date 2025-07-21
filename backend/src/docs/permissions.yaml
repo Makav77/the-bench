@@ -1,0 +1,76 @@
+paths:
+  /permissions/{code}/restrict:
+    post:
+      tags:
+      - Permissions
+      summary: Restrict user from action by permission code
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: create_event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/RestrictUserDTO'
+      responses:
+        '200':
+          description: User successfully restricted
+        '400':
+          description: Invalid duration or bad request
+
+    delete:
+      tags:
+      - Permissions
+      summary: Remove restriction by permission code
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: create_event
+      responses:
+        '200':
+          description: Restriction successfully removed
+
+  /permissions/{code}/isRestricted:
+    get:
+      tags:
+      - Permissions
+      summary: Check if current user is restricted from action
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: create_event
+      responses:
+        '200':
+          description: Restriction status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  restricted:
+                    type: boolean
+                    example: true
+                  expiresAt:
+                    type: string
+                    format: date-time
+                    example: '2025-06-19T13:00:00.000Z'
+                  reason:
+                    type: string
+                    example: Violation of community rules

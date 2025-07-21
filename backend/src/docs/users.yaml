@@ -1,0 +1,212 @@
+paths:
+  /users:
+    get:
+      summary: Get all users
+      tags: [Users]
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+
+    post:
+      summary: Create a new user
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/CreateUserDTO'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              example:
+                id: "4"
+                firstname: "John"
+                lastname: "Doe"
+                email: "john_doe@example.com"
+                password: "$2b$10$mDIoe8of/gcxVQIfVbx.YefPTaH8IFQ.VqdOdIBWa5btMm2LPyvaC"
+                dateOfBirth: "1995-04-20T00:00:00.000Z"
+                profilePicture: "/uploads/profile/default.png"
+                points: 0
+                role: "user"
+        '409':
+          description: Conflict - Email already exists
+          content:
+            application/json:
+              example:
+                message: "Un utilisateur avec cet email existe déjà."
+                error: "Conflict"
+                statusCode: 409
+
+  /users/search:
+    get:
+      summary: Search users by name
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of matching users
+          content:
+            application/json:
+              example:
+                - id: "1"
+                  firstname: "Johnny"
+                  lastname: "Doe"
+                - id: "4"
+                  firstname: "John"
+                  lastname: "Doe"
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      tags: [Users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              example:
+                id: "3"
+                firstname: "first"
+                lastname: "last"
+                email: "user_user@example.com"
+                password: "$2b$10$EXARrDa3IhJ1isYOKTWAKe41H2wZloZmN4aMwqZCb/1o./9/zXawO"
+                dateOfBirth: "2000-10-12T00:00:00.000Z"
+                profilePicture: "/uploads/profile/default.png"
+                points: 0
+                role: "user"
+                permissions: []
+        '404':
+          description: User not found
+          content:
+            application/json:
+              example:
+                message: "User with ID 999 not found."
+                error: "Not Found"
+                statusCode: 404
+
+    patch:
+      summary: Update a user
+      tags: [Users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './components.yaml#/components/schemas/UpdateUserDTO'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              example:
+                id: "3"
+                firstname: "UpdatedFirst"
+                lastname: "UpdatedLast"
+                email: "updated_email@example.com"
+                password: "newPassword123"
+                dateOfBirth: "1990-01-01T00:00:00.000Z"
+                profilePicture: ""
+                points: 0
+                role: "admin"
+                permissions: []
+        '404':
+          description: User not found
+          content:
+            application/json:
+              example:
+                message: "User with ID 999 not found."
+                error: "Not Found"
+                statusCode: 404
+
+    delete:
+      summary: Delete a user
+      tags: [Users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted
+
+  /users/{id}/profile:
+    get:
+      summary: Get user profile summary
+      tags: [Users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profile summary retrieved successfully
+          content:
+            application/json:
+              example:
+                id: "3"
+                firstname: "UpdatedFirst"
+                lastname: "UpdatedLast"
+                profilePictureUrl: "/uploads/profile/default.png"
+                badges: []
+                points: 0
+                events: []
+                challenges: []
+                marketItems: []
+        '404':
+          description: User not found
+          content:
+            application/json:
+              example:
+                message: "User with ID 999 not found."
+                error: "Not Found"
+                statusCode: 404
+
+  /users/upload-profile:
+    post:
+      summary: Upload profile picture
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Profile picture updated
+          content:
+            application/json:

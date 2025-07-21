@@ -3,9 +3,10 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./modules/App/app.module";
 import { ValidationPipe } from "@nestjs/common";
 import cookieParser from "cookie-parser";
-import { join } from "path";
+import { join } from 'path';
+import * as swaggerUi from 'swagger-ui-express';
+import * as fs from 'fs';
 import * as dotenv from "dotenv";
-import * as fs from "fs";
 
 dotenv.config();
 
@@ -62,6 +63,15 @@ async function bootstrap() {
     prefix: "/uploads/",
   });
 
+    const swaggerPath = join(__dirname, 'docs', 'openapi.json');
+    if (fs.existsSync(swaggerPath)) {
+        const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf8'));
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        console.log("API docs available at /api-docs");
+    } else {
+        console.warn("Swagger docs not found. Did you run npm run build:docs?");
+    }
+  
   await app.listen(port, () => {
     console.log(
       `Server running on ${isProduction ? "https" : "http"}://localhost:${port}`

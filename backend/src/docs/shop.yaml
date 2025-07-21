@@ -1,0 +1,102 @@
+paths:
+  /shop/badges:
+    get:
+      tags:
+        - Shop
+      summary: Get all badges with user info
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of badges
+
+    post:
+      tags:
+        - Shop
+      summary: Create a new badge (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                cost:
+                  type: number
+                  example: 100
+                available:
+                  type: boolean
+                  example: true
+      responses:
+        "201":
+          description: Badge created
+          content:
+            application/json:
+
+  /shop/user-badges:
+    get:
+      tags:
+        - Shop
+      summary: Get badges owned by the current user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User's badges
+          content:
+            application/json:
+
+  /shop/buy/{badgeId}:
+    post:
+      tags:
+        - Shop
+      summary: Buy a badge
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: badgeId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Purchase result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+  /shop/badges/{id}:
+    delete:
+      tags:
+        - Shop
+      summary: Delete a badge (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deletion result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
