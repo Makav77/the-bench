@@ -15,7 +15,6 @@ const allowedOrigins = [
 ];
 
 async function bootstrap() {
-  console.log("debug 1");
   const httpsOptions = {
     key: fs.readFileSync("/etc/letsencrypt/live/the-bench.app/privkey.pem"),
     cert: fs.readFileSync("/etc/letsencrypt/live/the-bench.app/fullchain.pem"),

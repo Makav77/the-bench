@@ -1,0 +1,5 @@
+{
+  "loading": "Chargement des suggestions...",
+  "loadError": "Erreur lors du chargement des suggestions",
+  "noSuggestions": "Aucune suggestion pour le moment"
+}

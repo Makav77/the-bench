@@ -93,7 +93,7 @@ export class MarketController {
         price: raw.price ? parseFloat(raw.price) : undefined,
         contactEmail: raw.contactEmail,
         contactPhone: raw.contactPhone,
-        images: urls,
+        images: urls.length > 0 ? urls : undefined,
         irisCode: raw.irisCode,
         irisName: raw.irisName,
       };
