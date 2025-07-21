@@ -16,6 +16,7 @@ function Navigation() {
         { to: "/bulletinsboard", label: t("listings"), match: ["/bulletinsboard", "/posts", "/flashposts"] },
         { to: "/events", label: t("events"), match: ["/events"] },
         { to: "/community", label: t("community"), match: ["/community", "/gallery", "/polls", "/challenges", "/calendar", "/artisans", "/news"] },
+        { to: "/hangman", label: t("hangman"), match: ["/hangman"] }
     ];
 
     const isActive = (matchArr: string[]) => matchArr.some((m) => location.pathname.startsWith(m));
@@ -51,7 +52,7 @@ function Navigation() {
             data-testid="navigation-bar" 
             className="relative"
         >
-            <div className="grid grid-cols-5 gap-1 m-2 mt-10 pt-5 mb-5 w-[75%] mx-auto border-t-1 max-sm:hidden">
+            <div className="grid grid-cols-6 gap-1 m-2 mt-10 pt-5 mb-5 w-[90%] mx-auto border-t-1 max-sm:hidden">
                 {navLinks.map((link) => (
                     <button
                         key={link.to}

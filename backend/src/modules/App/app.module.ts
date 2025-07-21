@@ -42,6 +42,8 @@ import { NotificationsModule } from '../notifications/notifications.module';
 import { NotificationsController } from '../notifications/notifications.controller';
 import { UploadModule } from '../Upload/upload.module';
 import { UploadController } from '../Upload/upload.controller';
+import { HangmanController } from '../Hangman/hangman.controller';
+import { HangmanModule } from '../Hangman/hangman.module';
 
 @Module({
     imports: [
@@ -74,6 +76,7 @@ import { UploadController } from '../Upload/upload.controller';
         ShopModule,
         NotificationsModule,
         UploadModule,
+        HangmanModule
     ],
     controllers: [
         ChallengesController,
@@ -93,6 +96,7 @@ import { UploadController } from '../Upload/upload.controller';
         ShopController,
         NotificationsController,
         UploadController,
+        IrisController
     ],
     providers: [AppService],
 })
